@@ -1,12 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:flutter/material.dart';
+import 'package:phcapp/src/tab_screens/patient_screens/vitals/vital_detail.dart';
 
 class VitalSigns extends StatelessWidget {
   @override
   build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.grey[200],
         body: ListView(
           children: <Widget>[
             HeaderSection("Vital Signs"),
@@ -77,6 +78,10 @@ class VitalSigns extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
+            //  onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => VitalDetail()));
+            // }
             // Add your onPressed code here!
           },
           label: Text('ADD VITALSIGN'),

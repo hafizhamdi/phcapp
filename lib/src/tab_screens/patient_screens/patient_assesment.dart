@@ -100,6 +100,7 @@ class _PatientAssessmentState extends State<PatientAssessment> {
               animationDuration: Duration(seconds: 1),
               children: [
                 ExpansionPanel(
+                  canTapOnHeader: true,
                   body: Container(
                       alignment: Alignment.centerLeft,
                       // margin: EdgeInsets.all(10),

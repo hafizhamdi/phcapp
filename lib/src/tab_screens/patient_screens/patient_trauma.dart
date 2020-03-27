@@ -100,6 +100,7 @@ class _PatientTraumaState extends State<PatientTrauma> {
               animationDuration: Duration(seconds: 1),
               children: [
                 ExpansionPanel(
+                  canTapOnHeader: true,
                   body: Container(
                       alignment: Alignment.centerLeft,
                       // margin: EdgeInsets.all(10),
@@ -178,7 +179,9 @@ class _PatientTraumaState extends State<PatientTrauma> {
         icon: Icons.drag_handle,
         bodyModel: BodyModel(list: _skinAssment)),
     ItemModel(
-        header: 'Left chest', icon: Icons.dashboard, bodyModel: BodyModel(list: _ecg)),
+        header: 'Left chest',
+        icon: Icons.dashboard,
+        bodyModel: BodyModel(list: _ecg)),
     ItemModel(
         header: 'Abdomen',
         icon: Icons.insert_emoticon,

@@ -13,14 +13,23 @@ class Assessments extends StatelessWidget {
           // appBar: AppBar(
           //     bottom:
           appBar: TabBar(
+            isScrollable: true,
             tabs: [
               Tab(
-                  icon: Icon(Icons.featured_play_list),
+                  // icon: Icon(Icons.featured_play_list),
                   text: "Patient Assessment"),
-              Tab(icon: Icon(Icons.assessment), text: "Trauma"),
-              Tab(icon: Icon(Icons.airline_seat_flat), text: "Intervention"),
-              Tab(icon: Icon(Icons.favorite), text: "Medication"),
-              Tab(icon: Icon(Icons.favorite), text: "Outcome"),
+              Tab(
+                  // icon: Icon(Icons.assessment),
+                  text: "Trauma"),
+              Tab(
+                  // icon: Icon(Icons.airline_seat_flat),
+                  text: "Intervention"),
+              Tab(
+                  // icon: Icon(Icons.favorite),
+                  text: "Medication"),
+              Tab(
+                  // icon: Icon(Icons.favorite),
+                  text: "Outcome"),
             ],
             labelColor: Colors.purple,
           ),
