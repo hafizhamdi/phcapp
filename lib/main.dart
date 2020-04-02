@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:phcapp/callcard_detail.dart';
+import 'package:phcapp/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(PhcApp());
+  runApp(ChangeNotifierProvider(
+      builder: (_) => ThemeProvider(isLightTheme: true), child: PhcApp()));
 }
 
 class PhcApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return MaterialApp(
+      theme: themeProvider.getThemeData,
       initialRoute: '/',
       routes: {
         '/': (context) => CallCardList(),
@@ -25,11 +30,22 @@ class PhcApp extends StatelessWidget {
 class CallCardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.purple,
-          title: Text("Call Cards"),
+          // backgroundColor: Colors.purple,
+          title: Center(
+            child: Text("Call Cards",
+                style: TextStyle(fontFamily: "Raleway", fontSize: 20)),
+          ),
+          leading: Container(
+              child: Switch(
+            value: themeProvider.isLightTheme,
+            onChanged: (val) {
+              themeProvider.setThemeData = val;
+            },
+          )),
         ),
         body: ListView.separated(
           separatorBuilder: (context, index) => Divider(

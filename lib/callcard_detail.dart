@@ -10,28 +10,35 @@ class CallCardDetail extends StatelessWidget {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
+        // backgroundColor: Colors.white,
         appBar: AppBar(
-            bottom: TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.info)),
-                Tab(icon: Icon(Icons.directions_car)),
-                Tab(icon: Icon(Icons.timer)),
-                Tab(icon: Icon(Icons.person)),
-              ],
-            ),
-            title: Text(
-              'PH Care Ambulance',
-            ),
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.cloud_upload),
-                tooltip: "Push to Server",
-                onPressed: () {
-                  //TODO: add handler
-                },
-              )
+          // shape: ShapeBorder(BorderRadius.only(topLeft:Radius.circular(2.0))),
+          // backgroundColor: Colors.white,
+          bottom: TabBar(
+            // unselectedLabelColor: Colors.red,
+            // labelColor: Colors.blue,
+            // indicatorColor: Color(0x880E4F00),
+            tabs: [
+              Tab(icon: Icon(Icons.info)),
+              Tab(icon: Icon(Icons.directions_car)),
+              Tab(icon: Icon(Icons.timer)),
+              Tab(icon: Icon(Icons.person)),
             ],
-            backgroundColor: Colors.purple),
+          ),
+          title: Center(
+              child: Text('PHCare Ambulance',
+                  style: TextStyle(fontFamily: "Raleway", fontSize: 20))),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.cloud_upload),
+              tooltip: "Push to Server",
+              onPressed: () {
+                //TODO: add handler
+              },
+            )
+          ],
+        ),
+        // backgroundColor: Colors.purple),
         body: TabBarView(
           children: <Widget>[
             CallInfo(),

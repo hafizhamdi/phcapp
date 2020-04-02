@@ -24,11 +24,11 @@ class Input extends StatelessWidget {
           Expanded(
               child: Text(
             label,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle( fontWeight: FontWeight.bold),
           )),
           Expanded(
               child: Text(label2,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)))
+                  style: TextStyle( fontWeight: FontWeight.bold)))
         ],
       ),
     );

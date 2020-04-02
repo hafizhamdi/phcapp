@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phcapp/custom/choice_chip.dart';
+import 'package:phcapp/custom/label.dart';
 
 const _disasterTriage = ["red", "yellow", "green", "white"];
 const _appearance = ["Oriented", "Lethargy", "Confused", "In pain", "Other"];
@@ -86,59 +87,104 @@ class PatientAssessment extends StatefulWidget {
   _PatientAssessmentState createState() => _PatientAssessmentState();
 }
 
-class _PatientAssessmentState extends State<PatientAssessment> {
-  void callback(String item) {}
+class _PatientAssessmentState extends State<PatientAssessment>
+    with TickerProviderStateMixin {
+  var checked = false;
+  final Duration animationDuration = Duration(seconds: 5);
+  double transitionIconSize = 16.0;
+
+  void callback(String header, int index) {
+    // print(cb.item.toString());
+    // setState(() {
+
+    prepareData.forEach((f) {
+      setState(() {
+        // print(f.header);
+        if (f.header == header) {
+          print(header);
+          print(index);
+          // int idx = prepareData.indexOf();
+          if (index == 10) {
+            f.isExpanded = false;
+
+            // _checkAnimationController.reverse();
+            // transitionIconSize = 14.0;
+            // });
+          } else {
+            // setState(() {
+            f.isExpanded = true;
+            _checkAnimationController.forward();
+            // transitionIconSize = 25.0;
+            // });
+          }
+          ;
+        }
+      });
+      // if (prepareData[index].header == item)
+      // checked = true;
+    });
+  }
+
+  Animation _checkAnimation;
+  AnimationController _checkAnimationController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _checkAnimationController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1200));
+    _checkAnimation = Tween(begin: 20.0, end: 25.0).animate(CurvedAnimation(
+        curve: Curves.bounceInOut, parent: _checkAnimationController));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
-      child: ListView.builder(
-          itemCount: prepareData.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ExpansionPanelList(
-              animationDuration: Duration(seconds: 1),
-              children: [
-                ExpansionPanel(
-                  canTapOnHeader: true,
-                  body: Container(
-                      alignment: Alignment.centerLeft,
-                      // margin: EdgeInsets.all(10),
-                      padding: EdgeInsets.only(bottom: 10),
-                      child: SingleOption(
-                          prepareData[index].bodyModel.list, callback)),
-                  headerBuilder: (BuildContext context, bool isExpanded) {
-                    return Container(
-                        // margin: EdgeInsets.only(bottom: 40),
-                        padding: EdgeInsets.all(10),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Icon(prepareData[index].icon),
-                              Text(prepareData[index].header,
-                                  style: TextStyle(
-                                    // color: Colors.black54,
-                                    fontSize: 18,
-                                  ))
-                            ]));
-                  },
-                  isExpanded: prepareData[index].isExpanded,
-                )
-              ],
-
-              // )]
-
-              expansionCallback: (int item, bool status) {
-                setState(() {
-                  prepareData[index].isExpanded =
-                      !prepareData[index].isExpanded;
-                });
-              },
-            );
-          }),
-      // },
-    );
+        padding: EdgeInsets.all(10),
+        child: ListView.builder(
+            itemCount: prepareData.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Card(
+                  child: ListTile(
+                title: Padding(
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(prepareData[index].header),
+                          AnimatedBuilder(
+                              animation: _checkAnimationController,
+                              builder: (context, child) {
+                                return Center(
+                                    child: Container(
+                                        // padding: EdgeInsets.all(10.0),
+                                        child: Center(
+                                            child: Icon(
+                                  prepareData[index].isExpanded
+                                      ? Icons.check_circle //,
+                                      : Icons.check_circle_outline,
+                                  color: prepareData[index].isExpanded
+                                      ? Colors.green
+                                      : Colors.grey,
+                                  size: prepareData[index].isExpanded
+                                      ? _checkAnimation.value
+                                      : 20,
+                                ))));
+                              })
+                        ]),
+                    padding: EdgeInsets.symmetric(vertical: 10.0)),
+                subtitle:
+                    //  Wrap(
+                    //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: <Widget>[
+                    SingleOption(
+                      header:prepareData[index].header,
+                      stateList:  prepareData[index].bodyModel.list,
+                      callback: callback),
+                // ],
+                // ),
+              ));
+            }));
   }
 
   List<ItemModel> prepareData = <ItemModel>[

@@ -104,9 +104,10 @@ class _PatientTraumaState extends State<PatientTrauma> {
                   body: Container(
                       alignment: Alignment.centerLeft,
                       // margin: EdgeInsets.all(10),
-                      padding: EdgeInsets.only(bottom: 10),
-                      child: SingleOption(
-                          prepareData[index].bodyModel.list, callback)),
+                      child: Text("OK")),
+                  // padding: EdgeInsets.only(bottom: 10),
+                  // child: SingleOption(
+                  //     prepareData[index].bodyModel.list, callback)),
                   headerBuilder: (BuildContext context, bool isExpanded) {
                     return Container(
                         // margin: EdgeInsets.only(bottom: 40),

@@ -47,7 +47,7 @@ class CPRLogs extends StatelessWidget {
     return ChangeNotifierProvider(
         create: (context) => LogModel(),
         child: Scaffold(
-          backgroundColor: Colors.grey[200],
+          // backgroundColor: Colors.grey[200],
           body: Consumer<LogModel>(
             builder: (context, logs, child) {
               return ListView(
@@ -203,7 +203,7 @@ Widget _buildIconData(BuildContext context, logs, IconData icon,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Label("Select type", ""),
-                      SingleOption(list, chipCallback),
+                      // SingleOption(list, chipCallback),
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: TextField(

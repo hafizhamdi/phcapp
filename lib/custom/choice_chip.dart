@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 
 class SingleOption extends StatefulWidget {
-  SingleOption(this.stateList, this.callback);
+  SingleOption({this.header, this.stateList, this.callback});
 
+  final String header;
   final List<String> stateList;
   final Function callback;
   @override
-  SingleChoiceChip createState() => SingleChoiceChip(stateList, callback);
+  SingleChoiceChip createState() =>
+      SingleChoiceChip(header, stateList, callback);
 }
 
 class SingleChoiceChip extends State<SingleOption> {
+  final String header;
   final List<String> list;
-  final Function callback;
+  final Function(String, int) callback;
+  // final VoidCallback onSelectedChip;
 
-  int _value = 0;
+  int _value = 10; // so that selected be false
 
   // final Function(String) onChoiceSelected;
 
-  SingleChoiceChip(this.list, this.callback);
+  SingleChoiceChip(this.header, this.list, this.callback);
 
   @override
   Widget build(BuildContext context) {
@@ -26,21 +30,45 @@ class SingleChoiceChip extends State<SingleOption> {
         child: Wrap(
           spacing: 10,
           children: List<Widget>.generate(
-            list.length,
+            list.length + 1,
             (int index) {
-              return ChoiceChip(
-                elevation: 2.0,
-                label: Text(list[index]),
-                selected: _value == index,
-                onSelected: (bool selected) {
-                  setState(() {
-                    _value = selected ? index : null;
-                    callback(list[_value]);
-                  });
-                },
-              );
+              var len = list.length;
+              if (index == len) {
+                return IconButton(
+                  icon: Icon(Icons.replay),
+                  onPressed: () {
+                    // setState(() {
+                    _value = 10;
+                    callback(header, _value);
+                    // });
+                  },
+                );
+              } else {
+                return ChoiceChip(
+                  elevation: 2.0,
+                  label: Text(list[index]),
+                  selected: _value == index,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value = selected ? index : null;
+                      callback(header, _value);
+                      // Callback cb =
+                      //     callback(item: list[index], index: index);
+
+                      // callback(cb);
+                    });
+                  },
+                );
+              }
             },
           ).toList(),
         ));
   }
+}
+
+class Callback {
+  String item;
+  int index;
+
+  Callback({this.item, this.index});
 }

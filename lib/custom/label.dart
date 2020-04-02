@@ -21,9 +21,11 @@ class Label extends StatelessWidget {
           Expanded(
               child: Text(
             label,
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(color: Colors.grey),
           )),
-          Expanded(child: Text(label2, style: TextStyle(fontSize: 16)))
+          Expanded(
+              child: Text(label2,
+                  style: TextStyle( color: Colors.grey)))
         ],
       ),
     );

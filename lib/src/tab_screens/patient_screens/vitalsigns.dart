@@ -7,12 +7,13 @@ class VitalSigns extends StatelessWidget {
   @override
   build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[200],
+
+        // backgroundColor: Colors.grey[200],
         body: ListView(
           children: <Widget>[
             HeaderSection("Vital Signs"),
             Card(
-              color: Colors.purple[100],
+              // color: Colors.purple[100],
               margin: EdgeInsets.only(
                 top: 10,
                 left: 10,
@@ -45,7 +46,7 @@ class VitalSigns extends StatelessWidget {
               ),
             ),
             Card(
-              color: Colors.purple[100],
+              // color: Colors.purple[100],
               margin:
                   EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 100),
               child: ListTile(
@@ -86,7 +87,7 @@ class VitalSigns extends StatelessWidget {
           },
           label: Text('ADD VITALSIGN'),
           icon: Icon(Icons.add),
-          backgroundColor: Colors.purple,
+          // backgroundColor: Colors.purple,
         ));
   }
 }

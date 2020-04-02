@@ -8,7 +8,7 @@ class PatientInfo extends StatelessWidget {
   @override
   build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[200],
+        // backgroundColor: Colors.grey[200],
         body: ListView(
           children: <Widget>[
             HeaderSection("Patient Information"),
@@ -30,7 +30,7 @@ class PatientInfo extends StatelessWidget {
           },
           label: Text('EDIT'),
           icon: Icon(Icons.edit),
-          backgroundColor: Colors.purple,
+          // backgroundColor: Colors.purple,
         ));
   }
 }
