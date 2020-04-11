@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
 
 class SingleOption extends StatefulWidget {
-  SingleOption({this.header, this.stateList, this.callback});
+  SingleOption({this.header, this.stateList, this.callback, this.multiple});
 
   final String header;
   final List<String> stateList;
   final Function callback;
+  bool multiple;
+
   @override
   SingleChoiceChip createState() =>
-      SingleChoiceChip(header, stateList, callback);
+      SingleChoiceChip(header, stateList, callback, multiple);
 }
 
 class SingleChoiceChip extends State<SingleOption> {
   final String header;
   final List<String> list;
-  final Function(String, int) callback;
-  // final VoidCallback onSelectedChip;
 
-  int _value = 10; // so that selected be false
+  final Function(String, List<String>) callback;
+  bool multiple;
+  // final VoidCallback onSelectedChip;
+  List<String> selectedItems = new List();
+  // String _value = ""; // so that selected be false
 
   // final Function(String) onChoiceSelected;
 
-  SingleChoiceChip(this.header, this.list, this.callback);
+  SingleChoiceChip(this.header, this.list, this.callback, this.multiple);
 
   @override
   Widget build(BuildContext context) {
@@ -30,36 +34,65 @@ class SingleChoiceChip extends State<SingleOption> {
         child: Wrap(
           spacing: 10,
           children: List<Widget>.generate(
-            list.length + 1,
+            list.length,
             (int index) {
-              var len = list.length;
-              if (index == len) {
-                return IconButton(
-                  icon: Icon(Icons.replay),
-                  onPressed: () {
-                    // setState(() {
-                    _value = 10;
-                    callback(header, _value);
-                    // });
-                  },
-                );
-              } else {
-                return ChoiceChip(
-                  elevation: 2.0,
-                  label: Text(list[index]),
-                  selected: _value == index,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      _value = selected ? index : null;
-                      callback(header, _value);
-                      // Callback cb =
-                      //     callback(item: list[index], index: index);
+              // var len = list.length;
+              // if (index == len) {
+              //   return IconButton(
+              //     icon: Icon(Icons.replay),
+              //     onPressed: () {
+              //       // setState(() {
+              //       // if(multiple == true){
+              //       //   selectedItems.add()
+              //       // }
 
-                      // callback(cb);
-                    });
-                  },
-                );
-              }
+              //       // _value = 10;
+              //       // selectedItems[0] = _value;
+              //       // callback(header, selectedItems);
+              //       // });
+              //     },
+              //   );
+              // } else {
+              String item = list[index];
+              return ChoiceChip(
+                elevation: 2.0,
+                label: Text(item),
+                selected: selectedItems.contains(list[index]),
+                onSelected: (selected) {
+                  setState(() {
+                    if (multiple == true) {
+                      selectedItems.contains(list[index])
+                          ? selectedItems.remove(item)
+                          : selectedItems.add(list[index]);
+                    } else {
+                      selectedItems = new List();
+                      selected
+                          ? selectedItems.add(list[index])
+                          : selectedItems.remove(list[index]);
+                    }
+                    // _value = selected ? index : null;
+
+                    // print("multiple");
+                    // print(multiple);
+                    // if (multiple == true) {
+                    // (_value != null)
+                    // ?
+                    // selectedItems.add(index);
+                    // print(selectedItems.length);
+                    // : selectedItems.removeAt(index);
+                    // } else {
+                    // selectedItems[0] = _value;
+                    // }
+
+                    callback(header, selectedItems);
+                    // Callback cb =
+                    //     callback(item: list[index], index: index);
+
+                    // callback(cb);
+                  });
+                },
+              );
+              // }
             },
           ).toList(),
         ));

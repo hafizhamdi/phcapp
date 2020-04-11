@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:phcapp/src/tab_screens/patient_screens/assessment.dart';
-import 'package:phcapp/src/tab_screens/patient_screens/info.dart';
-import 'package:phcapp/src/tab_screens/patient_screens/cprlogs.dart';
-import 'package:phcapp/src/tab_screens/patient_screens/vitalsigns.dart';
+import 'main_assessment.dart';
+import 'information.dart';
+import 'cprlog.dart';
+// import 'assessment.dart';
+import 'vitalsign_list.dart';
 
-class Patient extends StatelessWidget {
+class PatientTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -26,10 +27,10 @@ class Patient extends StatelessWidget {
               backgroundColor: Colors.purple),
           body: TabBarView(
             children: <Widget>[
-              PatientInfo(),
-              CPRLogs(),
-              VitalSigns(),
-              Assessments(),
+              Information(),
+              CPRLog(),
+              VitalSignList(),
+              MainAssessment(),
             ],
           ),
         ));

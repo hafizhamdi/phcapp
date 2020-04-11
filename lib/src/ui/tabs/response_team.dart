@@ -5,6 +5,7 @@ import 'package:phcapp/custom/choice_chip.dart';
 import 'package:phcapp/custom/drop_downlist.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/custom/text_input.dart';
+import 'package:phcapp/src/models/team_model.dart';
 
 // constants
 const LIST_RESPONSES = [
@@ -39,26 +40,34 @@ const LIST_AGENCIES = [
 //   }
 // }
 
-class Team extends StatefulWidget {
+class ResponseTeam extends StatefulWidget {
+  final TeamModel response_team;
+
+  ResponseTeam({this.response_team});
   // Team();
   _TeamState createState() => _TeamState();
 }
 
-class _TeamState extends State<Team> {
+class _TeamState extends State<ResponseTeam> {
   String serviceSelected = "Select option";
-
+  TextEditingController vehicleTxtController;
   void serviceCallback(String selected) {
     setState(() {
       serviceSelected = selected;
     });
   }
 
-  List<Person> team = <Person>[
-    Person(name: "Abu Bakar", position: "Medical Assistant"),
-    Person(name: "Malik Sinai", position: "Driver van"),
-    Person(name: "Malik Sinai", position: "Driver van"),
-    Person(name: "Malik Sinai", position: "Driver van")
-  ];
+  @override
+  void initState() {
+    vehicleTxtController = new TextEditingController();
+    vehicleTxtController.text =
+        widget.response_team.vehicle_regno; // List<Person> team = <Person>[
+    //   Person(name: "Abu Bakar", position: "Medical Assistant"),
+    //   Person(name: "Malik Sinai", position: "Driver van"),
+    //   Person(name: "Malik Sinai", position: "Driver van"),
+    //   Person(name: "Malik Sinai", position: "Driver van")
+    // ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +78,7 @@ class _TeamState extends State<Team> {
           BoxDecoration(color: Colors.pinkAccent, shape: BoxShape.circle),
       child: Center(
           child: Text(
-        "4",
+        widget.response_team.staffs.length.toString(),
         textAlign: TextAlign.center,
         style: TextStyle(color: Colors.white),
       )),
@@ -79,6 +88,7 @@ class _TeamState extends State<Team> {
         // backgroundColor: Colors.white,
         body: SingleChildScrollView(
             // padding: EdgeInsets.all(20),
+            physics: BouncingScrollPhysics(),
             child: ConstrainedBox(
                 constraints: BoxConstraints(),
                 child: Center(
@@ -98,7 +108,7 @@ class _TeamState extends State<Team> {
                                 itemSelected: serviceSelected),
                             CustomTextInput(
                                 labelText: "Vehicle Registration No",
-                                context: context),
+                                textController: vehicleTxtController),
                             Padding(
                               padding: EdgeInsets.only(top: 20),
                               child: Stack(children: <Widget>[
@@ -119,7 +129,7 @@ class _TeamState extends State<Team> {
                                   shrinkWrap: true,
                                   // ke: ,
                                   // padding: EdgeInsets.all(30),
-                                  itemCount: team.length,
+                                  itemCount: widget.response_team.staffs.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     return Container(
@@ -129,7 +139,8 @@ class _TeamState extends State<Team> {
                                           child: ListTile(
                                             leading: Icon(Icons.face),
                                             title: Text(
-                                              team[index].name,
+                                              widget.response_team.staffs[index]
+                                                  .name,
                                               style: TextStyle(
                                                   fontFamily: "Raleway",
                                                   fontWeight: FontWeight.bold
@@ -137,8 +148,8 @@ class _TeamState extends State<Team> {
                                                   // fontWeight: FontWeight.bold
                                                   ),
                                             ),
-                                            subtitle:
-                                                Text(team[index].position),
+                                            subtitle: Text(widget.response_team
+                                                .staffs[index].position),
                                             trailing: Icon(Icons.remove_circle),
                                           ),
                                         ));
