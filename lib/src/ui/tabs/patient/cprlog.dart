@@ -133,7 +133,7 @@ class CPRLog extends StatelessWidget {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(new DateFormat.jm().format(new DateTime.now())),
+                Text(data.timestamp),
                 IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
@@ -261,7 +261,9 @@ Widget _buildIconData(BuildContext context, logs, IconData icon,
                             // Add the item to the data list.
                             LogMeasurement logItem = new LogMeasurement(
                                 item: title + " " + newItem,
-                                measurement: commentController.text);
+                                measurement: commentController.text,
+                                timestamp: new DateFormat.jm()
+                                    .format(new DateTime.now()));
                             logs.add(logItem);
                             // logs.add(title +
                             //     " " +
@@ -304,7 +306,7 @@ class LogModel extends ChangeNotifier {
 
   /// Internal, private state of the cart.
   final List<LogMeasurement> _items = <LogMeasurement>[
-    LogMeasurement(item: 'CPR Start')
+    // LogMeasurement(item: 'CPR Start')
   ];
 
   /// An unmodifiable view of the items in the cart.
@@ -336,6 +338,7 @@ class LogModel extends ChangeNotifier {
 class LogMeasurement {
   final item;
   final measurement;
+  final timestamp;
 
-  LogMeasurement({this.item, this.measurement});
+  LogMeasurement({this.item, this.measurement, this.timestamp});
 }

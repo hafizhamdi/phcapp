@@ -136,22 +136,22 @@ class Medication extends StatelessWidget {
                             SizedBox(
                                 // height: 500,
                                 child: AnimatedList(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
 
-                                  // Give the Animated list the global key
-                                  key: _listKey,
-                                  initialItemCount: logs.items.length,
-                                  // _data.length,
-                                  // Similar to ListView itemBuilder, but AnimatedList has
-                                  // an additional animation parameter.
-                                  itemBuilder: (context, index, animation) {
-                                    // Breaking the row widget out as a method so that we can
-                                    // share it with the _removeSingleItem() method.
-                                    return _buildItem(logs, index,
-                                        logs.items[index], animation);
-                                  },
-                                )),
+                              // Give the Animated list the global key
+                              key: _listKey,
+                              initialItemCount: logs.items.length,
+                              // _data.length,
+                              // Similar to ListView itemBuilder, but AnimatedList has
+                              // an additional animation parameter.
+                              itemBuilder: (context, index, animation) {
+                                // Breaking the row widget out as a method so that we can
+                                // share it with the _removeSingleItem() method.
+                                return _buildItem(
+                                    logs, index, logs.items[index], animation);
+                              },
+                            )),
                             // ),
                           ],
                         )));
@@ -201,7 +201,9 @@ class Medication extends StatelessWidget {
                                   // Add the item to the data list.
                                   LogMeasurement logItem = new LogMeasurement(
                                       item: newItem,
-                                      measurement: commentController.text);
+                                      measurement: commentController.text,
+                                      timestamp: new DateFormat.jm()
+                                          .format(new DateTime.now()));
                                   logs_float.add(logItem);
                                   // logs.add(title +
                                   //     " " +
@@ -245,7 +247,7 @@ class Medication extends StatelessWidget {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(new DateFormat.jm().format(new DateTime.now())),
+                Text(data.timestamp),
                 IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
@@ -372,7 +374,9 @@ Widget _buildIconData(BuildContext context, logs, IconData icon,
                             // Add the item to the data list.
                             LogMeasurement logItem = new LogMeasurement(
                                 item: title + " " + newItem,
-                                measurement: commentController.text);
+                                measurement: commentController.text,
+                                timestamp:
+                                    DateFormat.jm().format(DateTime.now()));
                             logs.add(logItem);
                             // logs.add(title +
                             //     " " +
@@ -415,7 +419,9 @@ class LogModel extends ChangeNotifier {
 
   /// Internal, private state of the cart.
   final List<LogMeasurement> _items = <LogMeasurement>[
-    LogMeasurement(item: 'CPR Start')
+    // LogMeasurement(
+    //     item: '',
+    //     timestamp: new DateFormat.jm().format(new DateTime.now()))
   ];
 
   /// An unmodifiable view of the items in the cart.
@@ -447,6 +453,7 @@ class LogModel extends ChangeNotifier {
 class LogMeasurement {
   final item;
   final measurement;
+  final timestamp;
 
-  LogMeasurement({this.item, this.measurement});
+  LogMeasurement({this.item, this.measurement, this.timestamp});
 }
