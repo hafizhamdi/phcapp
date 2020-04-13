@@ -4,7 +4,30 @@ import 'package:phcapp/custom/label.dart';
 import 'package:phcapp/custom/input.dart';
 import 'package:flutter/material.dart';
 
-class Information extends StatelessWidget {
+class Information extends StatefulWidget {
+  final patient_information;
+  Information({this.patient_information});
+  _Information createState() => _Information();
+}
+
+class _Information extends State<Information> {
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController idNoController = new TextEditingController();
+  TextEditingController idTypeController = new TextEditingController();
+  TextEditingController dobController = new TextEditingController();
+  TextEditingController ageController = new TextEditingController();
+  TextEditingController genderController = new TextEditingController();
+
+  @override
+  initState() {
+    nameController.text = widget.patient_information.name;
+    idNoController.text = widget.patient_information.id_no;
+    idTypeController.text = widget.patient_information.id_type;
+    ageController.text = widget.patient_information.age;
+    genderController.text = widget.patient_information.gender;
+    dobController.text = widget.patient_information.dob;
+  }
+
   @override
   build(BuildContext context) {
     return Scaffold(
@@ -17,12 +40,12 @@ class Information extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       HeaderSection("Patient Information"),
-                      _textInput("Name", context),
-                      _textInput("ID No.", context),
-                      _textInput("Document Type", context),
-                      _textInput("Date of Birth", context),
-                      _textInput("Age", context),
-                      _textInput("Gender", context),
+                      _textInput("Name", nameController),
+                      _textInput("ID No.", idNoController),
+                      _textInput("Document Type", idTypeController),
+                      _textInput("Date of Birth", dobController),
+                      _textInput("Age", ageController),
+                      _textInput("Gender", genderController),
                     ],
                   )))),
       // floatingActionButton: FloatingActionButton.extended(
@@ -37,13 +60,14 @@ class Information extends StatelessWidget {
   }
 }
 
-Widget _textInput(labelText, context) {
+Widget _textInput(labelText, controller) {
   return Container(
       // width: 500,
       width: 500,
       child: Padding(
           padding: EdgeInsets.all(16),
           child: TextField(
+              controller: controller,
               decoration: InputDecoration(
                   labelText: labelText,
                   fillColor: Colors.white,

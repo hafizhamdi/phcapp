@@ -239,11 +239,14 @@ class Medication extends StatelessWidget {
       sizeFactor: animation,
       child: Card(
         child: ListTile(
+            leading: Icon(Icons.local_drink),
             title: Text(
               data.item,
               style: TextStyle(fontSize: 20),
             ),
-            subtitle: Text(data.measurement != null ? data.measurement : ""),
+            subtitle: Text("Dosage: " + data.measurement != null
+                ? data.measurement
+                : "N/A"),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[

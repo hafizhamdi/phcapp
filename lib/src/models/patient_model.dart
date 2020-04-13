@@ -62,12 +62,12 @@ class _PatientInformation {
   String _gender;
 
   _PatientInformation(data) {
-    _name = data["name"];
-    _id_no = data["id_no"];
-    _id_type = data["id_type"];
-    _age = data["age"];
-    _dob = data["dob"];
-    _gender = data["gender"];
+    _name = data["name"] != null ? data["name"] : '';
+    _id_no = data["id_no"] != null ? data["id_no"] : '';
+    _id_type = data["id_type"] != null ? data["id_type"] : '';
+    _age = data["age"] != null ? data["age"] : '';
+    _dob = data["dob"] != null ? data["dob"] : '';
+    _gender = data["gender"] != null ? data["gender"] : '';
   }
 
   String get name => _name;

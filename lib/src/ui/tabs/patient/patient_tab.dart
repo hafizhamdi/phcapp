@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phcapp/src/models/patient_model.dart';
 import 'main_assessment.dart';
 import 'information.dart';
 import 'cprlog.dart';
@@ -6,6 +7,9 @@ import 'cprlog.dart';
 import 'vitalsign_list.dart';
 
 class PatientTab extends StatelessWidget {
+  final PatientModel patient;
+
+  PatientTab({this.patient});
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -27,7 +31,7 @@ class PatientTab extends StatelessWidget {
               backgroundColor: Colors.purple),
           body: TabBarView(
             children: <Widget>[
-              Information(),
+              Information(patient_information: patient.patient_information),
               CPRLog(),
               VitalSignList(),
               MainAssessment(),

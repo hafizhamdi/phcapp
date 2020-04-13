@@ -56,7 +56,7 @@ class _Patients extends State<PatientList> {
         )));
   }
 
-  Widget _buildPatient(name, age, gender) => Container(
+  Widget _buildPatient(data, route) => Container(
           child: Container(
         width: 500,
         child: Card(
@@ -67,34 +67,43 @@ class _Patients extends State<PatientList> {
             right: 10,
           ),
           child: ListTile(
-            leading: Icon(Icons.face),
-            title: Text(name != null ? name : "No data",
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, fontFamily: "Raleway")),
-            subtitle: Container(
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: Row(children: <Widget>[
-                      Icon(
-                        Icons.accessibility_new,
-                        color: Colors.purple,
-                        size: 20,
-                      ),
-                      Text(
-                        (age != null ? age : "0") +
-                            " yrs (" +
-                            (gender != "" ? gender.substring(0, 1) : 'N') +
-                            ")",
-                        style: TextStyle(fontFamily: "Arial"),
-                      )
-                    ])),
-                  ],
-                ),
-                padding: EdgeInsets.only(right: 20)),
-            trailing: Icon(Icons.arrow_forward_ios),
-          ),
+              leading: Icon(Icons.face),
+              title: Text(data.name != null ? data.name : "No data",
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontFamily: "Raleway")),
+              subtitle: Container(
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: Row(children: <Widget>[
+                        Icon(
+                          Icons.accessibility_new,
+                          color: Colors.purple,
+                          size: 20,
+                        ),
+                        Text(
+                          (data.age != null ? data.age : "0") +
+                              " yrs (" +
+                              (data.gender != ""
+                                  ? data.gender.substring(0, 1)
+                                  : 'N') +
+                              ")",
+                          style: TextStyle(fontFamily: "Arial"),
+                        )
+                      ])),
+                    ],
+                  ),
+                  padding: EdgeInsets.only(right: 20)),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                //  onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => route));
+                // Add your onPressed code here!
+              }
+              // },
+              ),
         ),
       ));
 
@@ -122,50 +131,48 @@ class _Patients extends State<PatientList> {
         body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Card(
-                margin:
-                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 70),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    HeaderSection("Scene Assessment"),
-                    _buildSceneChips(
-                        "Other services at scene", _otherServices, callback),
-                    Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Stack(children: <Widget>[
-                          HeaderSection("Patients"),
-                          Positioned(
-                            child: circle,
-                            right: 0,
-                            top: 0,
-                            width: 20,
-                          ),
-                        ])),
-                    Container(
-                        width: 500,
-                        padding: EdgeInsets.only(bottom: 10),
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          // addRepaintBoundaries: false,
-                          shrinkWrap: true,
-                          // ke: ,
-                          // padding: EdgeInsets.all(30),
-                          itemCount: widget.patients.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return _buildPatient(
-                                widget.patients[index].patient_information.name,
-                                widget.patients[index].patient_information.age,
-                                widget.patients[index].patient_information
-                                    .gender);
-                          },
-                        ))
-                  ],
-                ))),
+              margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 70),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  HeaderSection("Scene Assessment"),
+                  _buildSceneChips(
+                      "Other services at scene", _otherServices, callback),
+                  Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Stack(children: <Widget>[
+                        HeaderSection("Patients"),
+                        Positioned(
+                          child: circle,
+                          right: 0,
+                          top: 0,
+                          width: 20,
+                        ),
+                      ])),
+                  Container(
+                      width: 500,
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        // addRepaintBoundaries: false,
+                        shrinkWrap: true,
+                        // ke: ,
+                        // padding: EdgeInsets.all(30),
+                        itemCount: widget.patients.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return _buildPatient(
+                              widget.patients[index].patient_information,
+                              PatientTab(patient: widget.patients[index]));
+                        },
+                      ))
+                ],
+              ),
+            )),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => PatientTab()));
+            // Navigator.push(
+            //     context, MaterialPageRoute(builder: (context) => PatientTab()));
             // Add your onPressed code here!
           },
           label: Text('ADD PATIENT'),
