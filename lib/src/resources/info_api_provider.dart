@@ -4,13 +4,13 @@ import 'dart:convert';
 import '../models/info_model.dart';
 
 class InfoApiProvider {
-  final _url = "http://202.171.33.109/phc-mobile/api/v1";
+  final baseUrl = "http://202.171.33.109/phc-mobile/api/v1";
   Client client = Client();
   // final http.Client httpClient = http.Client();
 
   Future addCallInfo(call_info) async {
     print(call_info);
-    final response = await client.post("$_url/upload_result", body: call_info);
+    final response = await client.post("$baseUrl/upload_result/call_information", body: call_info);
 
     if (response.statusCode == 200) {
       return response;

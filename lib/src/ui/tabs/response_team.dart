@@ -5,6 +5,7 @@ import 'package:phcapp/custom/choice_chip.dart';
 import 'package:phcapp/custom/drop_downlist.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/custom/text_input.dart';
+import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/models/team_model.dart';
 
 // constants
@@ -40,15 +41,15 @@ const LIST_AGENCIES = [
 //   }
 // }
 
-class ResponseTeam extends StatefulWidget {
-  final TeamModel response_team;
+class ResponseTeamScreen extends StatefulWidget {
+  final ResponseTeam response_team;
 
-  ResponseTeam({this.response_team});
+  ResponseTeamScreen({this.response_team});
   // Team();
   _TeamState createState() => _TeamState();
 }
 
-class _TeamState extends State<ResponseTeam> {
+class _TeamState extends State<ResponseTeamScreen> {
   String serviceSelected = "Select option";
   TextEditingController vehicleTxtController;
   void serviceCallback(String selected) {
@@ -61,7 +62,7 @@ class _TeamState extends State<ResponseTeam> {
   void initState() {
     vehicleTxtController = new TextEditingController();
     vehicleTxtController.text =
-        widget.response_team.vehicle_regno; // List<Person> team = <Person>[
+        widget.response_team.vehicleRegno; // List<Person> team = <Person>[
     //   Person(name: "Abu Bakar", position: "Medical Assistant"),
     //   Person(name: "Malik Sinai", position: "Driver van"),
     //   Person(name: "Malik Sinai", position: "Driver van"),

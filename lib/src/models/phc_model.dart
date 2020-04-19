@@ -1,31 +1,35 @@
 // import 'package:phcapp/src/tab_screens/patients.dart';
 
+import 'package:flutter/cupertino.dart';
+
 import 'team_model.dart';
 import 'timer_model.dart';
 import 'info_model.dart';
 import 'patient_model.dart';
 
-class PhcModel {
-  List<_Callcard> _callcards = [];
+class PhcModel with ChangeNotifier {
+  List<Callcard> _callcards = [];
   DateTime _lastUpdated;
 
+  PhcModel();
+
   PhcModel.fromJson(Map<String, dynamic> data) {
-    List<_Callcard> temp = [];
+    List<Callcard> temp = [];
     print(data["callcards"].length);
     for (int i = 0; i < data["callcards"].length; i++) {
       _lastUpdated = DateTime.parse(data["lastUpdated"]);
-      _Callcard _callcard = _Callcard(data["callcards"][i]);
+      Callcard _callcard = Callcard(data["callcards"][i]);
       temp.add(_callcard);
     }
 
     _callcards = temp;
   }
 
-  List<_Callcard> get callcards => _callcards;
+  List<Callcard> get callcards => _callcards;
   DateTime get last_updated => _lastUpdated;
 }
 
-class _Callcard {
+class Callcard with ChangeNotifier {
   InfoModel _call_information;
   TeamModel _response_team;
   TimerModel _response_time;
@@ -33,7 +37,9 @@ class _Callcard {
   // _SceneAssessment _scene_assessment;
   List<PatientModel> _patients = [];
 
-  _Callcard(data) {
+  // Callcard(){}
+
+  Callcard(data) {
     // _call_information = _CallInformation.fromJson(data['call_information']);
     _call_information = InfoModel.fromJson(data['call_information']);
     _response_team = TeamModel.fromJson(data['response_team']);
@@ -51,6 +57,14 @@ class _Callcard {
       _patients.add(_patientModel);
       // }
     }
+  }
+
+  void setCallInformation(InfoModel infor) {
+    print(infor);
+    assert(infor != null);
+    _call_information = infor;
+
+    notifyListeners();
   }
 
   InfoModel get call_information => _call_information;

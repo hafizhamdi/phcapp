@@ -277,6 +277,7 @@ Widget _buildIconData(BuildContext context, logs, IconData icon,
                             // if (_formKey.currentState.validate()) {
                             //   _formKey.currentState.save();
                             // }
+                            Navigator.pop(context);
                           },
                         ),
                       )

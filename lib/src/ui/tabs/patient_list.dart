@@ -4,7 +4,7 @@ import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/src/ui/tabs/patient/patient_tab.dart';
 // import 'package:phcapp/custom/label.dart';
 // import 'package:phcapp/custom/input.dart';
-import '../../models/patient_model.dart';
+import '../../models/phc.dart';
 // import 'package:phcapp/src/tab_screens/patient_screens/main.dart';
 
 const _otherServices = [
@@ -17,14 +17,14 @@ const _otherServices = [
   "Supervisor vehicle"
 ];
 
-class PatientList extends StatefulWidget {
-  final List<PatientModel> patients;
+class PatientListScreen extends StatefulWidget {
+  final List<Patient> patients;
 
-  PatientList({this.patients});
+  PatientListScreen({this.patients});
   _Patients createState() => _Patients();
 }
 
-class _Patients extends State<PatientList> {
+class _Patients extends State<PatientListScreen> {
   // List<PatientModel> patients = <PatientModel>[
   //   PatientModel(name: "Abu Bakar malik bin marwan", age: "45", gender: "Male"),
   //   PatientModel(name: "Abu Bakar", age: "45", gender: "Male"),
@@ -130,7 +130,8 @@ class _Patients extends State<PatientList> {
         // backgroundColor: Colors.grey[200],
         body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
-            child: Card(
+            child: Center(
+                child: Card(
               margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 70),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -162,13 +163,13 @@ class _Patients extends State<PatientList> {
                         itemCount: widget.patients.length,
                         itemBuilder: (BuildContext context, int index) {
                           return _buildPatient(
-                              widget.patients[index].patient_information,
+                              widget.patients[index].patientInformation,
                               PatientTab(patient: widget.patients[index]));
                         },
                       ))
                 ],
               ),
-            )),
+            ))),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             // Navigator.push(

@@ -1,8 +1,10 @@
 import 'dart:convert';
 
-class InfoModel {
+import 'package:flutter/cupertino.dart';
+
+class InfoModel extends ChangeNotifier {
   String callcard_no;
-  DateTime call_received;
+  String call_received;
   String caller_contactno;
   String event_code;
   String priority;
@@ -30,7 +32,7 @@ class InfoModel {
 
   factory InfoModel.fromJson(Map<String, dynamic> data) => InfoModel(
         callcard_no: data["callcard_no"],
-        call_received: DateTime.parse(data["call_received"]),
+        call_received: data["call_received"],
         caller_contactno: data["caller_contactno"],
         event_code: data["event_code"],
         priority: data["priority"],

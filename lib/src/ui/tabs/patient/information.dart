@@ -4,13 +4,13 @@ import 'package:phcapp/custom/label.dart';
 import 'package:phcapp/custom/input.dart';
 import 'package:flutter/material.dart';
 
-class Information extends StatefulWidget {
+class PatientInformationScreen extends StatefulWidget {
   final patient_information;
-  Information({this.patient_information});
+  PatientInformationScreen({this.patient_information});
   _Information createState() => _Information();
 }
 
-class _Information extends State<Information> {
+class _Information extends State<PatientInformationScreen> {
   TextEditingController nameController = new TextEditingController();
   TextEditingController idNoController = new TextEditingController();
   TextEditingController idTypeController = new TextEditingController();
@@ -20,12 +20,12 @@ class _Information extends State<Information> {
 
   @override
   initState() {
-    nameController.text = widget.patient_information.name;
+    nameController.text = widget.patient_information.nama;
     idNoController.text = widget.patient_information.id_no;
     idTypeController.text = widget.patient_information.id_type;
-    ageController.text = widget.patient_information.age;
-    genderController.text = widget.patient_information.gender;
-    dobController.text = widget.patient_information.dob;
+    ageController.text = widget.patient_information.ages;
+    genderController.text = widget.patient_information.jantina;
+    dobController.text = widget.patient_information.dateOfBirth;
   }
 
   @override

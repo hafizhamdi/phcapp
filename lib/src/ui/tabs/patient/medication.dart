@@ -101,60 +101,65 @@ class Medication extends StatelessWidget {
                 logs_float = logs;
                 return SingleChildScrollView(
                     physics: BouncingScrollPhysics(),
-                    child: Card(
-                        margin: EdgeInsets.only(
-                            left: 10, right: 10, top: 10, bottom: 70),
-                        child: Column(
-                          // child: Scaffold(
-                          //   // backgroundColor: Colors.grey[200],
-                          //   body: Consumer<LogModel>(
-                          //     builder: (context, logs, child) {
-                          //       return ListView(
-                          children: <Widget>[
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            //   children: <Widget>[
-                            //     _buildIconData(context, logs, Icons.videocam,
-                            //         _typeChoices, "Types"),
-                            //     _buildIconData(context, logs, Icons.vibration,
-                            //         _rhythmType, "Rhythm"),
-                            //     _buildIconData(context, logs, Icons.donut_large,
-                            //         _drugsType, "Drugs"),
-                            //     _buildIconData(
-                            //         context,
-                            //         logs,
-                            //         Icons.surround_sound,
-                            //         _interventionType,
-                            //         "Intervention"),
-                            //   ],
-                            // ),
-                            // HeaderSection("Select rhythm"),
-                            // SingleOption(_rhythmChoice),
-                            // HeaderSection("CPR Logs"),
-                            // _todaysDate(),
+                    child: Center(
+                        child: Card(
+                            margin: EdgeInsets.only(
+                                left: 10, right: 10, top: 10, bottom: 70),
+                            child: Container(
+                                // alignment: Alignment.center,
+                                width: 500,
+                                child: Column(
+                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                  // child: Scaffold(
+                                  //   // backgroundColor: Colors.grey[200],
+                                  //   body: Consumer<LogModel>(
+                                  //     builder: (context, logs, child) {
+                                  //       return ListView(
+                                  children: <Widget>[
+                                    // Row(
+                                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    //   children: <Widget>[
+                                    //     _buildIconData(context, logs, Icons.videocam,
+                                    //         _typeChoices, "Types"),
+                                    //     _buildIconData(context, logs, Icons.vibration,
+                                    //         _rhythmType, "Rhythm"),
+                                    //     _buildIconData(context, logs, Icons.donut_large,
+                                    //         _drugsType, "Drugs"),
+                                    //     _buildIconData(
+                                    //         context,
+                                    //         logs,
+                                    //         Icons.surround_sound,
+                                    //         _interventionType,
+                                    //         "Intervention"),
+                                    //   ],
+                                    // ),
+                                    // HeaderSection("Select rhythm"),
+                                    // SingleOption(_rhythmChoice),
+                                    // HeaderSection("CPR Logs"),
+                                    // _todaysDate(),
 
-                            SizedBox(
-                                // height: 500,
-                                child: AnimatedList(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
+                                    SizedBox(
+                                        // height: 500,
+                                        child: AnimatedList(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
 
-                              // Give the Animated list the global key
-                              key: _listKey,
-                              initialItemCount: logs.items.length,
-                              // _data.length,
-                              // Similar to ListView itemBuilder, but AnimatedList has
-                              // an additional animation parameter.
-                              itemBuilder: (context, index, animation) {
-                                // Breaking the row widget out as a method so that we can
-                                // share it with the _removeSingleItem() method.
-                                return _buildItem(
-                                    logs, index, logs.items[index], animation);
-                              },
-                            )),
-                            // ),
-                          ],
-                        )));
+                                      // Give the Animated list the global key
+                                      key: _listKey,
+                                      initialItemCount: logs.items.length,
+                                      // _data.length,
+                                      // Similar to ListView itemBuilder, but AnimatedList has
+                                      // an additional animation parameter.
+                                      itemBuilder: (context, index, animation) {
+                                        // Breaking the row widget out as a method so that we can
+                                        // share it with the _removeSingleItem() method.
+                                        return _buildItem(logs, index,
+                                            logs.items[index], animation);
+                                      },
+                                    )),
+                                    // ),
+                                  ],
+                                )))));
               },
             ),
             floatingActionButton: FloatingActionButton.extended(
@@ -217,6 +222,8 @@ class Medication extends StatelessWidget {
                                   // if (_formKey.currentState.validate()) {
                                   //   _formKey.currentState.save();
                                   // }
+
+                                  Navigator.pop(context);
                                 },
                               ),
                             )
@@ -244,9 +251,8 @@ class Medication extends StatelessWidget {
               data.item,
               style: TextStyle(fontSize: 20),
             ),
-            subtitle: Text("Dosage: " + data.measurement != null
-                ? data.measurement
-                : "N/A"),
+            subtitle: Text(
+                data.measurement != null ? "Dose: " + data.measurement : "N/A"),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -392,6 +398,7 @@ Widget _buildIconData(BuildContext context, logs, IconData icon,
                             _listKey.currentState.insertItem(insertIndex);
                             // if (_formKey.currentState.validate()) {
                             //   _formKey.currentState.save();
+
                             // }
                           },
                         ),

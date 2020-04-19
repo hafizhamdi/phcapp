@@ -1,12 +1,26 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:phcapp/custom/header_section.dart';
+import 'package:phcapp/src/blocs/app_bloc.dart';
+import 'package:phcapp/src/blocs/callinfo_bloc.dart';
+import 'package:phcapp/src/models/phc.dart';
+import 'package:phcapp/src/models/phc_model.dart';
 import 'package:phcapp/src/models/info_model.dart';
-import '../../blocs/info_bloc.dart';
+import 'package:phcapp/src/widgets/textEditLabel.dart';
+import 'package:provider/provider.dart';
+// import '../../blocs/info_bloc.dart';
+import 'dart:convert';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+const LIST_PRIORITY = ["", "1", "2", "3", "4"];
 
 const LIST_LOCTYPE = [
-  "Select option",
+  "",
   "Home",
   "Street",
   "Highway",
@@ -24,72 +38,77 @@ const LIST_LOCTYPE = [
   "Recreational/Cultrural/Public area"
 ];
 
-const LIST_DISTANCES = ["Select option", "< 5km", "5-10km", "> 10km"];
+const LIST_DISTANCES = ["", "< 5km", "5-10km", "> 10km"];
 
-class CallInfo extends StatefulWidget {
-  final InfoModel call_information;
+class CallInformationScreen extends StatefulWidget {
+  final CallInformation call_information;
 
-  CallInfo({this.call_information});
+  CallInformationScreen({this.call_information});
 
   _CallInfoState createState() => _CallInfoState();
 }
 
-class _CallInfoState extends State<CallInfo> {
-  String _locationTypeSelected = "Select option";
-  String _distancesSelected = "Select option";
-  // InfoModel call_information;
-  // _CallInfoState(this.call_information);
+class _CallInfoState extends State<CallInformationScreen> {
+  AppBloc appBloc;
+  CallInfoBloc callInfoBloc;
 
-  InfoBloc bloc = new InfoBloc();
+  Completer<void> _refreshCompleter;
+  // CallInfoBloc infoBloc = new CallInfoBloc();
 
-  var _received_ctrl = TextEditingController();
-  var _callcardNo_ctrl = TextEditingController();
-  var _contactNo_ctrl = TextEditingController();
-  var _eventCode_ctrl = TextEditingController();
-  var _priority_ctrl = TextEditingController();
-  var _incident_ctrl = TextEditingController();
-  var _location_ctrl = TextEditingController();
-  var _landmark_ctrl = TextEditingController();
-  var _loctype_ctrl = TextEditingController();
-  var _distScene_ctrl = TextEditingController();
+  String _locationTypeSelected = "";
+  String _distancesSelected = "";
+  String _priority = "";
+
+  final _formKey = GlobalKey<FormState>();
+
+  var receivedController = TextEditingController();
+  var cardNoController = TextEditingController();
+  var contactNoController = TextEditingController();
+  var eventCodeController = TextEditingController();
+  var incidentController = TextEditingController();
+  var locationController = TextEditingController();
+  var landmarkController = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
-    _received_ctrl.text = DateFormat("dd/MM/yyyy HH:mm:ss")
-        .format(widget.call_information.call_received);
-    _callcardNo_ctrl.text = widget.call_information.callcard_no;
-    _contactNo_ctrl.text = widget.call_information.caller_contactno;
-    _eventCode_ctrl.text = widget.call_information.event_code;
-    _priority_ctrl.text = widget.call_information.priority;
-    _incident_ctrl.text = widget.call_information.incident_desc;
-    _location_ctrl.text = widget.call_information.incident_location;
-    _landmark_ctrl.text = widget.call_information.landmark;
-    _loctype_ctrl.text = widget.call_information.location_type;
-    _distScene_ctrl.text = widget.call_information.distance_toscene;
-    // txt.text =
+    _refreshCompleter = Completer<void>();
+    callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
+    var assignId = widget.call_information.assign_id;
+    print("assignid=$assignId");
+    callInfoBloc.add(LoadCallInfo(assign_id: assignId));
+
+    cardNoController.text =
+        widget.call_information.callcard_no; //.callcardNo.value;
+
+    receivedController.text = widget.call_information.call_received;
+    contactNoController.text = widget.call_information.caller_contactno;
+    eventCodeController.text = widget.call_information.event_code;
+    incidentController.text = widget.call_information.incident_desc;
+    locationController.text = widget.call_information.incident_location;
+    landmarkController.text = widget.call_information.landmark;
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    // bloc.dispose();
-    _received_ctrl.dispose();
-    _callcardNo_ctrl.dispose();
-    _contactNo_ctrl.dispose();
-    _eventCode_ctrl.dispose();
-    _priority_ctrl.dispose();
-    _incident_ctrl.dispose();
-    _location_ctrl.dispose();
-    _landmark_ctrl.dispose();
-    _loctype_ctrl.dispose();
-    _distScene_ctrl.dispose();
+
+    print("im dispose atas arahan pkp");
+    cardNoController.dispose();
+    receivedController.dispose();
+    contactNoController.dispose();
+    eventCodeController.dispose();
+    incidentController.dispose();
+    locationController.dispose();
+    landmarkController.dispose();
   }
 
-  // txt.text = DateFormat("dd/MM/yyyy HH:mm:ss").format(new DateTime.now());
+  void priorityCallback(String selected) {
+    setState(() {
+      _priority = selected;
+    });
+  }
 
   void locCallback(String selected) {
     setState(() {
@@ -102,45 +121,8 @@ class _CallInfoState extends State<CallInfo> {
       _distancesSelected = selected;
     });
   }
-  // }
-
-  Widget _dropDownList(
-      labelText, List<String> list, Function callback, String selected) {
-    String _currentItemSelected;
-    return Container(
-        width: 500,
-        child: Padding(
-            padding: EdgeInsets.all(16),
-            child: DropdownButtonFormField(
-                isDense: true,
-                items: list.map((String dropDownStringItem) {
-                  return DropdownMenuItem<String>(
-                      child: Text(dropDownStringItem),
-                      value: dropDownStringItem);
-                }).toList(),
-                onChanged: (String newValueSelected) {
-                  callback(newValueSelected);
-                  // _currentItemSelected = newValueSelected;
-
-                  // _onDropDownChanged(newValueSelected);
-                },
-                value: selected,
-                // onChanged: _onChangeDropdown,
-                decoration: InputDecoration(
-                    labelText: labelText,
-                    fillColor: Colors.white,
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
-                      borderSide: new BorderSide(),
-                    )))));
-  }
 
   Widget _dateReceived(labelText, controller) {
-    // Text(),
-    var txt = TextEditingController();
-
-    txt.text = DateFormat("dd/MM/yyyy HH:mm:ss").format(new DateTime.now());
-
     return Container(
         width: 500,
         child: Padding(
@@ -156,16 +138,242 @@ class _CallInfoState extends State<CallInfo> {
                     )))));
   }
 
-  Widget _textInput(labelText, _controller, _stream, _updateText) {
+  @override
+  Widget build(BuildContext context) {
+    print("build call info run again");
+
+    void callback(String item, int index) {}
+
+    var maskEventCode = MaskTextInputFormatter(
+        mask: "##/#/##/#", filter: {"#": RegExp(r'[a-zA-Z0-9]')});
+
+    return Scaffold(
+        body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: BlocConsumer<CallInfoBloc, CallInfoState>(
+                listener: (context, state) {
+              _refreshCompleter?.complete();
+              _refreshCompleter = Completer();
+            }, builder: (context, state) {
+              if (state is CallInfoLoaded) {
+                print("UI:CALLINFOLOADED");
+                callInfoBloc.cardNoController.text =
+                    state.call_information.callcard_no;
+                cardNoController.text = state.call_information.callcard_no;
+                contactNoController.text =
+                    state.call_information.caller_contactno;
+                receivedController.text = state.call_information.call_received;
+                eventCodeController.text = state.call_information.event_code;
+                incidentController.text = state.call_information.incident_desc;
+                locationController.text =
+                    state.call_information.incident_location;
+                landmarkController.text = state.call_information.landmark;
+                print(state.call_information.callcard_no);
+
+                _locationTypeSelected = state.call_information.location_type;
+                _priority = state.call_information.priority;
+                _distancesSelected = state.call_information.distance_to_scene;
+              } else {
+                print(
+                    "THis is not cool im not loaded state, get datafrom previous yo!");
+              }
+
+              return Center(
+                child: Card(
+                    margin: EdgeInsets.all(10.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: <Widget>[
+                          HeaderSection("Call Information"),
+                          // TextEditLabel(
+                          //     labelText: "Call Card No",
+                          //     controller: cardNoController),
+
+                          TextInput(
+                            labelText: "Call Card No",
+                            controller: cardNoController,
+                            // stream: infoBloc.callcarNoStream,
+                            // updateText: infoBloc.setCallcardNo,
+                          ),
+                          _dateReceived("Date Received", receivedController),
+                          TextInput(
+                            labelText: "Caller Contact No",
+                            controller: contactNoController,
+                            inputType:
+                                TextInputType.numberWithOptions(signed: true),
+                            hintText: "0139446197",
+                          ),
+                          TextInput(
+                            labelText: "Event Code",
+                            controller: eventCodeController,
+                            hintText: "37/C/02/W",
+                            maskFormater: maskEventCode,
+                          ),
+                          DropDownList("Priority", LIST_PRIORITY,
+                              priorityCallback, _priority),
+                          // TextInput(
+                          //   labelText: "Priority",
+                          //   controller: _priority_ctrl,
+                          //   hintText: "1 - 4",
+                          //   inputType: TextInputType.numberWithOptions(),
+                          //   validator: validatePriority,
+                          // ),
+                          TextInput(
+                              labelText: "Incident Description",
+                              controller: incidentController),
+                          TextInput(
+                              labelText: "Incident Location",
+                              controller: locationController),
+                          TextInput(
+                              labelText: "Landmark",
+                              controller: landmarkController),
+                          DropDownList("Location Type", LIST_LOCTYPE,
+                              locCallback, _locationTypeSelected),
+                          DropDownList("Distance to Scene", LIST_DISTANCES,
+                              distCallback, _distancesSelected),
+                        ],
+                      ),
+                    )),
+              );
+              // }
+              // return Center(child: CircularProgressIndicator());
+            })),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.publish),
+          onPressed: () {
+            print("press publish");
+
+            var call = CallInformation(
+                callcardNo: cardNoController.text,
+                callReceived: receivedController.text,
+                callerContactno: contactNoController.text,
+                eventCode: eventCodeController.text,
+                priority: _priority,
+                incidentDesc: incidentController.text,
+                incidentLocation: locationController.text,
+                locationType: _locationTypeSelected,
+                landmark: landmarkController.text,
+                distanceToScene: _distancesSelected,
+                plateNo: widget.call_information.plate_no,
+                assignId: widget.call_information.assign_id);
+
+            callInfoBloc.add(AddCallInfo(call_information: call));
+
+            final snackBar = SnackBar(
+              content: Text("Call information push!"),
+              action: SnackBarAction(
+                label: "Undo",
+                onPressed: () {},
+              ),
+            );
+
+            if (_formKey.currentState.validate()) {
+              Scaffold.of(context).showSnackBar(snackBar);
+            }
+          },
+        ));
+  }
+
+  String changeStandardDateFormat(var mydate) {
+    assert(mydate != null);
+
+    // var date = mydate.toString();
+
+    var elem = mydate.split('/');
+    var dd = elem[0];
+    var mm = elem[1];
+    var yyyy = elem[2].substring(0, 4);
+    var time = elem[2].substring(4);
+
+    // DateFormat("dd/MM/yyyy HH:mm:ss")
+    //     .format(widget.call_information.call_received);
+
+    print(dd + mm + yyyy + time);
+    return yyyy + "-" + mm + "-" + dd + time;
+  }
+}
+
+class TextInput extends StatelessWidget {
+  final labelText;
+  final controller;
+  final hintText;
+  final inputType;
+  final validator;
+  final maskFormater;
+  final stream;
+  final updateText;
+
+  TextInput(
+      {this.labelText,
+      this.controller,
+      this.hintText,
+      this.inputType,
+      this.validator,
+      this.maskFormater,
+      this.stream,
+      this.updateText});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
         // width: 500,
         width: 500,
         child: Padding(
             padding: EdgeInsets.all(16),
-            child: TextField(
-                onChanged: (String text) => _updateText(text),
-                maxLines: null,
-                controller: _controller,
+            child:
+                // StreamBuilder(
+                //     stream: stream,
+                //     builder: (context, snapshot) {
+                //       return
+                // },)
+                TextFormField(
+                    validator: validator,
+                    // onChanged: updateText,
+                    // maxLines: null,
+                    inputFormatters: maskFormater != null ? [maskFormater] : [],
+                    keyboardType: inputType,
+                    controller: controller,
+                    decoration: InputDecoration(
+                        hintText: hintText,
+                        labelText: labelText,
+                        fillColor: Colors.white,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(10.0),
+                          borderSide: new BorderSide(),
+                        )))
+            // })
+            ));
+  }
+}
+
+class DropDownList extends StatelessWidget {
+  final String labelText;
+  final List<String> list;
+  final Function callback;
+  final String selected;
+
+  DropDownList(this.labelText, this.list, this.callback, this.selected);
+
+  String _currentItemSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: 500,
+        child: Padding(
+            padding: EdgeInsets.all(16),
+            child: DropdownButtonFormField(
+                isDense: true,
+                items: list.map((String dropDownStringItem) {
+                  return DropdownMenuItem<String>(
+                      child: Text(dropDownStringItem),
+                      value: dropDownStringItem);
+                }).toList(),
+                onChanged: (String newValueSelected) {
+                  callback(newValueSelected);
+                },
+                value: selected,
                 decoration: InputDecoration(
                     labelText: labelText,
                     fillColor: Colors.white,
@@ -173,57 +381,5 @@ class _CallInfoState extends State<CallInfo> {
                       borderRadius: new BorderRadius.circular(10.0),
                       borderSide: new BorderSide(),
                     )))));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    void callback(String item, int index) {}
-
-    return Scaffold(
-        // backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Center(
-              child: Card(
-            margin: EdgeInsets.all(10.0),
-            child: Column(
-              // mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                HeaderSection("Call Information"),
-                _textInput("Call Card No", _callcardNo_ctrl, bloc.callNoStream,
-                    bloc.updateCallcardNo),
-                _dateReceived("Date Received", _received_ctrl),
-                // _textInput("Caller Contact No", _contactNo_ctrl,
-                //     bloc.contactNoStream, bloc.updateContactNo),
-                _textInput("Event Code", _eventCode_ctrl, bloc.eventCodeStream,
-                    bloc.updateEventCode),
-                _textInput("Priority", _priority_ctrl, bloc.priorityStream,
-                    bloc.updatePriority),
-                _textInput("Incident Description", _incident_ctrl,
-                    bloc.incDescStream, bloc.updateIncidentDesc),
-                _textInput("Incident Location", _location_ctrl,
-                    bloc.incLocStream, bloc.updateIncidentLoc),
-                _textInput("Landmark", _landmark_ctrl, bloc.landmarkStream,
-                    bloc.updateLandmark),
-                _dropDownList("Location Type", LIST_LOCTYPE, locCallback,
-                    _locationTypeSelected),
-                _dropDownList("Distance to Scene", LIST_DISTANCES, distCallback,
-                    _distancesSelected),
-              ],
-            ),
-          )),
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
-            print("push data");
-            // Navigator.push(
-            //     context, MaterialPageRoute(builder: (context) => Patient()));
-            // // Add your onPressed code here!
-          },
-          // label: Text('ADD PATIENT'),
-          // icon: Icon(Icons.add),
-          // backgroundColor: Colors.purple,
-        ));
   }
 }

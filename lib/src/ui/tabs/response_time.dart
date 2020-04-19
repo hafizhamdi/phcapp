@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:phcapp/custom/drop_downlist.dart';
 import 'package:phcapp/custom/header_section.dart';
+import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/models/timer_model.dart';
 
 const LIST_MISSIONABORT = [
@@ -12,15 +13,15 @@ const LIST_MISSIONABORT = [
   "Stand down"
 ];
 
-class ResponseTime extends StatefulWidget {
-  final TimerModel response_time;
-  ResponseTime({this.response_time});
+class ResponseTimeScreen extends StatefulWidget {
+  final ResponseTime response_time;
+  ResponseTimeScreen({this.response_time});
 
   @override
   _TimerState createState() => _TimerState();
 }
 
-class _TimerState extends State<ResponseTime> {
+class _TimerState extends State<ResponseTimeScreen> {
   // DateTime _cupertinoTime = DateTime.now();
   DateTime _dispatchTime;
   DateTime _enrouteTime;
@@ -40,21 +41,25 @@ class _TimerState extends State<ResponseTime> {
 
   @override
   void initState() {
-    _dispatchTime = timeDefaultIfNull(widget.response_time.dispatch_time);
-    _enrouteTime = timeDefaultIfNull(widget.response_time.enroute_time);
-    _atSceneTime = timeDefaultIfNull(widget.response_time.at_scene_time);
-    _atPatientTime = timeDefaultIfNull(widget.response_time.at_patient_time);
-    _transportTime = timeDefaultIfNull(widget.response_time.transporting_time);
-    _atHospitalTime = timeDefaultIfNull(widget.response_time.at_hospital_time);
-    _rerouteTime = timeDefaultIfNull(widget.response_time.reroute_time);
+    _dispatchTime = timeDefaultIfNull(widget.response_time.dispatchTime);
+    _enrouteTime = timeDefaultIfNull(widget.response_time.enrouteTime);
+    _atSceneTime = timeDefaultIfNull(widget.response_time.atSceneTime);
+    _atPatientTime = timeDefaultIfNull(widget.response_time.atPatientTime);
+    _transportTime = timeDefaultIfNull(widget.response_time.transportingTime);
+    _atHospitalTime = timeDefaultIfNull(widget.response_time.atHospitalTime);
+    _rerouteTime = timeDefaultIfNull(widget.response_time.rerouteTime);
 
-    missionSelected = (widget.response_time.reason_abort != '')
-        ? widget.response_time.reason_abort
+    missionSelected = (widget.response_time.reasonAbort != '')
+        ? widget.response_time.reasonAbort
         : 'N/A';
   }
 
   DateTime timeDefaultIfNull(String time) {
-    return (time != '') ? DateTime.parse(time) : DateTime.now();
+    print(time);
+
+    return (time != '')
+        ? DateTime.parse(time.substring(0, time.length - 2))
+        : DateTime.now();
   }
 
   @override

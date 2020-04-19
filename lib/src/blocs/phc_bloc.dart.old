@@ -1,0 +1,66 @@
+import 'package:phcapp/src/database/phc_dao.dart';
+import 'package:phcapp/src/events/phc_event.dart';
+import 'package:phcapp/src/models/phc.dart';
+import 'package:phcapp/src/resources/phc_api_provider.dart';
+import '../resources/repository.dart';
+import 'package:rxdart/rxdart.dart';
+// import '../models/phc_model.dart';
+// import 'package:bloc/bloc.dart';
+
+class PhcBloc {
+
+
+  PhcDao _phcDao = PhcDao();
+
+  final phcApiProvider = PhcApiProvider();
+
+  @override
+  PhcState get initialState => PhcStateFetching();
+
+  @override
+  Stream<PhcState> mapEventToState(PhcEvent event) async* {
+    if (event is LoadPhcEvent) {
+      yield PhcStateLoading();
+      yield* _reloadPhc();
+    }
+    // else if( event is UpdatePhc) async *{
+    //   final newPhc =
+    // }
+  }
+
+  Stream<PhcState> _reloadPhc() async* {
+    final phcData = await _phcDao.getAllPhc();
+    yield PhcStateLoaded(phcData);
+  }
+
+  final _repository = Repository();
+  final _phcFetcher = PublishSubject<Phc>();
+
+
+  // final _callcardPublish = PublishSubject<Callcard>();
+  // final _updateInfo = PublishSubject<InfoModel>();
+
+  // Observable<Callcard> get callcard => _callcardPublish.stream;
+  Observable<Phc> get allCallcards => _phcFetcher.stream;
+
+  fetchAllCallcards() async {
+    // final _phcApiProvider = PhcApiProvider();
+
+    // phcApiProvider.fetchPhcList();
+    // _repo
+
+    Phc phcData = await _repository.fetchAllCallcards();
+    // Phc phcData = await phcApiProvider.fetchAllCallcards();
+    _phcFetcher.sink.add(phcData);
+  }
+
+  // retrieveCallcard() async {
+  //   Callcard callcardModel = await _repository.updateCallcard(callcard)
+  // }
+
+  dispose() {
+    _phcFetcher.close();
+  }
+}
+
+final bloc = PhcBloc();

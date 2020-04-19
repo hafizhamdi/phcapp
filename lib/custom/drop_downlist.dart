@@ -50,6 +50,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                 },
                 value: itemSelected,
                 decoration: InputDecoration(
+                    isDense: true,
                     labelText: labelText,
                     fillColor: Colors.white,
                     border: new OutlineInputBorder(
