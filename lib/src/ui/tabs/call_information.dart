@@ -1,20 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:phcapp/custom/header_section.dart';
-import 'package:phcapp/src/blocs/app_bloc.dart';
-import 'package:phcapp/src/blocs/callinfo_bloc.dart';
+import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/models/phc.dart';
-import 'package:phcapp/src/models/phc_model.dart';
-import 'package:phcapp/src/models/info_model.dart';
-import 'package:phcapp/src/widgets/textEditLabel.dart';
-import 'package:provider/provider.dart';
-// import '../../blocs/info_bloc.dart';
-import 'dart:convert';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 const LIST_PRIORITY = ["", "1", "2", "3", "4"];
@@ -49,7 +39,6 @@ class CallInformationScreen extends StatefulWidget {
 }
 
 class _CallInfoState extends State<CallInformationScreen> {
-  AppBloc appBloc;
   CallInfoBloc callInfoBloc;
 
   Completer<void> _refreshCompleter;
