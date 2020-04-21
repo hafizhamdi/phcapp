@@ -29,14 +29,9 @@ class PhcApiClient {
 
     var internal_callcard = {};
     internal_callcard["call_information"] = callcard.call_information;
-    final postResponse =
-        await this.httpClient.post("$baseUrl/upload_result/call_card",
-            // headers: {"Content-Type": "application/json"},
-            //   headers: <String, String>{
-            // 'Content-Type': 'application/json; charset=UTF-8',
-            // },
-            body: jsonEncode(internal_callcard));
-    // body: {'result':callcard.toJson()});
+    final postResponse = await this.httpClient.post(
+        "$baseUrl/upload_result/call_card",
+        body: jsonEncode(internal_callcard));
 
     print("post-status-code:");
     print(postResponse.statusCode);
@@ -47,5 +42,16 @@ class PhcApiClient {
       print("htrow excemptions");
       throw Exception("Failed to post call card");
     }
+  }
+
+  Future fetchAvailableStaffs() async {
+    final phcUrl = '$baseUrl/available_staffs';
+    final phcResponse = await this.httpClient.get(phcUrl);
+
+    if (phcResponse.statusCode != 200) {
+      throw Exception("Error getting phc dataset from server");
+    }
+    final phcJson = jsonDecode(phcResponse.body);
+    return phcJson;
   }
 }

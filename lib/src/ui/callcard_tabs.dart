@@ -103,7 +103,7 @@ class CallcardTabs extends StatelessWidget {
             TabBarView(
           children: <Widget>[
             CallInformationScreen(call_information: this.call_information),
-            ResponseTeamScreen(response_team: this.response_team),
+            ResponseTeamScreen(response_team: this.response_team, assign_id: this.call_information.assign_id),
             ResponseTimeScreen(response_time: this.response_time),
             PatientListScreen(patients: this.patients)
             // Icon(Icons.ev_station),

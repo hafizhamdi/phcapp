@@ -29,7 +29,13 @@ class App extends StatelessWidget {
                   phcRepository: phcRepository,
                   phcDao: phcDaoClient.phcDao)), //),
           BlocProvider(
-              create: (context) => CallInfoBloc(phcDao: phcDaoClient.phcDao))
+            create: (context) => CallInfoBloc(phcDao: phcDaoClient.phcDao),
+          ),
+          BlocProvider(
+              create: (context) => TeamBloc(phcDao: phcDaoClient.phcDao)),
+          BlocProvider(
+              create: (context) => StaffBloc(
+                  phcRepository: phcRepository, phcDao: phcDaoClient.phcDao))
         ],
         // bloc: PhcBloc(),
         child: MaterialApp(

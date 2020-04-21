@@ -33,18 +33,8 @@ class PhcDao {
   }
 
   Future updateCallInformation(CallInformation call) async {
-    // var record = await _phcStore.record(key).getSnapshot(db);
-    // var finder = Finder(
-
     print("updateCallInformation");
-    // var phc = await _phcStore.record(59).get(await _db);
     var records = await _phcStore.record(getKey).getSnapshot(await _db);
-
-    // _phcStore.record(getKey).
-
-    // var finder = Finder(filter: Filter.byKey(getKey));
-    // var phc = await _phcStore.find(await _db, finder: finder);
-    // _phcStore.record(key)
 
     var listCallcards = records["phc.callcards"]; // as List;
 
@@ -62,35 +52,6 @@ class PhcDao {
     });
 
     print(result);
-
-    // var updated = _phcStore.record(getKey).update(await _db, )
-    // print(updated);
-    // var temp = cloneMap(Callcard.fromJson(result).call_information.toJson());
-    print("temp");
-    // print(temp);
-    print("after");
-    // temp["caller_contactno"] = call.caller_contactno;
-    // print(temp);
-    // print("resultListCallcard");
-    // print(Callcard.fromJson(result).call_information);
-
-    // var newList = listCallcards.map((data) {
-    //   if (CallInformation.fromJson(data).assign_id == call.assign_id) {
-    //     var temp = cloneMap(data);
-    //     print(temp);
-    //     // temp["call_information"] = call;
-    //   }
-    //   return data;
-    // });
-
-    // print(newList);
-    // print(phc);
-    // var records = _phcStore.find(await _db, finder:finder);
-    // var records = await store.find(db, finder: finder);
-
-    // var phcRecord = await _phcStore.record(key).getSnapshot(await _db);
-
-    // await _phcStore.update(await _db, call.toJson());
   }
 
   Future getCallInformation(assign_id) async {
@@ -101,45 +62,9 @@ class PhcDao {
         filter: Filter.equals('assign_id', assign_id),
         sortOrders: [SortOrder(Field.key, false)]);
 
-    // var finder =
-    //     Finder(filter: Filter.matches('callcards', '^C', anyInList: true))
-    // int mykey = getKey;
-    // print('mykey[$mykey]');
-    // var records = await _phcStore.record(mykey).getSnapshot(await _db);
-
-    // var finder = Finder(filter: Filter.("phc.callcards.call_information.assign_id", assign_id));
-
-    // final phc = Phc.fromJson(records["phc"]);
-
-    // CallInformation
-    // var records = _phcStore.record(key).get(await _db);
     var record = await _phcStore.findFirst(await _db, finder: finder);
     print(record.value);
-    // var listCallcards = records["phc.callcards"] as List;
-
-    // var result = listCallcards.firstWhere(
-    //     (data) =>
-    //         Callcard.fromJson(data).call_information.assign_id == assign_id,
-    //     orElse: () => null);
-
-    // print("resultListCallcard");
-    // print(result);
-    // print(Callcard.fromJson(result).call_information);
-    // listCallcards.
-    // var call_info = listCallcards.((data) {
-    //   if (data.call_information.assign_id == assign_id)
-    //     return data.call_information;
-    // });
-
-    // print(CallInformation.fromJson(call_info));
-
-    // var phcRecord = await _phcStore.record(key).getSnapshot(await _db);
-    // print("records");
-    // print(records);
     return record.value;
-    // return Callcard.fromJson(result).call_information;
-
-    // phcRecord
   }
 
   Future<CallInformation> getPhcCallInformation(assign_id) async {
@@ -173,16 +98,7 @@ class PhcDao {
     print(record);
     print(record.value["phc"]);
 
-//test ok
-    // var phcRecord = await _phcStore.record(getKey).getSnapshot(await _db);
-    // print("getALLphc");
-    // print(phcRecord["phc"]);
-
-    // print(phcRecord["phc"]);
-    // print(phcRecord.toString());
     return Phc.fromJson(record.value["phc"]);
-
-    // return Phc.fromJson(phcRecord["phc"]);
   }
 
   Future insertCallInformation(CallInformation call_info) async {
@@ -194,4 +110,76 @@ class PhcDao {
     print(result);
     print(records);
   }
+
+  Future<ResponseTeam> getPhcResponseTeam(assign_id) async {
+    int mykey = getKey;
+    print('mykey[$mykey]');
+    var records = await _phcStore.record(mykey).getSnapshot(await _db);
+
+    var listCallcards = records["phc.callcards"] as List;
+
+    var result = listCallcards.firstWhere(
+        (data) =>
+            Callcard.fromJson(data).call_information.assign_id == assign_id,
+        orElse: () => null);
+
+    // print(result.call_information);
+    // print(Callcard.fromJson(result).response_team);
+    // print(CallInformation.fromJson(result).toJson());
+    var callcard = Callcard.fromJson(result);
+    // print(callcard.toJson());
+    return callcard.response_team;
+  }
+
+  Future insertResponseTeam(ResponseTeam responseTeam, assignId) async {
+    print("insert responseteam ----");
+
+    var response = responseTeam.toJson();
+    response["assign_id"] = assignId;
+    response["record_type"] = "ResponseTeam";
+
+    print("response");
+    print(response);
+    // print(call_info);
+    var result = await _phcStore.add(await _db, response);
+    var records = await _phcStore.record(result).get(await _db);
+
+    print(result);
+    print(records);
+  }
+
+  Future<ResponseTeam> getResponseTeam(assign_id) async {
+    print("getResponseTeam");
+    print(assign_id);
+
+    var finder = Finder(
+        filter: Filter.and([
+          Filter.equals('assign_id', assign_id),
+          Filter.equals('record_type', "ResponseTeam")
+        ]),
+        sortOrders: [SortOrder(Field.key, false)]);
+
+    var record = await _phcStore.findFirst(await _db, finder: finder);
+    print("record.value");
+    print(record);
+
+    var listStaffs = record["staffs"] as List;
+    // print(data.length);
+
+    var result = listStaffs.map((data) {
+      return Staff.fromJson(data);
+    }).toList();
+
+    print(result);
+
+    print(record["service_response"]);
+    ResponseTeam copy = new ResponseTeam(
+        serviceResponse: record["service_response"],
+        vehicleRegno: record["vehicle_regno"],
+        staffs: result
+        );
+    return copy;
+  }
 }
+
+final phcDao = PhcDao();

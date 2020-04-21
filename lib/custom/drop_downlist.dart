@@ -9,23 +9,22 @@ class CustomDropDown extends StatefulWidget {
   Function callback;
   String itemSelected;
 
-  _CustomDropDownState createState() =>
-      _CustomDropDownState(labelText, items, callback, itemSelected);
+  _CustomDropDownState createState() => _CustomDropDownState();
 }
 
 class _CustomDropDownState extends State<CustomDropDown> {
-  _CustomDropDownState(this.labelText, this.items, callback, this.itemSelected);
+  // _CustomDropDownState(this.labelText, this.items, callback, this.itemSelected);
   // labelText, List<String> list, Function callback, String selected
-  final List<String> items;
-  final String labelText;
+  // final List<String> items;
+  // final String labelText;
 
-  String itemSelected;
+  // String itemSelected;
 
-  Function callback(String item) {
-    setState(() {
-      itemSelected = item;
-    });
-  }
+  // Function callback(String item) {
+  //   setState(() {
+  //     itemSelected = item;
+  //   });
+  // }
 
   // Function callback(String item) {
   //   itemSelected = item;
@@ -40,18 +39,18 @@ class _CustomDropDownState extends State<CustomDropDown> {
             padding: EdgeInsets.all(16),
             child: DropdownButtonFormField(
                 isDense: true,
-                items: items.map((String dropDownStringItem) {
+                items: widget.items.map((String dropDownStringItem) {
                   return DropdownMenuItem<String>(
                       child: Text(dropDownStringItem),
                       value: dropDownStringItem);
                 }).toList(),
                 onChanged: (String newValueSelected) {
-                  callback(newValueSelected);
+                  widget.callback(newValueSelected);
                 },
-                value: itemSelected,
+                value: widget.itemSelected,
                 decoration: InputDecoration(
                     isDense: true,
-                    labelText: labelText,
+                    labelText: widget.labelText,
                     fillColor: Colors.white,
                     border: new OutlineInputBorder(
                       borderRadius: new BorderRadius.circular(10.0),

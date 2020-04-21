@@ -47,6 +47,7 @@ class _ListCallcards extends State<ListCallcards> {
           title: Text("Call Cards")),
       body: Center(
         child: BlocConsumer<PhcBloc, PhcState>(
+          
           listener: (context, state) {
             _refreshCompleter?.complete();
             _refreshCompleter = Completer();
@@ -123,15 +124,26 @@ class _ListCallcards extends State<ListCallcards> {
           subtitle:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
                   Widget>[
-            Row(children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.only(right: 6),
-                  child: Icon(
-                    Icons.person,
-                    size: 16,
-                  )),
-              Text(
-                  phc.callcards[index].patients.length.toString() + ' Patients')
+            Column(children: [
+              Row(children: <Widget>[
+                Padding(
+                    padding: EdgeInsets.only(right: 6),
+                    child: Icon(
+                      Icons.person,
+                      size: 16,
+                    )),
+                Text(phc.callcards[index].patients.length.toString() +
+                    ' Patients'),
+                Padding(
+                    padding: EdgeInsets.only(right: 6),
+                    child: Icon(
+                      Icons.person,
+                      size: 16,
+                    )),
+                Text(phc.callcards[index].response_team.staffs.length
+                        .toString() +
+                    ' Teams')
+              ])
             ]),
             Container(
                 padding: EdgeInsets.all(5),

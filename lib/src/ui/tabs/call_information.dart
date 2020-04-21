@@ -83,6 +83,34 @@ class _CallInfoState extends State<CallInformationScreen> {
   void dispose() {
     super.dispose();
 
+    var call = CallInformation(
+        callcardNo: cardNoController.text,
+        callReceived: receivedController.text,
+        callerContactno: contactNoController.text,
+        eventCode: eventCodeController.text,
+        priority: _priority,
+        incidentDesc: incidentController.text,
+        incidentLocation: locationController.text,
+        locationType: _locationTypeSelected,
+        landmark: landmarkController.text,
+        distanceToScene: _distancesSelected,
+        plateNo: widget.call_information.plate_no,
+        assignId: widget.call_information.assign_id);
+
+    callInfoBloc.add(AddCallInfo(call_information: call));
+
+    // final snackBar = SnackBar(
+    //   content: Text("Call information push!"),
+    //   action: SnackBarAction(
+    //     label: "Undo",
+    //     onPressed: () {},
+    //   ),
+    // );
+
+    // if (_formKey.currentState.validate()) {
+    // Scaffold.of(context).showSnackBar(snackBar);
+    // }
+
     print("im dispose atas arahan pkp");
     cardNoController.dispose();
     receivedController.dispose();
@@ -94,6 +122,7 @@ class _CallInfoState extends State<CallInformationScreen> {
   }
 
   void priorityCallback(String selected) {
+    print(selected);
     setState(() {
       _priority = selected;
     });
@@ -137,131 +166,132 @@ class _CallInfoState extends State<CallInformationScreen> {
         mask: "##/#/##/#", filter: {"#": RegExp(r'[a-zA-Z0-9]')});
 
     return Scaffold(
-        body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: BlocConsumer<CallInfoBloc, CallInfoState>(
-                listener: (context, state) {
-              _refreshCompleter?.complete();
-              _refreshCompleter = Completer();
-            }, builder: (context, state) {
-              if (state is CallInfoLoaded) {
-                print("UI:CALLINFOLOADED");
-                callInfoBloc.cardNoController.text =
-                    state.call_information.callcard_no;
-                cardNoController.text = state.call_information.callcard_no;
-                contactNoController.text =
-                    state.call_information.caller_contactno;
-                receivedController.text = state.call_information.call_received;
-                eventCodeController.text = state.call_information.event_code;
-                incidentController.text = state.call_information.incident_desc;
-                locationController.text =
-                    state.call_information.incident_location;
-                landmarkController.text = state.call_information.landmark;
-                print(state.call_information.callcard_no);
+      body: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: BlocConsumer<CallInfoBloc, CallInfoState>(
+              listener: (context, state) {
+            _refreshCompleter?.complete();
+            _refreshCompleter = Completer();
+          }, builder: (context, state) {
+            if (state is CallInfoLoaded) {
+              print("UI:CALLINFOLOADED");
+              callInfoBloc.cardNoController.text =
+                  state.call_information.callcard_no;
+              cardNoController.text = state.call_information.callcard_no;
+              contactNoController.text =
+                  state.call_information.caller_contactno;
+              receivedController.text = state.call_information.call_received;
+              eventCodeController.text = state.call_information.event_code;
+              incidentController.text = state.call_information.incident_desc;
+              locationController.text =
+                  state.call_information.incident_location;
+              landmarkController.text = state.call_information.landmark;
+              print(state.call_information.callcard_no);
 
-                _locationTypeSelected = state.call_information.location_type;
-                _priority = state.call_information.priority;
-                _distancesSelected = state.call_information.distance_to_scene;
-              } else {
-                print(
-                    "THis is not cool im not loaded state, get datafrom previous yo!");
-              }
-
-              return Center(
-                child: Card(
-                    margin: EdgeInsets.all(10.0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: <Widget>[
-                          HeaderSection("Call Information"),
-                          // TextEditLabel(
-                          //     labelText: "Call Card No",
-                          //     controller: cardNoController),
-
-                          TextInput(
-                            labelText: "Call Card No",
-                            controller: cardNoController,
-                            // stream: infoBloc.callcarNoStream,
-                            // updateText: infoBloc.setCallcardNo,
-                          ),
-                          _dateReceived("Date Received", receivedController),
-                          TextInput(
-                            labelText: "Caller Contact No",
-                            controller: contactNoController,
-                            inputType:
-                                TextInputType.numberWithOptions(signed: true),
-                            hintText: "0139446197",
-                          ),
-                          TextInput(
-                            labelText: "Event Code",
-                            controller: eventCodeController,
-                            hintText: "37/C/02/W",
-                            maskFormater: maskEventCode,
-                          ),
-                          DropDownList("Priority", LIST_PRIORITY,
-                              priorityCallback, _priority),
-                          // TextInput(
-                          //   labelText: "Priority",
-                          //   controller: _priority_ctrl,
-                          //   hintText: "1 - 4",
-                          //   inputType: TextInputType.numberWithOptions(),
-                          //   validator: validatePriority,
-                          // ),
-                          TextInput(
-                              labelText: "Incident Description",
-                              controller: incidentController),
-                          TextInput(
-                              labelText: "Incident Location",
-                              controller: locationController),
-                          TextInput(
-                              labelText: "Landmark",
-                              controller: landmarkController),
-                          DropDownList("Location Type", LIST_LOCTYPE,
-                              locCallback, _locationTypeSelected),
-                          DropDownList("Distance to Scene", LIST_DISTANCES,
-                              distCallback, _distancesSelected),
-                        ],
-                      ),
-                    )),
-              );
-              // }
-              // return Center(child: CircularProgressIndicator());
-            })),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.publish),
-          onPressed: () {
-            print("press publish");
-
-            var call = CallInformation(
-                callcardNo: cardNoController.text,
-                callReceived: receivedController.text,
-                callerContactno: contactNoController.text,
-                eventCode: eventCodeController.text,
-                priority: _priority,
-                incidentDesc: incidentController.text,
-                incidentLocation: locationController.text,
-                locationType: _locationTypeSelected,
-                landmark: landmarkController.text,
-                distanceToScene: _distancesSelected,
-                plateNo: widget.call_information.plate_no,
-                assignId: widget.call_information.assign_id);
-
-            callInfoBloc.add(AddCallInfo(call_information: call));
-
-            final snackBar = SnackBar(
-              content: Text("Call information push!"),
-              action: SnackBarAction(
-                label: "Undo",
-                onPressed: () {},
-              ),
-            );
-
-            if (_formKey.currentState.validate()) {
-              Scaffold.of(context).showSnackBar(snackBar);
+              // _locationTypeSelected = state.call_information.location_type;
+              // _priority = state.call_information.priority;
+              // _distancesSelected = state.call_information.distance_to_scene;
+            } else {
+              print(
+                  "THis is not cool im not loaded state, get datafrom previous yo!");
             }
-          },
-        ));
+
+            return Center(
+              child: Card(
+                  margin: EdgeInsets.all(10.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        HeaderSection("Call Information"),
+                        // TextEditLabel(
+                        //     labelText: "Call Card No",
+                        //     controller: cardNoController),
+
+                        TextInput(
+                          labelText: "Call Card No",
+                          controller: cardNoController,
+                          // stream: infoBloc.callcarNoStream,
+                          // updateText: infoBloc.setCallcardNo,
+                        ),
+                        _dateReceived("Date Received", receivedController),
+                        TextInput(
+                          labelText: "Caller Contact No",
+                          controller: contactNoController,
+                          inputType:
+                              TextInputType.numberWithOptions(signed: true),
+                          hintText: "0139446197",
+                        ),
+                        TextInput(
+                          labelText: "Event Code",
+                          controller: eventCodeController,
+                          hintText: "37/C/02/W",
+                          maskFormater: maskEventCode,
+                        ),
+                        DropDownList("Priority", LIST_PRIORITY,
+                            priorityCallback, _priority),
+                        // TextInput(
+                        //   labelText: "Priority",
+                        //   controller: _priority_ctrl,
+                        //   hintText: "1 - 4",
+                        //   inputType: TextInputType.numberWithOptions(),
+                        //   validator: validatePriority,
+                        // ),
+                        TextInput(
+                            labelText: "Incident Description",
+                            controller: incidentController),
+                        TextInput(
+                            labelText: "Incident Location",
+                            controller: locationController),
+                        TextInput(
+                            labelText: "Landmark",
+                            controller: landmarkController),
+                        DropDownList("Location Type", LIST_LOCTYPE, locCallback,
+                            _locationTypeSelected),
+                        DropDownList("Distance to Scene", LIST_DISTANCES,
+                            distCallback, _distancesSelected),
+                      ],
+                    ),
+                  )),
+            );
+            // }
+            // return Center(child: CircularProgressIndicator());
+          })),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.publish),
+      //   onPressed: () {
+      //     print("press publish");
+
+      // var call = CallInformation(
+      //     callcardNo: cardNoController.text,
+      //     callReceived: receivedController.text,
+      //     callerContactno: contactNoController.text,
+      //     eventCode: eventCodeController.text,
+      //     priority: _priority,
+      //     incidentDesc: incidentController.text,
+      //     incidentLocation: locationController.text,
+      //     locationType: _locationTypeSelected,
+      //     landmark: landmarkController.text,
+      //     distanceToScene: _distancesSelected,
+      //     plateNo: widget.call_information.plate_no,
+      //     assignId: widget.call_information.assign_id);
+
+      // callInfoBloc.add(AddCallInfo(call_information: call));
+
+      // final snackBar = SnackBar(
+      //   content: Text("Call information push!"),
+      //   action: SnackBarAction(
+      //     label: "Undo",
+      //     onPressed: () {},
+      //   ),
+      // );
+
+      // if (_formKey.currentState.validate()) {
+      //   Scaffold.of(context).showSnackBar(snackBar);
+      // }
+      //   },
+      // )
+    );
   }
 
   String changeStandardDateFormat(var mydate) {

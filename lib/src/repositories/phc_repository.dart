@@ -16,4 +16,9 @@ class PhcRepository {
     print(callcard);
     return phcApiClient.postCallcard(callcard);
   }
+
+  Future getAvailableStaffs() async {
+    print("getavailablestaffs");
+    return phcApiClient.fetchAvailableStaffs();
+  }
 }
