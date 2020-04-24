@@ -98,18 +98,6 @@ class _TeamState extends State<ResponseTeamScreen> {
     // teamBloc = BlocProvider.of<TeamBloc>(context);
     // print(teamBloc.state);
 
-    ResponseTeam responseTeam = new ResponseTeam(
-      serviceResponse: serviceSelected,
-      vehicleRegno: regNoController.text,
-      staffs: teamBloc.state.response_team.staffs,
-    );
-
-    print("bye---bye reponseteam");
-    print(responseTeam.toJson());
-
-    teamBloc.add(AddResponseTeam(
-        response_team: responseTeam, assign_id: widget.assign_id));
-
     regNoController.dispose();
     super.dispose();
   }
@@ -257,16 +245,49 @@ class _TeamState extends State<ResponseTeamScreen> {
         // return CircularProgressIndicator();
         // },
         // )))),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Staffs()));
-            // Add your onPressed code here!
-          },
-          label: Text('ADD STAFF'),
-          icon: Icon(Icons.add),
-          // backgroundColor: Colors.purple,
-        ));
+
+        floatingActionButton: Stack(children: [
+          Padding(
+              padding: EdgeInsets.only(bottom: 70),
+              child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: FloatingActionButton.extended(
+                    heroTag: 0,
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Staffs()));
+                      // Add your onPressed code here!
+                    },
+                    label: Text('ADD STAFF'),
+                    icon: Icon(Icons.add),
+                    // backgroundColor: Colors.purple,
+                  ))),
+          Align(
+              alignment: Alignment.bottomRight,
+              child: FloatingActionButton(
+                heroTag: 1,
+                onPressed: () {
+                  ResponseTeam responseTeam = new ResponseTeam(
+                    serviceResponse: serviceSelected,
+                    vehicleRegno: regNoController.text,
+                    staffs: teamBloc.state.response_team.staffs,
+                  );
+
+                  print("bye---bye reponseteam");
+                  print(responseTeam.toJson());
+
+                  teamBloc.add(AddResponseTeam(
+                      response_team: responseTeam,
+                      assign_id: widget.assign_id));
+
+                  final snackBar = SnackBar(
+                    content: Text("Response team has been saved!"),
+                  );
+                  Scaffold.of(context).showSnackBar(snackBar);
+                },
+                child: Icon(Icons.save),
+              ))
+        ]));
   }
 }
 

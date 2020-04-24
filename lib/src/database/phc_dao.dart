@@ -75,10 +75,11 @@ class PhcDao {
     var listCallcards = records["phc.callcards"] as List;
 
     var result = listCallcards.firstWhere(
-        (data) =>
-            Callcard.fromJson(data).call_information.assign_id == assign_id,
-        orElse: () => null);
+      (data) => Callcard.fromJson(data).call_information.assign_id == assign_id,
+    );
 
+    // listCallcards/
+    // .
     // print(result.call_information);
     print(Callcard.fromJson(result).call_information);
     // print(CallInformation.fromJson(result).toJson());
@@ -176,9 +177,90 @@ class PhcDao {
     ResponseTeam copy = new ResponseTeam(
         serviceResponse: record["service_response"],
         vehicleRegno: record["vehicle_regno"],
-        staffs: result
-        );
+        staffs: result);
     return copy;
+  }
+
+  Future<ResponseTime> getResponseTime(assign_id) async {
+    print("getResponseTime");
+    print(assign_id);
+
+    var finder = Finder(
+        filter: Filter.and([
+          Filter.equals('assign_id', assign_id),
+          Filter.equals('record_type', "ResponseTime")
+        ]),
+        sortOrders: [SortOrder(Field.key, false)]);
+
+    var record = await _phcStore.findFirst(await _db, finder: finder);
+    print("record.value");
+    print(record);
+
+    // var result = record["staffs"];
+    // print(data.length);
+
+    // var result = listStaffs.map((data) {
+    //   return Staff.fromJson(data);
+    // }).toList();
+
+    // print(result);
+
+    print(record.value["dispatch_time"]);
+    ResponseTime copy = new ResponseTime(
+      dispatchTime: record.value["dispatch_time"],
+      enrouteTime: record.value["enroute_time"],
+      atSceneTime: record.value["atScene_time"],
+      atPatientTime: record.value["atPatient_time"],
+      transportingTime: record.value["transporting_time"],
+      atHospitalTime: record.value["atHospital_time"],
+      rerouteTime: record.value["reroute_time"],
+      reasonAbort: record.value["reason_abort"],
+      // serviceResponse: record["service_response"],
+      // vehicleRegno: record["vehicle_regno"],
+      // staffs: result
+    );
+    return copy;
+  }
+
+  Future<ResponseTime> getPhcResponseTime(assign_id) async {
+    int mykey = getKey;
+    print('mykey[$mykey]');
+    var records = await _phcStore.record(mykey).getSnapshot(await _db);
+
+    var listCallcards = records["phc.callcards"] as List;
+
+    var result = listCallcards.firstWhere(
+        (data) =>
+            Callcard.fromJson(data).call_information.assign_id == assign_id,
+        orElse: () => null);
+
+    // print(result.call_information);
+    // print(Callcard.fromJson(result).response_team);
+    // print(CallInformation.fromJson(result).toJson());
+    var callcard = Callcard.fromJson(result);
+    // print(callcard.toJson());
+    return callcard.response_time;
+  }
+
+  Future insertResponseTime(ResponseTime responseTime, assignId) async {
+    print("insert responsetime ----");
+
+    var response = responseTime.toJson();
+    response["assign_id"] = assignId;
+    response["record_type"] = "ResponseTime";
+
+    print("response");
+    print(response);
+    // print(call_info);
+    var result = await _phcStore.add(await _db, response);
+    var records = await _phcStore.record(result).get(await _db);
+
+    print("keygenerated=${result}");
+    print(records["assign_id"]);
+
+    final newResult = ResponseTime(dispatchTime: records["dispatch_time"]);
+
+    return newResult;
   }
 }
 

@@ -1,11 +1,14 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/custom/label.dart';
 import 'package:phcapp/custom/input.dart';
 import 'package:flutter/material.dart';
+import 'package:phcapp/src/blocs/blocs.dart';
+import 'package:phcapp/src/models/phc.dart';
 
 class PatientInformationScreen extends StatefulWidget {
-  final patient_information;
+  PatientInformation patient_information;
   PatientInformationScreen({this.patient_information});
   _Information createState() => _Information();
 }
@@ -18,14 +21,25 @@ class _Information extends State<PatientInformationScreen> {
   TextEditingController ageController = new TextEditingController();
   TextEditingController genderController = new TextEditingController();
 
+  PatientBloc patientBloc;
+
   @override
   initState() {
-    nameController.text = widget.patient_information.nama;
-    idNoController.text = widget.patient_information.id_no;
-    idTypeController.text = widget.patient_information.id_type;
-    ageController.text = widget.patient_information.ages;
-    genderController.text = widget.patient_information.jantina;
-    dobController.text = widget.patient_information.dateOfBirth;
+    patientBloc = BlocProvider.of<PatientBloc>(context);
+
+    nameController.text = "";
+    idNoController.text = "";
+    idTypeController.text = "";
+    ageController.text = "";
+    genderController.text = "";
+    dobController.text = "";
+  }
+
+  @override
+  void dispose() {
+    // patientBloc.close();
+
+    super.dispose();
   }
 
   @override

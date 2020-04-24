@@ -1,0 +1,489 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:intl/intl.dart';
+import 'package:phcapp/custom/drop_downlist.dart';
+import 'package:phcapp/custom/header_section.dart';
+import 'package:phcapp/src/blocs/blocs.dart';
+import 'package:phcapp/src/models/phc.dart';
+import 'package:phcapp/src/models/timer_model.dart';
+
+enum TimeClass { dispatch, enroute }
+
+const LIST_MISSIONABORT = [
+  "N/A",
+  "Arrive at scene no patient found",
+  "Stand down"
+];
+
+class ResponseTimeScreen extends StatefulWidget {
+  final ResponseTime response_time;
+  final assign_id;
+
+  ResponseTimeScreen({this.response_time, this.assign_id});
+
+  @override
+  _TimerState createState() => _TimerState();
+}
+
+class _TimerState extends State<ResponseTimeScreen> {
+  // DateTime _cupertinoTime = DateTime.now();
+  DateTime _dispatchTime;
+  DateTime _enrouteTime;
+  DateTime _atSceneTime;
+  DateTime _atPatientTime;
+  DateTime _transportTime;
+  DateTime _atHospitalTime;
+  DateTime _rerouteTime;
+  String _dateTime =
+      DateFormat("dd/MM/yyyy HH:mm:ss").format(new DateTime.now()).toString();
+
+  String missionSelected = "N/A";
+  TimeBloc timeBloc;
+
+  ResponseTime respTime = new ResponseTime();
+
+  void missionCallback(String item) {
+    missionSelected = item;
+  }
+
+  @override
+  void initState() {
+    timeBloc = BlocProvider.of<TimeBloc>(context);
+
+    // BlocProvider.of<TimeBloc>(context).listen((onData) {
+    // final currentState = onData;
+    print("WHats INSIDE ONDATA");
+    // print(onData.responseTime.dispatchTime);
+    // if (onData.responseTime.dispatchTime != null) {
+    //   final dateTime = DateTime.parse(onData.responseTime.dispatchTime);
+    //   timeBloc.updateValue(dateTime);
+    // }
+
+    //   _dispatchTime = DateTime.parse(currentState.responseTime.dispatchTime);
+
+    //   print(currentState.responseTime.dispatchTime);
+    //   print(_dispatchTime);
+    // });
+
+    // print("Load time init");
+    // print(widget.response_time.dispatchTime);
+    // _dispatchTime = DateTime.parse((timeBloc.state.responseTime != null)
+    //     ? timeBloc.state.responseTime.dispatchTime
+    //     : widget.response_time.dispatchTime);
+    // print(_dispatchTime);
+
+    // final initTime = DateTime.parse(widget.response_time.dispatchTime);
+    // timeBloc.dispatchSink.add(initTime);
+
+    timeBloc.add(LoadTime(assign_id: widget.assign_id));
+
+    // _dispatchTime = DateTime.parse(widget.response_time.dispatchTime);
+    // _enrouteTime = timeDefaultIfNull(widget.response_time.enrouteTime);
+    // _atSceneTime = timeDefaultIfNull(widget.response_time.atSceneTime);
+    // _atPatientTime = timeDefaultIfNull(widget.response_time.atPatientTime);
+    // _transportTime = timeDefaultIfNull(widget.response_time.transportingTime);
+    // _atHospitalTime = timeDefaultIfNull(widget.response_time.atHospitalTime);
+    // _rerouteTime = timeDefaultIfNull(widget.response_time.rerouteTime);
+
+    missionSelected = (widget.response_time.reasonAbort != '')
+        ? widget.response_time.reasonAbort
+        : 'N/A';
+  }
+
+  @override
+  void dispose() {
+    print("last disptach");
+    print(timeBloc.dispatchTime.toString());
+
+    // timeBloc.dispatchStream.listen((value) {
+    //   print("TIMEBEFOREEXIT:$value");
+
+    //   respTime.dispatchTime = value.toString();
+
+      //   respTime = new ResponseTime(
+      //       // _dispatchTime
+      //       dispatchTime:
+      //           // DateFormat("yyyy-MM-dd HH:mm:ss.sss").format(_dispatchTime),
+      //           value.toString(),
+      //       // enrouteTime: DateFormat("yyyy-MM-dd HH:mm:ss").format(_enrouteTime),
+      //       // atSceneTime: DateFormat("yyyy-MM-dd HH:mm:ss").format(_atSceneTime),
+      //       // atPatientTime: DateFormat("yyyy-MM-dd HH:mm:ss").format(_atPatientTime),
+      //       // transportingTime:
+      //       //     DateFormat("yyyy-MM-dd HH:mm:ss").format(_transportTime),
+      //       // atHospitalTime:
+      //       //     DateFormat("yyyy-MM-dd HH:mm:ss").format(_atHospitalTime),
+      //       // rerouteTime: DateFormat("yyyy-MM-dd HH:mm:ss").format(_rerouteTime),
+      //       reasonAbort: missionSelected);
+    // });
+
+    // print(respTime);
+    print("BEFORE ADD");
+    timeBloc.add(
+        AddResponseTime(responseTime: respTime, assignId: widget.assign_id));
+
+    // _dispatchTime = null;
+    // timeBloc.dispatchController.close();
+    super.dispose();
+  }
+
+  DateTime parseDateTime(String time) {
+    print("PARSE TIME DATE");
+    print(time);
+    if (time == '' || time == null) return null;
+
+    print(time.length);
+    if (time.length > 19) {
+      final temp = DateTime.parse(time);
+      print("TEMP$temp");
+      return temp;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: ConstrainedBox(
+            constraints: BoxConstraints(),
+            child: Center(
+                child: Card(
+                    margin: EdgeInsets.all(10),
+                    child: BlocBuilder<TimeBloc, TimeState>(
+                      builder: (context, state) {
+                        // print("first run this again");
+                        // print(_dispatchTime);
+
+                        // _dispatchTime =
+                        // DateTime.parse(widget.response_time.dispatchTime);
+                        if (state is TimeLoaded) {
+                          final currentState = state.responseTime;
+
+                          // final timeState =
+                          //     DateTime.parse(currentState.dispatchTime);
+                          // timeBloc.updateValue(timeState);
+                          // _dispatchTime =
+                          // DateTime.parse(currentState.dispatchTime);
+                          // print("second run this again");
+                          // print(_dispatchTime);
+                          // setState(() {
+                          // _dispatchTime =
+                          //     DateTime.parse(currentState.dispatchTime);
+
+                          // print("after second set run this again");
+                          // print(_dispatchTime);
+
+                          // _enrouteTime =
+                          //     DateTime.parse(state.responseTime.enrouteTime);
+
+                          // _atSceneTime =
+                          //     DateTime.parse(state.responseTime.atSceneTime);
+
+                          // _atPatientTime =
+                          //     DateTime.parse(state.responseTime.atPatientTime);
+
+                          // _transportTime = DateTime.parse(
+                          //     state.responseTime.transportingTime);
+
+                          // _atHospitalTime =
+                          //     DateTime.parse(state.responseTime.atHospitalTime);
+
+                          // _rerouteTime =
+                          //     DateTime.parse(state.responseTime.rerouteTime);
+                          // missionSelected = state.responseTime.reasonAbort;
+                          // });
+                          // }
+                          // .parse(state.responseTime.dispatchTime);
+
+                          final initialTime =
+                              (currentState.dispatchTime != null)
+                                  ? currentState.dispatchTime
+                                  : widget.response_time.dispatchTime;
+                          return Column(
+                            // mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Center(child: HeaderSection("Response Time")),
+                              _buildCardTime(
+                                  "Dispatch Time",
+                                  DateTime.parse(initialTime),
+                                  // timeBloc.dispatchStream
+                                  //  _dispatchTime
+                                  DateTime.parse(initialTime)),
+                              // _buildCardTime("Enroute", _enrouteTime,
+                              //     DateTime.parse(currentState.enrouteTime)),
+                              // _buildCardTime("At Scene", _atSceneTime,
+                              //     DateTime.parse(currentState.atSceneTime)),
+                              // _buildCardTime("At Patient", _atPatientTime,
+                              //     DateTime.parse(currentState.atPatientTime)),
+                              // _buildCardTime("Transporting", _transportTime,
+                              //     DateTime.parse(currentState.transportingTime)),
+                              // _buildCardTime("At Hospital", _atHospitalTime,
+                              //     DateTime.parse(currentState.atHospitalTime)),
+                              // _buildCardTime("Reroute", _rerouteTime,
+                              //     DateTime.parse(currentState.rerouteTime)),
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                              ),
+                              Container(
+                                width: 500,
+                                child: CustomDropDown(
+                                  labelText: "Mission abort",
+                                  items: LIST_MISSIONABORT,
+                                  callback: missionCallback,
+                                  itemSelected: missionSelected,
+                                ),
+                              )
+                            ],
+                          );
+                        }
+
+                        return Container();
+                      },
+                    )))));
+  }
+
+  Widget _buildCardTime(labelText, timeHandler, initialData) {
+    print("INITALDATA=$initialData");
+    print("TIMEHANDLER=$timeHandler");
+
+    final TimeBloc bloc = BlocProvider.of<TimeBloc>(context);
+
+    // timeHandler = initialData;
+    // setState(() {
+    // timeHandler
+    // initialData);
+    // });
+    // String timeText;
+    String currentTime;
+
+    var cancelButton = CupertinoButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    var doneButton = CupertinoButton(
+      child: Text("Done"),
+      onPressed: () {
+        // setState(() {
+        //   _dateTime = new DateFormat("dd/MM/yyyy HH:mm:ss")
+        //       .format(_cupertinoTime)
+        //       .toString();
+        // });
+        Navigator.of(context).pop();
+      },
+    );
+
+    return Container(
+        margin: EdgeInsets.symmetric(horizontal: 10),
+        // padding: EdgeInsets.symmetric(horizontal: 20),
+        width: 500,
+        child: Card(
+          child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: ListTile(
+                // isThreeLine: true,
+                // leading: Icon(
+                //   Icons.access_time,
+                //   size: 40,
+                // ),
+                title: Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      labelText,
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 18,
+                          fontFamily: "Raleway"),
+                    )),
+                subtitle: _buildHasData(timeHandler),
+                trailing: Row(mainAxisSize: MainAxisSize.min,
+                    // mainAxisAlign: MainAxisAlign.,
+                    children: <Widget>[
+                      // Expanded(
+                      //     child:
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          final action = SizedBox(
+                              height: 200.0,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  Container(
+                                      alignment: Alignment.centerRight,
+                                      decoration: BoxDecoration(
+                                          color: const Color.fromRGBO(
+                                              249, 249, 247, 1.0),
+                                          border: Border(
+                                              bottom: const BorderSide(
+                                                  width: 0.5,
+                                                  color: Colors.black38))),
+                                      child: Padding(
+                                          padding: EdgeInsets.all(10),
+                                          child: Row(
+                                              // mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                // Padding(
+                                                // padding: EdgeInsets.all(10),
+                                                // child:
+                                                Text(
+                                                  labelText,
+                                                  style:
+                                                      TextStyle(fontSize: 12),
+                                                ),
+                                                // ),
+                                                doneButton
+                                              ]))
+                                      // ],
+                                      // )
+                                      ),
+                                  Expanded(
+                                      child: CupertinoDatePicker(
+                                    mode: CupertinoDatePickerMode.dateAndTime,
+                                    initialDateTime: timeBloc.dispatchTime,
+                                    onDateTimeChanged: (dateTime) {
+                                      print("datetime=$dateTime");
+                                      bloc.updateValue(dateTime);
+
+                                      print("Curent datetime:");
+                                      print(bloc.dispatchTime);
+
+                                      // print("onDateChanges");
+                                      // print(labelText);
+                                      // print(dateTime);
+
+                                      // switch (labelText) {
+                                      //   case "Dispatch Time":
+                                      //     setState(() {
+                                      //       _dispatchTime = dateTime;
+                                      //     });
+                                      //     print("after setstaet");
+                                      //     print(_dispatchTime);
+                                      //     break;
+                                      //   case "Enroute":
+                                      //     _enrouteTime = dateTime;
+                                      //     break;
+                                      //   case "At Scene":
+                                      //     _atSceneTime = dateTime;
+                                      //     break;
+                                      //   case "At Patient":
+                                      //     _atPatientTime = dateTime;
+                                      //     break;
+                                      //   case "Transporting":
+                                      //     _transportTime = dateTime;
+                                      //     break;
+                                      //   case "At Hospital":
+                                      //     _atHospitalTime = dateTime;
+                                      //     break;
+                                      //   case "Reroute":
+                                      //     _rerouteTime = dateTime;
+                                      //     break;
+                                      //   default:
+                                      //     break;
+                                      // }
+                                      // });
+                                    },
+                                  ))
+                                ],
+                              ));
+
+                          showCupertinoModalPopup(
+                              context: context, builder: (context) => action);
+                        },
+                        // )set
+                      ),
+                      RaisedButton(
+                        child: Text(
+                          "NOW",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        color: Colors.green,
+                        onPressed: () {
+                          timeBloc.updateValue(DateTime.now());
+
+                          final snackBar = SnackBar(
+                            content: Text(labelText + " changed!"),
+                            action: SnackBarAction(
+                              label: "Undo",
+                              onPressed: () {},
+                            ),
+                          );
+
+                          var dateTime = DateTime.now();
+                          // setState(() {
+                          //   switch (labelText) {
+                          //     case "Dispatch Time":
+                          //       _dispatchTime = dateTime;
+                          //       break;
+                          //     case "Enroute":
+                          //       _enrouteTime = dateTime;
+                          //       break;
+                          //     case "At Scene":
+                          //       _atSceneTime = dateTime;
+                          //       break;
+                          //     case "At Patient":
+                          //       _atPatientTime = dateTime;
+                          //       break;
+                          //     case "Transporting":
+                          //       _transportTime = dateTime;
+                          //       break;
+                          //     case "At Hospital":
+                          //       _atHospitalTime = dateTime;
+                          //       break;
+                          //     case "Reroute":
+                          //       _rerouteTime = dateTime;
+                          //       break;
+                          //     default:
+                          //       break;
+                          //   }
+
+                          Scaffold.of(context).showSnackBar(snackBar);
+                          // });
+                        },
+                      )
+                    ]),
+              )),
+        ));
+  }
+
+  Widget _buildHasData(timeHandler) {
+    print("BuildHasData");
+    print(timeHandler);
+    if (timeHandler != '') {
+      return StreamBuilder(
+        initialData: timeHandler,
+        stream: timeBloc.dispatchStream,
+        builder: (context, snapshot) {
+          return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              // mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  DateFormat("HH:mm:ss").format(snapshot.data),
+                  style: TextStyle(
+                    fontFamily: "Roboto",
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                    // color: Colors.black
+                  ),
+                ),
+                Text(
+                  DateFormat("dd MMM yyyy").format(snapshot.data),
+                  style: TextStyle(fontFamily: "OpenSans"),
+                ),
+              ]);
+        },
+      );
+    } else {
+      return Text("No data");
+    }
+  }
+}

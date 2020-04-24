@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/database/phc_dao.dart';
-// import 'package:phcapp/src/database/phc_dao.dart';
 import 'package:phcapp/src/repositories/repositories.dart';
-// import 'package:phcapp/src/ui/callcard_list.dart';
 import 'package:phcapp/src/ui/list_callcard.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phcapp/theme/theme_provider.dart';
@@ -35,8 +33,16 @@ class App extends StatelessWidget {
               create: (context) => TeamBloc(phcDao: phcDaoClient.phcDao)),
           BlocProvider(
               create: (context) => StaffBloc(
-                  phcRepository: phcRepository, phcDao: phcDaoClient.phcDao))
+                  phcRepository: phcRepository, phcDao: phcDaoClient.phcDao)),
+          BlocProvider(
+              create: (context) => TimeBloc(phcDao: phcDaoClient.phcDao)),
+          BlocProvider(
+              create: (context) => SceneBloc(phcDao: phcDaoClient.phcDao)),
+
+          BlocProvider(
+              create: (context) => PatientBloc(phcDao: phcDaoClient.phcDao))
         ],
+
         // bloc: PhcBloc(),
         child: MaterialApp(
           theme: themeProvider.getThemeData,
