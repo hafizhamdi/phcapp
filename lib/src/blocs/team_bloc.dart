@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/rendering.dart';
 import 'package:http/http.dart';
 import 'package:phcapp/src/database/phc_dao.dart';
 import 'package:phcapp/src/models/phc.dart';
@@ -10,12 +11,13 @@ abstract class TeamEvent extends Equatable {
 }
 
 class LoadTeam extends TeamEvent {
+  final ResponseTeam responseTeam;
   final assign_id;
 
-  LoadTeam({this.assign_id});
+  LoadTeam({this.assign_id, this.responseTeam});
 
   @override
-  List<Object> get props => [assign_id];
+  List<Object> get props => [assign_id, responseTeam];
 }
 
 class AddTeam extends TeamEvent {
@@ -70,6 +72,12 @@ class TeamLoaded extends TeamState {
         response_team,
         // selectedStaffs
       ];
+
+  // @override
+  // String toString() {
+  //   // TODO: implement toString
+  //   return "content staffs :" + response_team.staffs.length.toString();
+  // }
 }
 
 class TeamEmpty extends TeamState {}
@@ -77,7 +85,7 @@ class TeamEmpty extends TeamState {}
 class TeamBloc extends Bloc<TeamEvent, TeamState> {
   PhcDao phcDao;
   ResponseTeam response_team;
-  List<Staff> selectedStaffs;
+  List<int> listSelected = new List<int>();
 
   TeamBloc({this.phcDao}) : assert(phcDao != null);
 
@@ -93,49 +101,63 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
     } else if (event is RemoveTeam) {
       yield* _removeStaffToState(event);
     } else if (event is AddResponseTeam) {
-      await phcDao.insertResponseTeam(event.response_team, event.assign_id);
+      yield* _mapAddResponseTeamtoState(event);
+      // await phcDao.insertResponseTeam(event.response_team, event.assign_id);
 
-      yield* _reloadResponseTeam(event.assign_id);
+      // yield* _reloadResponseTeam(event.assign_id);
     }
     // else if (event is AddStaff) {
   }
 
   Stream<TeamState> _mapLoadTeamToState(LoadTeam event) async* {
-    assert(phcDao != null);
+    // assert(phcDao != null);
 
-    try {
-      print("Responseteam from sembast");
-      ResponseTeam resteam = await phcDao.getResponseTeam(event.assign_id);
-      // selectedStaffs = resteam.staffs;
+    // try {
+    //   print("Responseteam from sembast");
+    //   ResponseTeam resteam = await phcDao.getResponseTeam(event.assign_id);
+    //   // selectedStaffs = resteam.staffs;
 
-      // print(resteam.
-      print(resteam.toJson());
-      yield TeamLoaded(
-        response_team: resteam,
-        // selectedStaffs: resteam.staffs
-      );
-    } catch (_) {
-      print("Responseteam from phcsembast");
-      ResponseTeam responseTeam =
-          await phcDao.getPhcResponseTeam(event.assign_id);
-      // List<Staff> temp = new List<Staff>();
+    //   // print(resteam.
+    //   print(resteam.toJson());
+    //   yield TeamLoaded(
+    //     response_team: resteam,
+    //     // selectedStaffs: resteam.staffs
+    //   );
+    // } catch (_) {
+    //   print("Responseteam from phcsembast");
+    //   ResponseTeam responseTeam =
+    //       await phcDao.getPhcResponseTeam(event.assign_id);
+    //   // List<Staff> temp = new List<Staff>();
 
-      print(responseTeam.toJson());
-      // temp = responseTeam.staffs.map((data) {
-      //   Staff Staff =
-      //       Staff(staffName: data.name, position: data.position);
+    //   print(responseTeam.toJson());
+    // temp = responseTeam.staffs.map((data) {
+    //   Staff Staff =
+    //       Staff(staffName: data.name, position: data.position);
 
-      //   return Staff;
-      // }).toList();
+    //   return Staff;
+    // }).toList();
 
-      // responseTeam.staffs = temp;
-      // print(responseTeam.toJson());
+    final currentState = state;
+    ResponseTeam responseTeam = new ResponseTeam(
+        serviceResponse: event.responseTeam.serviceResponse,
+        vehicleRegno: event.responseTeam.vehicleRegno,
+        staffs: event.responseTeam.staffs != null
+            ? event.responseTeam.staffs
+            : new List<Staff>());
 
-      yield TeamLoaded(
-        response_team: responseTeam,
-        // selectedStaffs: responseTeam.staffs
-      );
-    }
+    // responseTeam.staffs = event.responseTeam.staffs != null
+    //     ? event.responseTeam.staffs
+    //     : new List<Staff>();
+
+    // response_team.staffs = List<Staff>.from(event.responseTeam.staffs).toList();
+    // response_team.serviceResponse = event.responseTeam.serviceResponse;
+    // response_team.vehicleRegno = event.responseTeam.vehicleRegno;
+    // print(responseTeam.toJson());
+
+    // print(event.responseTeam.toJson());
+
+    yield TeamLoaded(response_team: responseTeam);
+    // }
 
     // final responseTeam = await phcDao.getPhcResponseTeam(event.assign_id);
     // print("_mapLoadTeam");
@@ -161,42 +183,50 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
     print(state);
 
     final currentState = state;
-    if (state is TeamLoaded) {
-      // state
-      // print(currentState);
-      // selectedStaffs.add(event.staff);
-      final newList = List<Staff>.from(currentState.response_team.staffs)
-        ..add(event.staff);
-      // newList.removeAt(0);
+    ResponseTeam responseTeam = currentState.response_team;
+    // if (state is TeamLoaded) {
+    // state
+    // print(currentState);
+    // selectedStaffs.add(event.staff);
+    final newList = List<Staff>.from(responseTeam.staffs)..add(event.staff);
+    // newList.removeAt(0);
 
-      currentState.response_team.staffs = newList;
+    responseTeam.staffs = newList;
 
-      // print(newList);
+    print("responseTeam.staffs.length");
+    print(responseTeam.staffs.length);
+    // print(newList);
 
-      // yield TeamLoaded(
-      //     response_team: currentState.response_team, selectedStaffs: newList);
-      yield TeamLoaded(
-        response_team: currentState.response_team,
-        // selectedStaffs: newList
-      );
-    }
+    // yield TeamLoaded(
+    //     response_team: currentState.response_team, selectedStaffs: newList);
+    yield TeamLoaded(
+      response_team: responseTeam,
+      // selectedStaffs: newList
+    );
+    // }
   }
 
   Stream<TeamState> _removeStaffToState(RemoveTeam event) async* {
     final currentState = state;
+    ResponseTeam responseTeam = currentState.response_team;
+
     // if (state is TeamLoaded) {
     // selectedStaffs.add(event.staff);
-    final newList = List<Staff>.from(currentState.response_team.staffs)
+    final newList = List<Staff>.from(responseTeam.staffs)
       ..removeAt(event.removeIndex);
     // print(newList);
-    currentState.response_team.staffs = newList; // = newList;
+    responseTeam.staffs = newList; // = newList;
 
+    // remove from selected list tick
+    listSelected.removeAt(event.removeIndex);
     print("--removelength");
     // currentState.response_team.staffs.removeAt(event.removeIndex);
 
+    print("responseTeam.staffs.length");
+    print(responseTeam.staffs.length);
     // yield currentState;
     yield TeamLoaded(
-      response_team: currentState.response_team,
+      response_team: responseTeam,
       // selectedStaffs: newList
     );
     // yield TeamState(selectedStaffs: newList);
@@ -219,5 +249,15 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
         // selectedStaffs: resteam.staffs
       );
     }
+  }
+
+  Stream<TeamState> _mapAddResponseTeamtoState(AddResponseTeam event) async* {
+    // final currentState = state;
+
+    print("addreponesteam");
+    print(event.response_team.toJson());
+    response_team = event.response_team;
+
+    yield TeamLoaded(response_team: response_team);
   }
 }

@@ -1,14 +1,17 @@
 import 'package:intl/intl.dart';
 import 'package:phcapp/src/database/app_database.dart';
 import 'package:phcapp/src/models/phc.dart';
+import 'package:phcapp/src/models/history.dart';
 import 'package:sembast/sembast.dart';
 import 'dart:convert';
 import 'package:sembast/utils/value_utils.dart';
 
 class PhcDao {
   static const String PHC_STORE_NAME = "phcStore";
+  static const String HISTORY_STORE_NAME = "historyStore";
 
   final _phcStore = intMapStoreFactory.store(PHC_STORE_NAME);
+  final _historyStore = intMapStoreFactory.store(HISTORY_STORE_NAME);
   int key;
 
   Future<Database> get _db async => await AppDatabase.instance.database;
@@ -258,9 +261,224 @@ class PhcDao {
     print("keygenerated=${result}");
     print(records["assign_id"]);
 
-    final newResult = ResponseTime(dispatchTime: records["dispatch_time"]);
+    final newResult = ResponseTime(
+        dispatchTime: records["dispatch_time"],
+        enrouteTime: records["enroute_time"],
+        atSceneTime: records["atScene_time"],
+        atPatientTime: records["atPatient_time"],
+        atHospitalTime: records["atHospital_time"],
+        transportingTime: records["transporting_time"],
+        rerouteTime: records["reroute_time"],
+        reasonAbort: records["reason_abort"]);
 
     return newResult;
+  }
+
+  Future<List<Patient>> getPhcPatientList(assign_id) async {
+    int mykey = getKey;
+    print('mykey[$mykey]');
+    var records = await _phcStore.record(mykey).getSnapshot(await _db);
+
+    var listCallcards = records["phc.callcards"] as List;
+
+    var result = listCallcards.firstWhere(
+        (data) =>
+            Callcard.fromJson(data).call_information.assign_id == assign_id,
+        orElse: () => null);
+    var callcard = Callcard.fromJson(result);
+
+    print(callcard.patients);
+
+    return List<Patient>.from(callcard.patients).toList();
+  }
+
+  Future insertHistory(Callcard callcard, statusSend) async {
+    print("insert callcard history");
+    print("statusSend: " + statusSend.toString());
+    final List<History> listHistory = await showAllHistory();
+    // print(listHistory);
+    print("*&@&@&@&@(@((@");
+    print(listHistory.length);
+    // final newlist = List.from(listHistory).map((data) {
+    //   // print("****************");
+    //   print(data.timestamp);
+    //   return data;
+    //   // print(data.historyCallcard.call_information.callcard_no);
+    // });
+    // print(newlist);
+
+    // listHistory.firstWhere(test)
+    final isExist = listHistory.firstWhere(
+        (data) =>
+            data.historyCallcard.call_information.callcard_no ==
+            callcard.call_information.callcard_no, orElse: () {
+      //  await _historyStore.add(await _db, {
+      //     "history": callcard.toJson(),
+      //     "status_send": 0,
+      //     "timestamp": DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now())
+      //   });
+      return null;
+      // }
+    });
+    // });
+
+    print(callcard.call_information.callcard_no);
+    // if (isExist != null) {
+    // } else {}
+
+    // if (listHistory.firstWhere(
+    //   // (data) => data.historyCallcard.call_information.callcard_no ==
+    //   //         callcard.call_information.callcard_no ,
+
+    //     // },
+    //     () async {
+    // }) !=
+    // null)
+
+    // {
+    // )
+    //   print("****************");
+    //   print(data.historyCallcard.call_information.callcard_no);
+    //   // return data.historyCallcard.call_information.callcard_no ==
+    //   //     callcard.call_information.callcard_no;
+    // }))
+    if (isExist != null) {
+      //this callcard already exist in history list, so update
+      print("im in history contains");
+      var finder = Finder(
+        filter:
+            // Filter.and([
+            Filter.equals('history.call_information.callcard_no',
+                callcard.call_information.callcard_no),
+        // Filter.equals('record_type', "ResponseTime")
+        // ]
+        // ),
+        // sortOrders: [SortOrder(Field.key, false)]
+      );
+
+      var findRecord = await _historyStore.findFirst(await _db, finder: finder);
+      var key = findRecord.key;
+
+      var record = _historyStore.record(key);
+      // var test = _historyStore.record(key);
+      // test.ge
+      print("record found in history which exist before");
+      print(findRecord);
+
+      final update = await record.put(await _db, {
+        'history': callcard.toJson(),
+        'timestamp': DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()),
+        "status_send": statusSend
+      });
+
+      print("update----");
+      print(update);
+    } else {
+      print("Create new in history");
+
+      // final history = new History(
+      //     historyCallcard: Callcard(
+      //         callInformation: callcard.call_information,
+      //         responseTeam: callcard.response_team,
+      //         responseTime: callcard.response_time,
+      //         patients: List<Patient>(),
+      //         sceneAssessment: new SceneAssessment()),
+      //     statusSend: statusSend,
+      //     timestamp: DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()));
+      // create new in history
+      final mykey = await _historyStore.add(await _db, //history.toJson()
+          {
+            "history": callcard.toJson(),
+            "status_send": statusSend,
+            "timestamp":
+                DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now())
+          });
+
+      print("mykey---+" + mykey.toString());
+      print("satussend---+" + statusSend.toString());
+
+      return mykey;
+      // if (key != null) {
+      //   print("new key ---history generated");
+      //   print(key);
+      //   print("-----");
+      // }
+    }
+
+    // ))
+
+    // print(data);
+
+    // return key;
+    // setKey(key);
+  }
+
+  Future<List<History>> showAllHistory() async {
+    var finder = Finder(
+        //   filter: Filter.equals('call_information.assign_id', assign_id),
+        //   // Filter.equals('record_type', "ResponseTime")
+        // );
+        sortOrders: [SortOrder('timestamp', false)]);
+
+    var records = await _historyStore.find(await _db, finder: finder);
+
+    print("SHOWALL HISTORY");
+    // print(records);
+    return List.from(records).map((data) {
+      // print(data.value);
+      return History(
+          historyCallcard: Callcard.fromJson(data.value["history"]),
+          statusSend: data.value["status_send"],
+          timestamp: data.value["timestamp"]);
+      // return Callcard.fromJson(data.value);
+    }).toList();
+  }
+
+  Future<List<History>> clearAllSuccessHistory() async {
+    var finder = Finder(
+      filter:
+          // Filter.and([
+          Filter.equals('status_send', 1),
+      // Filter.equals('record_type', "ResponseTime")
+      // ]
+      // ),
+    );
+
+    final deleteAll = await _historyStore.delete(await _db, finder: finder);
+
+    return showAllHistory();
+
+    // print(deleteAll);
+  }
+
+  Future updateHistory(Callcard callcard, statusSend) async {
+    var finder = Finder(
+      filter:
+          // Filter.and([
+          Filter.equals('history.call_information.callcard_no',
+              callcard.call_information.callcard_no),
+      // Filter.equals('record_type', "ResponseTime")
+      // ]
+      // ),
+      // sortOrders: [SortOrder(Field.key, false)]
+    );
+
+    var findRecord = await _historyStore.findFirst(await _db, finder: finder);
+    var key = findRecord.key;
+
+    var record = _historyStore.record(key);
+    // var test = _historyStore.record(key);
+    // test.ge
+    print("record found in history which exist before");
+    print(findRecord);
+
+    final update = await record.put(await _db, {
+      'history': callcard.toJson(),
+      'timestamp': DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()),
+      'status_send': statusSend
+    });
+
+    print(update);
   }
 }
 

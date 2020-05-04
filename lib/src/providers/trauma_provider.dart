@@ -1,17 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:phcapp/custom/choice_chip.dart';
-import 'package:phcapp/src/blocs/blocs.dart';
+import 'package:flutter/foundation.dart';
 import 'package:phcapp/src/models/phc.dart';
-import 'package:phcapp/src/providers/trauma_provider.dart';
-import 'package:provider/provider.dart';
-
-// _head_face_neck_back_chest_abdomen
-
-class Trauma extends StatefulWidget {
-  @override
-  _PatientTraumaState createState() => _PatientTraumaState();
-}
+import 'package:flutter/material.dart';
 
 const _head = [
   "normal",
@@ -128,18 +117,10 @@ const _arm = [
   "Unable to assess"
 ];
 
-class _PatientTraumaState extends State<Trauma> with TickerProviderStateMixin {
-  var checked = false;
-  final Duration animationDuration = Duration(seconds: 5);
-  double transitionIconSize = 16.0;
+class TraumaProvider extends ChangeNotifier {
+  TraumaAssessment traumaAssessment = new TraumaAssessment();
 
-  Animation _checkAnimation;
-  AnimationController _checkAnimationController;
-
-  // TraumaProvider traumaProvider;
-
-  // TraumaProvider traumaProvider;
-  List<String> _listHead;
+  set setTraumaAssessment(data) => traumaAssessment = data;
 
   List<ItemModel> prepareData = <ItemModel>[
     ItemModel(
@@ -269,144 +250,6 @@ class _PatientTraumaState extends State<Trauma> with TickerProviderStateMixin {
         bodyModel: BodyModel(list: _face)),
   ];
 // }
-// }
-
-  @override
-  void initState() {
-    // TraumaProvider
-    // traumaProvider = Provider.of<TraumaProvider>(context);
-    super.initState();
-
-    _checkAnimationController = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 1200));
-    _checkAnimation = Tween(begin: 20.0, end: 25.0).animate(CurvedAnimation(
-        curve: Curves.elasticInOut, parent: _checkAnimationController));
-  }
-
-  void callback(String header, List<String> selectedItems) {
-    print(header);
-    print(selectedItems);
-
-    if (header == "Head") {
-      setState(() {
-        _listHead = selectedItems;
-      });
-    }
-
-    // traumaProvider.traumaAssessment.head = selectedItems;
-    //   setState(() {
-    //     traumaProvider.prepareData.forEach((f) {
-    //       if (f.header == header) {
-    //         print(header);
-    //         if (selectedItems.length != 0) {
-    //           f.isChecked = true;
-    //           _checkAnimationController.forward().orCancel;
-    //           // transitionIconSize = 25.0;
-    //         } else {
-    //           f.isChecked = false;
-    //         }
-    //       }
-    //     });
-    //   });
-  }
-
-  TraumaBloc traumaBloc;
-
-  @override
-  void didChangeDependencies() {
-    // traumaBloc = BlocProvider.of<TraumaBloc>(context);
-
-    super.didChangeDependencies();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final traumaBloc = BlocProvider.of<TraumaBloc>(context);
-
-    return BlocProvider(
-        create: (context) => TraumaBloc(),
-        // value: BlocProvider.of<TraumaBloc>(context),
-        child: Scaffold(
-            appBar: AppBar(
-              //  textTheme: themeProvider.getThemeData,
-              title: Text(
-                'Trauma Assessment',
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(
-                    "SAVE",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {
-                    traumaBloc.add(AddTrauma(
-                        traumaAssessment: new TraumaAssessment(head: _head)));
-
-                    Navigator.pop(context);
-                  },
-                )
-              ],
-            ),
-            // body: Icon(Icons.toys),
-            body: _buildBody(context)));
-    // },
-    // );
-
-    // ));
-  }
-
-  _buildBody(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(10),
-        child: ListView.builder(
-            itemCount: prepareData.length,
-            itemBuilder: (BuildContext context, int index) {
-              return _buildCard(prepareData, index);
-            }));
-    //   },
-    // );
-  }
-
-  _buildCard(prepareData, index) {
-    return Card(
-        child: ListTile(
-      title: Padding(
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(prepareData[index].header),
-                _buildAnimatedBuilder(prepareData, index)
-              ]),
-          padding: EdgeInsets.symmetric(vertical: 10.0)),
-      subtitle: SingleOption(
-        header: prepareData[index].header,
-        stateList: prepareData[index].bodyModel.list,
-        callback: callback,
-        multiple: prepareData[index].multiple,
-      ),
-    ));
-  }
-
-  _buildAnimatedBuilder(data, index) {
-    return AnimatedBuilder(
-        animation: _checkAnimationController,
-        builder: (context, child) {
-          return Center(
-              child: Container(
-                  // padding: EdgeInsets.all(10.0),
-                  child: Center(
-                      child: Icon(
-                          data[index].isChecked
-                              ? Icons.check_circle //,
-                              : Icons.check_circle_outline,
-                          color: data[index].isChecked
-                              ? Colors.green
-                              : Colors.grey,
-                          size: data[index].isChecked
-                              ? _checkAnimation.value
-                              : 20.0))));
-        });
-  }
 }
 
 class ItemModel {

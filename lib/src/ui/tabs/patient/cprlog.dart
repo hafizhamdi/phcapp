@@ -6,6 +6,8 @@ import 'package:phcapp/custom/choice_chip.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:intl/intl.dart';
 import 'package:phcapp/custom/label.dart';
+import 'package:phcapp/src/models/phc.dart';
+import 'package:phcapp/src/providers/cpr_provider.dart';
 import 'package:provider/provider.dart';
 
 const _rhythmChoices = ['Rhythm 1', 'Rhythm 2', 'Rhythm 3'];
@@ -44,77 +46,72 @@ List<String> _data = ['CPR Start', 'Bystander', 'ROSC'];
 class CPRLog extends StatelessWidget {
   @override
   build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => LogModel(),
-        child: Scaffold(
-          // backgroundColor: Colors.grey[200],
-          body: Consumer<LogModel>(
-            builder: (context, logs, child) {
-              return SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Card(
-                      margin: EdgeInsets.only(
-                          left: 10, right: 10, top: 10, bottom: 70),
-                      child: Column(
-                        // child: Scaffold(
-                        //   // backgroundColor: Colors.grey[200],
-                        //   body: Consumer<LogModel>(
-                        //     builder: (context, logs, child) {
-                        //       return ListView(
+    return Scaffold(
+      // backgroundColor: Colors.grey[200],
+      body: Consumer<CPRProvider>(
+        builder: (context, logs, child) {
+          return SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Card(
+                  margin:
+                      EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 70),
+                  child: Column(
+                    // child: Scaffold(
+                    //   // backgroundColor: Colors.grey[200],
+                    //   body: Consumer<LogModel>(
+                    //     builder: (context, logs, child) {
+                    //       return ListView(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              _buildIconData(context, logs, Icons.videocam,
-                                  _typeChoices, "Types"),
-                              _buildIconData(context, logs, Icons.vibration,
-                                  _rhythmType, "Rhythm"),
-                              _buildIconData(context, logs, Icons.donut_large,
-                                  _drugsType, "Drugs"),
-                              _buildIconData(
-                                  context,
-                                  logs,
-                                  Icons.surround_sound,
-                                  _interventionType,
-                                  "Intervention"),
-                            ],
-                          ),
-                          // HeaderSection("Select rhythm"),
-                          // SingleOption(_rhythmChoice),
-                          HeaderSection("CPR Logs"),
-                          _todaysDate(),
-
-                          SizedBox(
-                              height: 500,
-                              child: AnimatedList(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-
-                                // Give the Animated list the global key
-                                key: _listKey,
-                                initialItemCount: logs.items.length,
-                                // _data.length,
-                                // Similar to ListView itemBuilder, but AnimatedList has
-                                // an additional animation parameter.
-                                itemBuilder: (context, index, animation) {
-                                  // Breaking the row widget out as a method so that we can
-                                  // share it with the _removeSingleItem() method.
-                                  return _buildItem(logs, index,
-                                      logs._items[index], animation);
-                                },
-                              )),
-                          // ),
+                          _buildIconData(context, logs, Icons.videocam,
+                              _typeChoices, "Types"),
+                          _buildIconData(context, logs, Icons.vibration,
+                              _rhythmType, "Rhythm"),
+                          _buildIconData(context, logs, Icons.donut_large,
+                              _drugsType, "Drugs"),
+                          _buildIconData(context, logs, Icons.surround_sound,
+                              _interventionType, "Intervention"),
                         ],
-                      )));
-            },
-          ),
-          // floatingActionButton: FloatingActionButton.extended(
-          //   onPressed: () {},
-          //   label: Text('SELECT ACTION'),
-          //   icon: Icon(Icons.menu),
-          //   backgroundColor: Colors.purple,
-          // )
-        ));
+                      ),
+                      // HeaderSection("Select rhythm"),
+                      // SingleOption(_rhythmChoice),
+                      HeaderSection("CPR Logs"),
+                      _todaysDate(),
+
+                      SizedBox(
+                          height: 500,
+                          child: AnimatedList(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+
+                            // Give the Animated list the global key
+                            key: _listKey,
+                            initialItemCount: logs.items.length,
+                            // _data.length,
+                            // Similar to ListView itemBuilder, but AnimatedList has
+                            // an additional animation parameter.
+                            itemBuilder: (context, index, animation) {
+                              // Breaking the row widget out as a method so that we can
+                              // share it with the _removeSingleItem() method.
+                              return _buildItem(
+                                  logs, index, logs.items[index], animation);
+                            },
+                          )),
+                      // ),
+                    ],
+                  )));
+        },
+      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () {},
+      //   label: Text('SELECT ACTION'),
+      //   icon: Icon(Icons.menu),
+      //   backgroundColor: Colors.purple,
+      // )
+      // )
+    );
     // return
   }
 
@@ -297,49 +294,4 @@ Widget _buildIconData(BuildContext context, logs, IconData icon,
   void _insertSingleItem() {
     // var df = new DateFormat.jm();
   }
-}
-
-class LogModel extends ChangeNotifier {
-  // final item;
-  // final measurement;
-
-  // LogModel({this.item, this.measurement});
-
-  /// Internal, private state of the cart.
-  final List<LogMeasurement> _items = <LogMeasurement>[
-    // LogMeasurement(item: 'CPR Start')
-  ];
-
-  /// An unmodifiable view of the items in the cart.
-  UnmodifiableListView<LogMeasurement> get items =>
-      UnmodifiableListView(_items);
-
-  /// Adds [item] to cart. This and [removeAll] are the only ways to modify the
-  /// cart from the outside.
-  void add(LogMeasurement item) {
-    _items.add(item);
-    // This call tells the widgets that are listening to this model to rebuild.
-    notifyListeners();
-  }
-
-  /// Removes all items from the cart.
-  void removeAll() {
-    _items.clear();
-    // This call tells the widgets that are listening to this model to rebuild.
-    notifyListeners();
-  }
-
-  void remove(int index) {
-    _items.removeAt(index);
-
-    notifyListeners();
-  }
-}
-
-class LogMeasurement {
-  final item;
-  final measurement;
-  final timestamp;
-
-  LogMeasurement({this.item, this.measurement, this.timestamp});
 }

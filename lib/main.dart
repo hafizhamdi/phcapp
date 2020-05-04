@@ -11,5 +11,5 @@ void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
 
   runApp(ChangeNotifierProvider(
-      create: (_) => ThemeProvider(isLightTheme: true), child: App()));
+      create: (_) => ThemeProvider(isDarkTheme: false), child: App()));
 }

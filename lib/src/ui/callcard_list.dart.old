@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/models/phc.dart';
+import 'package:phcapp/src/repositories/repositories.dart';
 // import 'package:phcapp/src/events/phc_event.dart';
 import 'package:phcapp/src/ui/callcard_tabs.dart';
 import 'package:phcapp/theme/theme_provider.dart';
@@ -17,23 +20,62 @@ class _CallcardList extends State<CallcardList> {
   @override
   void initState() {
     super.initState();
-    
+
     // bloc.fetchAllCallcards();
     // _phcBloc = BlocProvider.of<PhcBloc>(context);
     // _phcBloc.distinct(LoadEventPhc());
   }
+
+  
+  final PhcRepository phcRepository =
+      PhcRepository(phcApiClient: PhcApiClient(httpClient: http.Client()));
+
+  final PhcDaoClient phcDaoClient = new PhcDaoClient(phcDao: new PhcDao());
 
   @override
   Widget build(BuildContext context) {
     // bloc.fetchAllCallcards();
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-    return Scaffold(
+    return MultiBlocProvider(
+        // BlocProvider(
+        providers: [
+          //),
+          BlocProvider(
+            create: (context) => CallInfoBloc(),
+          ),
+          BlocProvider(
+              create: (context) => TeamBloc(phcDao: phcDaoClient.phcDao)),
+          BlocProvider(
+              create: (context) => StaffBloc(
+                  phcRepository: phcRepository, phcDao: phcDaoClient.phcDao)),
+          BlocProvider(
+              create: (context) => TimeBloc(phcDao: phcDaoClient.phcDao)),
+          BlocProvider(
+              create: (context) => SceneBloc(phcDao: phcDaoClient.phcDao)),
+
+          BlocProvider(
+              create: (context) => PatientBloc(phcDao: phcDaoClient.phcDao)),
+
+          BlocProvider(
+              create: (context) => VitalBloc(phcDao: phcDaoClient.phcDao)),
+
+          BlocProvider(
+              create: (context) => AuthBloc(phcRepository: phcRepository)),
+
+          // BlocProvider<AuthBloc>(create: (context) {
+          //   return AuthBloc(phcRepository: phcRepository)..add(AppStarted());
+          // }),
+        ],
+    child:
+    
+    
+    Scaffold(
         appBar: AppBar(
           title: Text("Call Cards"),
           leading: Container(
               child: Switch(
-            value: themeProvider.isLightTheme,
+            value: themeProvider.isDarkTheme,
             onChanged: (val) {
               themeProvider.setThemeData = val;
             },
@@ -144,7 +186,6 @@ class _CallcardList extends State<CallcardList> {
                           response_time:
                               snapshot.data.listCallcards[index].response_time,
                           patients: snapshot.data.listCallcards[index].patients,
-                          
                         )));
             // Navigator.pushNamed(context, "/callcarddetail");
           },

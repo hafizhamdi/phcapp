@@ -1,7 +1,12 @@
 export 'phc_bloc.dart';
-export 'callinfo_bloc.dart';
+export 'call_info_bloc.dart';
 export 'team_bloc.dart';
 export 'staff_bloc.dart';
-export 'scene_bloc.dart';
 export 'time_bloc.dart';
 export 'patient_bloc.dart';
+export 'vital_bloc.dart';
+export 'authentication_bloc.dart';
+export 'trauma_bloc.dart';
+export 'login_bloc.dart';
+export 'history_bloc.dart';
+export 'callcard_tab_bloc.dart';

@@ -12,10 +12,11 @@ abstract class TimeEvent extends Equatable {
 
 class LoadTime extends TimeEvent {
   final assign_id;
+  final ResponseTime responseTime;
 
-  LoadTime({this.assign_id});
+  LoadTime({this.assign_id, this.responseTime});
   @override
-  List<Object> get props => [assign_id];
+  List<Object> get props => [assign_id, responseTime];
 }
 
 class AddResponseTime extends TimeEvent {
@@ -53,6 +54,7 @@ class TimeError extends TimeState {}
 class TimeBloc extends Bloc<TimeEvent, TimeState> {
   PhcDao phcDao;
   TimeBloc({this.phcDao}) : assert(phcDao != null);
+  ResponseTime responseTime;
 
   @override
   TimeState get initialState => TimeEmpty();
@@ -83,28 +85,33 @@ class TimeBloc extends Bloc<TimeEvent, TimeState> {
   }
 
   Stream<TimeState> _mapLoadTimeToState(LoadTime event) async* {
-    yield* _reloadResponseTime(event.assign_id);
+    // yield* _reloadResponseTime(event.assign_id);
     // try {
     //   final responseTime = await phcDao.getResponseTime(event.assign_id);
     //   yield TimeLoaded(responseTime: responseTime);
     // } catch (_) {
     //   final responseTime = await phcDao.getPhcResponseTime(event.assign_id);
-    //   yield TimeLoaded(responseTime: responseTime);
+    yield TimeLoaded(responseTime: event.responseTime);
     // }
   }
 
   Stream<TimeState> _mapAddResponseTimeToState(AddResponseTime event) async* {
-    try {
-      final result =
-          await phcDao.insertResponseTime(event.responseTime, event.assignId);
+    // try {
+    //   final result =
+    //       await phcDao.insertResponseTime(event.responseTime, event.assignId);
 
-      // yield* _reloadResponseTime(event.assignId);
-      yield TimeLoaded(
-        responseTime: result,
-      );
-    } catch (_) {
-      yield TimeError();
-    }
+    //   // yield* _reloadResponseTime(event.assignId);
+    //   yield TimeLoaded(
+    //     responseTime: result,
+    //   );
+    // } catch (_) {
+    //   yield TimeError();
+    // }
+    responseTime = event.responseTime;
+    print(responseTime.toJson());
+    print("addrespoinse team success");
+
+    TimeLoaded(responseTime: responseTime);
   }
 
   Stream<TimeState> _reloadResponseTime(assign_id) async* {
@@ -118,17 +125,37 @@ class TimeBloc extends Bloc<TimeEvent, TimeState> {
 
       // )
 
+      if (responseTime == null) {
+        yield TimeLoaded(
+          responseTime: new ResponseTime(),
+        );
+      }
+
       yield TimeLoaded(
         responseTime: responseTime,
       );
     } catch (_) {
       print("failed so read from responsetime--load phcsembast");
-      final responseTime = await phcDao.getPhcResponseTime(assign_id);
-      print(responseTime.toJson());
+      // final responseTime = await phcDao.getPhcResponseTime(assign_id);
+      // print(responseTime.toJson());
 
+      // if (responseTime == null) {
       yield TimeLoaded(
-        responseTime: responseTime,
+        responseTime: new ResponseTime(
+            dispatchTime: "",
+            enrouteTime: "",
+            atSceneTime: "",
+            atPatientTime: "",
+            transportingTime: "",
+            atHospitalTime: "",
+            rerouteTime: "",
+            reasonAbort: ""),
       );
+      // }
+
+      // yield TimeLoaded(
+      //   responseTime: responseTime,
+      // );
     }
   }
 }

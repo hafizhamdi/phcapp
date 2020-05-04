@@ -1,40 +1,65 @@
 import 'package:flutter/material.dart';
 
-class SingleOption extends StatefulWidget {
-  SingleOption({this.header, this.stateList, this.callback, this.multiple});
+enum Assessment {
+  triage,
+  appearance,
+  responsiveness,
+  airway,
+  respiratory,
+  airentry,
+  breathSound,
+  heartSound,
+  skin,
+  ecg,
+  abdomenPalpation,
+  abdomenAbnormal,
+  faceStroke
+}
 
-  final String header;
+class SingleOption extends StatefulWidget {
+  SingleOption(
+      {this.header,
+      this.stateList,
+      this.callback,
+      this.multiple,
+      this.initialData});
+
+  final header;
   final List<String> stateList;
   final Function callback;
   bool multiple;
+  final initialData;
 
   @override
   SingleChoiceChip createState() =>
-      SingleChoiceChip(header, stateList, callback, multiple);
+      SingleChoiceChip(); //header, stateList, callback, multiple);
 }
 
 class SingleChoiceChip extends State<SingleOption> {
-  final String header;
-  final List<String> list;
+  // final String header;
+  // final List<String> list;
 
-  final Function(String, List<String>) callback;
-  bool multiple;
+  // final Function(String, List<String>) callback;
+  // bool multiple;
   // final VoidCallback onSelectedChip;
   List<String> selectedItems = new List();
   // String _value = ""; // so that selected be false
 
   // final Function(String) onChoiceSelected;
 
-  SingleChoiceChip(this.header, this.list, this.callback, this.multiple);
+  // SingleChoiceChip(this.header, this.list, this.callback, this.multiple);
 
   @override
   Widget build(BuildContext context) {
+    if (widget.initialData != null) {
+      selectedItems = widget.initialData;
+    }
     return Container(
         padding: EdgeInsets.only(left: 10),
         child: Wrap(
           spacing: 10,
           children: List<Widget>.generate(
-            list.length,
+            widget.stateList.length,
             (int index) {
               // var len = list.length;
               // if (index == len) {
@@ -53,22 +78,22 @@ class SingleChoiceChip extends State<SingleOption> {
               //     },
               //   );
               // } else {
-              String item = list[index];
+              String item = widget.stateList[index];
               return ChoiceChip(
                 elevation: 2.0,
                 label: Text(item),
-                selected: selectedItems.contains(list[index]),
+                selected: selectedItems.contains(widget.stateList[index]),
                 onSelected: (selected) {
                   setState(() {
-                    if (multiple == true) {
-                      selectedItems.contains(list[index])
+                    if (widget.multiple == true) {
+                      selectedItems.contains(widget.stateList[index])
                           ? selectedItems.remove(item)
-                          : selectedItems.add(list[index]);
+                          : selectedItems.add(widget.stateList[index]);
                     } else {
                       selectedItems = new List();
                       selected
-                          ? selectedItems.add(list[index])
-                          : selectedItems.remove(list[index]);
+                          ? selectedItems.add(widget.stateList[index])
+                          : selectedItems.remove(widget.stateList[index]);
                     }
                     // _value = selected ? index : null;
 
@@ -84,9 +109,9 @@ class SingleChoiceChip extends State<SingleOption> {
                     // selectedItems[0] = _value;
                     // }
 
-                    callback(header, selectedItems);
+                    widget.callback(widget.header, selectedItems);
                     // Callback cb =
-                    //     callback(item: list[index], index: index);
+                    //     callback(item: stateList[index], index: index);
 
                     // callback(cb);
                   });

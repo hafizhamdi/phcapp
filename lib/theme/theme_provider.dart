@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class ThemeProvider with ChangeNotifier {
-  bool isLightTheme;
+  bool isDarkTheme;
 
-  ThemeProvider({this.isLightTheme});
+  ThemeProvider({this.isDarkTheme});
 
-  ThemeData get getThemeData => isLightTheme ? lightTheme : darkTheme;
+  ThemeData get getThemeData => isDarkTheme ? darkTheme : lightTheme;
 
   set setThemeData(bool val) {
     if (val) {
-      isLightTheme = true;
+      isDarkTheme = true;
     } else {
-      isLightTheme = false;
+      isDarkTheme = false;
     }
     notifyListeners();
   }

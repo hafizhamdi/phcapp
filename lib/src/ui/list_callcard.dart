@@ -6,11 +6,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/database/phc_dao.dart';
+import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/repositories/phc_dao_client.dart';
+import 'package:phcapp/src/repositories/repositories.dart';
+import 'package:phcapp/src/ui/history.dart';
 import 'package:phcapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'package:http/http.dart' as http;
 import 'callcard_tabs.dart';
+
+enum WhatTodo { logout, history, newCallcard }
 
 class ListCallcards extends StatefulWidget {
   PhcDao phcDao;
@@ -23,37 +29,82 @@ class ListCallcards extends StatefulWidget {
 class _ListCallcards extends State<ListCallcards> {
   Completer<void> _refreshCompleter;
   PhcBloc phcBloc;
+  LoginBloc loginBloc;
+  AuthBloc authBloc;
+
+  final PhcRepository phcRepository =
+      PhcRepository(phcApiClient: PhcApiClient(httpClient: http.Client()));
+
+  final PhcDaoClient phcDaoClient = new PhcDaoClient(phcDao: new PhcDao());
   // PhcDao phcDao;
+
+  @override
+  void didChangeDependencies() {
+    phcBloc = BlocProvider.of<PhcBloc>(context);
+    loginBloc = BlocProvider.of<LoginBloc>(context);
+    authBloc = BlocProvider.of<AuthBloc>(context);
+    super.didChangeDependencies();
+  }
 
   @override
   void initState() {
     super.initState();
     _refreshCompleter = Completer<void>();
-    phcBloc = BlocProvider.of<PhcBloc>(context);
-    phcBloc.add(FetchPhc());
   }
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return Scaffold(
+    return
+        // MultiBlocProvider(
+        //     // BlocProvider(
+        //     providers: [
+        //       //),
+        //       BlocProvider(
+        //         create: (context) => CallInfoBloc(),
+        //       ),
+        //       BlocProvider(
+        //           create: (context) => TeamBloc(phcDao: phcDaoClient.phcDao)),
+        //       BlocProvider(
+        //           create: (context) => StaffBloc(
+        //               phcRepository: phcRepository, phcDao: phcDaoClient.phcDao)),
+        //       BlocProvider(
+        //           create: (context) => TimeBloc(phcDao: phcDaoClient.phcDao)),
+        //       BlocProvider(
+        //           create: (context) => SceneBloc(phcDao: phcDaoClient.phcDao)),
+
+        //       BlocProvider(
+        //           create: (context) => PatientBloc(phcDao: phcDaoClient.phcDao)),
+
+        //       BlocProvider(
+        //           create: (context) => VitalBloc(phcDao: phcDaoClient.phcDao)),
+
+        //       BlocProvider(
+        //           create: (context) => AuthBloc(phcRepository: phcRepository)),
+
+        //       // BlocProvider<AuthBloc>(create: (context) {
+        //       //   return AuthBloc(phcRepository: phcRepository)..add(AppStarted());
+        //       // }),
+        //     ],
+        // child:
+        Scaffold(
       appBar: AppBar(
-          leading: Container(
-              child: Switch(
-                  value: themeProvider.isLightTheme,
-                  onChanged: (val) {
-                    themeProvider.setThemeData = val;
-                  })),
-          title: Text("Call Cards")),
+        leading: TopOtherMenu(),
+        title: Text("Call Cards"),
+        actions: <Widget>[
+          Padding(padding: EdgeInsets.only(right: 10), child: TopUserMenu()),
+        ],
+      ),
       body: Center(
         child: BlocConsumer<PhcBloc, PhcState>(
-          
           listener: (context, state) {
             _refreshCompleter?.complete();
             _refreshCompleter = Completer();
           },
           builder: (context, state) {
-            if (state is PhcLoaded) {
+            if (state is PhcEmpty) {
+              phcBloc.add(FetchPhc());
+            } else if (state is PhcLoaded) {
               print("Phc loaded");
               final phc = state.phc;
 
@@ -115,7 +166,7 @@ class _ListCallcards extends State<ListCallcards> {
                 callInfo.callcard_no,
               )),
               Text(
-                DateFormat("d MMM, hh:mm aaa")
+                DateFormat("d MMM yyyy, hh:mm aaa")
                     .format(DateTime.parse(callInfo.call_received)),
                 style: TextStyle(color: Colors.grey, fontSize: 14),
               )
@@ -156,10 +207,10 @@ class _ListCallcards extends State<ListCallcards> {
           ]),
           leading: Container(
               // alignment: Alignment.centerLeft,
-              width: 70,
-              height: 70,
+              width: 60,
+              height: 60,
               decoration: new BoxDecoration(
-                color: Colors.orange,
+                color: Colors.pinkAccent,
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.headset_mic)),
@@ -182,5 +233,87 @@ class _ListCallcards extends State<ListCallcards> {
         );
       },
     );
+  }
+
+  Widget TopUserMenu() {
+    Staff user = authBloc.getAuthorizedUser;
+    return PopupMenuButton<WhatTodo>(
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Text(
+              user.userid,
+              style: TextStyle(fontFamily: "Raleway"),
+            )),
+        Container(
+            // alignment: Alignment.centerLeft,
+            width: 30,
+            height: 30,
+            decoration: new BoxDecoration(
+              color: Colors.pinkAccent,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.person))
+      ]),
+      onSelected: (WhatTodo result) {
+        if (result == WhatTodo.logout) {
+          //  authBloc.add (LogoutButtonPressed());
+          loginBloc.add(LogoutButtonPressed());
+        }
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<WhatTodo>>[
+        const PopupMenuItem<WhatTodo>(
+          value: WhatTodo.logout,
+          child: Text("LOGOUT      "),
+        ),
+      ],
+    );
+    // ]);
+  }
+
+  Widget TopOtherMenu() {
+    // Staff user = loginBloc.getAuthorizedUser;
+    return PopupMenuButton<WhatTodo>(
+      // child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      //   Padding(padding: EdgeInsets.only(right: 10), child: Text(user.userid)),
+      //   Container(
+      //       // alignment: Alignment.centerLeft,
+      //       width: 30,
+      //       height: 30,
+      //       decoration: new BoxDecoration(
+      //         color: Colors.orange,
+      //         shape: BoxShape.circle,
+      //       ),
+      //       child: Icon(Icons.person))
+      // ]),
+      onSelected: (WhatTodo result) {
+        if (result == WhatTodo.history) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => History()));
+        } else if (result == WhatTodo.newCallcard) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CallcardTabs(
+                        callcard_no: "",
+                        call_information: new CallInformation(),
+                        response_time: new ResponseTime(),
+                        response_team: new ResponseTeam(),
+                        patients: List(),
+                      )));
+        }
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<WhatTodo>>[
+        const PopupMenuItem<WhatTodo>(
+          value: WhatTodo.newCallcard,
+          child: Text("NEW CALLCARD"),
+        ),
+        const PopupMenuItem<WhatTodo>(
+          value: WhatTodo.history,
+          child: Text("HISTORY"),
+        )
+      ],
+    );
+    // ]);
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -12,9 +14,22 @@ abstract class PatientEvent extends Equatable {
 }
 
 class LoadPatient extends PatientEvent {
+  final assign_id;
+  final SceneAssessment sceneAssessment;
   final List<Patient> patients;
 
-  LoadPatient({this.patients});
+  LoadPatient({this.assign_id, this.sceneAssessment, this.patients});
+
+  @override
+  List<Object> get props => [patients, sceneAssessment];
+}
+
+class AddSceneAssessment extends PatientEvent {
+  final assign_id;
+  final SceneAssessment sceneAssessment;
+  final List<Patient> patients;
+
+  AddSceneAssessment({this.assign_id, this.sceneAssessment, this.patients});
 
   @override
   List<Object> get props => [patients];
@@ -47,8 +62,9 @@ abstract class PatientState extends Equatable {
 
 class PatientLoaded extends PatientState {
   final List<Patient> patients;
+  final SceneAssessment sceneAssessment;
 
-  PatientLoaded({this.patients});
+  PatientLoaded({this.patients, this.sceneAssessment});
 
   @override
   List<Object> get props => [patients];
@@ -61,13 +77,14 @@ class PatientLoading extends PatientState {}
 class PatientBloc extends Bloc<PatientEvent, PatientState> {
   final PhcDao phcDao;
   // final PhcRepository phcRepository;
-  List<Patient> blocPatients = new List<Patient>();
+  List<Patient> patients;
   TextEditingController nameController = new TextEditingController();
   TextEditingController idController = new TextEditingController();
   TextEditingController idTypeController = new TextEditingController();
   TextEditingController dobController = new TextEditingController();
   TextEditingController ageController = new TextEditingController();
   TextEditingController genderController = new TextEditingController();
+  SceneAssessment sceneAssessment;
 
   PatientBloc(
       {
@@ -100,13 +117,47 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       yield* _addPatientToState(event);
     } else if (event is RemovePatient) {
       yield* _removePatientToState(event);
-    }
+    } else if (event is AddSceneAssessment) {}
   }
 
   Stream<PatientState> _mapLoadPatientToState(LoadPatient event) async* {
+    // final result = await phcDao.getPhcPatientList(event.assign_id);
+
+    final currentState = state;
+    // sceneAssessment = event.sceneAssessment;
+
+    patients = event.patients != null ? event.patients : new List<Patient>();
+
+    sceneAssessment = event.sceneAssessment != null
+        ? event.sceneAssessment
+        : new SceneAssessment();
+    // final newList = List<Patient>.from(result)
+    // result.
+    // final currentState = state;
+// currentState.patients
+
+    // print(result);
     // yield PatientLoading();
 
-    yield PatientLoaded(patients: event.patients);
+    yield PatientLoaded(patients: patients, sceneAssessment: sceneAssessment);
+  }
+
+  Stream<PatientState> _mapAddSceneAssessmentToState(
+      AddSceneAssessment event) async* {
+    // final result = await phcDao.getPhcPatientList(event.assign_id);
+    final currentState = state;
+
+    sceneAssessment = event.sceneAssessment;
+    patients = event.patients;
+    // final newList = List<Patient>.from(result)
+    // result.
+    // final currentState = state;
+// currentState.patients
+
+    // print(result);
+    // yield PatientLoading();
+
+    yield PatientLoaded(patients: patients, sceneAssessment: sceneAssessment);
   }
 
   Stream<PatientState> _addPatientToState(AddPatient event) async* {
@@ -117,11 +168,15 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     // print(blocPatients.length);
 
     print("ADDD PATIENT");
+    print(currentState.patients);
     final newList = List<Patient>.from(currentState.patients)..add(patient);
+    print(newList.length);
     // / blocPatients.add(patient);
+
+    patients = newList;
     // yield PatientLoading();
 
-    yield PatientLoaded(patients: newList);
+    yield PatientLoaded(patients: newList, sceneAssessment: sceneAssessment);
   }
 
   Stream<PatientState> _removePatientToState(RemovePatient event) async* {
@@ -132,7 +187,9 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     // print(blocPatients.length);
     final newList = List<Patient>.from(currentState.patients)
       ..removeAt(event.index);
+
+    patients = newList;
     // final newList = blocPatients.removeAt(event.index);
-    yield PatientLoaded(patients: newList);
+    yield PatientLoaded(patients: newList, sceneAssessment: sceneAssessment);
   }
 }

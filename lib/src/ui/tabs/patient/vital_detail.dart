@@ -1,11 +1,53 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phcapp/src/blocs/vital_bloc.dart';
+import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class VitalDetail extends StatefulWidget {
-  VitalDetail({Key key}) : super(key: key);
+  final String bpSystolic;
+  final String bpDiastolic;
+  final String map;
+  final String pr;
+  final String pp;
+  final String pulseVolume;
+  final String crt;
+  final String rr;
+  final String sp02;
+  final String temp;
+  final String painScore;
+  final String bloodGlucose;
+  final String shockIndex;
+  final String leftPupil;
+  final String rightPupil;
+  final String gcsE;
+  final String gcsV;
+  final String gcsM;
+  final String gcsTotal;
+
+  VitalDetail(
+      {this.bpSystolic,
+      this.bpDiastolic,
+      this.map,
+      this.pr,
+      this.pp,
+      this.pulseVolume,
+      this.crt,
+      this.rr,
+      this.sp02,
+      this.temp,
+      this.painScore,
+      this.bloodGlucose,
+      this.shockIndex,
+      this.leftPupil,
+      this.rightPupil,
+      this.gcsE,
+      this.gcsV,
+      this.gcsM,
+      this.gcsTotal});
 
   @override
   _VitalDetailState createState() => _VitalDetailState();
@@ -38,8 +80,11 @@ class _VitalDetailState extends State<VitalDetail> {
   ControllerInput gcsController =
       new ControllerInput(first: 0, second: 0, third: 0);
 
+  VitalBloc vitalBloc;
+
   @override
   initState() {
+    vitalBloc = BlocProvider.of<VitalBloc>(context);
     // bpSysController.first_value.text = "1";
     // bpSysController.second_value.text = "1";
 
@@ -49,136 +94,137 @@ class _VitalDetailState extends State<VitalDetail> {
   }
 
   Widget _buildItemGCS(context, title, controller) {
-    return Card(
-      // color: Colors.white10,
-      elevation: 2.4,
-      child: Container(
-          padding: EdgeInsets.only(left: 8, top: 8),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-          width: 160,
-          height: 220,
-          child: Column(
-            children: <Widget>[
-              Row(
+    return Container(
+        margin: EdgeInsets.all(5),
+        padding: EdgeInsets.only(left: 8, top: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            shape: BoxShape.rectangle,
+            border: Border.all(color: Colors.grey, width: 0.5)),
+        width: 160,
+        height: 220,
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Text(title,
+                    textAlign: TextAlign.left, style: TextStyle(fontSize: 16)
+                    // style: TextStyle(color: Colors.white),
+                    ),
+              ],
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(title,
-                      textAlign: TextAlign.left, style: TextStyle(fontSize: 20)
-                      // style: TextStyle(color: Colors.white),
-                      ),
-                ],
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.only(right: 40),
-                        child: Text(
-                          "E",
-                          textAlign: TextAlign.left,
-                          // style: TextStyle(color: Colors.white),
-                        )),
-                    Text(
-                      controller.firstValue.toString(),
-                      style: TextStyle(
-                        fontSize: 30,
-                        // color: Colors.purple[200]
-                      ),
+                  Padding(
+                      padding: EdgeInsets.only(right: 40),
+                      child: Text(
+                        "E",
+                        textAlign: TextAlign.left,
+                        // style: TextStyle(color: Colors.white),
+                      )),
+                  Text(
+                    controller.firstValue.toString(),
+                    style: TextStyle(
+                      fontSize: 30,
+                      // color: Colors.purple[200]
                     ),
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      color: Colors.grey,
-                      iconSize: 25,
-                      onPressed: () {
-                        showCupertinoModalPopup(
-                            context: context,
-                            builder: (context) => _actionSinglePicker(
-                                "E", controller, callbackGcs, 5));
-                      },
-                    )
-                  ]),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.only(right: 40),
-                        child: Text(
-                          "V",
-                          textAlign: TextAlign.left,
-                          // style: TextStyle(color: Colors.white),
-                        )),
-                    //,
-                    Text(
-                      controller.secondValue.toString(),
-                      style: TextStyle(
-                        fontSize: 30,
-                        // color: Colors.purple[200]
-                      ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    color: Colors.grey,
+                    iconSize: 25,
+                    onPressed: () {
+                      showCupertinoModalPopup(
+                          context: context,
+                          builder: (context) => _actionSinglePicker(
+                              "E", controller, callbackGcs, 5));
+                    },
+                  )
+                ]),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.only(right: 40),
+                      child: Text(
+                        "V",
+                        textAlign: TextAlign.left,
+                        // style: TextStyle(color: Colors.white),
+                      )),
+                  //,
+                  Text(
+                    controller.secondValue.toString(),
+                    style: TextStyle(
+                      fontSize: 30,
+                      // color: Colors.purple[200]
                     ),
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      color: Colors.grey,
-                      iconSize: 25,
-                      onPressed: () {
-                        showCupertinoModalPopup(
-                            context: context,
-                            builder: (context) => _actionSinglePicker(
-                                "V", controller, callbackGcs, 6));
-                      },
-                    )
-                  ]),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.only(right: 40),
-                        child: Text(
-                          "M",
-                          textAlign: TextAlign.left,
-                          // style: TextStyle(color: Colors.white),
-                        )),
-                    Text(
-                      controller.thirdValue.toString(),
-                      style: TextStyle(
-                        fontSize: 30,
-                        // color: Colors.purple[200]
-                      ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    color: Colors.grey,
+                    iconSize: 25,
+                    onPressed: () {
+                      showCupertinoModalPopup(
+                          context: context,
+                          builder: (context) => _actionSinglePicker(
+                              "V", controller, callbackGcs, 6));
+                    },
+                  )
+                ]),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.only(right: 40),
+                      child: Text(
+                        "M",
+                        textAlign: TextAlign.left,
+                        // style: TextStyle(color: Colors.white),
+                      )),
+                  Text(
+                    controller.thirdValue.toString(),
+                    style: TextStyle(
+                      fontSize: 30,
+                      // color: Colors.purple[200]
                     ),
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      color: Colors.grey,
-                      iconSize: 25,
-                      onPressed: () {
-                        showCupertinoModalPopup(
-                            context: context,
-                            builder: (context) => _actionSinglePicker(
-                                "M", controller, callbackGcs, 7));
-                      },
-                    )
-                  ]),
-              Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.only(right: 39),
-                        child: Text(
-                          "Total",
-                          textAlign: TextAlign.left,
-                          // style: TextStyle(color: Colors.white),
-                        )),
-                    Text(
-                      controller.responseText != null
-                          ? controller.responseText
-                          : '',
-                      style: TextStyle(
-                        fontSize: 30,
-                        // color: Colors.purple[200]
-                      ),
-                      // )
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    color: Colors.grey,
+                    iconSize: 25,
+                    onPressed: () {
+                      showCupertinoModalPopup(
+                          context: context,
+                          builder: (context) => _actionSinglePicker(
+                              "M", controller, callbackGcs, 7));
+                    },
+                  )
+                ]),
+            Row(
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.only(right: 39),
+                      child: Text(
+                        "Total",
+                        textAlign: TextAlign.left,
+                        // style: TextStyle(color: Colors.white),
+                      )),
+                  Text(
+                    controller.responseText != null
+                        ? controller.responseText
+                        : '',
+                    style: TextStyle(
+                      fontSize: 30,
+                      // color: Colors.purple[200]
                     ),
-                  ])
-            ],
-          )),
-    );
+                    // )
+                  ),
+                ])
+          ],
+        )); //,
+    // );
   }
 
   int selectPicker(title, first, second, third) {
@@ -236,87 +282,88 @@ class _VitalDetailState extends State<VitalDetail> {
   }
 
   Widget _buildItemPupil(context, title, controller) {
-    return Card(
-      // color: Colors.white10,
-      elevation: 2.4,
-      child: Container(
-          padding: EdgeInsets.only(left: 8, top: 8),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-          width: 160,
-          height: 170,
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.only(bottom: 10),
-                      child: Text(title,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(fontSize: 20)
-                          // style: TextStyle(color: Colors.white),
-                          )),
-                ],
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      controller.firstValue.toString() == "0"
-                          ? ""
-                          : controller.firstValue.toString(),
-                      style: TextStyle(
-                        fontSize: 40,
-                        // color: Colors.purple[200]
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      color: Colors.grey,
-                      iconSize: 25,
-                      onPressed: () {
-                        showCupertinoModalPopup(
-                            context: context,
-                            builder: (context) => _actionSinglePicker(
-                                title, controller, callbackPupil, 9));
-                      },
-                    )
-                  ]),
-              Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        "Response to light",
+    return Container(
+        margin: EdgeInsets.all(5),
+        padding: EdgeInsets.only(left: 8, top: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            shape: BoxShape.rectangle,
+            border: Border.all(color: Colors.grey, width: 0.5)),
+        width: 160,
+        height: 170,
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Text(title,
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  )),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        style: TextStyle(fontSize: 16)
+                        // style: TextStyle(color: Colors.white),
+                        )),
+              ],
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    controller.firstValue.toString() == "0"
+                        ? ""
+                        : controller.firstValue.toString(),
+                    style: TextStyle(
+                      fontSize: 40,
+                      // color: Colors.purple[200]
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    color: Colors.grey,
+                    iconSize: 25,
+                    onPressed: () {
+                      showCupertinoModalPopup(
+                          context: context,
+                          builder: (context) => _actionSinglePicker(
+                              title, controller, callbackPupil, 9));
+                    },
+                  )
+                ]),
+            Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: Row(
                   children: <Widget>[
                     Text(
-                      controller.responseText,
-                      style: TextStyle(
-                        fontSize: 25,
-                        // color: Colors.purple[200]
-                      ),
+                      "Response to light",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(color: Colors.grey),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      color: Colors.grey,
-                      iconSize: 25,
-                      onPressed: () {
-                        showCupertinoModalPopup(
-                            context: context,
-                            builder: (context) => _actionPupilPicker(
-                                title, controller, callbackPupil));
-                      },
-                    )
-                  ])
-            ],
-          )),
-    );
+                  ],
+                )),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    controller.responseText,
+                    style: TextStyle(
+                      fontSize: 25,
+                      // color: Colors.purple[200]
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    color: Colors.grey,
+                    iconSize: 25,
+                    onPressed: () {
+                      showCupertinoModalPopup(
+                          context: context,
+                          builder: (context) => _actionPupilPicker(
+                              title, controller, callbackPupil));
+                    },
+                  )
+                ])
+          ],
+        )); //,
+    // );
   }
 
   Widget _buildItem(context, title, controller) {
@@ -331,12 +378,19 @@ class _VitalDetailState extends State<VitalDetail> {
         Navigator.of(context).pop();
       },
     );
-    return Card(
-        // color: Colors.white10,
-        elevation: 2.4,
-        child: Container(
+    return
+        // Card(
+        //     // color: Colors.white10,
+        //     elevation: 2.4,
+        //     child:
+
+        Container(
+            margin: EdgeInsets.all(5),
             padding: EdgeInsets.only(left: 8, top: 8),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                shape: BoxShape.rectangle,
+                border: Border.all(color: Colors.grey, width: 0.5)),
             width: 160,
             height: 100,
             child: Column(children: <Widget>[
@@ -346,7 +400,7 @@ class _VitalDetailState extends State<VitalDetail> {
                       padding: EdgeInsets.only(bottom: 10),
                       child: Text(title,
                           textAlign: TextAlign.left,
-                          style: TextStyle(fontSize: 20)
+                          style: TextStyle(fontSize: 16)
                           // style: TextStyle(color: Colors.white),
                           )),
                 ],
@@ -373,7 +427,7 @@ class _VitalDetailState extends State<VitalDetail> {
                                   title, controller, callbackDouble));
                         })
                   ])
-            ])));
+            ])); //);
   }
 
   String decimalFormating(first, second) {
@@ -543,8 +597,13 @@ class _VitalDetailState extends State<VitalDetail> {
             ]));
   }
 
+  String appendDecimal(first, second) {
+    return (first.toString() + "." + second.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
+    vitalBloc = BlocProvider.of<VitalBloc>(context);
     // final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       // backgroundColor: Colors.grey[900],
@@ -553,6 +612,60 @@ class _VitalDetailState extends State<VitalDetail> {
           title: Text(
             'Vital signs',
           ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Cancel", style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text("Create", style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                VitalSign vs = new VitalSign(
+                    id: UniqueKey().toString(),
+                    created: new DateTime.now(),
+                    bpSystolic: appendDecimal(
+                        bpSysController.first, bpSysController.second),
+                    bpDiastolic: appendDecimal(
+                        bpDiasController.first, bpDiasController.second),
+                    map: appendDecimal(
+                        mapController.first, mapController.second),
+                    pr: appendDecimal(prController.first, prController.second),
+                    pulsePressure:
+                        appendDecimal(ppController.first, ppController.second),
+                    pulseVolume:
+                        appendDecimal(pvController.first, pvController.second),
+                    crt: appendDecimal(
+                        crtController.first, crtController.second),
+                    rr: appendDecimal(rrController.first, rrController.second),
+                    spo2: appendDecimal(
+                        spo2Controller.first, spo2Controller.second),
+                    temp: appendDecimal(
+                        tempController.first, tempController.second),
+                    painScore: psController.text,
+                    bloodGlucose:
+                        appendDecimal(bgController.first, bgController.second),
+                    shockIndex:
+                        appendDecimal(siController.first, siController.second),
+                    pupil: Pupil(
+                        leftResponseTolight: lpController.text,
+                        leftSize: lpController.first.toString(),
+                        rightResponseTolight: rpController.text,
+                        rightSize: rpController.first.toString()),
+                    e: gcsController.first.toString(),
+                    v: gcsController.second.toString(),
+                    m: gcsController.third.toString(),
+                    gcs: gcsController.text.toString());
+
+                print("Vital Sigs");
+                print(vs.toJson());
+                vitalBloc.add(AddVital(vital: vs));
+
+                Navigator.pop(context);
+              },
+            )
+          ],
           backgroundColor: Colors.purple),
       body: SingleChildScrollView(
           child: Center(

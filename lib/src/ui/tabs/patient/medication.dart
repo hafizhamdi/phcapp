@@ -6,6 +6,7 @@ import 'package:phcapp/custom/choice_chip.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:intl/intl.dart';
 import 'package:phcapp/custom/label.dart';
+import 'package:phcapp/src/providers/medication_provider.dart';
 import 'package:provider/provider.dart';
 
 // const _rhythmChoices = ['Rhythm 1', 'Rhythm 2', 'Rhythm 3'];
@@ -46,12 +47,6 @@ const _medication = [
   "neb salbutamol"
 ];
 
-// const _interventionType = ["Defibrillation", "Sync-cardioversion", "Pacing"];
-
-// const _airwayType = ["BVM", "LMA", "ETT"];
-
-// const _rhythmChoice = ['Rhythm 1', 'Rhythm 2', 'Rhythm 3'];
-
 final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 final _formKey = GlobalKey<FormState>();
 
@@ -59,10 +54,6 @@ List<String> _data = ['CPR Start', 'Bystander', 'ROSC'];
 
 class Medication extends StatelessWidget {
   String data;
-
-  // List<LogMeasurement> logs = new List<LogMeasurement>();
-
-  LogModel logs_float = new LogModel();
 
   final commentController = TextEditingController();
 
@@ -89,154 +80,44 @@ class Medication extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => LogModel(),
-        child: Scaffold(
-            appBar: AppBar(
-              title: Text("Medication"),
-            ),
-            // backgroundColor: Colors.grey[200],
-            body: Consumer<LogModel>(
-              builder: (context, logs, child) {
-                logs_float = logs;
-                return SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: Center(
-                        child: Card(
-                            margin: EdgeInsets.only(
-                                left: 10, right: 10, top: 10, bottom: 70),
-                            child: Container(
-                                // alignment: Alignment.center,
-                                width: 500,
-                                child: Column(
-                                  // mainAxisAlignment: MainAxisAlignment.center,
-                                  // child: Scaffold(
-                                  //   // backgroundColor: Colors.grey[200],
-                                  //   body: Consumer<LogModel>(
-                                  //     builder: (context, logs, child) {
-                                  //       return ListView(
-                                  children: <Widget>[
-                                    // Row(
-                                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    //   children: <Widget>[
-                                    //     _buildIconData(context, logs, Icons.videocam,
-                                    //         _typeChoices, "Types"),
-                                    //     _buildIconData(context, logs, Icons.vibration,
-                                    //         _rhythmType, "Rhythm"),
-                                    //     _buildIconData(context, logs, Icons.donut_large,
-                                    //         _drugsType, "Drugs"),
-                                    //     _buildIconData(
-                                    //         context,
-                                    //         logs,
-                                    //         Icons.surround_sound,
-                                    //         _interventionType,
-                                    //         "Intervention"),
-                                    //   ],
-                                    // ),
-                                    // HeaderSection("Select rhythm"),
-                                    // SingleOption(_rhythmChoice),
-                                    // HeaderSection("CPR Logs"),
-                                    // _todaysDate(),
+    Scaffold(
+        appBar: AppBar(
+          title: Text("Medication"),
+        ),
+        // backgroundColor: Colors.grey[200],
+        body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Center(
+                child: Card(
+              margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 70),
+              // child: Container(
+              //     // alignment: Alignment.center,
+              //     width: 500,
+              //     child: Column(
+              //       children: <Widget>[
+              //         SizedBox(
+              //             // height: 500,
+              //             child: AnimatedList(
+              //                 // shrinkWrap: true,
+              //                 // physics: NeverScrollableScrollPhysics(),
 
-                                    SizedBox(
-                                        // height: 500,
-                                        child: AnimatedList(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
+              //                 // // Give the Animated list the global key
+              //                 // key: _listKey,
+              //                 // initialItemCount: logs.items.length,
+              //                 // itemBuilder: (context, index, animation) {
+              //                 //   return _buildItem(
+              //                 //       logs, index, logs.items[index], animation);
+              //                 // },
+              //                 ))
+              //       ],
+              //     ))
+            )))
 
-                                      // Give the Animated list the global key
-                                      key: _listKey,
-                                      initialItemCount: logs.items.length,
-                                      // _data.length,
-                                      // Similar to ListView itemBuilder, but AnimatedList has
-                                      // an additional animation parameter.
-                                      itemBuilder: (context, index, animation) {
-                                        // Breaking the row widget out as a method so that we can
-                                        // share it with the _removeSingleItem() method.
-                                        return _buildItem(logs, index,
-                                            logs.items[index], animation);
-                                      },
-                                    )),
-                                    // ),
-                                  ],
-                                )))));
-              },
-            ),
-            floatingActionButton: FloatingActionButton.extended(
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    // builder: (context, <LogModel> logs, child) {
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                          content: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Text('Add Medication')),
-                            // Label("Select type", ""),
-                            SingleOption(
-                                header: "Add medication",
-                                stateList: _medication,
-                                callback: chipCallback),
-                            // SingleOption(list, chipCallback),
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: TextField(
-                                decoration: InputDecoration(
-                                    // border: InputBorder.none,
-                                    hintText: "Enter dose here"),
-                                controller: commentController,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: RaisedButton(
-                                color: Colors.lightGreen,
-                                child: Text(
-                                  "ADD MEDICINE",
-                                ),
-                                onPressed: () {
-                                  String newItem = getItem();
-                                  // Arbitrary location for demonstration purposes
-                                  int insertIndex = 0;
-                                  // int lastItems = logs._item.length;
-                                  // Add the item to the data list.
-                                  LogMeasurement logItem = new LogMeasurement(
-                                      item: newItem,
-                                      measurement: commentController.text,
-                                      timestamp: new DateFormat.jm()
-                                          .format(new DateTime.now()));
-                                  logs_float.add(logItem);
-                                  // logs.add(title +
-                                  //     " " +
-                                  //     newItem +
-                                  //     " " +
-                                  //     commentController.text);
-                                  // logs._items.insert(0, newItem);
-                                  // _data.insert(insertIndex, newItem);
-                                  // Add the item visually to the AnimatedList.
-                                  _listKey.currentState.insertItem(insertIndex);
-                                  // if (_formKey.currentState.validate()) {
-                                  //   _formKey.currentState.save();
-                                  // }
-
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                      ));
-                    });
-              },
-              label: Text('ADD MEDICATION'),
-              icon: Icon(Icons.add),
-              // backgroundColor: Colors.purple,
-            )));
-    // return
+        // floatingActionButton: FloatingButton(
+        //   commentController: commentController,
+        //   logs: logs,
+        // ));
+        );
   }
 
   void onModalPressed(context) {}
@@ -260,10 +141,6 @@ class Medication extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
-                    // int temp = index;
-                    // temp -= 1;
-                    // print(temp);
-                    // print(index--);
                     logs.remove(index);
 
                     AnimatedListRemovedItemBuilder builder =
@@ -272,13 +149,6 @@ class Medication extends StatelessWidget {
                     };
                     // Remove the item visually from the AnimatedList.
                     _listKey.currentState.removeItem(index, builder);
-
-                    // This builder is just for showing the row while it is still
-                    // animating away. The item is already gone from the data list.
-
-                    // _listKey.currentStat
-                    // _listKey.currentState.
-                    // _listKey.currentState.removeItem(2);
                   },
                 )
               ],
@@ -311,10 +181,16 @@ Widget _todaysDate() {
   );
 }
 
-Widget _buildIconData(BuildContext context, logs, IconData icon,
-    List<String> list, String title) {
+class FloatingButton extends StatelessWidget {
+  final commentController;
+  final logs;
+
+  FloatingButton({this.commentController, this.logs});
   String data;
-  final commentController = TextEditingController();
+
+  String getItem() {
+    return data;
+  }
 
   void setItem(String item) {
     data = item;
@@ -329,141 +205,69 @@ Widget _buildIconData(BuildContext context, logs, IconData icon,
   }
 
   @override
-  void dispose() {
-    commentController.dispose();
-  }
-
-  String getItem() {
-    return data;
-  }
-
-  return Column(
-    children: <Widget>[
-      IconButton(
-        icon: Icon(icon),
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                    content: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text('Select $title:')),
-                      // Label("Select type", ""),
-                      SingleOption(
-                          header: title,
-                          stateList: list,
-                          callback: chipCallback),
-                      // SingleOption(list, chipCallback),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: TextField(
-                          decoration: InputDecoration(
-                              // border: InputBorder.none,
-                              hintText: "Put detail measurements"),
-                          controller: commentController,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: RaisedButton(
-                          color: Colors.lightGreen,
-                          child: Text(
-                            "GENERATE LOG",
-                          ),
-                          onPressed: () {
-                            String newItem = getItem();
-                            // Arbitrary location for demonstration purposes
-                            int insertIndex = 0;
-                            // int lastItems = logs._item.length;
-                            // Add the item to the data list.
-                            LogMeasurement logItem = new LogMeasurement(
-                                item: title + " " + newItem,
-                                measurement: commentController.text,
-                                timestamp:
-                                    DateFormat.jm().format(DateTime.now()));
-                            logs.add(logItem);
-                            // logs.add(title +
-                            //     " " +
-                            //     newItem +
-                            //     " " +
-                            //     commentController.text);
-                            // logs._items.insert(0, newItem);
-                            // _data.insert(insertIndex, newItem);
-                            // Add the item visually to the AnimatedList.
-                            _listKey.currentState.insertItem(insertIndex);
-                            // if (_formKey.currentState.validate()) {
-                            //   _formKey.currentState.save();
-
-                            // }
-                          },
-                        ),
-                      )
-                    ],
+  Widget build(BuildContext context) {
+    return FloatingActionButton.extended(
+      onPressed: () {
+        showDialog(
+            context: context,
+            // builder: (context, <LogModel> logs, child) {
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  content: SingleChildScrollView(
+                      child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text('Add Medication')),
+                  // Label("Select type", ""),
+                  SingleOption(
+                      header: "Add medication",
+                      stateList: _medication,
+                      callback: chipCallback),
+                  // SingleOption(list, chipCallback),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                          // border: InputBorder.none,
+                          hintText: "Enter dose here"),
+                      controller: commentController,
+                    ),
                   ),
-                ));
-              });
-        },
-      ),
-      Text(
-        title,
-        style: TextStyle(fontSize: 12, color: Colors.grey),
-      ),
-    ],
-  );
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RaisedButton(
+                      color: Colors.lightGreen,
+                      child: Text(
+                        "ADD MEDICINE",
+                      ),
+                      onPressed: () {
+                        String newItem = getItem();
+                        // Arbitrary location for demonstration purposes
+                        int insertIndex = 0;
+                        LogMeasurement logItem = new LogMeasurement(
+                            item: newItem,
+                            measurement: commentController.text,
+                            timestamp:
+                                new DateFormat.jm().format(new DateTime.now()));
 
-  void _insertSingleItem() {
-    // var df = new DateFormat.jm();
+                        logs.add(logItem);
+                        _listKey.currentState.insertItem(insertIndex);
+
+                        Navigator.pop(context);
+                      },
+                    ),
+                  )
+                ],
+              )));
+              // )
+              // });
+            });
+      },
+      label: Text('ADD MEDICATION'),
+      icon: Icon(Icons.add),
+      // backgroundColor: Colors.purple,
+    );
   }
-}
-
-class LogModel extends ChangeNotifier {
-  // final item;
-  // final measurement;
-
-  // LogModel({this.item, this.measurement});
-
-  /// Internal, private state of the cart.
-  final List<LogMeasurement> _items = <LogMeasurement>[
-    // LogMeasurement(
-    //     item: '',
-    //     timestamp: new DateFormat.jm().format(new DateTime.now()))
-  ];
-
-  /// An unmodifiable view of the items in the cart.
-  UnmodifiableListView<LogMeasurement> get items =>
-      UnmodifiableListView(_items);
-
-  /// Adds [item] to cart. This and [removeAll] are the only ways to modify the
-  /// cart from the outside.
-  void add(LogMeasurement item) {
-    _items.add(item);
-    // This call tells the widgets that are listening to this model to rebuild.
-    notifyListeners();
-  }
-
-  /// Removes all items from the cart.
-  void removeAll() {
-    _items.clear();
-    // This call tells the widgets that are listening to this model to rebuild.
-    notifyListeners();
-  }
-
-  void remove(int index) {
-    _items.removeAt(index);
-
-    notifyListeners();
-  }
-}
-
-class LogMeasurement {
-  final item;
-  final measurement;
-  final timestamp;
-
-  LogMeasurement({this.item, this.measurement, this.timestamp});
 }

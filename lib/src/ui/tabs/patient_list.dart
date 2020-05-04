@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phcapp/custom/choice_chip.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
+import 'package:phcapp/src/providers/patinfo_provider.dart';
 import 'package:phcapp/src/ui/tabs/patient/patient_tab.dart';
+import 'package:provider/provider.dart';
 // import 'package:phcapp/custom/label.dart';
 // import 'package:phcapp/custom/input.dart';
 import '../../models/phc.dart';
@@ -20,13 +22,18 @@ const _otherServices = [
 ];
 
 class PatientListScreen extends StatefulWidget {
+  final assign_id;
+  final SceneAssessment sceneAssessment;
   final List<Patient> patients;
 
-  PatientListScreen({this.patients});
+  PatientListScreen({this.assign_id, this.patients, this.sceneAssessment});
   _Patients createState() => _Patients();
 }
 
-class _Patients extends State<PatientListScreen> {
+class _Patients extends State<PatientListScreen>
+    with AutomaticKeepAliveClientMixin<PatientListScreen> {
+  @override
+  bool get wantKeepAlive => true;
   // List<PatientModel> patients = <PatientModel>[
   //   PatientModel(name: "Abu Bakar malik bin marwan", age: "45", gender: "Male"),
   //   PatientModel(name: "Abu Bakar", age: "45", gender: "Male"),
@@ -36,9 +43,29 @@ class _Patients extends State<PatientListScreen> {
 
   PatientBloc patientBloc;
 
+  // @override
+  // initState() {
+    //   patientBloc = BlocProvider.of<PatientBloc>(context);
+
+    //   patientBloc.add(LoadPatient(assign_id: widget.assign_id));
+  // }
+
   @override
-  initState() {
-    patientBloc = BlocProvider.of<PatientBloc>(context);
+  void didChangeDependencies() {
+    final patientBloc = BlocProvider.of<PatientBloc>(context);
+
+    if (widget.patients != null) {
+      patientBloc.add(LoadPatient(
+          assign_id: widget.assign_id,
+          sceneAssessment: SceneAssessment(
+              otherServicesAtScene: ["Civil defence", "Fire rescue"]),
+          patients: widget.patients));
+    } else {
+      patientBloc.add(
+          LoadPatient(assign_id: widget.assign_id, patients: List<Patient>()));
+    }
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -47,7 +74,7 @@ class _Patients extends State<PatientListScreen> {
     super.dispose();
   }
 
-  Widget _buildSceneChips(header, list, callback) {
+  Widget _buildSceneChips(header, list, callback, initialData) {
     return Container(
         width: 500,
         margin: EdgeInsets.all(10),
@@ -61,11 +88,11 @@ class _Patients extends State<PatientListScreen> {
               //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               //   children: <Widget>[
               SingleOption(
-            header: header,
-            stateList: list,
-            callback: callback,
-            multiple: true,
-          ),
+                  header: header,
+                  stateList: list,
+                  callback: callback,
+                  multiple: true,
+                  initialData: initialData),
           // ],
           // ),
         )));
@@ -120,10 +147,15 @@ class _Patients extends State<PatientListScreen> {
               // },
               ),
         ),
-      ));
+      )
+          // )
+          );
 
   @override
   Widget build(BuildContext context) {
+    final patientBloc = BlocProvider.of<PatientBloc>(context);
+
+    // final patientBloc = Provider
     Widget circle(count) => Container(
           width: 25,
           height: 25,
@@ -140,74 +172,108 @@ class _Patients extends State<PatientListScreen> {
     void callback(String item, List<String> selectedItems) {}
 
     return Scaffold(
-        body: BlocBuilder(
-            bloc: patientBloc,
+        body: BlocBuilder<PatientBloc, PatientState>(
+            // bloc: patientBloc,
             builder: (context, state) {
-              final currentState = state;
-              if (currentState is PatientLoaded) {
-                return SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: Center(
-                        child: Card(
-                      margin: EdgeInsets.only(
-                          left: 10, right: 10, top: 10, bottom: 70),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          HeaderSection("Scene Assessment"),
-                          _buildSceneChips("Other services at scene",
-                              _otherServices, callback),
-                          Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Stack(children: <Widget>[
-                                HeaderSection("Patients"),
-                                Positioned(
-                                  child: circle(currentState.patients.length),
-                                  right: 0,
-                                  top: 0,
-                                  width: 20,
-                                ),
-                              ])),
-                          Container(
-                              width: 500,
-                              padding: EdgeInsets.only(bottom: 10),
-                              child: ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                // addRepaintBoundaries: false,
-                                shrinkWrap: true,
-                                // ke: ,
-                                // padding: EdgeInsets.all(30),
-                                itemCount: currentState.patients.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return _buildPatient(
-                                      currentState
-                                          .patients[index].patientInformation,
-                                      PatientTab(
-                                          patient: currentState.patients[index],
-                                          index: index));
-                                },
-                              )
-                              // }
+          final currentState = state;
+          print("WHAT ABOUT THIS");
+          print(currentState);
+          if (currentState is PatientLoaded) {
+            return SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Center(
+                    child: Card(
+                  margin:
+                      EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 70),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      HeaderSection("Scene Assessment"),
+                      _buildSceneChips(
+                          "Other services at scene",
+                          _otherServices,
+                          callback,
+                          currentState.sceneAssessment.otherServicesAtScene),
+                      Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Stack(children: <Widget>[
+                            HeaderSection("Patients"),
+                            Positioned(
+                              child: circle(currentState.patients.length),
+                              right: 0,
+                              top: 0,
+                              width: 20,
+                            ),
+                          ])),
+                      Container(
+                          width: 500,
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            // addRepaintBoundaries: false,
+                            shrinkWrap: true,
+                            // ke: ,
+                            // padding: EdgeInsets.all(30),
+                            itemCount: currentState.patients.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return _buildPatient(
+                                  currentState
+                                      .patients[index].patientInformation,
+                                  PatientTab(
+                                      patient: currentState.patients[index],
+                                      index: index));
+                            },
+                          )
+                          // }
 // },
-                              )
-                        ],
-                      ),
-                    )));
-              }
+                          )
+                    ],
+                  ),
+                )));
+          }
 
-              return Container();
-            }),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            // BlocProvider.of(context);
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => PatientTab()));
-            // Add your onPressed code here!
-          },
-          label: Text('ADD PATIENT'),
-          icon: Icon(Icons.add),
-          // backgroundColor: Colors.purple,
-        ));
+          return Container();
+        }),
+        floatingActionButton: Stack(children: [
+          Padding(
+              padding: EdgeInsets.only(bottom: 70),
+              child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: FloatingActionButton.extended(
+                    heroTag: 0,
+                    onPressed: () {
+                      // BlocProvider.of(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PatientTab(
+                                    patient: new Patient(
+                                        patientInformation:
+                                            new PatientInformation()),
+                                  )));
+                      // Add your onPressed code here!
+                    },
+                    label: Text('ADD PATIENT'),
+                    icon: Icon(Icons.add),
+                    // backgroundColor: Colors.purple,
+                  ))),
+          Align(
+              alignment: Alignment.bottomRight,
+              child: FloatingActionButton(
+                  onPressed: () {
+                    patientBloc.add(AddSceneAssessment(
+                        patients: patientBloc.state.patients,
+                        sceneAssessment: patientBloc.sceneAssessment));
+
+                    print(patientBloc.state.patients);
+                    print(patientBloc.sceneAssessment);
+                    final snackBar = SnackBar(
+                      content: Text("Scene Assessment has been saved!"),
+                    );
+                    Scaffold.of(context).showSnackBar(snackBar);
+                  },
+                  child: Icon(Icons.save))),
+        ]));
   }
 }

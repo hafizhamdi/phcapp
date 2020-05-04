@@ -72,7 +72,7 @@ class Callcard {
   List<Patient> get listPatients => patients;
 }
 
-class CallInformation extends ChangeNotifier {
+class CallInformation {
   String callcardNo;
   String callReceived;
   String callerContactno;
@@ -201,7 +201,7 @@ class Patient {
 class CprLog {
   String id;
   DateTime created;
-  List<Log> logs;
+  List<LogMeasurement> logs;
 
   CprLog({
     this.id,
@@ -212,7 +212,8 @@ class CprLog {
   factory CprLog.fromJson(Map<String, dynamic> json) => CprLog(
         id: json["id"],
         created: DateTime.parse(json["created"]),
-        logs: List<Log>.from(json["logs"].map((x) => Log.fromJson(x))),
+        logs:
+            List<LogMeasurement>.from(json["logs"].map((x) => Log.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -240,6 +241,28 @@ class Log {
         "message": message,
         "timestamp": timestamp.toIso8601String(),
       };
+}
+
+class LogMeasurement {
+  String item;
+  String timestamp;
+  String measurement;
+
+  LogMeasurement({this.item, this.timestamp, this.measurement});
+
+  LogMeasurement.fromJson(Map<String, dynamic> json) {
+    item = json['item'];
+    timestamp = json['timestamp'];
+    measurement = json['measurement'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['item'] = this.item;
+    data['timestamp'] = this.timestamp;
+    data['measurement'] = this.measurement;
+    return data;
+  }
 }
 
 class IncidentReporting {
@@ -760,7 +783,7 @@ class Pupil {
       };
 }
 
-class ResponseTeam {
+class ResponseTeam extends Equatable {
   String serviceResponse;
   String vehicleRegno;
   List<Staff> staffs;
@@ -787,20 +810,31 @@ class ResponseTeam {
 class Staff {
   String name;
   String position;
+  String userid;
+  String password;
+  String designation_code;
 
-  Staff({
-    this.name,
-    this.position,
-  });
+  Staff(
+      {this.name,
+      this.position,
+      this.userid,
+      this.password,
+      this.designation_code});
 
   factory Staff.fromJson(Map<String, dynamic> json) => Staff(
         name: json["name"],
         position: json["position"],
+        userid: json["user_id"],
+        password: json["user_password"],
+        designation_code: json["designation_code"],
       );
 
   Map<String, dynamic> toJson() => {
         "name": name,
         "position": position,
+        "userid": userid,
+        "password": password,
+        "designation_code": designation_code,
       };
 }
 

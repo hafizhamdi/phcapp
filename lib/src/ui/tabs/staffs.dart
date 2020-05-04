@@ -15,11 +15,13 @@ class _Staffs extends State<Staffs> {
   List<Staff> _listStaffs;
 
   String filter;
+  TeamBloc teamBloc;
 
   @override
   void initState() {
     super.initState();
     staffBloc = BlocProvider.of<StaffBloc>(context);
+    teamBloc = BlocProvider.of<TeamBloc>(context);
     print("staffBloc");
     print(staffBloc);
     staffBloc.add(FetchStaff());
@@ -30,6 +32,8 @@ class _Staffs extends State<Staffs> {
       });
     });
   }
+
+  List<int> listSelected = new List<int>();
 
   @override
   build(BuildContext context) {
@@ -76,11 +80,13 @@ class _Staffs extends State<Staffs> {
                           title: Text(state.available_staffs[index].name),
                           subtitle:
                               Text(state.available_staffs[index].position),
-                          trailing: IconButton(
-                            icon: Icon(Icons.check),
-                            onPressed: () {},
-                          ),
+                          trailing: teamBloc.listSelected.contains(index)
+                              ? Icon(Icons.check)
+                              : null,
                           onTap: () {
+                            setState(() {
+                              teamBloc.listSelected.add(index);
+                            });
                             print("your location:{$index}");
                             print("you pressed me!! " +
                                 state.available_staffs[index].name);
@@ -97,8 +103,7 @@ class _Staffs extends State<Staffs> {
                               .toLowerCase()
                               .contains(filter.toLowerCase())
                           ? ListTile(
-                              title:
-                                  Text(state.available_staffs[index].name),
+                              title: Text(state.available_staffs[index].name),
                               subtitle:
                                   Text(state.available_staffs[index].position),
                               trailing: IconButton(

@@ -21,7 +21,7 @@ class PhcApiClient {
     return Phc.fromJson(phcJson);
   }
 
-  Future<Callcard> postCallcard(Callcard callcard) async {
+  Future postCallcard(Callcard callcard) async {
     assert(callcard != null);
 
     print("post callcard masuk");
@@ -29,19 +29,32 @@ class PhcApiClient {
 
     var internal_callcard = {};
     internal_callcard["call_information"] = callcard.call_information;
+    internal_callcard["response_team"] = callcard.response_team;
+    internal_callcard["response_time"] = callcard.response_time;
     final postResponse = await this.httpClient.post(
         "$baseUrl/upload_result/call_card",
         body: jsonEncode(internal_callcard));
 
     print("post-status-code:");
     print(postResponse.statusCode);
-    if (postResponse.statusCode == 200) {
-      final resultResponse = jsonDecode(postResponse.body);
-      return Callcard.fromJson(resultResponse);
-    } else {
+    // if (postResponse.statusCode == 200) {
+    //   print("masuk dalam 200");
+    //   final resultResponse = jsonDecode(postResponse.body);
+    //   print("result response");
+    //   print(resultResponse);
+    //   // return Callcard.fromJson(resultResponse);
+    //   return resultResponse;
+    // } else {
+    if (postResponse.statusCode != 200) {
       print("htrow excemptions");
       throw Exception("Failed to post call card");
     }
+
+    print("Lepas throw");
+    final callcardJson = jsonDecode(postResponse.body);
+    print(callcardJson);
+    return callcardJson;
+    // return Callcard.fromJson(callcardJson);
   }
 
   Future fetchAvailableStaffs() async {
