@@ -5,6 +5,8 @@ import 'package:phcapp/src/blocs/history_bloc.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:provider/provider.dart';
 
+import 'callcard_tabs.dart';
+
 enum WhatTodo { clearAllHistory }
 
 class History extends StatefulWidget {
@@ -125,13 +127,38 @@ class _History extends State<History> {
                                   children: <Widget>[
                                     IconButton(
                                         icon: Icon(Icons.edit),
-                                        onPressed: () {}),
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CallcardTabs(
+                                                        callcard_no: data
+                                                            .historyCallcard
+                                                            .call_information
+                                                            .callcard_no,
+                                                        call_information: data
+                                                            .historyCallcard
+                                                            .call_information,
+                                                        response_team: data
+                                                            .historyCallcard
+                                                            .response_team,
+                                                        response_time: data
+                                                            .historyCallcard
+                                                            .response_time,
+                                                        patients: data
+                                                            .historyCallcard
+                                                            .patients,
+
+                                                        // phcDao: widget.phcDao,
+                                                      )));
+                                        }),
                                     FlatButton(
                                       child: Text("RESEND"),
                                       color: Colors.green,
                                       onPressed: () {
                                         print("RESEND============");
-                                        tabBloc.add(PublishCallcard(
+                                        tabBloc.add(RepublishCallcard(
                                             callInformation: data
                                                 .historyCallcard
                                                 .call_information,

@@ -33,7 +33,7 @@ class CallcardTabs extends StatefulWidget {
   final ResponseTeam response_team;
   final ResponseTime response_time;
   final List<Patient> patients;
-  final PhcDao phcDao;
+  // final PhcDao phcDao;
 
   CallcardTabs(
       {this.callcard_no,
@@ -41,7 +41,8 @@ class CallcardTabs extends StatefulWidget {
       this.response_team,
       this.response_time,
       this.patients,
-      this.phcDao});
+      // this.phcDao
+      });
 
   _CallcardTabs createState() => _CallcardTabs();
 }

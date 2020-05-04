@@ -226,7 +226,7 @@ class _ListCallcards extends State<ListCallcards> {
                           response_team: phc.callcards[index].response_team,
                           response_time: phc.callcards[index].response_time,
                           patients: phc.callcards[index].patients,
-                          phcDao: widget.phcDao,
+                          // phcDao: widget.phcDao,
                         )));
             // Navigator.pushNamed(context, "/callcarddetail");
           },
