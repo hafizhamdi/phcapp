@@ -35,14 +35,14 @@ class CallcardTabs extends StatefulWidget {
   final List<Patient> patients;
   // final PhcDao phcDao;
 
-  CallcardTabs(
-      {this.callcard_no,
-      this.call_information,
-      this.response_team,
-      this.response_time,
-      this.patients,
-      // this.phcDao
-      });
+  CallcardTabs({
+    this.callcard_no,
+    this.call_information,
+    this.response_team,
+    this.response_time,
+    this.patients,
+    // this.phcDao
+  });
 
   _CallcardTabs createState() => _CallcardTabs();
 }
@@ -139,6 +139,7 @@ class _CallcardTabs extends State<CallcardTabs> {
     final patientBloc = BlocProvider.of<PatientBloc>(context);
     final tabBloc = BlocProvider.of<CallCardTabBloc>(context);
     final historyBloc = BlocProvider.of<HistoryBloc>(context);
+    final callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
     // var callcard = Provider.of<Callcard>(context);
 
     // callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
@@ -179,15 +180,23 @@ class _CallcardTabs extends State<CallcardTabs> {
                   ],
                 ),
                 title: Center(
-                    child: Text(widget.callcard_no,
-                        style:
-                            TextStyle(fontFamily: "OpenSans", fontSize: 20))),
+                    child: StreamBuilder(
+                        initialData: '',
+                        stream: callInfoBloc.cardNoController.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(snapshot.data,
+                                style: TextStyle(
+                                    fontFamily: "OpenSans", fontSize: 20));
+                          }
+                          return Container();
+                        })),
+
                 actions: <Widget>[
                   IconButton(
                     icon: const Icon(Icons.cloud_upload),
                     tooltip: "Push to Server",
                     onPressed: () {
-                      callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
                       print("callInfoBloc state push toserver");
                       final call_information = callInfoBloc.callInformation;
 

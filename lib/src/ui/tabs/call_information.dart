@@ -70,14 +70,18 @@ class _CallInfoState extends State<CallInformationScreen>
   TextEditingController locationController = TextEditingController();
   TextEditingController landmarkController = TextEditingController();
   String initialValue;
-
+  String cardNoValue = "";
   @override
   void didChangeDependencies() {
+    callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
     print("widget.call_information.assign_id");
     print(widget.call_information.assign_id);
     if (widget.call_information != null) {
       receivedController.text = widget.call_information.call_received;
-      cardNoController.text = widget.call_information.callcard_no;
+      cardNoValue = widget.call_information.callcard_no;
+      callInfoBloc.cardNoController.sink
+          .add(widget.call_information.callcard_no);
+      // cardNoController.text = widget.call_information.callcard_no;
       contactNoController.text = widget.call_information.caller_contactno;
       eventCodeController.text = widget.call_information.event_code;
       incidentController.text = widget.call_information.incident_desc;
@@ -93,6 +97,11 @@ class _CallInfoState extends State<CallInformationScreen>
     //   receivedController.text = DateTime.now().toIso8601String();
     // }
 
+    callInfoBloc.cardNoController.stream.listen((value) {
+      cardNoValue = value;
+      print('Value from controller: $value');
+    });
+
     super.didChangeDependencies();
   }
 
@@ -106,7 +115,7 @@ class _CallInfoState extends State<CallInformationScreen>
     //     callInformation:
     //         new CallInformation(callcardNo: cardNoController.text)));
     // print("call info captured");
-    cardNoController.dispose();
+    // cardNoController.dispose();
     receivedController.dispose();
     contactNoController.dispose();
     eventCodeController.dispose();
@@ -176,12 +185,14 @@ class _CallInfoState extends State<CallInformationScreen>
                 // //     labelText: "Call Card No",
                 // //     controller: cardNoController),
 
-                TextInput(
-                    labelText: "Call Card No", controller: cardNoController
-                    // controller: cardNoController,
-                    // stream: infoBloc.callcarNoStream,
-                    // updateText: infoBloc.setCallcardNo,
-                    ),
+                CardNoTextInput(
+                  labelText: "Call Card No",
+                  controller: callInfoBloc.cardNoController,
+                  initialData: cardNoValue,
+                  // controller: cardNoController,
+                  // stream: infoBloc.callcarNoStream,
+                  // updateText: infoBloc.setCallcardNo,
+                ),
                 _dateReceived("Date Received", receivedController),
                 TextInput(
                   labelText: "Caller Contact No",
@@ -235,7 +246,7 @@ class _CallInfoState extends State<CallInformationScreen>
           print(widget.call_information.assign_id);
           callInfoBloc.add(SaveCallInfo(
               callInformation: new CallInformation(
-                  callcardNo: cardNoController.text,
+                  callcardNo: cardNoValue,
                   callReceived: receivedController.text,
                   callerContactno: contactNoController.text,
                   eventCode: eventCodeController.text,
@@ -359,6 +370,49 @@ class _CallInfoState extends State<CallInformationScreen>
                             borderSide: new BorderSide(),
                           )));
                 })));
+  }
+}
+
+class CardNoTextInput extends StatelessWidget {
+  final labelText;
+  final controller;
+  final inputType;
+  final maskFormater;
+  final hintText;
+  final initialData;
+
+  CardNoTextInput(
+      {this.labelText,
+      this.controller,
+      this.maskFormater,
+      this.inputType,
+      this.hintText,
+      this.initialData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        // width: 500,
+        width: 500,
+        child: Padding(
+            padding: EdgeInsets.all(16),
+            child: TextFormField(
+                initialValue: initialData,
+                // validator: validator,
+                inputFormatters: maskFormater != null ? [maskFormater] : [],
+                onChanged: (value) {
+                  controller.sink.add(value);
+                },
+                // keyboardType: inputType,
+                // controller: controller,
+                decoration: InputDecoration(
+                    // hintText: hintText,
+                    labelText: labelText,
+                    fillColor: Colors.white,
+                    border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(10.0),
+                      borderSide: new BorderSide(),
+                    )))));
   }
 }
 

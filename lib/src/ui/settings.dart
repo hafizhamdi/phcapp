@@ -20,7 +20,7 @@ class Settings extends StatelessWidget {
             )));
   }
 
-  appChild() => Text("1.0.04.20");
+  appChild() => Text("1.1.05.20");
 
   toggleButton(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);

@@ -65,8 +65,8 @@ class CallInfoBloc extends Bloc<CallInfoEvent, CallInfoState> {
   get initialState => CallInfoInitial();
 
   CallInformation callInformation;
-  TextEditingController cardNoController = new TextEditingController();
-  // StreamController<String> cardNoController = new StreamController.broadcast();
+  // TextEditingController cardNoController = new TextEditingController();
+  StreamController<String> cardNoController = new StreamController.broadcast();
 
   @override
   Stream<CallInfoState> mapEventToState(event) async* {
