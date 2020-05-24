@@ -10,3 +10,5 @@ export 'trauma_bloc.dart';
 export 'login_bloc.dart';
 export 'history_bloc.dart';
 export 'callcard_tab_bloc.dart';
+export 'intervention_bloc.dart';
+export '../ui/tabs/patient/cpr/bloc_cpr.dart';

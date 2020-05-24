@@ -7,10 +7,13 @@ import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/providers/cpr_provider.dart';
 import 'package:phcapp/src/providers/medication_provider.dart';
 import 'package:phcapp/src/providers/patinfo_provider.dart';
+import 'package:phcapp/src/providers/vital_provider.dart';
+import 'package:phcapp/src/ui/tabs/patient/cpr/list_cpr.dart';
 import 'package:provider/provider.dart';
+import 'cprlog_list.dart';
 import 'main_assessment.dart';
 import 'information.dart';
-import 'cprlog.dart';
+// import 'cprlog.dart';
 // import 'assessment.dart';
 import 'vitalsign_list.dart';
 
@@ -28,6 +31,7 @@ class PatientTab extends StatefulWidget {
 class _PatientTab extends State<PatientTab> {
   PatientBloc patientBloc;
   PatientInformation patientInformation;
+  VitalBloc vitalBloc;
 
   Action getAction(index) {
     if (index == null)
@@ -39,6 +43,7 @@ class _PatientTab extends State<PatientTab> {
   @override
   void initState() {
     patientBloc = BlocProvider.of<PatientBloc>(context);
+    // print(widget.patient.toJson());
     super.initState();
   }
 
@@ -47,8 +52,23 @@ class _PatientTab extends State<PatientTab> {
     super.dispose();
   }
 
+  convertDOBtoStandard(data) {
+    print("CONVERT DOB");
+    if (data == null) return null;
+
+    var split = data.split('/');
+    var dd = split[0];
+    var MM = split[1];
+    var yyyy = split[2];
+
+    print(data);
+    print("$yyyy-$MM-$dd");
+    return "$yyyy-$MM-$dd";
+  }
+
   @override
   Widget build(BuildContext context) {
+    final vitalBloc = BlocProvider.of<VitalBloc>(context);
     final action = getAction(widget.index);
     // final patProvider = Provider.of<PatInfoProvider>(context);
 
@@ -62,7 +82,7 @@ class _PatientTab extends State<PatientTab> {
           idNo: patProvider.getId,
           idType: patProvider.getIdtype,
           age: patProvider.getAge,
-          dob: patProvider.getDob,
+          dob: convertDOBtoStandard(patProvider.getDob),
           gender: patProvider.getGender);
 
       print(patProvider.getName);
@@ -70,50 +90,65 @@ class _PatientTab extends State<PatientTab> {
       return patInfo;
     }
 
-    List<CprLog> preparingResultCPRlog(BuildContext context) {
-      final logProvider = Provider.of<CPRProvider>(context, listen: false);
+    // CprLog preparingResultCPRlog(BuildContext context) {
+    // final logProvider = Provider.of<CPRProvider>(context, listen: false);
 
-      final logs = logProvider.items;
-      final newCpr = new CprLog(id: "1", created: DateTime.now(), logs: logs);
-      print("PREPARING RESULT CPRLOG");
-      print(newCpr.toJson());
+    // final logs = logProvider.items;
+    // final newCpr = new CprLog(id: "1", created: DateTime.now(), logs: logs);
+    // print("PREPARING RESULT CPRLOG");
+    // print(newCpr.toJson());
 
-      List<CprLog> list = List<CprLog>(1);
-      list[0] = newCpr;
+    // List<CprLog> list = List<CprLog>(1);
+    // list[0] = newCpr;
 
-      return list;
+    // return newCpr;
+    // }
+
+    List<VitalSign> preparingResultVitalSigns(BuildContext context) {
+      // print(vitalBloc.state.listVitals);
+      // print(vitalBloc.state.listVitals.length);
+      return vitalBloc.state.listVitals;
     }
 
-    createButton(BuildContext context, action) => FlatButton(
+    createButton(BuildContext context, action, index) => FlatButton(
         onPressed: () {
-          if (action == Action.delete) {
-            //TODO:Update
+          final provider = Provider.of<PatInfoProvider>(context, listen: false);
+          if (provider.formKey.currentState.validate()) {
+            final patInfo = preparingResultPatientInformation(context);
+            // final cprlog = preparingResultCPRlog();
 
-          } else {
-            final provider =
-                Provider.of<PatInfoProvider>(context, listen: false);
-            if (provider.formKey.currentState.validate()) {
-              final patInfo = preparingResultPatientInformation(context);
-              // final cprlog = preparingResultCPRlog();
+            final traumaBloc = BlocProvider.of<TraumaBloc>(context);
 
-              final traumaBloc = BlocProvider.of<TraumaBloc>(context);
+            print("trauma state");
+            print(traumaBloc.state);
 
-              print("trauma state");
-              print(traumaBloc.state);
+            // print(cprlog)
 
-              // print(cprlog)
+            final cprBloc = BlocProvider.of<CprBloc>(context);
+            print("CPR RESULT WOHOW");
+            print(cprBloc.state.cpr.toJson());
+            // final cprlog = preparingResultCPRlog(context);
+            // print(cprlog);
 
-              final cprlog = preparingResultCPRlog(context);
-              print(cprlog);
-
+            final vitalsigns = preparingResultVitalSigns(context);
+            if (action == Action.delete) {
+              //TODO:Update
+              patientBloc.add(UpdatePatient(
+                  patient: new Patient(
+                      cpr: cprBloc.state.cpr,
+                      patientInformation: patInfo,
+                      vitalSigns: vitalsigns),
+                  index: widget.index));
+            } else {
               patientBloc.add(AddPatient(
-                patient:
-                    new Patient(patientInformation: patInfo, cprLogs: cprlog),
+                patient: new Patient(
+                    cpr: cprBloc.state.cpr,
+                    patientInformation: patInfo,
+                    vitalSigns: vitalsigns),
               ));
-
-              print("patient created");
-              Navigator.pop(context);
             }
+            print("patient created");
+            Navigator.pop(context);
           }
         },
         child: Text(
@@ -154,7 +189,7 @@ class _PatientTab extends State<PatientTab> {
                     ),
                     actions: <Widget>[
                       deleteButton(context, action),
-                      createButton(context, action)
+                      createButton(context, action, widget.index)
                     ],
                     backgroundColor: Colors.purple),
                 body: TabBarView(
@@ -162,8 +197,10 @@ class _PatientTab extends State<PatientTab> {
                     PatientInformationScreen(
                         patient_information: widget.patient.patientInformation),
                     // ),
-                    CPRLog(),
-                    VitalSignList(),
+                    ListCPR(),
+                    VitalSignList(
+                        listVitals: widget.patient.vitalSigns,
+                        index: widget.index),
                     MainAssessment(context: context),
                   ],
                 ),

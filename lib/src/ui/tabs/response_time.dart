@@ -82,6 +82,7 @@ class _TimerState extends State<ResponseTimeScreen>
     _transportController.close();
     _atHospitalController.close();
     _rerouteController.close();
+    _missionController.close();
     super.dispose();
   }
 
@@ -104,17 +105,18 @@ class _TimerState extends State<ResponseTimeScreen>
           child: ConstrainedBox(
               constraints: BoxConstraints(), child: _buildMainCard(context))),
       floatingActionButton: FloatingActionButton(
+        heroTag: 220,
         onPressed: () {
           timeBloc.add(AddResponseTime(
               assignId: widget.assign_id,
               responseTime: new ResponseTime(
-                  dispatchTime: _dispatchTime.toString(),
-                  enrouteTime: _enrouteTime.toString(),
-                  atSceneTime: _atSceneTime.toString(),
-                  atPatientTime: _atPatientTime.toString(),
-                  transportingTime: _transportTime.toString(),
-                  atHospitalTime: _atHospitalTime.toString(),
-                  rerouteTime: _rerouteTime.toString(),
+                  dispatchTime: _dispatchTime,
+                  enrouteTime: _enrouteTime,
+                  atSceneTime: _atSceneTime,
+                  atPatientTime: _atPatientTime,
+                  transportingTime: _transportTime,
+                  atHospitalTime: _atHospitalTime,
+                  rerouteTime: _rerouteTime,
                   reasonAbort: missionAbort)));
 
           final snackBar = SnackBar(
@@ -131,51 +133,53 @@ class _TimerState extends State<ResponseTimeScreen>
     print(datetime);
 
     if (datetime == "null" || datetime == null || datetime == '') {
-      return DateTime.now();
+      return null;
     }
     return DateTime.parse(datetime);
   }
 
   Widget _buildMainCard(BuildContext context) {
     return Center(
-        child: Card(
-            margin: EdgeInsets.all(10),
-            child: BlocBuilder<TimeBloc, TimeState>(
-              builder: (context, state) {
-                // // if (state is TimeLoaded) {
-                // final currentState = state.responseTime;
-                // final dispatchTime = parseTime(currentState.dispatchTime);
-                // final enrouteTime = parseTime(currentState.enrouteTime);
-                // final atSceneTime = parseTime(currentState.atSceneTime);
-                // final atPatientTime = parseTime(currentState.atPatientTime);
-                // final atHospitalTime = parseTime(currentState.atHospitalTime);
-                // final transportingTime =
-                //     parseTime(currentState.transportingTime);
-                // final rerouteTime = parseTime(currentState.rerouteTime);
+        child: Container(
+            width: 500,
+            child: Card(
+                margin: EdgeInsets.all(10),
+                child: BlocBuilder<TimeBloc, TimeState>(
+                  builder: (context, state) {
+                    // // if (state is TimeLoaded) {
+                    // final currentState = state.responseTime;
+                    // final dispatchTime = parseTime(currentState.dispatchTime);
+                    // final enrouteTime = parseTime(currentState.enrouteTime);
+                    // final atSceneTime = parseTime(currentState.atSceneTime);
+                    // final atPatientTime = parseTime(currentState.atPatientTime);
+                    // final atHospitalTime = parseTime(currentState.atHospitalTime);
+                    // final transportingTime =
+                    //     parseTime(currentState.transportingTime);
+                    // final rerouteTime = parseTime(currentState.rerouteTime);
 
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Center(child: HeaderSection("Response Time")),
-                    _buildTimeCard("Dispatch Time", Response.dispatch),
-                    _buildTimeCard("Enroute Time", Response.enroute),
-                    _buildTimeCard("At Scene Time", Response.atScene),
-                    _buildTimeCard("At Patient Time", Response.atPatient),
-                    _buildTimeCard("Transporting Time", Response.transport),
-                    _buildTimeCard("At Hospital Time", Response.atHospital),
-                    _buildTimeCard("Reroute Time", Response.reroute),
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                    ),
-                    DropDownList("Mission Abort", LIST_MISSIONABORT,
-                        _missionController, missionAbort)
-                  ],
-                );
-                //   }
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Center(child: HeaderSection("Response Time")),
+                        _buildTimeCard("Dispatch Time", Response.dispatch),
+                        _buildTimeCard("Enroute Time", Response.enroute),
+                        _buildTimeCard("At Scene Time", Response.atScene),
+                        _buildTimeCard("At Patient Time", Response.atPatient),
+                        _buildTimeCard("Transporting Time", Response.transport),
+                        _buildTimeCard("At Hospital Time", Response.atHospital),
+                        _buildTimeCard("Reroute Time", Response.reroute),
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                        ),
+                        DropDownList("Mission Abort", LIST_MISSIONABORT,
+                            _missionController, missionAbort)
+                      ],
+                    );
+                    //   }
 
-                //   return Container();
-              },
-            )));
+                    //   return Container();
+                  },
+                ))));
   }
 
   DateTime getInitialTimestamp(selector) {
@@ -183,28 +187,28 @@ class _TimerState extends State<ResponseTimeScreen>
 
     switch (selector) {
       case Response.dispatch:
-        return parseTime(data.dispatchTime);
+        return data.dispatchTime;
         break;
       case Response.enroute:
-        return parseTime(data.enrouteTime);
+        return data.enrouteTime;
         break;
       case Response.atScene:
-        return parseTime(data.atSceneTime);
+        return data.atSceneTime;
         break;
       case Response.atPatient:
-        return parseTime(data.atPatientTime);
+        return data.atPatientTime;
         break;
       case Response.transport:
-        return parseTime(data.transportingTime);
+        return data.transportingTime;
         break;
       case Response.atHospital:
-        return parseTime(data.atHospitalTime);
+        return data.atHospitalTime;
         break;
       case Response.reroute:
-        return parseTime(data.rerouteTime);
+        return data.rerouteTime;
         break;
       default:
-        return DateTime.now();
+        return null;
         break;
     }
   }
@@ -346,12 +350,14 @@ class _TimerState extends State<ResponseTimeScreen>
         onPressed: () {
           streamController.sink.add(DateTime.now());
 
+          setTimestamp(DateTime.now(), selector);
+
           final snackBar = SnackBar(
             content: Text(labelText + " changed!"),
-            action: SnackBarAction(
-              label: "Undo",
-              onPressed: () {},
-            ),
+            // action: SnackBarAction(
+            // label: "Undo",
+            //   onPressed: () {},
+            // ),
           );
           Scaffold.of(context).showSnackBar(snackBar);
         },
@@ -368,12 +374,20 @@ class _TimerState extends State<ResponseTimeScreen>
       builder: (context, snapshot) {
         setTimestamp(snapshot.data, selector);
 
+        if (snapshot.data == null) {
+          return Text("No data",
+              style: TextStyle(fontFamily: "OpenSans", fontSize: 16
+                  // fontWeight: FontWeight.bold,
+                  // fontSize: 30,
+                  ));
+        }
+
         return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                DateFormat("HH:mm:ss").format(snapshot.data),
+                DateFormat("HH:mm").format(snapshot.data),
                 style: TextStyle(
                   fontFamily: "Roboto",
                   fontWeight: FontWeight.bold,

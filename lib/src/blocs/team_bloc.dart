@@ -7,8 +7,14 @@ import 'package:bloc/bloc.dart';
 import 'package:phcapp/src/models/phc_staff.dart';
 
 abstract class TeamEvent extends Equatable {
-  TeamEvent();
+  final ResponseTeam responseTeam;
+
+  TeamEvent({this.responseTeam});
+  @override
+  List<Object> get props => [responseTeam];
 }
+
+class InitTeam extends TeamEvent {}
 
 class LoadTeam extends TeamEvent {
   final ResponseTeam responseTeam;
@@ -92,6 +98,13 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
   @override
   TeamState get initialState => TeamEmpty();
 
+  // @override
+  // Future<void> close() {
+  //   listSelected = [];
+
+  //   return super.close();
+  // }
+
   @override
   Stream<TeamState> mapEventToState(TeamEvent event) async* {
     if (event is LoadTeam) {
@@ -105,8 +118,9 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
       // await phcDao.insertResponseTeam(event.response_team, event.assign_id);
 
       // yield* _reloadResponseTeam(event.assign_id);
+    } else if (event is InitTeam) {
+      yield TeamEmpty();
     }
-    // else if (event is AddStaff) {
   }
 
   Stream<TeamState> _mapLoadTeamToState(LoadTeam event) async* {
@@ -137,13 +151,19 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
     //   return Staff;
     // }).toList();
 
-    final currentState = state;
+    // final currentState = state;final currentState = state;
     ResponseTeam responseTeam = new ResponseTeam(
         serviceResponse: event.responseTeam.serviceResponse,
         vehicleRegno: event.responseTeam.vehicleRegno,
         staffs: event.responseTeam.staffs != null
             ? event.responseTeam.staffs
             : new List<Staff>());
+    // ResponseTeam responseTeam = new ResponseTeam(
+    //     serviceResponse: event.responseTeam.serviceResponse,
+    //     vehicleRegno: event.responseTeam.vehicleRegno,
+    //     staffs: event.responseTeam.staffs != null
+    //         ? event.responseTeam.staffs
+    //         : new List<Staff>());
 
     // responseTeam.staffs = event.responseTeam.staffs != null
     //     ? event.responseTeam.staffs
@@ -155,6 +175,9 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
     // print(responseTeam.toJson());
 
     // print(event.responseTeam.toJson());
+
+    print("EVENT LOADTEAM");
+    print(event.responseTeam);
 
     yield TeamLoaded(response_team: responseTeam);
     // }

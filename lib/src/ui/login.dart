@@ -27,7 +27,9 @@ class _LoginScreen extends State<LoginScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Login Failed"),
-          content: Text("Your username and/or password do not match"),
+          content: Text("Your username and/or password did not match"),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
       });
 
@@ -65,7 +67,7 @@ class _LoginScreen extends State<LoginScreen> {
       //       context, MaterialPageRoute(builder: (context) => ListCallcards()));
       // }
     }, builder: (context, state) {
-      return _loginPage();
+      return Center(child: _loginPage());
     })));
   }
 
@@ -73,16 +75,6 @@ class _LoginScreen extends State<LoginScreen> {
     return SingleChildScrollView(
         child: Column(
       children: <Widget>[
-        Row(children: [
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Settings()));
-            },
-          ),
-          Text("Settings")
-        ]),
         Container(
             width: 200,
             height: 100,
@@ -103,14 +95,14 @@ class _LoginScreen extends State<LoginScreen> {
                     _textInput("Username", usernameController, false),
                     _textInput("Password", passwordController, true),
                     Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(20),
                         child: FlatButton(
                           child: Container(
                             height: 50,
-                            width: 500,
+                            // width: 500,
                             decoration: BoxDecoration(
                                 color: Colors.pinkAccent,
-                                borderRadius: BorderRadius.circular(10)),
+                                borderRadius: BorderRadius.circular(50.0)),
                             child: Center(
                                 child: Text(
                               "LOGIN",
@@ -125,7 +117,17 @@ class _LoginScreen extends State<LoginScreen> {
                           },
                         ))
                   ]),
-            ))
+            )),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Settings()));
+            },
+          ),
+          Text("Settings")
+        ])
       ],
     ));
   }
@@ -133,7 +135,7 @@ class _LoginScreen extends State<LoginScreen> {
   Widget _textInput(labelText, controller, obscureText) {
     return Container(
         // width: 500,
-        width: 500,
+        // width: 400,
         child: Padding(
             padding: EdgeInsets.all(16),
             child: TextFormField(
@@ -144,7 +146,7 @@ class _LoginScreen extends State<LoginScreen> {
                     labelText: labelText,
                     fillColor: Colors.white,
                     border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
+                      borderRadius: new BorderRadius.circular(50.0),
                       borderSide: new BorderSide(),
                     )))));
   }

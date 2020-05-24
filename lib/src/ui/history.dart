@@ -159,16 +159,18 @@ class _History extends State<History> {
                                       onPressed: () {
                                         print("RESEND============");
                                         tabBloc.add(RepublishCallcard(
-                                            callInformation: data
-                                                .historyCallcard
-                                                .call_information,
-                                            responseTeam: data
-                                                .historyCallcard.response_team,
-                                            responseTime: data
-                                                .historyCallcard.response_time,
-                                            patients: List<Patient>(),
-                                            sceneAssessment:
-                                                new SceneAssessment()));
+                                          callInformation: data
+                                              .historyCallcard.call_information,
+                                          responseTeam: data
+                                              .historyCallcard.response_team,
+                                          responseTime: data
+                                              .historyCallcard.response_time,
+                                          patients:
+                                              data.historyCallcard.patients,
+                                          // sceneAssessment: data
+                                          //     .historyCallcard
+                                          //     .scene_assessment
+                                        ));
 
                                         // setState(() {
                                         //   print("Setstate is pressed");

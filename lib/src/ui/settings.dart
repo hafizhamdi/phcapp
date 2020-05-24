@@ -14,13 +14,13 @@ class Settings extends StatelessWidget {
             child: ListView(
               children: <Widget>[
                 _buildList(
-                    "Theme mode", Icons.brightness_4, toggleButton(context)),
+                    "Dark mode", Icons.brightness_4, toggleButton(context)),
                 _buildList("App version", Icons.info, appChild()),
               ],
             )));
   }
 
-  appChild() => Text("1.1.05.20");
+  appChild() => Text("1.5.05.20");
 
   toggleButton(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);

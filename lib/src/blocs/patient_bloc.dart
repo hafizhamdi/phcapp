@@ -24,6 +24,8 @@ class LoadPatient extends PatientEvent {
   List<Object> get props => [patients, sceneAssessment];
 }
 
+class InitPatient extends PatientEvent {}
+
 class AddSceneAssessment extends PatientEvent {
   final assign_id;
   final SceneAssessment sceneAssessment;
@@ -43,6 +45,15 @@ class AddPatient extends PatientEvent {
   List<Object> get props => [patient];
 }
 
+class UpdatePatient extends PatientEvent {
+  final int index;
+  final Patient patient;
+  UpdatePatient({this.patient, this.index});
+
+  @override
+  List<Object> get props => [patient];
+}
+
 class RemovePatient extends PatientEvent {
   int index;
   RemovePatient({this.index});
@@ -53,11 +64,12 @@ class RemovePatient extends PatientEvent {
 
 abstract class PatientState extends Equatable {
   final List<Patient> patients;
+  final SceneAssessment sceneAssessment;
 
-  PatientState({this.patients});
+  PatientState({this.patients, this.sceneAssessment});
 
   @override
-  List<Object> get props => [patients];
+  List<Object> get props => [patients, sceneAssessment];
 }
 
 class PatientLoaded extends PatientState {
@@ -117,7 +129,27 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       yield* _addPatientToState(event);
     } else if (event is RemovePatient) {
       yield* _removePatientToState(event);
-    } else if (event is AddSceneAssessment) {}
+    } else if (event is AddSceneAssessment) {
+      yield* _addSceneToState(event);
+    } else if (event is UpdatePatient) {
+      yield* _updatePatientToState(event);
+    } else if (event is InitPatient) {
+      yield PatientEmpty();
+    }
+  }
+
+  Stream<PatientState> _addSceneToState(AddSceneAssessment event) async* {
+    List<String> otherServices = List();
+    if (event.sceneAssessment.otherServicesAtScene == null) {
+      otherServices = event.sceneAssessment.otherServicesAtScene;
+    }
+
+    yield PatientLoaded(
+        patients: event.patients,
+        sceneAssessment: SceneAssessment(
+          otherServicesAtScene: otherServices,
+          // typeResponse: ""
+        ));
   }
 
   Stream<PatientState> _mapLoadPatientToState(LoadPatient event) async* {
@@ -128,18 +160,24 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
 
     patients = event.patients != null ? event.patients : new List<Patient>();
 
+    print("Patient BLOC");
+
     sceneAssessment = event.sceneAssessment != null
         ? event.sceneAssessment
         : new SceneAssessment();
     // final newList = List<Patient>.from(result)
     // result.
+    print(sceneAssessment);
     // final currentState = state;
 // currentState.patients
 
     // print(result);
     // yield PatientLoading();
 
-    yield PatientLoaded(patients: patients, sceneAssessment: sceneAssessment);
+    yield PatientLoaded(
+      patients: patients,
+      sceneAssessment: sceneAssessment,
+    );
   }
 
   Stream<PatientState> _mapAddSceneAssessmentToState(
@@ -161,8 +199,10 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
   }
 
   Stream<PatientState> _addPatientToState(AddPatient event) async* {
-    Patient patient =
-        new Patient(patientInformation: event.patient.patientInformation);
+    Patient patient = new Patient(
+        patientInformation: event.patient.patientInformation,
+        cpr: event.patient.cpr,
+        vitalSigns: event.patient.vitalSigns);
 
     final currentState = state;
     // print(blocPatients.length);
@@ -170,6 +210,37 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     print("ADDD PATIENT");
     print(currentState.patients);
     final newList = List<Patient>.from(currentState.patients)..add(patient);
+    print(newList.length);
+    // / blocPatients.add(patient);
+
+    patients = newList;
+    // yield PatientLoading();
+
+    yield PatientLoaded(patients: newList, sceneAssessment: sceneAssessment);
+  }
+
+  Stream<PatientState> _updatePatientToState(UpdatePatient event) async* {
+    final currentState = state;
+
+    final foundPatient = currentState.patients.firstWhere((data) =>
+        data.patientInformation.name == event.patient.patientInformation.name);
+
+    foundPatient.patientInformation = event.patient.patientInformation;
+    foundPatient.cpr = event.patient.cpr;
+    foundPatient.vitalSigns = event.patient.vitalSigns;
+
+    // Patient patient = new Patient(
+    //     patientInformation: event.patient.patientInfo//////////////////////rmation,
+    //     cprLogs: event.patient.cprLogs,/
+    //     vitalSigns: event.patient.vitalSigns);
+
+    // final currentState = state;
+    // // print(blocPatients.length);
+
+    print("UPDATE PATIENT");
+    print(currentState.patients);
+    final newList = List<Patient>.from(currentState.patients)
+      ..replaceRange(event.index, event.index + 1, [foundPatient]);
     print(newList.length);
     // / blocPatients.add(patient);
 

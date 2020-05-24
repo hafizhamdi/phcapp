@@ -5,6 +5,8 @@ import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/models/phc_staff.dart';
 
 class Staffs extends StatefulWidget {
+  Staffs();
+
   _Staffs createState() => _Staffs();
 }
 
@@ -21,7 +23,9 @@ class _Staffs extends State<Staffs> {
   void initState() {
     super.initState();
     staffBloc = BlocProvider.of<StaffBloc>(context);
+
     teamBloc = BlocProvider.of<TeamBloc>(context);
+    // ;
     print("staffBloc");
     print(staffBloc);
     staffBloc.add(FetchStaff());

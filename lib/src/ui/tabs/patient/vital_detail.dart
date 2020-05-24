@@ -7,47 +7,14 @@ import 'package:phcapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-class VitalDetail extends StatefulWidget {
-  final String bpSystolic;
-  final String bpDiastolic;
-  final String map;
-  final String pr;
-  final String pp;
-  final String pulseVolume;
-  final String crt;
-  final String rr;
-  final String sp02;
-  final String temp;
-  final String painScore;
-  final String bloodGlucose;
-  final String shockIndex;
-  final String leftPupil;
-  final String rightPupil;
-  final String gcsE;
-  final String gcsV;
-  final String gcsM;
-  final String gcsTotal;
+enum ItemInput { singlePoint, doublePoint }
+enum ActionButton { delete, create }
 
-  VitalDetail(
-      {this.bpSystolic,
-      this.bpDiastolic,
-      this.map,
-      this.pr,
-      this.pp,
-      this.pulseVolume,
-      this.crt,
-      this.rr,
-      this.sp02,
-      this.temp,
-      this.painScore,
-      this.bloodGlucose,
-      this.shockIndex,
-      this.leftPupil,
-      this.rightPupil,
-      this.gcsE,
-      this.gcsV,
-      this.gcsM,
-      this.gcsTotal});
+class VitalDetail extends StatefulWidget {
+  final VitalSign vitalSign;
+  final index;
+
+  VitalDetail({this.vitalSign, this.index});
 
   @override
   _VitalDetailState createState() => _VitalDetailState();
@@ -56,44 +23,110 @@ class VitalDetail extends StatefulWidget {
 class _VitalDetailState extends State<VitalDetail> {
   // ControllerInput
   String _timestamp =
-      DateFormat("dd/MM/yyyy HH:mm:ss").format(new DateTime.now()).toString();
+      DateFormat("HH:mm aa").format(new DateTime.now()).toString();
   int totalGcs = 0;
 
-  //  ControllerInput gcsController = new ControllerInput();
-  ControllerInput bpSysController = new ControllerInput(first: 0, second: 0);
-  ControllerInput bpDiasController = new ControllerInput(first: 0, second: 0);
-  ControllerInput mapController = new ControllerInput(first: 0, second: 0);
-  ControllerInput prController = new ControllerInput(first: 0, second: 0);
-  ControllerInput ppController = new ControllerInput(first: 0, second: 0);
-  ControllerInput pvController = new ControllerInput(first: 0, second: 0);
-  ControllerInput crtController = new ControllerInput(first: 0, second: 0);
-  ControllerInput siController = new ControllerInput(first: 0, second: 0);
-  ControllerInput rrController = new ControllerInput(first: 0, second: 0);
-  ControllerInput spo2Controller = new ControllerInput(first: 0, second: 0);
-  ControllerInput tempController = new ControllerInput(first: 0, second: 0);
-  ControllerInput psController = new ControllerInput(first: 0, second: 0);
-  ControllerInput bgController = new ControllerInput(first: 0, second: 0);
-  ControllerInput lpController =
-      new ControllerInput(first: 0, second: 0, text: "");
-  ControllerInput rpController =
-      new ControllerInput(first: 0, second: 0, text: "");
-  ControllerInput gcsController =
-      new ControllerInput(first: 0, second: 0, third: 0);
+  NumberPicker bpSysPicker = new NumberPicker();
+  NumberPicker bpDiasPicker = new NumberPicker();
+  NumberPicker mapPicker = new NumberPicker();
+  NumberPicker prPicker = new NumberPicker();
+  NumberPicker ppPicker = new NumberPicker();
+  NumberPicker pvPicker = new NumberPicker();
+  NumberPicker crtPicker = new NumberPicker();
+  NumberPicker siPicker = new NumberPicker();
+  NumberPicker rrPicker = new NumberPicker();
+  NumberPicker spo2Picker = new NumberPicker();
+  NumberPicker tempPicker = new NumberPicker();
+  NumberPicker psPicker = new NumberPicker();
+  NumberPicker bgPicker = new NumberPicker();
+  NumberPicker lpPicker = new NumberPicker();
+  NumberPicker rpPicker = new NumberPicker();
+  NumberPicker gcsEpicker = new NumberPicker();
+  NumberPicker gcsVpicker = new NumberPicker();
+  NumberPicker gcsMpicker = new NumberPicker();
+  NumberPicker gcsTotalpicker = new NumberPicker();
 
   VitalBloc vitalBloc;
 
   @override
   initState() {
-    vitalBloc = BlocProvider.of<VitalBloc>(context);
-    // bpSysController.first_value.text = "1";
-    // bpSysController.second_value.text = "1";
+    print("INIT STATE VITAL DETAIL");
 
-    // gcsController.first_value.text = "1";
-    // gcsController.second_value.text = "1";
-    // gcsController.third_value.text = "1";
+    if (widget.vitalSign != null) {
+      bpSysPicker = new NumberPicker(
+          value: checkIsNumberNotNull(widget.vitalSign.bpSystolic));
+
+      bpDiasPicker = new NumberPicker(
+          value: checkIsNumberNotNull(widget.vitalSign.bpDiastolic));
+      mapPicker =
+          new NumberPicker(option: checkIsStringNotNull(widget.vitalSign.map));
+      prPicker =
+          new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.pr));
+      ppPicker = new NumberPicker(
+          value: checkIsNumberNotNull(widget.vitalSign.pulsePressure));
+      pvPicker = new NumberPicker(
+          value: checkIsNumberNotNull(widget.vitalSign.pulseVolume));
+      crtPicker =
+          new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.crt));
+      siPicker = new NumberPicker(
+          option: checkIsStringNotNull(widget.vitalSign.shockIndex));
+      rrPicker =
+          new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.rr));
+      spo2Picker =
+          new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.spo2));
+      tempPicker = new NumberPicker();
+      psPicker = new NumberPicker(
+          value: checkIsNumberNotNull(widget.vitalSign.painScore));
+      bgPicker = new NumberPicker(
+          value: checkIsNumberNotNull(widget.vitalSign.bloodGlucose));
+      lpPicker = new NumberPicker(
+          value: checkIsNumberNotNull(widget.vitalSign.pupil.leftSize),
+          option:
+              checkIsStringNotNull(widget.vitalSign.pupil.leftResponseTolight));
+      rpPicker = new NumberPicker(
+          value: checkIsNumberNotNull(widget.vitalSign.pupil.rightSize),
+          option: checkIsStringNotNull(
+              widget.vitalSign.pupil.rightResponseTolight));
+      gcsEpicker =
+          new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.e));
+      gcsVpicker =
+          new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.v));
+      gcsMpicker =
+          new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.m));
+      gcsTotalpicker =
+          new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.gcs));
+    }
   }
 
-  Widget _buildItemGCS(context, title, controller) {
+  @override
+  didChangeDependencies() {}
+
+  checkIsNumberNotNull(value) {
+    if (value == null) return null;
+    return int.tryParse(value);
+  }
+
+  checkIsStringNotNull(value) {
+    if (value == "null") return "";
+    return value;
+  }
+
+  getActionPicker(labelName) {
+    switch (labelName) {
+      case "BP Systolic":
+        return ItemInput.singlePoint;
+        break;
+      case "BP Diastolic":
+        return ItemInput.singlePoint;
+        break;
+      default:
+        return ItemInput.doublePoint;
+        break;
+    }
+  }
+
+  Widget _buildItemGCS(
+      context, NumberPicker ePicker, vPicker, mPicker, totalPicker, title) {
     return Container(
         margin: EdgeInsets.all(5),
         padding: EdgeInsets.only(left: 8, top: 8),
@@ -124,7 +157,8 @@ class _VitalDetailState extends State<VitalDetail> {
                         // style: TextStyle(color: Colors.white),
                       )),
                   Text(
-                    controller.firstValue.toString(),
+                    ePicker.getValue != null ? ePicker.getValue.toString() : '',
+                    // decimalFormating(,
                     style: TextStyle(
                       fontSize: 30,
                       // color: Colors.purple[200]
@@ -137,8 +171,12 @@ class _VitalDetailState extends State<VitalDetail> {
                     onPressed: () {
                       showCupertinoModalPopup(
                           context: context,
-                          builder: (context) => _actionSinglePicker(
-                              "E", controller, callbackGcs, 5));
+                          builder: (context) =>
+                              cupertinoPicker(ePicker, "GCS E", 5, 1));
+                      // showCupertinoModalPopup(
+                      //     context: context,
+                      //     builder: (context) => _actionSinglePicker(
+                      //         "E", controller, callbackGcs, 5));
                     },
                   )
                 ]),
@@ -154,7 +192,7 @@ class _VitalDetailState extends State<VitalDetail> {
                       )),
                   //,
                   Text(
-                    controller.secondValue.toString(),
+                    vPicker.getValue != null ? vPicker.getValue.toString() : '',
                     style: TextStyle(
                       fontSize: 30,
                       // color: Colors.purple[200]
@@ -167,8 +205,13 @@ class _VitalDetailState extends State<VitalDetail> {
                     onPressed: () {
                       showCupertinoModalPopup(
                           context: context,
-                          builder: (context) => _actionSinglePicker(
-                              "V", controller, callbackGcs, 6));
+                          builder: (context) =>
+                              cupertinoPicker(vPicker, "GCS V", 6, 1));
+
+                      // showCupertinoModalPopup(
+                      //     context: context,
+                      //     builder: (context) => _actionSinglePicker(
+                      //         "V", controller, callbackGcs, 6));
                     },
                   )
                 ]),
@@ -183,7 +226,7 @@ class _VitalDetailState extends State<VitalDetail> {
                         // style: TextStyle(color: Colors.white),
                       )),
                   Text(
-                    controller.thirdValue.toString(),
+                    mPicker.getValue != null ? mPicker.getValue.toString() : '',
                     style: TextStyle(
                       fontSize: 30,
                       // color: Colors.purple[200]
@@ -196,8 +239,12 @@ class _VitalDetailState extends State<VitalDetail> {
                     onPressed: () {
                       showCupertinoModalPopup(
                           context: context,
-                          builder: (context) => _actionSinglePicker(
-                              "M", controller, callbackGcs, 7));
+                          builder: (context) =>
+                              cupertinoPicker(mPicker, "GCS M", 7, 1));
+                      // showCupertinoModalPopup(
+                      //     context: context,
+                      //     builder: (context) => _actionSinglePicker(
+                      //         "M", controller, callbackGcs, 7));
                     },
                   )
                 ]),
@@ -212,9 +259,10 @@ class _VitalDetailState extends State<VitalDetail> {
                         // style: TextStyle(color: Colors.white),
                       )),
                   Text(
-                    controller.responseText != null
-                        ? controller.responseText
+                    totalPicker.getValue != null
+                        ? totalPicker.getValue.toString()
                         : '',
+
                     style: TextStyle(
                       fontSize: 30,
                       // color: Colors.purple[200]
@@ -270,6 +318,8 @@ class _VitalDetailState extends State<VitalDetail> {
                           controller.setFirstValue(index);
                         if (title == "Left Pupil")
                           controller.setFirstValue(index);
+                        if (title == "BP Systolic")
+                          controller.setFirstValue(index);
 
                         callback(controller);
                         // setState(() {
@@ -281,7 +331,8 @@ class _VitalDetailState extends State<VitalDetail> {
             ]));
   }
 
-  Widget _buildItemPupil(context, title, controller) {
+  Widget _buildItemPupil(
+      context, NumberPicker picker, title, itemCount, initialData) {
     return Container(
         margin: EdgeInsets.all(5),
         padding: EdgeInsets.only(left: 8, top: 8),
@@ -308,9 +359,7 @@ class _VitalDetailState extends State<VitalDetail> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    controller.firstValue.toString() == "0"
-                        ? ""
-                        : controller.firstValue.toString(),
+                    picker.getValue != null ? picker.getValue.toString() : '',
                     style: TextStyle(
                       fontSize: 40,
                       // color: Colors.purple[200]
@@ -323,8 +372,8 @@ class _VitalDetailState extends State<VitalDetail> {
                     onPressed: () {
                       showCupertinoModalPopup(
                           context: context,
-                          builder: (context) => _actionSinglePicker(
-                              title, controller, callbackPupil, 9));
+                          builder: (context) => cupertinoPicker(
+                              picker, title, itemCount, initialData));
                     },
                   )
                 ]),
@@ -343,7 +392,7 @@ class _VitalDetailState extends State<VitalDetail> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    controller.responseText,
+                    picker.getOption != null ? picker.getOption : '',
                     style: TextStyle(
                       fontSize: 25,
                       // color: Colors.purple[200]
@@ -356,8 +405,7 @@ class _VitalDetailState extends State<VitalDetail> {
                     onPressed: () {
                       showCupertinoModalPopup(
                           context: context,
-                          builder: (context) => _actionPupilPicker(
-                              title, controller, callbackPupil));
+                          builder: (context) => pupilPicker(picker, title));
                     },
                   )
                 ])
@@ -366,68 +414,117 @@ class _VitalDetailState extends State<VitalDetail> {
     // );
   }
 
-  Widget _buildItem(context, title, controller) {
+  Widget _buildItem(
+      context, NumberPicker picker, title, itemCount, initialData) {
+    // print(title);
     var doneButton = CupertinoButton(
       child: Text("Done"),
       onPressed: () {
-        // setState(() {
-        //   _dateTime = new DateFormat("dd/MM/yyyy HH:mm:ss")
-        //       .format(_cupertinoTime)
-        //       .toString();
-        // });
         Navigator.of(context).pop();
       },
     );
-    return
-        // Card(
-        //     // color: Colors.white10,
-        //     elevation: 2.4,
-        //     child:
-
-        Container(
-            margin: EdgeInsets.all(5),
-            padding: EdgeInsets.only(left: 8, top: 8),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                shape: BoxShape.rectangle,
-                border: Border.all(color: Colors.grey, width: 0.5)),
-            width: 160,
-            height: 100,
-            child: Column(children: <Widget>[
-              Row(
+    if (title == "MAP" || title == "Shock Index") {
+      return Container(
+          margin: EdgeInsets.all(5),
+          padding: EdgeInsets.only(left: 8, top: 8),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              shape: BoxShape.rectangle,
+              border: Border.all(color: Colors.grey, width: 0.5)),
+          width: 160,
+          height: 100,
+          child: Column(children: <Widget>[
+            Row(
+              children: <Widget>[
+                Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Text(title,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(fontSize: 16)
+                        // style: TextStyle(color: Colors.white),
+                        )),
+              ],
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.only(bottom: 10),
-                      child: Text(title,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(fontSize: 16)
-                          // style: TextStyle(color: Colors.white),
-                          )),
-                ],
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      decimalFormating(
-                          controller.firstValue, controller.secondValue),
-                      style: TextStyle(
-                        fontSize: 40,
-                        // color: Colors.purple[200]
-                      ),
+                  Text(
+                    picker.getOption != null ? picker.getOption.toString() : '',
+                    // decimalFormating(
+                    //     controller.firstValue, controller.secondValue),
+                    style: TextStyle(
+                      fontSize: 40,
+                      // color:
+                      //     picker.getAbnormal ? Colors.red : null
+                      // color: Colors.purple[200]
                     ),
-                    IconButton(
-                        icon: Icon(Icons.edit),
-                        color: Colors.grey,
-                        iconSize: 25,
-                        onPressed: () {
-                          showCupertinoModalPopup(
-                              context: context,
-                              builder: (context) => _actionDoublePicker(
-                                  title, controller, callbackDouble));
-                        })
-                  ])
-            ])); //);
+                  ),
+                  // IconButton(
+                  //     icon: Icon(Icons.edit),
+                  //     color: Colors.grey,
+                  //     iconSize: 25,
+                  //     onPressed: () {
+                  //       showCupertinoModalPopup(
+                  //           context: context,
+                  //           builder: (context) => cupertinoPicker(
+                  //               picker, title, itemCount, initialData));
+                  //       // ItemInput.singlePoint == getActionPicker(title)
+                  //       //     ? showCupertinoModalPopup(
+                  //       //         context: context,
+                  //       //         builder: (context) => _actionSinglePicker(
+                  //       //             title, controller, callbackSingle, range))
+                  //       //     : showCupertinoModalPopup(
+                  //       //         context: context,
+                  //       //         builder: (context) => _actionDoublePicker(
+                  //       //             title, controller, callbackSingle));
+                  //     })
+                ])
+          ])); //);
+    }
+    return Container(
+        margin: EdgeInsets.all(5),
+        padding: EdgeInsets.only(left: 8, top: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            shape: BoxShape.rectangle,
+            border: Border.all(color: Colors.grey, width: 0.5)),
+        width: 160,
+        height: 100,
+        child: Column(children: <Widget>[
+          Row(
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: Text(title,
+                      textAlign: TextAlign.left, style: TextStyle(fontSize: 16)
+                      // style: TextStyle(color: Colors.white),
+                      )),
+            ],
+          ),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  picker.getValue != null ? picker.getValue.toString() : '',
+                  // decimalFormating(
+                  //     controller.firstValue, controller.secondValue),
+                  style: TextStyle(
+                      fontSize: 40,
+                      color:
+                          picker.getAbnormal == true ? Colors.redAccent : null),
+                ),
+                IconButton(
+                    icon: Icon(Icons.edit),
+                    color: Colors.grey,
+                    iconSize: 25,
+                    onPressed: () {
+                      showCupertinoModalPopup(
+                          context: context,
+                          builder: (context) => cupertinoPicker(
+                              picker, title, itemCount, initialData));
+                    })
+              ])
+        ]));
   }
 
   String decimalFormating(first, second) {
@@ -439,110 +536,6 @@ class _VitalDetailState extends State<VitalDetail> {
       return first.toString();
     else if (second != null) return "." + second.toString();
     return "";
-  }
-
-  void callbackGcs(ControllerInput data) {
-    setState(() {
-      totalGcs = 0;
-      gcsController.setFirstValue(data.firstValue);
-      gcsController.setSecondValue(data.secondValue);
-      gcsController.setThirdValue(data.thirdValue);
-
-      totalGcs += data.firstValue;
-      totalGcs += data.secondValue;
-      totalGcs += data.thirdValue;
-
-      gcsController.setText(totalGcs.toString());
-    });
-    // if (data.title == "BP Systolic") {
-    // print(data.secondValue);
-    // }
-  }
-
-  void callbackPupil(ControllerInput data) {
-    setState(() {
-      if (data.title == "Left Pupil") {
-        lpController.setFirstValue(data.firstValue);
-        lpController.setText(data.responseText);
-      }
-
-      if (data.title == "Right Pupil") {
-        rpController.setFirstValue(data.firstValue);
-        rpController.setText(data.responseText);
-      }
-    });
-  }
-
-  void callbackDouble(ControllerInput data) {
-    print(data.title);
-    setState(() {
-      // print()
-      if (data.title == "BP Systolic") {
-        bpSysController.setFirstValue(data.firstValue);
-        bpSysController.setSecondValue(data.secondValue);
-        // print(data.secondValue);
-      }
-      if (data.title == "BP Diastolic") {
-        bpDiasController.setFirstValue(data.firstValue);
-        bpDiasController.setSecondValue(data.secondValue);
-        // print(data.secondValue);
-      }
-      if (data.title == "MAP") {
-        mapController.setFirstValue(data.firstValue);
-        mapController.setSecondValue(data.secondValue);
-        // print(data.secondValue);
-      }
-      if (data.title == "PR") {
-        prController.setFirstValue(data.firstValue);
-        prController.setSecondValue(data.secondValue);
-        // print(data.secondValue);
-      }
-      if (data.title == "Pulse Pressure") {
-        ppController.setFirstValue(data.firstValue);
-        ppController.setSecondValue(data.secondValue);
-        // print(data.secondValue);
-      }
-      if (data.title == "Pulse Volume") {
-        pvController.setFirstValue(data.firstValue);
-        pvController.setSecondValue(data.secondValue);
-        // print(data.secondValue);
-      }
-      if (data.title == "CRT") {
-        crtController.setFirstValue(data.firstValue);
-        crtController.setSecondValue(data.secondValue);
-        // print(data.secondValue);
-      }
-      if (data.title == "RR") {
-        rrController.setFirstValue(data.firstValue);
-        rrController.setSecondValue(data.secondValue);
-        // print(data.secondValue);
-      }
-      if (data.title == "Sp02") {
-        spo2Controller.setFirstValue(data.firstValue);
-        spo2Controller.setSecondValue(data.secondValue);
-        // print(data.secondValue);
-      }
-      if (data.title == "Temperature") {
-        tempController.setFirstValue(data.firstValue);
-        tempController.setSecondValue(data.secondValue);
-        // print(data.secondValue);
-      }
-      if (data.title == "Pain Score") {
-        psController.setFirstValue(data.firstValue);
-        psController.setSecondValue(data.secondValue);
-        // print(data.secondValue);
-      }
-      if (data.title == "Blood Glucose") {
-        bgController.setFirstValue(data.firstValue);
-        bgController.setSecondValue(data.secondValue);
-        // print(data.secondValue);
-      }
-
-      //   controller.setFirstValue = index.toString();
-      //   // controller =
-      //   //     new ControllerInput(first: index.toString());
-      //   // controller.firstValue = index.toString();
-    });
   }
 
   Widget _actionDoublePicker(title, controller, callback) {
@@ -601,9 +594,161 @@ class _VitalDetailState extends State<VitalDetail> {
     return (first.toString() + "." + second.toString());
   }
 
+  ActionButton getAction(index) {
+    print("WHAT INDEX:" + index.toString());
+    if (index == null)
+      return ActionButton.create;
+    else
+      return ActionButton.delete;
+  }
+
+  cancelButton(action, index) {
+    if (action != ActionButton.delete) {
+      return FlatButton(
+        child: Text("CANCEL", style: TextStyle(color: Colors.white)),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      );
+    } else {
+      return FlatButton(
+          child: Text("DELETE", style: TextStyle(color: Colors.white)),
+          onPressed: () {
+            vitalBloc.add(RemoveVital(index: index));
+            Navigator.pop(context);
+          });
+    }
+  }
+
+  String transformBlankNull(number) {
+    if (number == null) {
+      return null;
+    }
+    return number.toString();
+  }
+
+  createButton(action, index) {
+    if (action == ActionButton.create) {
+      return FlatButton(
+        child: Text("CREATE", style: TextStyle(color: Colors.white)),
+        onPressed: () {
+          int len = vitalBloc.state.listVitals.length != null
+              ? vitalBloc.state.listVitals.length
+              : 0;
+
+          VitalSign vs = new VitalSign(
+              id: (len + 1).toString(),
+              created: new DateTime.now(),
+              bpSystolic: transformBlankNull(bpSysPicker.getValue),
+              bpDiastolic: transformBlankNull(bpDiasPicker.getValue),
+              map: transformBlankNull(mapPicker.getOption),
+              pr: transformBlankNull(prPicker.getValue),
+              pulsePressure: transformBlankNull(ppPicker.getValue),
+              pulseVolume: transformBlankNull(pvPicker.getValue),
+              crt: transformBlankNull(crtPicker.getValue),
+              rr: transformBlankNull(rrPicker.getValue),
+              spo2: transformBlankNull(spo2Picker.getValue),
+              temp: transformBlankNull(tempPicker.getValue),
+              painScore: transformBlankNull(psPicker.getValue),
+              bloodGlucose: transformBlankNull(bgPicker.getValue),
+              shockIndex: transformBlankNull(siPicker.getOption),
+              pupil: Pupil(
+                  leftResponseTolight: transformBlankNull(lpPicker.getOption),
+                  leftSize: transformBlankNull(lpPicker.getValue),
+                  rightResponseTolight: transformBlankNull(rpPicker.getOption),
+                  rightSize: rpPicker.getValue.toString()),
+              e: transformBlankNull(gcsEpicker.getValue),
+              v: transformBlankNull(gcsVpicker.getValue),
+              m: transformBlankNull(gcsMpicker.getValue),
+              gcs: transformBlankNull(gcsTotalpicker.getValue));
+
+          print("Vital Sigs");
+          // print(vs.toJson());
+          vitalBloc.add(AddVital(vital: vs));
+
+          Navigator.pop(context);
+        },
+      );
+    } else {
+      //save -update button
+      return FlatButton(
+          child: Text("SAVE", style: TextStyle(color: Colors.white)),
+          onPressed: () {
+            VitalSign vs = new VitalSign(
+                // id: (index + 1).toString(),
+                // id: (vitalBloc.state.listVitals.length + 1).toString(),
+                created: new DateTime.now(),
+                bpSystolic: bpSysPicker.getValue.toString(),
+                bpDiastolic: bpDiasPicker.getValue.toString(),
+                map: mapPicker.getOption.toString(),
+                pr: prPicker.getValue.toString(),
+                pulsePressure: ppPicker.getValue.toString(),
+                pulseVolume: pvPicker.getValue.toString(),
+                crt: crtPicker.getValue.toString(),
+                rr: rrPicker.getValue.toString(),
+                spo2: spo2Picker.getValue.toString(),
+                temp: tempPicker.getValue.toString(),
+                painScore: psPicker.getValue.toString(),
+                bloodGlucose: bgPicker.getValue.toString(),
+                shockIndex: siPicker.getOption.toString(),
+                pupil: Pupil(
+                    leftResponseTolight: lpPicker.getOption.toString(),
+                    leftSize: lpPicker.getValue.toString(),
+                    rightResponseTolight: rpPicker.getOption.toString(),
+                    rightSize: rpPicker.getValue.toString()),
+                e: gcsEpicker.getValue.toString(),
+                v: gcsVpicker.getValue.toString(),
+                m: gcsMpicker.getValue.toString(),
+                gcs: gcsTotalpicker.getValue.toString());
+
+            vitalBloc.add(UpdateVital(index: index, vital: vs));
+
+            Navigator.pop(context);
+          });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     vitalBloc = BlocProvider.of<VitalBloc>(context);
+
+    final action = getAction(widget.index);
+    setState(() {
+      if (gcsEpicker.getValue != null &&
+          gcsMpicker.getValue != null &&
+          gcsVpicker.getValue != null) {
+        var total =
+            gcsEpicker.getValue + gcsMpicker.getValue + gcsVpicker.getValue;
+        gcsTotalpicker.setValue(total);
+        // print(total);
+      }
+
+      if (bpSysPicker.getValue != null && bpDiasPicker.getValue != null) {
+        var map = (bpSysPicker.getValue + (2 * bpDiasPicker.getValue) / 3);
+        var mapStr = double.parse(map.toString()).toStringAsFixed(2);
+        mapPicker.setOption(mapStr);
+        // print(map);
+        // print(mapStr);
+      }
+
+      if (bpSysPicker.getValue != null && bpDiasPicker.getValue != null) {
+        var pp = bpSysPicker.getValue - bpDiasPicker.getValue;
+
+        ppPicker.setValue(pp);
+      }
+
+      if (prPicker.getValue != null && bpSysPicker.getValue != null) {
+        var shockIndex = prPicker.getValue / bpSysPicker.getValue;
+
+        var siStr = double.parse(shockIndex.toString()).toStringAsFixed(2);
+        siPicker.setOption(siStr);
+
+        // print("shock index");
+        // print(siStr);
+      }
+      changeColorAbnormal();
+    });
+
     // final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       // backgroundColor: Colors.grey[900],
@@ -613,58 +758,8 @@ class _VitalDetailState extends State<VitalDetail> {
             'Vital signs',
           ),
           actions: <Widget>[
-            FlatButton(
-              child: Text("Cancel", style: TextStyle(color: Colors.white)),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            FlatButton(
-              child: Text("Create", style: TextStyle(color: Colors.white)),
-              onPressed: () {
-                VitalSign vs = new VitalSign(
-                    id: UniqueKey().toString(),
-                    created: new DateTime.now(),
-                    bpSystolic: appendDecimal(
-                        bpSysController.first, bpSysController.second),
-                    bpDiastolic: appendDecimal(
-                        bpDiasController.first, bpDiasController.second),
-                    map: appendDecimal(
-                        mapController.first, mapController.second),
-                    pr: appendDecimal(prController.first, prController.second),
-                    pulsePressure:
-                        appendDecimal(ppController.first, ppController.second),
-                    pulseVolume:
-                        appendDecimal(pvController.first, pvController.second),
-                    crt: appendDecimal(
-                        crtController.first, crtController.second),
-                    rr: appendDecimal(rrController.first, rrController.second),
-                    spo2: appendDecimal(
-                        spo2Controller.first, spo2Controller.second),
-                    temp: appendDecimal(
-                        tempController.first, tempController.second),
-                    painScore: psController.text,
-                    bloodGlucose:
-                        appendDecimal(bgController.first, bgController.second),
-                    shockIndex:
-                        appendDecimal(siController.first, siController.second),
-                    pupil: Pupil(
-                        leftResponseTolight: lpController.text,
-                        leftSize: lpController.first.toString(),
-                        rightResponseTolight: rpController.text,
-                        rightSize: rpController.first.toString()),
-                    e: gcsController.first.toString(),
-                    v: gcsController.second.toString(),
-                    m: gcsController.third.toString(),
-                    gcs: gcsController.text.toString());
-
-                print("Vital Sigs");
-                print(vs.toJson());
-                vitalBloc.add(AddVital(vital: vs));
-
-                Navigator.pop(context);
-              },
-            )
+            cancelButton(action, widget.index),
+            createButton(action, widget.index)
           ],
           backgroundColor: Colors.purple),
       body: SingleChildScrollView(
@@ -678,99 +773,212 @@ class _VitalDetailState extends State<VitalDetail> {
                       Center(
                           child: Padding(
                               padding: EdgeInsets.all(10),
-                              child: Text("Created at " + _timestamp))),
-                      _buildItem(context, "BP Systolic", bpSysController),
-                      _buildItem(context, "BP Diastolic", bpDiasController),
-                      _buildItem(context, "MAP", mapController),
-                      _buildItem(context, "PR", prController),
-                      _buildItem(context, "Pulse Pressure", ppController),
-                      _buildItem(context, "Pulse Volume", pvController),
-                      _buildItem(context, "CRT", crtController),
-                      _buildItem(context, "Shock Index", siController),
-                      _buildItem(context, "RR", rrController),
-                      _buildItem(context, "Sp02", spo2Controller),
-                      _buildItem(context, "Temperature", tempController),
-                      _buildItem(context, "Pain Score", psController),
-                      _buildItem(context, "Blood Glucose", bgController),
-                      _buildItemPupil(context, "Left Pupil", lpController),
-                      _buildItemPupil(context, "Right Pupil", rpController),
-                      _buildItemGCS(context, "GCS", gcsController),
+                              child: widget.vitalSign == null
+                                  ? Text("Last changes at " + _timestamp)
+                                  : Text("Last changes at " +
+                                      DateFormat("HH:mm aa")
+                                          .format(widget.vitalSign.created)))),
+                      _buildItem(context, bpSysPicker, "BP Systolic", 200, 90),
+                      _buildItem(
+                          context, bpDiasPicker, "BP Diastolic", 200, 60),
+                      // _buildItem(
+                      //     context, "BP Diastolic", bpDiasController, 200),
+                      _buildItem(context, mapPicker, "MAP", 200, 100),
+                      _buildItem(context, prPicker, "PR", 200, 60),
+                      _buildItem(context, ppPicker, "Pulse Pressure", 200, 20),
+                      _buildItem(context, pvPicker, "Pulse Volume", 200, 100),
+                      _buildItem(context, crtPicker, "CRT", 200, 100),
+                      _buildItem(context, siPicker, "Shock Index", 200, 100),
+                      _buildItem(context, rrPicker, "RR", 100, 1),
+                      _buildItem(context, spo2Picker, "Sp02", 200, 95),
+                      _buildItem(context, tempPicker, "Temperature", 100, 30),
+                      _buildItem(context, psPicker, "Pain Score", 11, 1),
+                      _buildItem(context, bgPicker, "Blood Glucose", 200, 100),
+                      _buildItemPupil(context, lpPicker, "Left Pupil", 9, 1),
+                      _buildItemPupil(context, rpPicker, "Right Pupil", 9, 1),
+                      // _buildItemPupil(context, "Right Pupil", rpController),
+                      _buildItemGCS(context, gcsEpicker, gcsVpicker, gcsMpicker,
+                          gcsTotalpicker, "GCS"),
                     ],
                   )))),
     );
   }
-}
 
-Widget _actionPupilPicker(title, controller, callback) {
-  const list = ["Reactive", "Sluggish", "Fixed"];
-  controller.setTitle(title);
-  return SizedBox(
-      height: 200,
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          mainAxisSize: MainAxisSize.min,
+  pupilPicker(NumberPicker picker, title) {
+    const list = ["Reactive", "Sluggish", "Fixed"];
+    // controller.setTitle(title);
+    return SizedBox(
+        height: 200,
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Expanded(
+                  child: CupertinoPicker(
+                      itemExtent: 50,
+                      scrollController: FixedExtentScrollController(
+                          initialItem: list
+                              .indexWhere((item) => item == picker.getOption)),
+                      onSelectedItemChanged: (int index) {
+                        setState(() {
+                          picker.setOption(list[index]);
+                        });
+                        // controller.setText(list[index]);
+                        // callback(controller);
+                        // print(index);
+                      },
+                      children: List<Widget>.generate(
+                          list.length, (int index) => Text(list[index]))
+
+                      // generate(
+                      //         200, (int index) => Text(index.toString())))
+                      // Text("Sluggish")
+                      // ]
+                      )),
+              // Expanded(
+              //     child: CupertinoPicker(
+              //         itemExtent: 50,
+              //         onSelectedItemChanged: (int index) {
+              //           print(index);
+              //         },
+              //         children: List<Widget>.generate(
+              //             10, (int index) => Text(index.toString()))))
+            ]));
+  }
+
+  changeColorAbnormal() {
+    print("Change color abnormal");
+
+    // BP SYSTOLIC
+    if (bpSysPicker.getValue != null) {
+      (bpSysPicker.getValue < 90 || bpSysPicker.getValue > 139)
+          ? bpSysPicker.setAbnormal(true)
+          : bpSysPicker.setAbnormal(false);
+    }
+
+    // BP DIASTOLIC
+    if (bpDiasPicker.getValue != null) {
+      (bpDiasPicker.getValue < 60 || bpDiasPicker.getValue > 89)
+          ? bpDiasPicker.setAbnormal(true)
+          : bpDiasPicker.setAbnormal(false);
+    }
+
+    // PULSE RATE
+    if (prPicker.getValue != null) {
+      (prPicker.getValue < 60 || prPicker.getValue > 90)
+          ? prPicker.setAbnormal(true)
+          : prPicker.setAbnormal(false);
+    }
+
+    // RR
+    if (rrPicker.getValue != null) {
+      (rrPicker.getValue >= 20)
+          ? prPicker.setAbnormal(true)
+          : prPicker.setAbnormal(false);
+    }
+
+    // SpO2
+    if (spo2Picker.getValue != null) {
+      (spo2Picker.getValue < 95 || spo2Picker.getValue > 200)
+          ? spo2Picker.setAbnormal(true)
+          : spo2Picker.setAbnormal(false);
+    }
+
+    //PULSE PRESSURE
+    if (ppPicker.getValue != null) {
+      (ppPicker.getValue < 20 || ppPicker.getValue > 100)
+          ? ppPicker.setAbnormal(true)
+          : ppPicker.setAbnormal(false);
+    }
+  }
+
+  cupertinoPicker(NumberPicker picker, title, itemCount, initialData) {
+    var titleButton = CupertinoButton(
+      child: Text(title),
+      onPressed: () {
+        // Navigator.of(context).pop();
+      },
+    );
+    var doneButton = CupertinoButton(
+      child: Text("Done"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    return SizedBox(
+        height: 200.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            Container(
+                alignment: Alignment.centerRight,
+                decoration: BoxDecoration(
+                    color: const Color.fromRGBO(249, 249, 247, 1.0),
+                    border: Border(
+                        bottom: const BorderSide(
+                            width: 0.5, color: Colors.black38))),
+                child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [titleButton, doneButton]))),
             Expanded(
                 child: CupertinoPicker(
+                    scrollController:
+                        FixedExtentScrollController(initialItem: initialData),
                     itemExtent: 50,
-                    scrollController: FixedExtentScrollController(
-                        initialItem: list.indexWhere(
-                            (item) => item == controller.firstValue)),
                     onSelectedItemChanged: (int index) {
-                      controller.setText(list[index]);
-                      callback(controller);
+                      print("onselecteditemchanged --cupertinopicker");
                       print(index);
+
+                      setState(() {
+                        picker.setValue(index);
+                      });
+                      print(picker.getValue);
                     },
                     children: List<Widget>.generate(
-                        list.length, (int index) => Text(list[index]))
-
-                    // generate(
-                    //         200, (int index) => Text(index.toString())))
-                    // Text("Sluggish")
-                    // ]
-                    )),
-            // Expanded(
-            //     child: CupertinoPicker(
-            //         itemExtent: 50,
-            //         onSelectedItemChanged: (int index) {
-            //           print(index);
-            //         },
-            //         children: List<Widget>.generate(
-            //             10, (int index) => Text(index.toString()))))
-          ]));
+                        itemCount, (int index) => Text(index.toString()))))
+          ],
+        ));
+  }
 }
 
-class ControllerInput {
+// Widget
+
+class NumberPicker {
+// extends ChangeNotifier {
   String title;
-  String text;
-  int first;
-  int second;
-  int third;
+  String option;
+  int value;
+  int decimal;
+  bool abnormal = false;
 
-  ControllerInput({this.title, this.first, this.second, this.third, this.text});
+  NumberPicker(
+      {this.title, this.option, this.value, this.abnormal, this.decimal});
 
-  void setFirstValue(int value) {
-    first = value;
+  setOption(_option) {
+    option = _option;
   }
 
-  void setSecondValue(int value) {
-    second = value;
+  setTitle(_title) {
+    title = _title;
   }
 
-  void setThirdValue(int value) {
-    third = value;
+  setValue(_value) {
+    value = _value;
   }
 
-  void setTitle(String value) {
-    title = value;
+  setAbnormal(_select) {
+    abnormal = _select;
   }
 
-  void setText(String value) {
-    text = value;
+  setDecimal(_value) {
+    decimal = _value;
   }
 
-  int get firstValue => first;
-  int get secondValue => second;
-  int get thirdValue => third;
-  String get responseText => text;
+  String get getTitle => title;
+  String get getOption => option;
+  int get getValue => value;
+  int get getDecimal => decimal;
+  bool get getAbnormal => abnormal;
 }

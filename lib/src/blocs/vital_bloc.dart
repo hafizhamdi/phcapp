@@ -31,6 +31,15 @@ class AddVital extends VitalEvent {
   List<Object> get props => [vital];
 }
 
+class UpdateVital extends VitalEvent {
+  final VitalSign vital;
+  final index;
+  UpdateVital({this.vital, this.index});
+
+  @override
+  List<Object> get props => [vital, index];
+}
+
 class RemoveVital extends VitalEvent {
   int index;
   RemoveVital({this.index});
@@ -103,6 +112,8 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
       yield* _addVitalToState(event);
     } else if (event is RemoveVital) {
       yield* _removeVitalToState(event);
+    } else if (event is UpdateVital) {
+      yield* _updateVitalToState(event);
     }
   }
 
@@ -117,7 +128,7 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
     // print(result);
     // yield PatientLoading();
 
-    yield VitalLoaded(listVitals: new List<VitalSign>());
+    yield VitalLoaded(listVitals: event.listVitals);
   }
 
   Stream<VitalState> _addVitalToState(AddVital event) async* {
@@ -138,15 +149,51 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
     yield VitalLoaded(listVitals: newList);
   }
 
+  Stream<VitalState> _updateVitalToState(UpdateVital event) async* {
+    final currentState = state;
+
+    final foundVital = currentState.listVitals
+        .firstWhere((data) => data.id == (event.index + 1).toString());
+
+    foundVital.created = event.vital.created;
+    foundVital.bpDiastolic = event.vital.bpDiastolic;
+    foundVital.bpSystolic = event.vital.bpSystolic;
+    foundVital.map = event.vital.map;
+    foundVital.pr = event.vital.pr;
+    foundVital.rr = event.vital.rr;
+    foundVital.gcs = event.vital.gcs;
+    foundVital.e = event.vital.e;
+    foundVital.m = event.vital.m;
+    foundVital.v = event.vital.v;
+    foundVital.shockIndex = event.vital.shockIndex;
+    foundVital.spo2 = event.vital.spo2;
+    foundVital.pulsePressure = event.vital.pulsePressure;
+    foundVital.pulseVolume = event.vital.pulseVolume;
+    foundVital.crt = event.vital.crt;
+    foundVital.painScore = event.vital.painScore;
+    foundVital.temp = event.vital.temp;
+    foundVital.pupil.rightResponseTolight =
+        event.vital.pupil.rightResponseTolight;
+    foundVital.pupil.rightSize = event.vital.pupil.rightSize;
+    foundVital.pupil.leftResponseTolight =
+        event.vital.pupil.leftResponseTolight;
+    foundVital.pupil.leftSize = event.vital.pupil.leftSize;
+
+    final newList = List<VitalSign>.from(currentState.listVitals)
+      ..replaceRange(event.index, event.index + 1, [foundVital]);
+
+    yield VitalLoaded(listVitals: newList);
+  }
+
   Stream<VitalState> _removeVitalToState(RemoveVital event) async* {
     //   print("REMOVE PATIENT BY 1");
     //   print("length");
 
-    //   final currentState = state;
-    //   // print(blocPatients.length);
-    //   final newList = List<VitalSign>.from(currentState.patients)
-    //     ..removeAt(event.index);
-    //   // final newList = blocPatients.removeAt(event.index);
-    //   yield VitalLoaded(patients: newList);
+    final currentState = state;
+    // print(blocPatients.length);
+    final newList = List<VitalSign>.from(currentState.listVitals)
+      ..removeAt(event.index);
+    // final newList = blocPatients.removeAt(event.index);
+    yield VitalLoaded(listVitals: newList);
   }
 }

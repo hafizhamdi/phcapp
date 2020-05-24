@@ -62,7 +62,7 @@ class _CallInfoState extends State<CallInformationScreen>
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController receivedController = TextEditingController(
-      text: DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()));
+      text: DateFormat("dd/MM/yyyy HH:mm:ss").format(DateTime.now()));
   TextEditingController cardNoController = TextEditingController();
   TextEditingController contactNoController = TextEditingController();
   TextEditingController eventCodeController = TextEditingController();
@@ -74,10 +74,12 @@ class _CallInfoState extends State<CallInformationScreen>
   @override
   void didChangeDependencies() {
     callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
-    print("widget.call_information.assign_id");
-    print(widget.call_information.assign_id);
-    if (widget.call_information != null) {
-      receivedController.text = widget.call_information.call_received;
+    // print("widget.call_information.assign_id");
+    // print(widget.call_information.assign_id);
+    if (widget.call_information.assign_id != null) {
+      print("INISDE WIDGET INFO");
+      receivedController.text = DateFormat("dd/MM/yyyy HH:mm:ss")
+          .format(DateTime.parse(widget.call_information.call_received));
       cardNoValue = widget.call_information.callcard_no;
       callInfoBloc.cardNoController.sink
           .add(widget.call_information.callcard_no);
@@ -130,8 +132,14 @@ class _CallInfoState extends State<CallInformationScreen>
         width: 500,
         child: Padding(
             padding: EdgeInsets.all(16),
-            child: TextField(
+            child: TextFormField(
                 controller: controller,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "This field is required";
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
                     labelText: labelText,
                     fillColor: Colors.white,
@@ -149,8 +157,10 @@ class _CallInfoState extends State<CallInformationScreen>
 
   Widget _buildBloc(BuildContext context, initialValue) {
     // final callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
-    var maskEventCode = MaskTextInputFormatter(
-        mask: "##/#/##/#", filter: {"#": RegExp(r'[a-zA-Z0-9]')});
+    var eventCodeFormater = MaskTextInputFormatter(
+        mask: "##/##/##/##", filter: {"#": RegExp(r'[a-zA-Z0-9]')});
+    var contactNoFormater = MaskTextInputFormatter(
+        mask: "###-########", filter: {"#": RegExp(r'[a-zA-Z0-9]')});
 
     // return BlocConsumer<CallInfoBloc, CallInfoState>(
     //     listener: (context, state) {},
@@ -197,6 +207,8 @@ class _CallInfoState extends State<CallInformationScreen>
                 TextInput(
                   labelText: "Caller Contact No",
                   controller: contactNoController,
+                  maskFormater: contactNoFormater,
+                  hintText: "XXX-XXXXXXX",
                   //     inputType:
                   //         TextInputType.numberWithOptions(signed: true),
                   //     hintText: "0139446197",
@@ -204,8 +216,8 @@ class _CallInfoState extends State<CallInformationScreen>
                 TextInput(
                   labelText: "Event Code",
                   controller: eventCodeController,
-                  //     hintText: "37/C/02/W",
-                  //     maskFormater: maskEventCode,
+                  hintText: "37/XC/02/XW",
+                  maskFormater: eventCodeFormater,
                 ),
                 DropDownList(
                     "Priority", LIST_PRIORITY, InputOption.priority, _priority),
@@ -228,6 +240,19 @@ class _CallInfoState extends State<CallInformationScreen>
     // });
   }
 
+  convertDateToStandard(var datetime) {
+    //dd/MM/yyyy HH:mm:ss to yyyy-MM-dd HH:mm:ss
+    var split = datetime.split("/");
+    var dd = split[0];
+    var MM = split[1];
+    var yyyy = split[2].substring(0, 4);
+
+    var time = datetime.substring(11);
+
+    print(time);
+    return "$yyyy-$MM-$dd $time";
+  }
+
   @override
   Widget build(BuildContext context) {
     final callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
@@ -241,44 +266,32 @@ class _CallInfoState extends State<CallInformationScreen>
           physics: BouncingScrollPhysics(),
           child: _buildBloc(context, initialValue)),
       floatingActionButton: FloatingActionButton(
+        heroTag: 100,
         onPressed: () {
-          print("widget.call_information.assign_id");
-          print(widget.call_information.assign_id);
-          callInfoBloc.add(SaveCallInfo(
-              callInformation: new CallInformation(
-                  callcardNo: cardNoValue,
-                  callReceived: receivedController.text,
-                  callerContactno: contactNoController.text,
-                  eventCode: eventCodeController.text,
-                  priority: _priority,
-                  incidentDesc: incidentController.text,
-                  incidentLocation: locationController.text,
-                  landmark: landmarkController.text,
-                  locationType: _location,
-                  distanceToScene: _distance,
-                  assignId: widget.call_information.assign_id,
-                  plateNo: widget.call_information.plate_no)));
-          print("call info captured");
-          // var call = CallInformation(
-          //     callcardNo: cardNoController.text,
-          //     callReceived: receivedController.text,
-          //     callerContactno: contactNoController.text,
-          //     eventCode: eventCodeController.text,
-          //     priority: _priority,
-          //     incidentDesc: incidentController.text,
-          //     incidentLocation: locationController.text,
-          //     locationType: _location,
-          //     landmark: landmarkController.text,
-          //     distanceToScene: _distance,
-          //     plateNo: widget.call_information.plate_no,
-          //     assignId: widget.call_information.assign_id);
+          if (_formKey.currentState.validate()) {
+            // print("widget.call_information.assign_id");
+            // print(widget.call_information.assign_id);
+            callInfoBloc.add(SaveCallInfo(
+                callInformation: new CallInformation(
+                    callcardNo: cardNoValue,
+                    callReceived:
+                        convertDateToStandard(receivedController.text),
+                    callerContactno: contactNoController.text,
+                    eventCode: eventCodeController.text,
+                    priority: _priority,
+                    incidentDesc: incidentController.text,
+                    incidentLocation: locationController.text,
+                    landmark: landmarkController.text,
+                    locationType: _location,
+                    distanceToScene: _distance,
+                    assignId: widget.call_information.assign_id,
+                    plateNo: widget.call_information.plate_no)));
 
-          // callInfoBloc.add(AddCallInfo(call_information: call));
-
-          final snackBar = SnackBar(
-            content: Text("Call information has been saved!"),
-          );
-          Scaffold.of(context).showSnackBar(snackBar);
+            final snackBar = SnackBar(
+              content: Text("Call information has been saved!"),
+            );
+            Scaffold.of(context).showSnackBar(snackBar);
+          }
         },
         child: Icon(Icons.save),
       ),
@@ -380,6 +393,7 @@ class CardNoTextInput extends StatelessWidget {
   final maskFormater;
   final hintText;
   final initialData;
+  final validator;
 
   CardNoTextInput(
       {this.labelText,
@@ -387,7 +401,10 @@ class CardNoTextInput extends StatelessWidget {
       this.maskFormater,
       this.inputType,
       this.hintText,
-      this.initialData});
+      this.initialData,
+      this.validator});
+
+  TextEditingController myController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -398,13 +415,26 @@ class CardNoTextInput extends StatelessWidget {
             padding: EdgeInsets.all(16),
             child: TextFormField(
                 initialValue: initialData,
-                // validator: validator,
+                validator: (value) {
+                  if (value.length > 20) {
+                    return "Call Card No cannot be more than 20 characters";
+                  }
+
+                  if (value.isEmpty) {
+                    return 'This field is required';
+                  }
+                  return null;
+                },
                 inputFormatters: maskFormater != null ? [maskFormater] : [],
                 onChanged: (value) {
-                  controller.sink.add(value);
+                  controller.sink.add(value.toUpperCase());
                 },
+
+                // onEditingComplete: (){
+
+                // },
                 // keyboardType: inputType,
-                // controller: controller,
+                // controller: myController,
                 decoration: InputDecoration(
                     // hintText: hintText,
                     labelText: labelText,
@@ -439,12 +469,13 @@ class TextInput extends StatelessWidget {
         child: Padding(
             padding: EdgeInsets.all(16),
             child: TextFormField(
+
                 // validator: validator,
                 inputFormatters: maskFormater != null ? [maskFormater] : [],
                 // keyboardType: inputType,
                 controller: controller,
                 decoration: InputDecoration(
-                    // hintText: hintText,
+                    hintText: hintText,
                     labelText: labelText,
                     fillColor: Colors.white,
                     border: new OutlineInputBorder(

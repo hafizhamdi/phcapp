@@ -295,10 +295,10 @@ class PhcDao {
   Future insertHistory(Callcard callcard, statusSend) async {
     print("insert callcard history");
     print("statusSend: " + statusSend.toString());
-    final List<History> listHistory = await showAllHistory();
+    // final List<History> listHistory = await showAllHistory();
     // print(listHistory);
     print("*&@&@&@&@(@((@");
-    print(listHistory.length);
+    // print(listHistory.length);
     // final newlist = List.from(listHistory).map((data) {
     //   // print("****************");
     //   print(data.timestamp);
@@ -308,18 +308,18 @@ class PhcDao {
     // print(newlist);
 
     // listHistory.firstWhere(test)
-    final isExist = listHistory.firstWhere(
-        (data) =>
-            data.historyCallcard.call_information.callcard_no ==
-            callcard.call_information.callcard_no, orElse: () {
-      //  await _historyStore.add(await _db, {
-      //     "history": callcard.toJson(),
-      //     "status_send": 0,
-      //     "timestamp": DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now())
-      //   });
-      return null;
-      // }
-    });
+    // final isExist = listHistory.firstWhere(
+    //     (data) =>
+    //         data.historyCallcard.call_information.assign_id ==
+    //         callcard.call_information.assign_id, orElse: () {
+    //  await _historyStore.add(await _db, {
+    //     "history": callcard.toJson(),
+    //     "status_send": 0,
+    //     "timestamp": DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now())
+    //   });
+    // return null;
+    // }
+    // });
     // });
 
     print(callcard.call_information.callcard_no);
@@ -342,21 +342,23 @@ class PhcDao {
     //   // return data.historyCallcard.call_information.callcard_no ==
     //   //     callcard.call_information.callcard_no;
     // }))
-    if (isExist != null) {
-      //this callcard already exist in history list, so update
-      print("im in history contains");
-      var finder = Finder(
-        filter:
-            // Filter.and([
-            Filter.equals('history.call_information.callcard_no',
-                callcard.call_information.callcard_no),
-        // Filter.equals('record_type', "ResponseTime")
-        // ]
-        // ),
-        // sortOrders: [SortOrder(Field.key, false)]
-      );
+    // if (callcard.call_information.assign_id != null) {
+    //this callcard already exist in history list, so update
+    print("im in history contains");
+    var finder = Finder(
+      filter:
+          // Filter.and([
+          Filter.equals('history.call_information.callcard_no',
+              callcard.call_information.callcard_no),
+      // Filter.equals('record_type', "ResponseTime")
+      // ]
+      // ),
+      // sortOrders: [SortOrder(Field.key, false)]
+    );
 
-      var findRecord = await _historyStore.findFirst(await _db, finder: finder);
+    var findRecord = await _historyStore.findFirst(await _db, finder: finder);
+
+    if (findRecord != null) {
       var key = findRecord.key;
 
       var record = _historyStore.record(key);
@@ -370,10 +372,12 @@ class PhcDao {
         'timestamp': DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()),
         "status_send": statusSend
       });
-
       print("update----");
       print(update);
     } else {
+      // } else {
+
+      // if (key == null) {
       print("Create new in history");
 
       // final history = new History(
@@ -423,15 +427,21 @@ class PhcDao {
     var records = await _historyStore.find(await _db, finder: finder);
 
     print("SHOWALL HISTORY");
+
+    if (records != null) {
+      return List.from(records).map((data) {
+        // print(data.value);
+        print(data.value["history"]);
+        return History(
+            historyCallcard: Callcard.fromJson(data.value["history"]),
+            statusSend: data.value["status_send"],
+            timestamp: data.value["timestamp"]);
+        // return Callcard.fromJson(data.value);
+      }).toList();
+    }
+
+    return [];
     // print(records);
-    return List.from(records).map((data) {
-      // print(data.value);
-      return History(
-          historyCallcard: Callcard.fromJson(data.value["history"]),
-          statusSend: data.value["status_send"],
-          timestamp: data.value["timestamp"]);
-      // return Callcard.fromJson(data.value);
-    }).toList();
   }
 
   Future<List<History>> clearAllSuccessHistory() async {
@@ -444,7 +454,11 @@ class PhcDao {
       // ),
     );
 
-    final deleteAll = await _historyStore.delete(await _db, finder: finder);
+    final deleteAll = await _historyStore.delete(
+        await _db
+        // );
+        ,
+        finder: finder);
 
     return showAllHistory();
 

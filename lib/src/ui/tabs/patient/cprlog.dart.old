@@ -43,9 +43,36 @@ final _formKey = GlobalKey<FormState>();
 
 List<String> _data = ['CPR Start', 'Bystander', 'ROSC'];
 
-class CPRLog extends StatelessWidget {
+class CPRLog extends StatefulWidget {
+  final CprLog cprLog;
+  CPRLog({this.cprLog});
+
+  _CPRLog createState() => _CPRLog();
+}
+
+class _CPRLog extends State<CPRLog> {
+  @override
+  void didChangeDependencies() {
+    print("DIDCHANGEDEPENDENCIES");
+    // final cprProvider = Provider.of<CPRProvider>(context);
+    // cprProvider.items.add(widget.cprLog);
+    // print(widget.cprLog.length);
+    // if (widget.cprLog != null) {
+    //   widget.cprLog.logs.map((f) {
+    //     print(f.toJson());
+    //     cprProvider.items.add(f);
+    //   });
+    // }
+    super.didChangeDependencies();
+  }
+
   @override
   build(BuildContext context) {
+    print("BUILD CPRLOG");
+    final cprProvider = Provider.of<CPRProvider>(context);
+
+    if (widget.cprLog != null) cprProvider.setLogs = widget.cprLog.logs;
+
     return Scaffold(
       // backgroundColor: Colors.grey[200],
       body: Consumer<CPRProvider>(

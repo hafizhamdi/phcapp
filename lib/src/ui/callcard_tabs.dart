@@ -49,6 +49,9 @@ class CallcardTabs extends StatefulWidget {
 
 class _CallcardTabs extends State<CallcardTabs> {
   CallInfoBloc callInfoBloc;
+
+  final PhcRepository phcRepository =
+      PhcRepository(phcApiClient: PhcApiClient(httpClient: http.Client()));
   // final PhcRepository phcRepository =
   //     PhcRepository(phcApiClient: PhcApiClient(httpClient: http.Client()));
 
@@ -95,8 +98,10 @@ class _CallcardTabs extends State<CallcardTabs> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Data sending failed"),
-          content: Text(
-              "You need internet connection. We keep your last saving in History"),
+          content:
+              Text("Something went wrong. We keep your last saving in History"),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
       });
 
@@ -129,6 +134,8 @@ class _CallcardTabs extends State<CallcardTabs> {
               },
             )
           ],
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
       });
 
@@ -147,125 +154,154 @@ class _CallcardTabs extends State<CallcardTabs> {
 
     phcBloc = BlocProvider.of<PhcBloc>(context);
 
-    return DefaultTabController(
-        length: 4,
-        child: BlocConsumer<CallCardTabBloc, TabState>(
-          listener: (context, state) {
-            if (state is CallcardToPublishLoading) {
-              //circular progress alert dialog
-              showLoading();
-            } else if (state is CallcardToPublishSuccess) {
-              //Callcard success publish dialog with ok
-              showSuccess();
-            } else if (state is CallcardToPublishFailed) {
-              //callcard failed to publish dialog error
-              showError();
-            }
-          },
-          builder: (context, state) {
-            return Scaffold(
-              // backgroundColor: Colors.white,
-              appBar: AppBar(
-                // shape: ShapeBorder(BorderRadius.only(topLeft:Radius.circular(2.0))),
-                // backgroundColor: Colors.white,
-                bottom: TabBar(
-                  // unselectedLabelColor: Colors.red,
-                  // labelColor: Colors.blue,
-                  // indicatorColor: Color(0x880E4F00),
-                  tabs: [
-                    Tab(icon: Icon(Icons.info)),
-                    Tab(icon: Icon(Icons.directions_car)),
-                    Tab(icon: Icon(Icons.timer)),
-                    Tab(icon: Icon(Icons.person)),
-                  ],
-                ),
-                title: Center(
-                    child: StreamBuilder(
-                        initialData: '',
-                        stream: callInfoBloc.cardNoController.stream,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return Text(snapshot.data,
-                                style: TextStyle(
-                                    fontFamily: "OpenSans", fontSize: 20));
-                          }
-                          return Container();
-                        })),
+    return
+        // MultiProvider(
+        //     providers: [
+        //       BlocProvider(create: (context) => TeamBloc(phcDao: new PhcDao())),
+        //       // BlocProvider(
+        //       //     create: (context) => StaffBloc(phcRepository: phcRepository))
+        //     ],
+        //     child:
+        DefaultTabController(
+            length: 4,
+            child: BlocConsumer<CallCardTabBloc, TabState>(
+              listener: (context, state) {
+                if (state is CallcardToPublishLoading) {
+                  //circular progress alert dialog
+                  showLoading();
+                } else if (state is CallcardToPublishSuccess) {
+                  //Callcard success publish dialog with ok
+                  showSuccess();
+                } else if (state is CallcardToPublishFailed) {
+                  //callcard failed to publish dialog error
+                  showError();
+                }
+              },
+              builder: (context, state) {
+                return Scaffold(
+                  // backgroundColor: Colors.white,
+                  appBar: AppBar(
+                    // shape: ShapeBorder(BorderRadius.only(topLeft:Radius.circular(2.0))),
+                    // backgroundColor: Colors.white,
+                    bottom: TabBar(
+                      labelColor: Colors.pinkAccent,
+                      unselectedLabelColor: Colors.white,
 
-                actions: <Widget>[
-                  IconButton(
-                    icon: const Icon(Icons.cloud_upload),
-                    tooltip: "Push to Server",
-                    onPressed: () {
-                      print("callInfoBloc state push toserver");
-                      final call_information = callInfoBloc.callInformation;
+                      // indicatorPadding: EdgeInsets.symmetric(vertical: 40),
+                      // indicatorWeight: 4.0,
+                      // indicatorSize: TabBarIndicatorSize.tab,
+                      indicator: BoxDecoration(
+                          // border: Border.,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10)),
+                          color: Colors.white),
 
-                      // print(currentState.toJson());
-                      final response_team = teamBloc.response_team;
-                      // print(teamState);
+                      // unselectedLabelColor: Colors.red,
+                      // labelColor: Colors.blue,
+                      // indicatorColor: Color(0x880E4F00),
+                      tabs: [
+                        Tab(icon: Icon(Icons.info)),
+                        Tab(icon: Icon(Icons.directions_car)),
+                        Tab(icon: Icon(Icons.timer)),
+                        Tab(icon: Icon(Icons.person)),
+                      ],
+                    ),
+                    title: Center(
+                        child: StreamBuilder(
+                            initialData: '',
+                            stream: callInfoBloc.cardNoController.stream,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Text(snapshot.data,
+                                    style: TextStyle(
+                                        fontFamily: "OpenSans", fontSize: 20));
+                              }
+                              return Container();
+                            })),
 
-                      final response_time = timeBloc.responseTime;
-                      // print(timeState);
+                    actions: <Widget>[
+                      IconButton(
+                        icon: const Icon(Icons.cloud_upload),
+                        tooltip: "Push to Server",
+                        onPressed: () {
+                          print("callInfoBloc state push toserver");
+                          final call_information = callInfoBloc.callInformation;
 
-                      // final patientState = patientBloc.sceneAssessment.toJson();
-                      // print(patientState);
-                      // final patientList = patientBloc.patients;
-                      // print(patientList.elementAt(0).patientInformation.idNo);
+                          // print(currentState.toJson());
+                          final response_team = teamBloc.response_team;
+                          // print(teamState);
 
-                      // historyBloc.add(AddHistory(
-                      //     callcard: new Callcard(
-                      //         callInformation: call_information,
-                      //         responseTeam: response_team,
-                      //         responseTime: response_time,
-                      //         patients: List<Patient>(),
-                      //         sceneAssessment: new SceneAssessment())));
+                          final response_time = timeBloc.responseTime;
+                          // print(timeState);
 
-                      print("DONE");
+                          final scene_assessment = patientBloc.sceneAssessment;
+                          // print(patientState);
+                          final patientList = patientBloc.patients;
 
-                      tabBloc.add(PublishCallcard(
-                          callInformation: call_information,
-                          responseTeam: response_team,
-                          responseTime: response_time,
-                          patients: List<Patient>(),
-                          sceneAssessment: new SceneAssessment()));
-                      // Navigator.push(context,
-                      //     MaterialPageRoute(builder: (context) => History()));
-                    },
-                  )
-                ],
-              ),
-              // backgroundColor: Colors.purple),
-              body:
-                  // Consumer<CallInformation>(builder: (context, info, child) {
-                  //   return
-                  TabBarView(
-                children: <Widget>[
-                  CallInformationScreen(
-                      call_information: widget.call_information),
-                  ResponseTeamScreen(
-                      response_team: widget.response_team,
-                      assign_id: widget.call_information.assign_id),
-                  ResponseTimeScreen(
-                      response_time: widget.response_time,
-                      assign_id: widget.call_information.assign_id),
+                          print(patientList.length);
+                          // print(scene_assessment.toJson());
+                          // print(patientList.elementAt(0).patientInformation.idNo);
 
-                  PatientListScreen(
-                    patients: widget.patients,
-                    assign_id: widget.call_information.assign_id,
-                  )
-                  // Icon(Icons.ev_station),
-                  // Icon(Icons.ev_station),
-                  // Team(),
-                  // Timer(),
-                  // Patients(),
-                ],
-                // );
-                // }
-              ),
-            );
-          },
-          // child:
-        ));
+                          // print(patientBloc.sceneAssessment.toJson());
+                          // historyBloc.add(AddHistory(
+                          //     callcard: new Callcard(
+                          //         callInformation: call_information,
+                          //         responseTeam: response_team,
+                          //         responseTime: response_time,
+                          //         patients: List<Patient>(),
+                          //         sceneAssessment: new SceneAssessment())));
+
+                          print("DONE");
+
+                          tabBloc.add(PublishCallcard(
+                            callInformation: call_information,
+                            responseTeam: response_team,
+                            responseTime: response_time,
+                            patients: patientList,
+                            // sceneAssessment:
+                            //     SceneAssessment(otherServicesAtScene: []
+                            //     )
+                          ));
+                          // Navigator.push(context,
+                          //     MaterialPageRoute(builder: (context) => History()));
+                        },
+                      )
+                    ],
+                  ),
+                  // backgroundColor: Colors.purple),
+                  body:
+                      // Consumer<CallInformation>(builder: (context, info, child) {
+                      //   return
+                      TabBarView(
+                    children: <Widget>[
+                      CallInformationScreen(
+                          call_information: widget.call_information),
+                      ResponseTeamScreen(
+                          // context: context,
+                          response_team: widget.response_team,
+                          assign_id: widget.call_information.assign_id),
+                      ResponseTimeScreen(
+                          response_time: widget.response_time,
+                          assign_id: widget.call_information.assign_id),
+
+                      PatientListScreen(
+                        patients: widget.patients,
+                        assign_id: widget.call_information.assign_id,
+                      )
+                      // Icon(Icons.ev_station),
+                      // Icon(Icons.ev_station),
+                      // Team(),
+                      // Timer(),
+                      // Patients(),
+                    ],
+                    // );
+                    // }
+                  ),
+                );
+              },
+              // child:
+            ));
     // );
   }
 

@@ -42,28 +42,32 @@ class _Patients extends State<PatientListScreen>
   // ];
 
   PatientBloc patientBloc;
+  List<String> wantedList;
 
   // @override
   // initState() {
-    //   patientBloc = BlocProvider.of<PatientBloc>(context);
+  //   patientBloc = BlocProvider.of<PatientBloc>(context);
 
-    //   patientBloc.add(LoadPatient(assign_id: widget.assign_id));
+  //   patientBloc.add(LoadPatient(assign_id: widget.assign_id));
   // }
 
   @override
   void didChangeDependencies() {
-    final patientBloc = BlocProvider.of<PatientBloc>(context);
+    BlocProvider.of<PatientBloc>(context).add(InitPatient());
 
-    if (widget.patients != null) {
-      patientBloc.add(LoadPatient(
-          assign_id: widget.assign_id,
-          sceneAssessment: SceneAssessment(
-              otherServicesAtScene: ["Civil defence", "Fire rescue"]),
-          patients: widget.patients));
-    } else {
-      patientBloc.add(
-          LoadPatient(assign_id: widget.assign_id, patients: List<Patient>()));
-    }
+    // if (widget.patients != null) {
+    // patientBloc.add(LoadPatient(
+    //     assign_id: widget.assign_id,
+    //     sceneAssessment: widget.sceneAssessment,
+    //     patients: patientBloc.state.patients != null
+    //         ? patientBloc.state.patients
+    //         : widget.patients));
+    // } else {
+    //   patientBloc.add(LoadPatient(
+    //       assign_id: widget.assign_id,
+    //       patients: List<Patient>(),
+    //       sceneAssessment: widget.sceneAssessment));
+    // }
 
     super.didChangeDependencies();
   }
@@ -169,7 +173,20 @@ class _Patients extends State<PatientListScreen>
           )),
         );
 
-    void callback(String item, List<String> selectedItems) {}
+    void callback(String item, List<String> selectedItems) {
+      setState(() {
+        wantedList = selectedItems;
+      });
+
+      print("callback");
+      print(selectedItems.length.toString());
+
+      // patientBloc.add(LoadPatient(
+      //     assign_id: widget.assign_id,
+      //     patients: patientBloc.state.patients,
+      //     sceneAssessment:
+      //         SceneAssessment(otherServicesAtScene: selectedItems)));
+    }
 
     return Scaffold(
         body: BlocBuilder<PatientBloc, PatientState>(
@@ -178,7 +195,14 @@ class _Patients extends State<PatientListScreen>
           final currentState = state;
           print("WHAT ABOUT THIS");
           print(currentState);
-          if (currentState is PatientLoaded) {
+          if (state is PatientEmpty) {
+            BlocProvider.of<PatientBloc>(context).add(LoadPatient(
+                assign_id: widget.assign_id,
+                sceneAssessment: widget.sceneAssessment,
+                patients: patientBloc.state.patients != null
+                    ? patientBloc.state.patients
+                    : widget.patients));
+          } else if (state is PatientLoaded) {
             return SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 child: Center(
@@ -222,6 +246,7 @@ class _Patients extends State<PatientListScreen>
                                       .patients[index].patientInformation,
                                   PatientTab(
                                       patient: currentState.patients[index],
+                                      
                                       index: index));
                             },
                           )
@@ -241,7 +266,7 @@ class _Patients extends State<PatientListScreen>
               child: Align(
                   alignment: Alignment.bottomRight,
                   child: FloatingActionButton.extended(
-                    heroTag: 0,
+                    heroTag: 8,
                     onPressed: () {
                       // BlocProvider.of(context);
                       Navigator.push(
@@ -261,13 +286,15 @@ class _Patients extends State<PatientListScreen>
           Align(
               alignment: Alignment.bottomRight,
               child: FloatingActionButton(
+                  heroTag: 4,
                   onPressed: () {
                     patientBloc.add(AddSceneAssessment(
                         patients: patientBloc.state.patients,
-                        sceneAssessment: patientBloc.sceneAssessment));
+                        sceneAssessment:
+                            SceneAssessment(otherServicesAtScene: wantedList)));
 
-                    print(patientBloc.state.patients);
-                    print(patientBloc.sceneAssessment);
+                    // print(patientBloc.state.patients);
+                    // print(patientBloc.sceneAssessment.toJson());
                     final snackBar = SnackBar(
                       content: Text("Scene Assessment has been saved!"),
                     );

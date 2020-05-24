@@ -38,14 +38,14 @@ class Callcard {
   CallInformation callInformation;
   ResponseTeam responseTeam;
   ResponseTime responseTime;
-  SceneAssessment sceneAssessment;
+  // SceneAssessment sceneAssessment;
   List<Patient> patients;
 
   Callcard({
     this.callInformation,
     this.responseTeam,
     this.responseTime,
-    this.sceneAssessment,
+    // this.sceneAssessment,
     this.patients,
   });
 
@@ -69,6 +69,7 @@ class Callcard {
   CallInformation get call_information => callInformation;
   ResponseTeam get response_team => responseTeam;
   ResponseTime get response_time => responseTime;
+  // SceneAssessment get scene_assessment => sceneAssessment;
   List<Patient> get listPatients => patients;
 }
 
@@ -145,18 +146,18 @@ class CallInformation {
 }
 
 class Patient {
-  List<CprLog> cprLogs;
+  CPR cpr;
   PatientInformation patientInformation;
   PatientAssessment patientAssessment;
   TraumaAssessment traumaAssessment;
-  Intervention intervention;
+  InterventionAss intervention;
   List<Medication> medication;
   List<VitalSign> vitalSigns;
   IncidentReporting incidentReporting;
   Outcome outcome;
 
   Patient({
-    this.cprLogs,
+    this.cpr,
     this.patientInformation,
     this.patientAssessment,
     this.traumaAssessment,
@@ -168,8 +169,9 @@ class Patient {
   });
 
   factory Patient.fromJson(Map<String, dynamic> json) => Patient(
-        // cprLogs:
-        //     List<CprLog>.from(json["cpr_logs"].map((x) => CprLog.fromJson(x))),
+        cpr: (json["cpr_logs"] != null)
+            ? CPR.fromJson(json["cpr_logs"])
+            : new CPR(),
         patientInformation:
             PatientInformation.fromJson(json["patient_information"]),
         // patientAssessment:
@@ -178,92 +180,98 @@ class Patient {
         // intervention: Intervention.fromJson(json["intervention"]),
         // medication: List<Medication>.from(
         //     json["medication"].map((x) => Medication.fromJson(x))),
-        // vitalSigns: List<VitalSign>.from(
-        //     json["vital_signs"].map((x) => VitalSign.fromJson(x))),
+        vitalSigns: (json["vital_signs"] != null)
+            ? List<VitalSign>.from(
+                json["vital_signs"].map((x) => VitalSign.fromJson(x)))
+            : [],
         // incidentReporting:
         //     IncidentReporting.fromJson(json["incident_reporting"]),
         // outcome: Outcome.fromJson(json["outcome"]),
       );
 
   Map<String, dynamic> toJson() => {
+        "cpr_logs": cpr.toJson(),
+        // (cpr != null)
+        // ? List<CprSection>.from(cprLogs.map((x) => x.toJson()))
+        //     : [],
         // "cpr_logs": List<dynamic>.from(cprLogs.map((x) => x.toJson())),
         "patient_information": patientInformation.toJson(),
         // "patient_assessment": patientAssessment.toJson(),
         // "trauma_assessment": traumaAssessment.toJson(),
         // "intervention": intervention.toJson(),
         // "medication": List<dynamic>.from(medication.map((x) => x.toJson())),
-        // "vital_signs": List<dynamic>.from(vitalSigns.map((x) => x.toJson())),
+        "vital_signs": List<dynamic>.from(vitalSigns.map((x) => x.toJson())),
         // "incident_reporting": incidentReporting.toJson(),
         // "outcome": outcome.toJson(),
       };
 }
 
-class CprLog {
-  String id;
-  DateTime created;
-  List<LogMeasurement> logs;
+// class CprLog {
+//   String id;
+//   DateTime created;
+//   List<LogMeasurement> logs;
 
-  CprLog({
-    this.id,
-    this.created,
-    this.logs,
-  });
+//   CprLog({
+//     this.id,
+//     this.created,
+//     this.logs,
+//   });
 
-  factory CprLog.fromJson(Map<String, dynamic> json) => CprLog(
-        id: json["id"],
-        created: DateTime.parse(json["created"]),
-        logs:
-            List<LogMeasurement>.from(json["logs"].map((x) => Log.fromJson(x))),
-      );
+//   factory CprLog.fromJson(Map<String, dynamic> json) => CprLog(
+//         id: json["id"],
+//         created: DateTime.parse(json["created"]),
+//         logs:
+//             List<LogMeasurement>.from(json["logs"].map((x) => Log.fromJson(x))),
+//       );
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "created": created.toIso8601String(),
-        "logs": List<dynamic>.from(logs.map((x) => x.toJson())),
-      };
-}
+//   Map<String, dynamic> toJson() => {
+//         "id": id,
+//         "created": created.toIso8601String(),
+//         "logs": List<dynamic>.from(logs.map((x) => x.toJson())),
+//       };
+// }
 
-class Log {
-  String message;
-  DateTime timestamp;
+// class Log {
+//   String message;
+//   DateTime timestamp;
 
-  Log({
-    this.message,
-    this.timestamp,
-  });
+//   Log({
+//     this.message,
+//     this.timestamp,
+//   });
 
-  factory Log.fromJson(Map<String, dynamic> json) => Log(
-        message: json["message"],
-        timestamp: DateTime.parse(json["timestamp"]),
-      );
+//   factory Log.fromJson(Map<String, dynamic> json) => Log(
+//         message: json["message"],
+//         timestamp: DateTime.parse(json["timestamp"]),
+//       );
 
-  Map<String, dynamic> toJson() => {
-        "message": message,
-        "timestamp": timestamp.toIso8601String(),
-      };
-}
+//   Map<String, dynamic> toJson() => {
+//         "message": message,
+//         "timestamp": timestamp.toIso8601String(),
+//       };
+// }
 
-class LogMeasurement {
-  String item;
-  String timestamp;
-  String measurement;
+// class LogMeasurement {
+//   String item;
+//   String timestamp;
+//   String measurement;
 
-  LogMeasurement({this.item, this.timestamp, this.measurement});
+//   LogMeasurement({this.item, this.timestamp, this.measurement});
 
-  LogMeasurement.fromJson(Map<String, dynamic> json) {
-    item = json['item'];
-    timestamp = json['timestamp'];
-    measurement = json['measurement'];
-  }
+//   LogMeasurement.fromJson(Map<String, dynamic> json) {
+//     item = json['item'];
+//     timestamp = json['timestamp'];
+//     measurement = json['measurement'];
+//   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['item'] = this.item;
-    data['timestamp'] = this.timestamp;
-    data['measurement'] = this.measurement;
-    return data;
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['item'] = this.item;
+//     data['timestamp'] = this.timestamp;
+//     data['measurement'] = this.measurement;
+//     return data;
+//   }
+// }
 
 class IncidentReporting {
   String responseDelay;
@@ -290,16 +298,18 @@ class IncidentReporting {
       };
 }
 
-class Intervention {
-  String airwayDevice;
-  String oxygen;
+class InterventionAss {
+  DateTime timestamp;
+  List<String> airwayDevice;
+  List<String> oxygen;
   List<String> extHaemorrhage;
   List<String> vascularAccess;
-  String vascularAccessLocation;
+  List<String> vascularAccessLocation;
   List<String> immobilization;
   List<String> specialCare;
 
-  Intervention({
+  InterventionAss({
+    this.timestamp,
     this.airwayDevice,
     this.oxygen,
     this.extHaemorrhage,
@@ -309,7 +319,9 @@ class Intervention {
     this.specialCare,
   });
 
-  factory Intervention.fromJson(Map<String, dynamic> json) => Intervention(
+  factory InterventionAss.fromJson(Map<String, dynamic> json) =>
+      InterventionAss(
+        timestamp: json["timestamp"],
         airwayDevice: json["airway_device"],
         oxygen: json["oxygen"],
         extHaemorrhage:
@@ -322,6 +334,7 @@ class Intervention {
       );
 
   Map<String, dynamic> toJson() => {
+        "timestamp": timestamp,
         "airway_device": airwayDevice,
         "oxygen": oxygen,
         "ext_haemorrhage": List<dynamic>.from(extHaemorrhage.map((x) => x)),
@@ -728,7 +741,7 @@ class VitalSign {
         gcs: json["gcs"],
         bloodGlucose: json["blood_glucose"],
         painScore: json["pain_score"],
-        pupil: Pupil.fromJson(json["pupil"]),
+        pupil: json['pupil'] != null ? new Pupil.fromJson(json['pupil']) : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -751,7 +764,11 @@ class VitalSign {
         "gcs": gcs,
         "blood_glucose": bloodGlucose,
         "pain_score": painScore,
-        "pupil": pupil.toJson(),
+
+        //      if (this.pupil != null) {
+        //   data['pupil'] = this.pupil.toJson();
+        // }
+        "pupil": (pupil != null) ? pupil.toJson() : null,
       };
 }
 
@@ -783,7 +800,7 @@ class Pupil {
       };
 }
 
-class ResponseTeam extends Equatable {
+class ResponseTeam {
   String serviceResponse;
   String vehicleRegno;
   List<Staff> staffs;
@@ -838,14 +855,24 @@ class Staff {
       };
 }
 
+DateTime parsingDateTime(data) {
+  if (data == null) return null;
+  var split = data.split(".");
+
+  print(split[0]);
+  var result = DateTime.parse(split[0]);
+
+  return result;
+}
+
 class ResponseTime {
-  String dispatchTime;
-  String enrouteTime;
-  String atSceneTime;
-  String atPatientTime;
-  String transportingTime;
-  String atHospitalTime;
-  String rerouteTime;
+  DateTime dispatchTime;
+  DateTime enrouteTime;
+  DateTime atSceneTime;
+  DateTime atPatientTime;
+  DateTime transportingTime;
+  DateTime atHospitalTime;
+  DateTime rerouteTime;
   String reasonAbort;
 
   ResponseTime({
@@ -860,24 +887,28 @@ class ResponseTime {
   });
 
   factory ResponseTime.fromJson(Map<String, dynamic> json) => ResponseTime(
-        dispatchTime: transformTime(json["dispatch_time"]),
-        enrouteTime: transformTime(json["enroute_time"]),
-        atSceneTime: transformTime(json["atScene_time"]),
-        atPatientTime: transformTime(json["atPatient_time"]),
-        transportingTime: transformTime(json["transporting_time"]),
-        atHospitalTime: transformTime(json["atHospital_time"]),
-        rerouteTime: transformTime(json["reroute_time"]),
+        dispatchTime: parsingDateTime(json["dispatch_time"]),
+        enrouteTime: parsingDateTime(json["enroute_time"]),
+        atSceneTime: parsingDateTime(json["atScene_time"]),
+        atPatientTime: parsingDateTime(json["atPatient_time"]),
+        transportingTime: parsingDateTime(json["transporting_time"]),
+        atHospitalTime: parsingDateTime(json["atHospital_time"]),
+        rerouteTime: parsingDateTime(json["reroute_time"]),
         reasonAbort: json["reason_abort"],
       );
 
   Map<String, dynamic> toJson() => {
-        "dispatch_time": dispatchTime,
-        "enroute_time": enrouteTime,
-        "atScene_time": atSceneTime,
-        "atPatient_time": atPatientTime,
-        "transporting_time": transportingTime,
-        "atHospital_time": atHospitalTime,
-        "reroute_time": rerouteTime,
+        "dispatch_time":
+            (dispatchTime != null) ? dispatchTime.toString() : null,
+        "enroute_time": (enrouteTime != null) ? enrouteTime.toString() : null,
+        "atScene_time": (atSceneTime != null) ? atSceneTime.toString() : null,
+        "atPatient_time":
+            (atPatientTime != null) ? atPatientTime.toString() : null,
+        "transporting_time":
+            (transportingTime != null) ? transportingTime.toString() : null,
+        "atHospital_time":
+            (atHospitalTime != null) ? atHospitalTime.toString() : null,
+        "reroute_time": (rerouteTime != null) ? rerouteTime.toString() : null,
         "reason_abort": reasonAbort,
       };
 }
@@ -929,4 +960,133 @@ class EnumValues<T> {
     }
     return reverseMap;
   }
+}
+
+class CPR {
+  List<CprSection> cprLogs;
+
+  CPR({this.cprLogs});
+
+  CPR.fromJson(Map<String, dynamic> json) {
+    if (json['cpr_logs'] != null) {
+      cprLogs = new List<CprSection>();
+      json['cpr_logs'].forEach((v) {
+        cprLogs.add(new CprSection.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.cprLogs != null) {
+      data['cpr_logs'] = this.cprLogs.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class CprSection {
+  String timestamp;
+  int id;
+  String witnessCpr;
+  String bystanderCpr;
+  String cprStart;
+  String rosc;
+  String cprStop;
+  Analysis shockable;
+  Analysis nonShockable;
+  Analysis other;
+  List<String> logs;
+
+  CprSection(
+      {this.timestamp,
+      this.id,
+      this.witnessCpr,
+      this.bystanderCpr,
+      this.cprStart,
+      this.cprStop,
+      this.rosc,
+      this.shockable,
+      this.nonShockable,
+      this.other,
+      this.logs});
+
+  CprSection.fromJson(Map<String, dynamic> json) {
+    timestamp = json['timestamp'];
+    id = json['id'];
+    shockable = json['shockable'] != null
+        ? new Analysis.fromJson(json['shockable'])
+        : null;
+    nonShockable = json['nonShockable'] != null
+        ? new Analysis.fromJson(json['nonShockable'])
+        : null;
+    other = json['other'] != null ? new Analysis.fromJson(json['other']) : null;
+    logs = json['logs'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['timestamp'] = this.timestamp;
+    data['witness_cpr'] = this.witnessCpr;
+    data['bystander_cpr'] = this.bystanderCpr;
+    data['cpr_start'] = this.cprStart;
+    data['cpr_stop'] = this.cprStop;
+    data['rosc'] = this.rosc;
+    data['id'] = this.id;
+    if (this.shockable != null) {
+      data['shockable'] = this.shockable.toJson();
+    }
+    if (this.nonShockable != null) {
+      data['nonShockable'] = this.nonShockable.toJson();
+    }
+    if (this.other != null) {
+      data['other'] = this.other.toJson();
+    }
+    data['logs'] = this.logs;
+    return data;
+  }
+}
+
+class Analysis {
+  String id;
+  String name;
+  String rhythm;
+  String intervention;
+  String drugs;
+  String airway;
+
+  Analysis(
+      {this.id,
+      this.name,
+      this.rhythm,
+      this.intervention,
+      this.drugs,
+      this.airway});
+
+  Analysis.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    rhythm = json['rhythm'];
+    intervention = json['intervention'];
+    drugs = json['drugs'];
+    airway = json['airway'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['rhythm'] = this.rhythm;
+    data['intervention'] = this.intervention;
+    data['drugs'] = this.drugs;
+    data['airway'] = this.airway;
+    return data;
+  }
+}
+
+class ItemModel {
+  String id;
+  String name;
+  String value;
+  ItemModel({this.id, this.name, this.value});
 }

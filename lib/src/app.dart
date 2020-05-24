@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
+// import 'package:phcapp/src/blocs/cpr_bloc.dart';
 import 'package:phcapp/src/database/phc_dao.dart';
 import 'package:phcapp/src/repositories/repositories.dart';
 import 'package:phcapp/src/ui/list_callcard.dart';
@@ -91,6 +92,10 @@ class App extends StatelessWidget {
                   phcDao: phcDaoClient.phcDao,
                   phcRepository: phcRepository,
                   historyBloc: BlocProvider.of<HistoryBloc>(context))),
+          BlocProvider(create: (context) => InterBloc()),
+          BlocProvider(
+            create: (context) => CprBloc(),
+          )
         ],
         child: MaterialApp(
             theme: themeProvider.getThemeData,
@@ -100,8 +105,10 @@ class App extends StatelessWidget {
                 if (state is AuthUnitialized) {
                   return Scaffold(
                       body: Container(
+                    width: 500,
+                    height: 400,
                     child: Center(
-                      child: Text("IM SPLASH SCREEN"),
+                      child: Image(image: AssetImage('assets/ambulance.png')),
                     ),
                   ));
                 } else if (state is AuthAunthenticated) {
@@ -115,6 +122,7 @@ class App extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 }
+                return Container();
               },
             )));
   }

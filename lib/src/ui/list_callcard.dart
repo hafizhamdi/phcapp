@@ -55,39 +55,7 @@ class _ListCallcards extends State<ListCallcards> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return
-        // MultiBlocProvider(
-        //     // BlocProvider(
-        //     providers: [
-        //       //),
-        //       BlocProvider(
-        //         create: (context) => CallInfoBloc(),
-        //       ),
-        //       BlocProvider(
-        //           create: (context) => TeamBloc(phcDao: phcDaoClient.phcDao)),
-        //       BlocProvider(
-        //           create: (context) => StaffBloc(
-        //               phcRepository: phcRepository, phcDao: phcDaoClient.phcDao)),
-        //       BlocProvider(
-        //           create: (context) => TimeBloc(phcDao: phcDaoClient.phcDao)),
-        //       BlocProvider(
-        //           create: (context) => SceneBloc(phcDao: phcDaoClient.phcDao)),
-
-        //       BlocProvider(
-        //           create: (context) => PatientBloc(phcDao: phcDaoClient.phcDao)),
-
-        //       BlocProvider(
-        //           create: (context) => VitalBloc(phcDao: phcDaoClient.phcDao)),
-
-        //       BlocProvider(
-        //           create: (context) => AuthBloc(phcRepository: phcRepository)),
-
-        //       // BlocProvider<AuthBloc>(create: (context) {
-        //       //   return AuthBloc(phcRepository: phcRepository)..add(AppStarted());
-        //       // }),
-        //     ],
-        // child:
-        Scaffold(
+    return Scaffold(
       appBar: AppBar(
         leading: TopOtherMenu(),
         title: Text("Call Cards"),

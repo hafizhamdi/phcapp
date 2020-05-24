@@ -140,17 +140,16 @@ class TimeBloc extends Bloc<TimeEvent, TimeState> {
       // print(responseTime.toJson());
 
       // if (responseTime == null) {
-      yield TimeLoaded(
-        responseTime: new ResponseTime(
-            dispatchTime: "",
-            enrouteTime: "",
-            atSceneTime: "",
-            atPatientTime: "",
-            transportingTime: "",
-            atHospitalTime: "",
-            rerouteTime: "",
-            reasonAbort: ""),
-      );
+      yield TimeLoaded(responseTime: new ResponseTime()
+          // dispatchTime: "",
+          // enrouteTime: "",
+          // atSceneTime: "",
+          // atPatientTime: "",
+          // transportingTime: "",
+          // atHospitalTime: "",
+          // rerouteTime: "",
+          // reasonAbort: ""),
+          );
       // }
 
       // yield TimeLoaded(

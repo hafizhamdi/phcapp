@@ -29,11 +29,12 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
 
   Stream<TabState> republishCallcardToState(RepublishCallcard event) async* {
     Callcard callcard = new Callcard(
-        callInformation: event.callInformation,
-        responseTeam: event.responseTeam,
-        responseTime: event.responseTime,
-        patients: event.patients,
-        sceneAssessment: event.sceneAssessment);
+      callInformation: event.callInformation,
+      responseTeam: event.responseTeam,
+      responseTime: event.responseTime,
+      patients: event.patients,
+      // sceneAssessment: event.sceneAssessment
+    );
 
     try {
       //publish to api
@@ -71,11 +72,12 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
 
   Stream<TabState> publishCallcardToState(PublishCallcard event) async* {
     Callcard callcard = new Callcard(
-        callInformation: event.callInformation,
-        responseTeam: event.responseTeam,
-        responseTime: event.responseTime,
-        patients: event.patients,
-        sceneAssessment: event.sceneAssessment);
+      callInformation: event.callInformation,
+      responseTeam: event.responseTeam,
+      responseTime: event.responseTime,
+      patients: event.patients,
+      // sceneAssessment: event.sceneAssessment
+    );
 
     try {
       //publish to api

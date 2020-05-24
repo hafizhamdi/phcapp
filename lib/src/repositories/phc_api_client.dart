@@ -26,11 +26,14 @@ class PhcApiClient {
 
     print("post callcard masuk");
     print(jsonEncode(callcard.call_information));
+    // print(jsonEncode(callcard.scene_assessment));
 
     var internal_callcard = {};
     internal_callcard["call_information"] = callcard.call_information;
     internal_callcard["response_team"] = callcard.response_team;
     internal_callcard["response_time"] = callcard.response_time;
+    // internal_callcard["scene_assessment"] = callcard.scene_assessment;
+    internal_callcard["patients"] = callcard.listPatients;
     final postResponse = await this.httpClient.post(
         "$baseUrl/upload_result/call_card",
         body: jsonEncode(internal_callcard));
