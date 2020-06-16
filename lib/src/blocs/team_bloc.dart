@@ -8,22 +8,26 @@ import 'package:phcapp/src/models/phc_staff.dart';
 
 abstract class TeamEvent extends Equatable {
   final ResponseTeam responseTeam;
+  final List<Staff> selectedStaffs;
 
-  TeamEvent({this.responseTeam});
+  TeamEvent({this.responseTeam, this.selectedStaffs});
   @override
-  List<Object> get props => [responseTeam];
+  List<Object> get props => [responseTeam, selectedStaffs];
 }
 
 class InitTeam extends TeamEvent {}
 
+class ResetTeam extends TeamEvent {}
+
 class LoadTeam extends TeamEvent {
   final ResponseTeam responseTeam;
-  final assign_id;
+  final selectedStaffs;
+   // final assign_id;
 
-  LoadTeam({this.assign_id, this.responseTeam});
+  LoadTeam({this.responseTeam, this.selectedStaffs});
 
   @override
-  List<Object> get props => [assign_id, responseTeam];
+  List<Object> get props => [responseTeam, selectedStaffs];
 }
 
 class AddTeam extends TeamEvent {
@@ -53,31 +57,22 @@ class RemoveTeam extends TeamEvent {
 
 abstract class TeamState extends Equatable {
   final ResponseTeam response_team;
-  // final List<Staff> selectedStaffs;
+  final List<Staff> selectedStaffs;
 
-  TeamState({
-    this.response_team,
-    // this.selectedStaffs
-  });
+  TeamState({this.response_team, this.selectedStaffs});
 
   @override
-  List<Object> get props => [response_team];
+  List<Object> get props => [response_team, selectedStaffs];
 }
 
 class TeamLoaded extends TeamState {
   final ResponseTeam response_team;
-  // final List<Staff> selectedStaffs;
+  final List<Staff> selectedStaffs;
 
-  TeamLoaded({
-    this.response_team,
-    // this.selectedStaffs
-  });
+  TeamLoaded({this.response_team, this.selectedStaffs});
 
   @override
-  List<Object> get props => [
-        response_team,
-        // selectedStaffs
-      ];
+  List<Object> get props => [response_team, selectedStaffs];
 
   // @override
   // String toString() {
@@ -86,12 +81,24 @@ class TeamLoaded extends TeamState {
   // }
 }
 
-class TeamEmpty extends TeamState {}
+class TeamEmpty extends TeamState {
+  // final ResponseTeam response_team;
+  // List<Staff> selectedStaffs;
+
+  // TeamEmpty(
+  //     {
+  //     // this.response_team,
+  //     this.selectedStaffs});
+
+  // @override
+  // List<Object> get props => [selectedStaffs];
+}
 
 class TeamBloc extends Bloc<TeamEvent, TeamState> {
   PhcDao phcDao;
   ResponseTeam response_team;
   List<int> listSelected = new List<int>();
+  List<Staff> selectedStaffs = new List<Staff>();
 
   TeamBloc({this.phcDao}) : assert(phcDao != null);
 
@@ -118,7 +125,9 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
       // await phcDao.insertResponseTeam(event.response_team, event.assign_id);
 
       // yield* _reloadResponseTeam(event.assign_id);
-    } else if (event is InitTeam) {
+    } else if (event is ResetTeam) {
+      selectedStaffs = new List<Staff>();
+      listSelected = new List<int>();
       yield TeamEmpty();
     }
   }
@@ -203,42 +212,45 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
 
   Stream<TeamState> _addStaffToState(AddTeam event) async* {
     print("currentTstate");
-    print(state);
+    // print(state);
 
-    final currentState = state;
-    ResponseTeam responseTeam = currentState.response_team;
+    // final currentState = state;
+
+    List<Staff> newList = selectedStaffs..add(event.staff);
+
+    print(newList);
+    // ResponseTeam responseTeam = currentState.response_team;
     // if (state is TeamLoaded) {
     // state
     // print(currentState);
     // selectedStaffs.add(event.staff);
-    final newList = List<Staff>.from(responseTeam.staffs)..add(event.staff);
+    // final newList = List<Staff>.from(responseTeam.staffs)..add(event.staff);
     // newList.removeAt(0);
 
-    responseTeam.staffs = newList;
+    // responseTeam.staffs = newList;
 
-    print("responseTeam.staffs.length");
-    print(responseTeam.staffs.length);
+    // print("responseTeam.staffs.length");
+    // print(responseTeam.staffs.length);
     // print(newList);
-
+    // List<Staff> temp = List<Staff>.from(selectedStaffs)..add(event.staff);
+    // print(temp);
     // yield TeamLoaded(
     //     response_team: currentState.response_team, selectedStaffs: newList);
     yield TeamLoaded(
-      response_team: responseTeam,
-      // selectedStaffs: newList
-    );
+        // response_team: responseTeam,
+        selectedStaffs: newList);
     // }
   }
 
   Stream<TeamState> _removeStaffToState(RemoveTeam event) async* {
-    final currentState = state;
-    ResponseTeam responseTeam = currentState.response_team;
+    // final currentState = state;
+    // ResponseTeam responseTeam = currentState.response_team;
 
     // if (state is TeamLoaded) {
     // selectedStaffs.add(event.staff);
-    final newList = List<Staff>.from(responseTeam.staffs)
-      ..removeAt(event.removeIndex);
+    final newList = selectedStaffs..removeAt(event.removeIndex);
     // print(newList);
-    responseTeam.staffs = newList; // = newList;
+    // responseTeam.staffs = newList; // = newList;
 
     // remove from selected list tick
     listSelected.removeAt(event.removeIndex);
@@ -246,12 +258,11 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
     // currentState.response_team.staffs.removeAt(event.removeIndex);
 
     print("responseTeam.staffs.length");
-    print(responseTeam.staffs.length);
+    // print(responseTeam.staffs.length);
     // yield currentState;
     yield TeamLoaded(
-      response_team: responseTeam,
-      // selectedStaffs: newList
-    );
+        // response_team: responseTeam,
+        selectedStaffs: newList);
     // yield TeamState(selectedStaffs: newList);
     // }
   }

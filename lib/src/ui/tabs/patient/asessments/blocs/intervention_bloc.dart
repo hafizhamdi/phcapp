@@ -27,6 +27,8 @@ class LoadInter extends InterEvent {
   List<Object> get props => [inter];
 }
 
+class ResetInter extends InterEvent {}
+
 abstract class InterState extends Equatable {
   final InterventionAss inter;
   InterState({this.inter});
@@ -56,6 +58,8 @@ class InterBloc extends Bloc<InterEvent, InterState> {
       yield* _mapLoadInterToState(event);
     } else if (event is UpdateInter) {
       yield* _mapUpdateInterToState(event);
+    } else if (event is ResetInter) {
+      yield InterEmpty();
     }
   }
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/database/phc_dao.dart';
@@ -55,10 +56,84 @@ class _ListCallcards extends State<ListCallcards> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    // return SafeArea(
+    //   child: Material(
+    //     child: CustomScrollView(
+    //       slivers: <Widget>[
+    //         SliverPersistentHeader(
+    //           delegate: MySliverAppBar(expandedHeight: 200),
+    //           pinned: true,
+    //         ),
+    //         SliverList(
+    //           delegate: SliverChildBuilderDelegate(
+    //             (_, index) => ListTile(
+    //               title: Text("Index: $index"),
+    //             ),
+    //           ),
+    //         )
+
+    // BlocConsumer<PhcBloc, PhcState>(
+    //   listener: (context, state) {
+    //     _refreshCompleter?.complete();
+    //     _refreshCompleter = Completer();
+    //   },
+    //   builder: (context, state) {
+    //     if (state is PhcEmpty) {
+    //       phcBloc.add(FetchPhc());
+    //     } else if (state is PhcLoaded) {
+    //       print("Phc loaded");
+    //       final phc = state.phc;
+
+    //       return RefreshIndicator(
+    //           onRefresh: () {
+    //             BlocProvider.of<PhcBloc>(context).add(
+    //               RefreshPhc(),
+    //             );
+    //             return _refreshCompleter.future;
+    //           },
+    //           child: _buildList(phc)
+    //           // ListView.builder(
+    //           //     itemCount: phc.callcards.length,
+    //           //     itemBuilder: (context, index) {
+    //           //       final callInfo = phc.callcards[index].call_information;
+    //           //       return ListTile(
+    //           //         title: Text(callInfo.callcard_no),
+    //           //         subtitle: Text(callInfo.callReceived != null
+    //           //             ? callInfo.callReceived.substring(
+    //           //                 0, callInfo.call_received.length - 2)
+    //           //             : callInfo.callReceived),
+    //           //       );
+    //           //     })
+
+    //           );
+    //     }
+
+    //     if (state is PhcFetched) {
+    //       final phc = state.phc;
+    //       print("Phc fetched");
+
+    //       phcBloc.add(AddPhc(phc: phc));
+    //       print("after loadphc");
+    //     }
+    //     return Center(
+    //       child: CircularProgressIndicator(),
+    //     );
+    //   },
+    // ),
+    // )
+
+    // ,)
+    //       ],
+    //     ),
+    //   ),
+    // );
+
     return Scaffold(
       appBar: AppBar(
         leading: TopOtherMenu(),
         title: Text("Call Cards"),
+        // shape: ShapeBorde,
+
         actions: <Widget>[
           Padding(padding: EdgeInsets.only(right: 10), child: TopUserMenu()),
         ],
@@ -117,6 +192,9 @@ class _ListCallcards extends State<ListCallcards> {
   }
 
   Widget _buildList(phc) {
+    // return SliverList(
+    //   delegate: SliverChildBuilderDelegate(
+    // (_, index) {
     return ListView.separated(
       itemCount: phc.callcards.length,
       separatorBuilder: (context, index) => Divider(
@@ -185,22 +263,50 @@ class _ListCallcards extends State<ListCallcards> {
           // trailing: Icon(Icons.arrow_forward_ios),
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CallcardTabs(
-                          callcard_no: callInfo.callcard_no,
-                          call_information:
-                              phc.callcards[index].call_information,
-                          response_team: phc.callcards[index].response_team,
-                          response_time: phc.callcards[index].response_time,
-                          patients: phc.callcards[index].patients,
-                          // phcDao: widget.phcDao,
-                        )));
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  final timeBloc = BlocProvider.of<TimeBloc>(context);
+                  timeBloc.add(ResetTime());
+
+                  final sceneBloc = BlocProvider.of<SceneBloc>(context);
+
+                  print("OPEN CALLCARD SCENE ASSESMNT");
+                  print(phc
+                      .callcards[index].scene_assessment.otherServicesAtScene);
+                  sceneBloc.add(
+                    LoadScene(
+                        selectedServices: phc.callcards[index].scene_assessment
+                            .otherServicesAtScene),
+                  );
+
+                  final patientBloc = BlocProvider.of<PatientBloc>(context);
+                  patientBloc.add(
+                    LoadPatient(patients: phc.callcards[index].patients),
+                  );
+
+                  final teamBloc = BlocProvider.of<TeamBloc>(context);
+                  teamBloc.add(LoadTeam(
+                      selectedStaffs:
+                          phc.callcards[index].response_team.staffs));
+
+                  return CallcardTabs(
+                    callcard_no: callInfo.callcard_no,
+                    call_information: phc.callcards[index].call_information,
+                    response_team: phc.callcards[index].response_team,
+                    response_time: phc.callcards[index].response_time,
+                    patients: phc.callcards[index].patients,
+                    // phcDao: widget.phcDao,
+                  );
+                },
+              ),
+            );
             // Navigator.pushNamed(context, "/callcarddetail");
           },
         );
       },
     );
+    // );
   }
 
   Widget TopUserMenu() {
@@ -259,15 +365,34 @@ class _ListCallcards extends State<ListCallcards> {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => History()));
         } else if (result == WhatTodo.newCallcard) {
+          // initialization
+          final responseBloc = BlocProvider.of<ResponseBloc>(context);
+          responseBloc.add(ResetResponse());
+
+          final infoBloc = BlocProvider.of<CallInfoBloc>(context);
+          infoBloc.add(ResetCallInfo());
+
+          final teamBloc = BlocProvider.of<TeamBloc>(context);
+          teamBloc.add(ResetTeam());
+
+          final timeBloc = BlocProvider.of<TimeBloc>(context);
+          timeBloc.add(ResetTime());
+
+          final sceneBloc = BlocProvider.of<SceneBloc>(context);
+          sceneBloc.add(LoadScene(selectedServices: []));
+
+          final patientBloc = BlocProvider.of<PatientBloc>(context);
+          patientBloc.add(InitPatient());
+
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => CallcardTabs(
-                        callcard_no: "",
-                        call_information: new CallInformation(),
-                        response_time: new ResponseTime(),
-                        response_team: new ResponseTeam(),
-                        patients: List(),
+                      // callcard_no: "",
+                      // call_information: new CallInformation(),
+                      // response_time: new ResponseTime(),
+                      // response_team: new ResponseTeam(),
+                      // patients: List(),
                       )));
         }
       },
@@ -284,4 +409,65 @@ class _ListCallcards extends State<ListCallcards> {
     );
     // ]);
   }
+}
+
+class MySliverAppBar extends SliverPersistentHeaderDelegate {
+  final double expandedHeight;
+
+  MySliverAppBar({@required this.expandedHeight});
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Stack(
+      fit: StackFit.expand,
+      overflow: Overflow.visible,
+      children: [
+        Container(
+          width: double.infinity,
+          child: SvgPicture.asset("assets/town.svg"),
+        ),
+        Container(
+          width: double.infinity,
+          child: Center(
+            child: Opacity(
+              opacity: shrinkOffset / expandedHeight,
+              child: Text(
+                "MySliverAppBar",
+                style: TextStyle(
+                  // color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 23,
+                ),
+              ),
+            ),
+          ),
+        ),
+        // Positioned(
+        //   top: expandedHeight / 2 - shrinkOffset,
+        //   left: MediaQuery.of(context).size.width / 4,
+        //   child: Opacity(
+        //     opacity: (1 - shrinkOffset / expandedHeight),
+        //     child: Card(
+        //       elevation: 10,
+        //       child: SizedBox(
+        //         height: expandedHeight,
+        //         width: MediaQuery.of(context).size.width / 2,
+        //         child: FlutterLogo(),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+      ],
+    );
+  }
+
+  @override
+  double get maxExtent => expandedHeight;
+
+  @override
+  double get minExtent => 100;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
 }

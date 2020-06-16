@@ -98,8 +98,20 @@ class _CallcardTabs extends State<CallcardTabs> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Data sending failed"),
-          content:
-              Text("Something went wrong. We keep your last saving in History"),
+          content: Text(
+              "Something went wrong. \nWe keep your last saving in History"),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        );
+      });
+
+  savingError() => showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Opss Saving failed"),
+          content: Text("We couldn't save in History"),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
@@ -139,6 +151,23 @@ class _CallcardTabs extends State<CallcardTabs> {
         );
       });
 
+  convertDateToStandard(String datetime) {
+    if (datetime.contains("-") != true) {
+      //dd/MM/yyyy HH:mm:ss to yyyy-MM-dd HH:mm:ss
+      var split = datetime.split("/");
+      var dd = split[0];
+      var MM = split[1];
+      var yyyy = split[2].substring(0, 4);
+
+      var time = datetime.substring(11);
+
+      print(time);
+      return "$yyyy-$MM-$dd $time:00";
+    } else {
+      return datetime;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final teamBloc = BlocProvider.of<TeamBloc>(context);
@@ -147,6 +176,8 @@ class _CallcardTabs extends State<CallcardTabs> {
     final tabBloc = BlocProvider.of<CallCardTabBloc>(context);
     final historyBloc = BlocProvider.of<HistoryBloc>(context);
     final callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
+    final responseBloc = BlocProvider.of<ResponseBloc>(context);
+    final sceneBloc = BlocProvider.of<SceneBloc>(context);
     // var callcard = Provider.of<Callcard>(context);
 
     // callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
@@ -175,6 +206,8 @@ class _CallcardTabs extends State<CallcardTabs> {
                 } else if (state is CallcardToPublishFailed) {
                   //callcard failed to publish dialog error
                   showError();
+                } else if (state is CallcardToSavingError) {
+                  savingError();
                 }
               },
               builder: (context, state) {
@@ -209,7 +242,9 @@ class _CallcardTabs extends State<CallcardTabs> {
                     ),
                     title: Center(
                         child: StreamBuilder(
-                            initialData: '',
+                            initialData: widget.callcard_no != null
+                                ? widget.callcard_no
+                                : '',
                             stream: callInfoBloc.cardNoController.stream,
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
@@ -221,52 +256,86 @@ class _CallcardTabs extends State<CallcardTabs> {
                             })),
 
                     actions: <Widget>[
-                      IconButton(
-                        icon: const Icon(Icons.cloud_upload),
-                        tooltip: "Push to Server",
-                        onPressed: () {
-                          print("callInfoBloc state push toserver");
-                          final call_information = callInfoBloc.callInformation;
+                      Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(40.0)),
+                        padding: EdgeInsets.only(right: 10),
+                        child:
+                            // FlatButton.icon(
 
-                          // print(currentState.toJson());
-                          final response_team = teamBloc.response_team;
-                          // print(teamState);
+                            // )
+                            Row(
+                          children: <Widget>[
+                            IconButton(
+                              icon: const Icon(Icons.cloud_upload),
+                              tooltip: "Push to Server",
+                              onPressed: () {
+                                print("callInfoBloc state push toserver");
 
-                          final response_time = timeBloc.responseTime;
-                          // print(timeState);
+                                final call_information =
+                                    callInfoBloc.state.callInformation;
+                                call_information.callReceived =
+                                    convertDateToStandard(callInfoBloc
+                                        .state.callInformation.call_received);
 
-                          final scene_assessment = patientBloc.sceneAssessment;
-                          // print(patientState);
-                          final patientList = patientBloc.patients;
+                                // print(currentState.toJson());
+                                final response_team = new ResponseTeam(
+                                    serviceResponse:
+                                        responseBloc.state.serviceResponse,
+                                    vehicleRegno:
+                                        responseBloc.state.vehicleRegNo,
+                                    staffs: teamBloc.state.selectedStaffs);
+                                // print(teamState);
 
-                          print(patientList.length);
-                          // print(scene_assessment.toJson());
-                          // print(patientList.elementAt(0).patientInformation.idNo);
+                                final response_time =
+                                    timeBloc.state.responseTime;
+                                // print(timeState);
 
-                          // print(patientBloc.sceneAssessment.toJson());
-                          // historyBloc.add(AddHistory(
-                          //     callcard: new Callcard(
-                          //         callInformation: call_information,
-                          //         responseTeam: response_team,
-                          //         responseTime: response_time,
-                          //         patients: List<Patient>(),
-                          //         sceneAssessment: new SceneAssessment())));
+                                final scene_assessment = new SceneAssessment(
+                                    otherServicesAtScene:
+                                        sceneBloc.state.selectedServices);
+                                // print(patientState);
+                                final patientList = patientBloc.state.patients;
 
-                          print("DONE");
+                                // print(patientList.length);
+                                // print(scene_assessment.toJson());
+                                // print(patientList.elementAt(0).patientInformation.idNo);
 
-                          tabBloc.add(PublishCallcard(
-                            callInformation: call_information,
-                            responseTeam: response_team,
-                            responseTime: response_time,
-                            patients: patientList,
-                            // sceneAssessment:
-                            //     SceneAssessment(otherServicesAtScene: []
-                            //     )
-                          ));
-                          // Navigator.push(context,
-                          //     MaterialPageRoute(builder: (context) => History()));
-                        },
-                      )
+                                // print(patientBloc.sceneAssessment.toJson());
+                                // historyBloc.add(AddHistory(
+                                //     callcard: new Callcard(
+                                //         callInformation: call_information,
+                                //         responseTeam: response_team,
+                                //         responseTime: response_time,
+                                //         patients: List<Patient>(),
+                                //         sceneAssessment: new SceneAssessment())));
+
+                                print("DONE");
+
+                                tabBloc.add(PublishCallcard(
+                                    callInformation: call_information,
+                                    responseTeam: response_team,
+                                    responseTime: response_time,
+                                    sceneAssessment: scene_assessment,
+                                    patients: patientList
+                                    // responseTeam: response_team,
+                                    // responseTime: response_time,
+                                    // patients: patientList,
+                                    // sceneAssessment:
+                                    //     SceneAssessment(otherServicesAtScene: []
+                                    //     )
+                                    ));
+                                // Navigator.push(context,
+                                //     MaterialPageRoute(builder: (context) => History()));
+                              },
+                            ),
+                            Text("UPLOAD")
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                   // backgroundColor: Colors.purple),
@@ -280,14 +349,24 @@ class _CallcardTabs extends State<CallcardTabs> {
                       ResponseTeamScreen(
                           // context: context,
                           response_team: widget.response_team,
-                          assign_id: widget.call_information.assign_id),
+                          assign_id: (widget.call_information != null)
+                              ? widget.call_information.assign_id
+                              : null),
                       ResponseTimeScreen(
-                          response_time: widget.response_time,
-                          assign_id: widget.call_information.assign_id),
+                        // responseTime: widget.response_time,
+                        responseTime: widget.response_time != null
+                            ? widget.response_time
+                            : new ResponseTime(),
+                        // assign_id: (widget.call_information != null)
+                        //     ? widget.call_information.assign_id
+                        //     : null
+                      ),
 
                       PatientListScreen(
                         patients: widget.patients,
-                        assign_id: widget.call_information.assign_id,
+                        assign_id: (widget.call_information != null)
+                            ? widget.call_information.assign_id
+                            : null,
                       )
                       // Icon(Icons.ev_station),
                       // Icon(Icons.ev_station),

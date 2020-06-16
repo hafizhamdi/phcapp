@@ -6,7 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phcapp/src/models/phc.dart';
 
 abstract class CallInfoEvent extends Equatable {
-  CallInfoEvent();
+  final CallInformation callInformation;
+
+  CallInfoEvent({this.callInformation});
+  @override
+  List<Object> get props => [callInformation];
+  // CallInfoEvent();
 }
 
 class SaveCallInfo extends CallInfoEvent {
@@ -17,13 +22,29 @@ class SaveCallInfo extends CallInfoEvent {
   List<Object> get props => [callInformation];
 }
 
+class ResetCallInfo extends CallInfoEvent {}
+
 abstract class CallInfoState extends Equatable {
-  CallInfoState();
+  final CallInformation callInformation;
+
+  CallInfoState({this.callInformation});
+  @override
+  List<Object> get props => [callInformation];
+
+  // CallInfoState();
 }
 
-// class LoadCallInfo extends CallInfoEvent {
-// }
-class CallInfoInitial extends CallInfoState {}
+class LoadCallInfo extends CallInfoEvent {}
+
+class CallInfoEmpty extends CallInfoState {}
+
+class CallInfoLoaded extends CallInfoState {
+  final CallInformation callInformation;
+
+  CallInfoLoaded({this.callInformation});
+  @override
+  List<Object> get props => [callInformation];
+}
 
 class CallInfoSaved extends CallInfoState {
   final CallInformation callInformation;
@@ -62,7 +83,7 @@ class CallInfoSaved extends CallInfoState {
 
 class CallInfoBloc extends Bloc<CallInfoEvent, CallInfoState> {
   @override
-  get initialState => CallInfoInitial();
+  get initialState => CallInfoEmpty();
 
   CallInformation callInformation;
   // TextEditingController cardNoController = new TextEditingController();
@@ -70,8 +91,15 @@ class CallInfoBloc extends Bloc<CallInfoEvent, CallInfoState> {
 
   @override
   Stream<CallInfoState> mapEventToState(event) async* {
-    if (event is SaveCallInfo) {
+    if (event is LoadCallInfo) {
+      final currentState = state;
+
+      yield CallInfoLoaded(callInformation: currentState.callInformation);
+      // load from database
+    } else if (event is SaveCallInfo) {
       yield* mapCallInfoToState(event);
+    } else if (event is ResetCallInfo) {
+      yield CallInfoEmpty();
     }
   }
 
@@ -90,7 +118,7 @@ class CallInfoBloc extends Bloc<CallInfoEvent, CallInfoState> {
         distanceToScene: event.callInformation.distance_to_scene,
         assignId: event.callInformation.assign_id,
         plateNo: event.callInformation.plate_no);
-    yield CallInfoSaved(callInformation: callInformation);
+    yield CallInfoLoaded(callInformation: callInformation);
   }
   // Stream<TextEditingController> get cardNoControllerStream =>  cardNoController;
 }

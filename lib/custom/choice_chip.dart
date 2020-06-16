@@ -21,7 +21,7 @@ class SingleOption extends StatefulWidget {
       {this.header,
       this.stateList,
       this.callback,
-      this.multiple,
+      this.multiple = true,
       this.initialData});
 
   final header;
@@ -85,16 +85,20 @@ class SingleChoiceChip extends State<SingleOption> {
                 selected: selectedItems.contains(widget.stateList[index]),
                 onSelected: (selected) {
                   setState(() {
-                    if (widget.multiple == true) {
-                      selectedItems.contains(widget.stateList[index])
-                          ? selectedItems.remove(item)
-                          : selectedItems.add(widget.stateList[index]);
-                    } else {
-                      selectedItems = new List();
-                      selected
-                          ? selectedItems.add(widget.stateList[index])
-                          : selectedItems.remove(widget.stateList[index]);
-                    }
+                    // if (widget.multiple == true) {
+                    selectedItems.contains(widget.stateList[index])
+                        ? selectedItems.remove(item)
+                        : selectedItems.add(widget.stateList[index]);
+                    // } else {
+                    //   print("multiple false this single");
+                    //   if (selectedItems.length < 1) {
+                    //     selectedItems.contains(widget.stateList[index])
+                    //         ? selectedItems.remove(item)
+                    //         : selectedItems.add(widget.stateList[index]);
+                    //   } else {
+                    //     selectedItems.remove(item);
+                    //   }
+                    // }
                     // _value = selected ? index : null;
 
                     // print("multiple");

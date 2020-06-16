@@ -6,8 +6,26 @@ import 'package:phcapp/src/database/phc_dao.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:bloc/bloc.dart';
 
+enum Response {
+  dispatch,
+  enroute,
+  atScene,
+  atPatient,
+  atHospital,
+  transport,
+  reroute
+}
+
 abstract class TimeEvent extends Equatable {
-  TimeEvent();
+  final ResponseTime responseTime;
+  final time;
+  final selector;
+
+  // AddTime({this.time, this.selector});
+  TimeEvent({this.responseTime, this.time, this.selector});
+
+  @override
+  List get props => [time, selector, responseTime];
 }
 
 class LoadTime extends TimeEvent {
@@ -17,6 +35,19 @@ class LoadTime extends TimeEvent {
   LoadTime({this.assign_id, this.responseTime});
   @override
   List<Object> get props => [assign_id, responseTime];
+}
+
+class ResetTime extends TimeEvent {}
+
+class AddTime extends TimeEvent {
+  final ResponseTime responseTime;
+  final time;
+  final selector;
+
+  AddTime({this.time, this.selector, this.responseTime});
+
+  @override
+  List get props => [time, selector, this.responseTime];
 }
 
 class AddResponseTime extends TimeEvent {
@@ -31,11 +62,17 @@ class AddResponseTime extends TimeEvent {
 
 abstract class TimeState extends Equatable {
   final ResponseTime responseTime;
+  final time;
+  final selector;
 
-  TimeState({this.responseTime});
+  // AddTime({this.time, this.selector});
+  TimeState({this.responseTime, this.time, this.selector});
 
   @override
-  List<Object> get props => [responseTime];
+  List get props => [time, selector, responseTime];
+
+  // @override
+  // List<Object> get props => [responseTime];
 }
 
 class TimeLoaded extends TimeState {
@@ -54,7 +91,7 @@ class TimeError extends TimeState {}
 class TimeBloc extends Bloc<TimeEvent, TimeState> {
   PhcDao phcDao;
   TimeBloc({this.phcDao}) : assert(phcDao != null);
-  ResponseTime responseTime;
+  final ResponseTime responseTime = new ResponseTime();
 
   @override
   TimeState get initialState => TimeEmpty();
@@ -81,6 +118,10 @@ class TimeBloc extends Bloc<TimeEvent, TimeState> {
       yield* _mapLoadTimeToState(event);
     } else if (event is AddResponseTime) {
       yield* _mapAddResponseTimeToState(event);
+    } else if (event is AddTime) {
+      yield* _mapAddTimeToState(event);
+    } else if (event is ResetTime) {
+      yield TimeEmpty();
     }
   }
 
@@ -107,11 +148,49 @@ class TimeBloc extends Bloc<TimeEvent, TimeState> {
     // } catch (_) {
     //   yield TimeError();
     // }
-    responseTime = event.responseTime;
-    print(responseTime.toJson());
-    print("addrespoinse team success");
+    // responseTime = event.responseTime;
+    // print(responseTime.toJson());
+    // print("addrespoinse team success");
 
     TimeLoaded(responseTime: responseTime);
+  }
+
+  Stream<TimeState> _mapAddTimeToState(AddTime event) async* {
+    // DateTime dispatchTime;
+    // ResponseTime resTime = responseTime;
+    // print(event.time);
+    // if (Response.dispatch == event.selector) {
+    //   dispatchTime = event.time;
+    // }
+    // switch (event.selector) {
+    //   case Response.dispatch:
+    //     resTime.dispatchTime = event.time;
+    //     break;
+    //   case Response.enroute:
+    //     resTime.enrouteTime = event.time;
+    //     break;
+    //   case Response.atScene:
+    //     resTime.atSceneTime = event.time;
+    //     break;
+    //   case Response.atPatient:
+    //     resTime.atPatientTime = event.time;
+    //     break;
+    //   case Response.transport:
+    //     resTime.transportingTime = event.time;
+    //     break;
+    //   case Response.atHospital:
+    //     resTime.atHospitalTime = event.time;
+    //     break;
+    //   case Response.reroute:
+    //     resTime.rerouteTime = event.time;
+    //     break;
+    //   default:
+    // }
+
+    print("bloc responsetime");
+    print(event.responseTime.dispatchTime);
+
+    yield TimeLoaded(responseTime: event.responseTime);
   }
 
   Stream<TimeState> _reloadResponseTime(assign_id) async* {

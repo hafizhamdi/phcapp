@@ -117,17 +117,20 @@ class _CPRItems extends State<CPRItems>
     // }
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            _buildChoiceChip(context, "witness_cpr", WITNESS),
-            _buildChoiceChip(context, "bystander_cpr", WITNESS),
-            _buildChoiceChip(
-              context,
-              "cpr_start",
-              WITNESS,
-            ),
-            _buildAnalysis(),
-          ],
+        child: Container(
+          padding: EdgeInsets.all(15),
+          child: Column(
+            children: <Widget>[
+              _buildChoiceChip(context, "witness_cpr", WITNESS),
+              _buildChoiceChip(context, "bystander_cpr", WITNESS),
+              _buildChoiceChip(
+                context,
+                "cpr_start",
+                WITNESS,
+              ),
+              _buildAnalysis(),
+            ],
+          ),
         ),
       ),
     );

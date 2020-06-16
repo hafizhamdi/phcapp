@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:phcapp/src/ui/tabs/edit_screen/edit_call_info.dart';
 
 enum InputOption { priority, location, distance }
 const LIST_PRIORITY = ["", "1", "2", "3", "4"];
@@ -61,8 +63,8 @@ class _CallInfoState extends State<CallInformationScreen>
 
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController receivedController = TextEditingController(
-      text: DateFormat("dd/MM/yyyy HH:mm:ss").format(DateTime.now()));
+  TextEditingController receivedController = TextEditingController();
+  // text: DateFormat("dd/MM/yyyy HH:mm:ss").format(DateTime.now()));
   TextEditingController cardNoController = TextEditingController();
   TextEditingController contactNoController = TextEditingController();
   TextEditingController eventCodeController = TextEditingController();
@@ -73,36 +75,36 @@ class _CallInfoState extends State<CallInformationScreen>
   String cardNoValue = "";
   @override
   void didChangeDependencies() {
-    callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
-    // print("widget.call_information.assign_id");
-    // print(widget.call_information.assign_id);
-    if (widget.call_information.assign_id != null) {
-      print("INISDE WIDGET INFO");
-      receivedController.text = DateFormat("dd/MM/yyyy HH:mm:ss")
-          .format(DateTime.parse(widget.call_information.call_received));
-      cardNoValue = widget.call_information.callcard_no;
-      callInfoBloc.cardNoController.sink
-          .add(widget.call_information.callcard_no);
-      // cardNoController.text = widget.call_information.callcard_no;
-      contactNoController.text = widget.call_information.caller_contactno;
-      eventCodeController.text = widget.call_information.event_code;
-      incidentController.text = widget.call_information.incident_desc;
-      locationController.text = widget.call_information.location_type;
-      landmarkController.text = widget.call_information.landmark;
+    // callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
+    // // print("widget.call_information.assign_id");
+    // // print(widget.call_information.assign_id);
+    // if (widget.call_information != null) {
+    //   print("INISDE WIDGET INFO");
+    //   receivedController.text = DateFormat("dd/MM/yyyy HH:mm:ss")
+    //       .format(DateTime.parse(widget.call_information.call_received));
+    //   cardNoValue = widget.call_information.callcard_no;
+    //   callInfoBloc.cardNoController.sink
+    //       .add(widget.call_information.callcard_no);
+    //   // cardNoController.text = widget.call_information.callcard_no;
+    //   contactNoController.text = widget.call_information.caller_contactno;
+    //   eventCodeController.text = widget.call_information.event_code;
+    //   incidentController.text = widget.call_information.incident_desc;
+    //   locationController.text = widget.call_information.location_type;
+    //   landmarkController.text = widget.call_information.landmark;
 
-      _priority = widget.call_information.priority;
-      _distance = widget.call_information.distance_to_scene;
-      _location = widget.call_information.location_type;
-    }
-    // else {
-    //   print("NEW CALLCARD");
-    //   receivedController.text = DateTime.now().toIso8601String();
+    //   _priority = widget.call_information.priority;
+    //   _distance = widget.call_information.distance_to_scene;
+    //   _location = widget.call_information.location_type;
     // }
+    // // else {
+    // //   print("NEW CALLCARD");
+    // //   receivedController.text = DateTime.now().toIso8601String();
+    // // }
 
-    callInfoBloc.cardNoController.stream.listen((value) {
-      cardNoValue = value;
-      print('Value from controller: $value');
-    });
+    // callInfoBloc.cardNoController.stream.listen((value) {
+    //   cardNoValue = value;
+    //   print('Value from controller: $value');
+    // });
 
     super.didChangeDependencies();
   }
@@ -133,6 +135,7 @@ class _CallInfoState extends State<CallInformationScreen>
         child: Padding(
             padding: EdgeInsets.all(16),
             child: TextFormField(
+                enabled: false,
                 controller: controller,
                 validator: (value) {
                   if (value.isEmpty) {
@@ -155,88 +158,148 @@ class _CallInfoState extends State<CallInformationScreen>
     return data;
   }
 
-  Widget _buildBloc(BuildContext context, initialValue) {
-    // final callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
-    var eventCodeFormater = MaskTextInputFormatter(
-        mask: "##/##/##/##", filter: {"#": RegExp(r'[a-zA-Z0-9]')});
-    var contactNoFormater = MaskTextInputFormatter(
-        mask: "###-########", filter: {"#": RegExp(r'[a-zA-Z0-9]')});
+  _buildBody(CallInformation data) {
+    // final editData = data;
 
-    // return BlocConsumer<CallInfoBloc, CallInfoState>(
-    //     listener: (context, state) {},
-    //     builder: (context, state) {
-    //       if (state is CallInfoLoaded) {
-    //         final currentState = state.call_information;
+    if (data == null) {
+      data = new CallInformation(
+          callReceived: DateFormat("dd/MM/yyyy HH:mm").format(DateTime.now()));
+    }
+    return Scaffold(
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        // child: Center(
+        child: Card(
+          margin: EdgeInsets.all(12.0),
 
-    //         print("UI:CALLINFOLOADED");
-    //         cardNoController.text = setField(currentState.callcard_no);
-    //         contactNoController.text = setField(currentState.caller_contactno);
-    //         receivedController.text = setField(currentState.call_received);
-    //         eventCodeController.text = setField(currentState.event_code);
-    //         incidentController.text = setField(currentState.incident_desc);
-    //         locationController.text = setField(currentState.incident_location);
-    //         landmarkController.text = setField(currentState.landmark);
-
-    //         _priority = setField(currentState.priority);
-    //         _location = setField(currentState.location_type);
-    //         _distance = setField(currentState.distance_to_scene);
-    //       }
-    // String initialValue;
-
-    return Center(
-      child: Card(
-          margin: EdgeInsets.all(10.0),
           child: Form(
+            autovalidate: true,
             key: _formKey,
-            child: Column(
-              children: <Widget>[
-                HeaderSection("Call Information"),
-                // // TextEditLabel(
-                // //     labelText: "Call Card No",
-                // //     controller: cardNoController),
+            // child:
 
-                CardNoTextInput(
-                  labelText: "Call Card No",
-                  controller: callInfoBloc.cardNoController,
-                  initialData: cardNoValue,
-                  // controller: cardNoController,
-                  // stream: infoBloc.callcarNoStream,
-                  // updateText: infoBloc.setCallcardNo,
-                ),
-                _dateReceived("Date Received", receivedController),
-                TextInput(
-                  labelText: "Caller Contact No",
-                  controller: contactNoController,
-                  maskFormater: contactNoFormater,
-                  hintText: "XXX-XXXXXXX",
-                  //     inputType:
-                  //         TextInputType.numberWithOptions(signed: true),
-                  //     hintText: "0139446197",
-                ),
-                TextInput(
-                  labelText: "Event Code",
-                  controller: eventCodeController,
-                  hintText: "37/XC/02/XW",
-                  maskFormater: eventCodeFormater,
-                ),
-                DropDownList(
-                    "Priority", LIST_PRIORITY, InputOption.priority, _priority),
-                TextInput(
-                    labelText: "Incident Description",
-                    controller: incidentController),
-                TextInput(
-                    labelText: "Incident Location",
-                    controller: locationController),
-                TextInput(
-                    labelText: "Landmark", controller: landmarkController),
-                DropDownList("Location type", LIST_LOCTYPE,
-                    InputOption.location, _location),
-                DropDownList("Distance to scene", LIST_DISTANCES,
-                    InputOption.distance, _distance)
-              ],
+            // Column(
+            //   // crossAxisAlignment: CrossAxisAlignment.start,
+            //   // mainAxisAlignment: MainAxisAlignment.start,
+            //   children: <Widget>[
+            //     Expanded(
+            // child:
+            child: Container(
+              padding: EdgeInsets.all(10),
+              // width: 500,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                // physics:
+                // physics: BouncingScrollPhysics(),
+                // crossAxisCount: 2,
+
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    HeaderSection("Call Information"),
+                    IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => EditCallInfo(
+                                        call_information: data,
+                                      )));
+                        }),
+                  ]),
+                  Container(
+                    height: 1,
+                    color: Colors.grey,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  // Expanded(
+                  //     flex: 2,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      MyTextField(
+                          labelText: "Call Card No",
+                          // controller: callInfoBloc.cardNoController,
+                          initialData: data.callcardNo
+                          // controller: cardNoController,
+                          // stream: infoBloc.callcarNoStream,
+                          // updateText: infoBloc.setCallcardNo,
+                          ),
+                      MyTextField(
+                          labelText: "Date Received",
+                          initialData: data.callReceived),
+                    ],
+                  ),
+                  Row(crossAxisAlignment: CrossAxisAlignment.start,
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        // ),
+                        MyTextField(
+                          labelText: "Caller Contact No",
+                          initialData: data.callerContactno,
+                        ),
+                        MyTextField(
+                          labelText: "Event Code",
+                          initialData: data.eventCode,
+                        ),
+                      ]),
+                  Row(crossAxisAlignment: CrossAxisAlignment.start,
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        MyTextField(
+                            labelText: "Location type",
+                            // LIST_LOCTYPE,
+                            //     InputOption.location,
+                            initialData: data.locationType),
+                        MyTextField(
+                            labelText: "Priority",
+                            // LIST_PRIORITY, InputOption.priority,
+                            initialData: data.priority),
+                      ]),
+
+                  Row(children: [
+                    MyTextField(
+                        labelText: "Incident Description",
+                        initialData: data.incidentLocation),
+                  ]),
+                  Row(children: <Widget>[
+                    MyTextField(
+                        labelText: "Incident Location",
+                        initialData: data.incidentLocation),
+                  ]),
+
+                  Row(
+                    children: <Widget>[
+                      // MyTextField(
+                      //     labelText: "Landmark", initialData: data.landmark),
+                    ],
+                  ),
+
+                  Row(
+                    children: <Widget>[
+                      MyTextField(
+                          labelText: "Distance to scene",
+                          // LIST_DISTANCES,
+                          //     InputOption.distance,
+                          initialData: data.distanceToScene),
+                    ],
+                  )
+                ],
+              ),
             ),
-          )),
+          ),
+          // ],
+          // ),
+          // ),
+          // ),
+          // ),
+        ),
+      ),
     );
+
     // });
   }
 
@@ -261,40 +324,49 @@ class _CallInfoState extends State<CallInformationScreen>
 
     void callback(String item, int index) {}
 
-    return Scaffold(
-      body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: _buildBloc(context, initialValue)),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 100,
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            // print("widget.call_information.assign_id");
-            // print(widget.call_information.assign_id);
-            callInfoBloc.add(SaveCallInfo(
-                callInformation: new CallInformation(
-                    callcardNo: cardNoValue,
-                    callReceived:
-                        convertDateToStandard(receivedController.text),
-                    callerContactno: contactNoController.text,
-                    eventCode: eventCodeController.text,
-                    priority: _priority,
-                    incidentDesc: incidentController.text,
-                    incidentLocation: locationController.text,
-                    landmark: landmarkController.text,
-                    locationType: _location,
-                    distanceToScene: _distance,
-                    assignId: widget.call_information.assign_id,
-                    plateNo: widget.call_information.plate_no)));
+    return BlocBuilder<CallInfoBloc, CallInfoState>(
+      builder: (context, state) {
+        if (state is CallInfoLoaded) {
+          return _buildBody(state.callInformation);
+        } else if (widget.call_information != null) {
+          return _buildBody(widget.call_information);
+        } else {
+          return _buildBody(null);
+        }
+      },
+      // floatingActionButton: FloatingActionButton(
+      //   heroTag: 100,
+      //   onPressed: () {
+      // if (_formKey.currentState.validate()) {
+      //   // print("widget.call_information.assign_id");
+      //   // print(widget.call_information.assign_id);
+      //   callInfoBloc.add(SaveCallInfo(
+      //       callInformation: new CallInformation(
+      //           callcardNo: cardNoValue,
+      //           callReceived:
+      //               convertDateToStandard(receivedController.text),
+      //           callerContactno: contactNoController.text,
+      //           eventCode: eventCodeController.text,
+      //           priority: _priority,
+      //           incidentDesc: incidentController.text,
+      //           incidentLocation: locationController.text,
+      //           landmark: landmarkController.text,
+      //           locationType: _location,
+      //           distanceToScene: _distance,
+      //           assignId: widget.call_information.assign_id,
+      //           plateNo: widget.call_information.plate_no)));
 
-            final snackBar = SnackBar(
-              content: Text("Call information has been saved!"),
-            );
-            Scaffold.of(context).showSnackBar(snackBar);
-          }
-        },
-        child: Icon(Icons.save),
-      ),
+      //   final snackBar = SnackBar(
+      //     content: Text("Call information has been saved!"),
+      //   );
+      //   Scaffold.of(context).showSnackBar(snackBar);
+      // }
+
+      // Navigator.push(context,
+      //     CupertinoPageRoute(builder: (context) => EditCallInfo()));
+      //   },
+      //   child: Icon(Icons.edit),
+      // ),
     );
   }
 
@@ -386,63 +458,86 @@ class _CallInfoState extends State<CallInformationScreen>
   }
 }
 
-class CardNoTextInput extends StatelessWidget {
+class MyTextField extends StatelessWidget {
   final labelText;
-  final controller;
-  final inputType;
-  final maskFormater;
-  final hintText;
+  // final controller;
+  // final inputType;
+  // final maskFormater;
+  // final hintText;
   final initialData;
-  final validator;
+  // final validator;
 
-  CardNoTextInput(
-      {this.labelText,
-      this.controller,
-      this.maskFormater,
-      this.inputType,
-      this.hintText,
-      this.initialData,
-      this.validator});
+  MyTextField({
+    this.labelText,
+    // this.controller,
+    // this.maskFormater,
+    // this.inputType,
+    // this.hintText,
+    this.initialData,
+    // this.validator
+  });
 
   TextEditingController myController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Expanded(
+      child: Container(
+        // height: 50,
         // width: 500,
-        width: 500,
+        // width: 170,
         child: Padding(
-            padding: EdgeInsets.all(16),
-            child: TextFormField(
-                initialValue: initialData,
-                validator: (value) {
-                  if (value.length > 20) {
-                    return "Call Card No cannot be more than 20 characters";
-                  }
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                labelText,
+                style: TextStyle(fontSize: 16, color: Colors.purple),
+              ),
+              Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    (initialData != null) ? initialData : "",
+                  ))
+              // TextFormField(
+              //   enabled: false,
+              //   initialValue: initialData,
+              //   validator: (value) {
+              //     if (value.length > 20) {
+              //       return "Call Card No cannot be more than 20 characters";
+              //     }
 
-                  if (value.isEmpty) {
-                    return 'This field is required';
-                  }
-                  return null;
-                },
-                inputFormatters: maskFormater != null ? [maskFormater] : [],
-                onChanged: (value) {
-                  controller.sink.add(value.toUpperCase());
-                },
+              //     if (value.isEmpty) {
+              //       return 'This field is required';
+              //     }
+              //     return null;
+              //   },
+              //   inputFormatters: maskFormater != null ? [maskFormater] : [],
+              //   onChanged: (value) {
+              //     controller.sink.add(value.toUpperCase());
+              //   },
 
-                // onEditingComplete: (){
+              //   // onEditingComplete: (){
 
-                // },
-                // keyboardType: inputType,
-                // controller: myController,
-                decoration: InputDecoration(
-                    // hintText: hintText,
-                    labelText: labelText,
-                    fillColor: Colors.white,
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
-                      borderSide: new BorderSide(),
-                    )))));
+              //   // },
+              //   // keyboardType: inputType,
+              //   // controller: myController,
+              //   decoration: InputDecoration(border: InputBorder.none
+              //       //   // hintText: hintText,
+              //       //   labelText: labelText,
+              //       //   fillColor: Colors.white,
+              //       //   border: new OutlineInputBorder(
+              //       //     borderRadius: new BorderRadius.circular(10.0),
+              //       //     borderSide: new BorderSide(),
+              //       //   ),
+              //       ),
+              // ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -473,11 +568,13 @@ class TextInput extends StatelessWidget {
                 // validator: validator,
                 inputFormatters: maskFormater != null ? [maskFormater] : [],
                 // keyboardType: inputType,
+                enabled: false,
                 controller: controller,
                 decoration: InputDecoration(
                     hintText: hintText,
                     labelText: labelText,
                     fillColor: Colors.white,
+                    enabled: false,
                     border: new OutlineInputBorder(
                       borderRadius: new BorderRadius.circular(10.0),
                       borderSide: new BorderSide(),

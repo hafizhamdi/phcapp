@@ -38,14 +38,14 @@ class Callcard {
   CallInformation callInformation;
   ResponseTeam responseTeam;
   ResponseTime responseTime;
-  // SceneAssessment sceneAssessment;
+  SceneAssessment sceneAssessment;
   List<Patient> patients;
 
   Callcard({
     this.callInformation,
     this.responseTeam,
     this.responseTime,
-    // this.sceneAssessment,
+    this.sceneAssessment,
     this.patients,
   });
 
@@ -53,7 +53,7 @@ class Callcard {
         callInformation: CallInformation.fromJson(json["call_information"]),
         responseTeam: ResponseTeam.fromJson(json["response_team"]),
         responseTime: ResponseTime.fromJson(json["response_time"]),
-        // sceneAssessment: SceneAssessment.fromJson(json["scene_assessment"]),
+        sceneAssessment: SceneAssessment.fromJson(json["scene_assessment"]),
         patients: List<Patient>.from(
             json["patients"].map((x) => Patient.fromJson(x))),
       );
@@ -62,14 +62,14 @@ class Callcard {
         "call_information": callInformation.toJson(),
         "response_team": responseTeam.toJson(),
         "response_time": responseTime.toJson(),
-        // "scene_assessment": sceneAssessment.toJson(),
+        "scene_assessment": sceneAssessment.toJson(),
         "patients": List<dynamic>.from(patients.map((x) => x.toJson())),
       };
 
   CallInformation get call_information => callInformation;
   ResponseTeam get response_team => responseTeam;
   ResponseTime get response_time => responseTime;
-  // SceneAssessment get scene_assessment => sceneAssessment;
+  SceneAssessment get scene_assessment => sceneAssessment;
   List<Patient> get listPatients => patients;
 }
 
@@ -150,8 +150,9 @@ class Patient {
   PatientInformation patientInformation;
   PatientAssessment patientAssessment;
   TraumaAssessment traumaAssessment;
+  MedicationAssessment medicationAssessment;
   InterventionAss intervention;
-  List<Medication> medication;
+  // List<Medication> medication;
   List<VitalSign> vitalSigns;
   IncidentReporting incidentReporting;
   Outcome outcome;
@@ -161,8 +162,8 @@ class Patient {
     this.patientInformation,
     this.patientAssessment,
     this.traumaAssessment,
+    this.medicationAssessment,
     this.intervention,
-    this.medication,
     this.vitalSigns,
     this.incidentReporting,
     this.outcome,
@@ -174,19 +175,18 @@ class Patient {
             : new CPR(),
         patientInformation:
             PatientInformation.fromJson(json["patient_information"]),
-        // patientAssessment:
-        //     PatientAssessment.fromJson(json["patient_assessment"]),
-        // traumaAssessment: TraumaAssessment.fromJson(json["trauma_assessment"]),
-        // intervention: Intervention.fromJson(json["intervention"]),
-        // medication: List<Medication>.from(
-        //     json["medication"].map((x) => Medication.fromJson(x))),
+        patientAssessment:
+            PatientAssessment.fromJson(json["patient_assessment"]),
+        traumaAssessment: TraumaAssessment.fromJson(json["trauma_assessment"]),
+        intervention: InterventionAss.fromJson(json["intervention"]),
+        medicationAssessment: MedicationAssessment.fromJson(json["medication"]),
         vitalSigns: (json["vital_signs"] != null)
             ? List<VitalSign>.from(
                 json["vital_signs"].map((x) => VitalSign.fromJson(x)))
             : [],
-        // incidentReporting:
-        //     IncidentReporting.fromJson(json["incident_reporting"]),
-        // outcome: Outcome.fromJson(json["outcome"]),
+        incidentReporting:
+            IncidentReporting.fromJson(json["incident_reporting"]),
+        outcome: Outcome.fromJson(json["outcome"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -196,13 +196,13 @@ class Patient {
         //     : [],
         // "cpr_logs": List<dynamic>.from(cprLogs.map((x) => x.toJson())),
         "patient_information": patientInformation.toJson(),
-        // "patient_assessment": patientAssessment.toJson(),
-        // "trauma_assessment": traumaAssessment.toJson(),
-        // "intervention": intervention.toJson(),
-        // "medication": List<dynamic>.from(medication.map((x) => x.toJson())),
+        "patient_assessment": patientAssessment.toJson(),
+        "trauma_assessment": traumaAssessment.toJson(),
+        "intervention": intervention.toJson(),
+        "medication": medicationAssessment.toJson(),
         "vital_signs": List<dynamic>.from(vitalSigns.map((x) => x.toJson())),
-        // "incident_reporting": incidentReporting.toJson(),
-        // "outcome": outcome.toJson(),
+        "incident_reporting": incidentReporting.toJson(),
+        "outcome": outcome.toJson(),
       };
 }
 
@@ -274,24 +274,27 @@ class Patient {
 // }
 
 class IncidentReporting {
+  DateTime timestamp;
   String responseDelay;
   String sceneDelay;
   String transportDelay;
 
-  IncidentReporting({
-    this.responseDelay,
-    this.sceneDelay,
-    this.transportDelay,
-  });
+  IncidentReporting(
+      {this.responseDelay,
+      this.sceneDelay,
+      this.transportDelay,
+      this.timestamp});
 
   factory IncidentReporting.fromJson(Map<String, dynamic> json) =>
       IncidentReporting(
+        timestamp: json["timestamp"],
         responseDelay: json["response_delay"],
         sceneDelay: json["scene_delay"],
         transportDelay: json["transport_delay"],
       );
 
   Map<String, dynamic> toJson() => {
+        "timestamp": timestamp,
         "response_delay": responseDelay,
         "scene_delay": sceneDelay,
         "transport_delay": transportDelay,
@@ -300,11 +303,11 @@ class IncidentReporting {
 
 class InterventionAss {
   DateTime timestamp;
-  List<String> airwayDevice;
-  List<String> oxygen;
+  String airwayDevice;
+  String oxygen;
   List<String> extHaemorrhage;
   List<String> vascularAccess;
-  List<String> vascularAccessLocation;
+  String vascularAccessLocation;
   List<String> immobilization;
   List<String> specialCare;
 
@@ -345,31 +348,32 @@ class InterventionAss {
       };
 }
 
-class Medication {
-  String name;
-  String dosage;
-  String timestamp;
+// class Medication {
+//   String name;
+//   String dosage;
+//   String timestamp;
 
-  Medication({
-    this.name,
-    this.dosage,
-    this.timestamp,
-  });
+//   Medication({
+//     this.name,
+//     this.dosage,
+//     this.timestamp,
+//   });
 
-  factory Medication.fromJson(Map<String, dynamic> json) => Medication(
-        name: json["name"],
-        dosage: json["dosage"],
-        timestamp: json["timestamp"],
-      );
+//   factory Medication.fromJson(Map<String, dynamic> json) => Medication(
+//         name: json["name"],
+//         dosage: json["dosage"],
+//         timestamp: json["timestamp"],
+//       );
 
-  Map<String, dynamic> toJson() => {
-        "name": name,
-        "dosage": dosage,
-        "timestamp": timestamp,
-      };
-}
+//   Map<String, dynamic> toJson() => {
+//         "name": name,
+//         "dosage": dosage,
+//         "timestamp": timestamp,
+//       };
+// }
 
 class Outcome {
+  DateTime timestamp;
   String provisionDiagnosis;
   String etdTriage;
   String transportStatus;
@@ -380,6 +384,7 @@ class Outcome {
   String deteriorationTransport;
 
   Outcome({
+    this.timestamp,
     this.provisionDiagnosis,
     this.etdTriage,
     this.transportStatus,
@@ -391,6 +396,7 @@ class Outcome {
   });
 
   factory Outcome.fromJson(Map<String, dynamic> json) => Outcome(
+        timestamp: json["timestamp"],
         provisionDiagnosis: json["provision_diagnosis"],
         etdTriage: json["etd_triage"],
         transportStatus: json["transport_status"],
@@ -402,6 +408,7 @@ class Outcome {
       );
 
   Map<String, dynamic> toJson() => {
+        "timestamp": timestamp,
         "provision_diagnosis": provisionDiagnosis,
         "etd_triage": etdTriage,
         "transport_status": transportStatus,
@@ -414,13 +421,14 @@ class Outcome {
 }
 
 class PatientAssessment {
+  DateTime timestamp;
   String disasterTriage;
   String appearance;
   String levelResponsive;
   String airwayPatency;
   String respiratoryEffort;
   AirEntry airEntry;
-  AirEntry breathSound;
+  BreathSound breathSound;
   String heartSound;
   List<String> skin;
   String ecg;
@@ -429,6 +437,7 @@ class PatientAssessment {
   StrokeScale strokeScale;
 
   PatientAssessment({
+    this.timestamp,
     this.disasterTriage,
     this.appearance,
     this.levelResponsive,
@@ -446,13 +455,14 @@ class PatientAssessment {
 
   factory PatientAssessment.fromJson(Map<String, dynamic> json) =>
       PatientAssessment(
+        timestamp: json["timestamp"],
         disasterTriage: json["disaster_triage"],
         appearance: json["appearance"],
         levelResponsive: json["level_responsive"],
         airwayPatency: json["airway_patency"],
         respiratoryEffort: json["respiratory_effort"],
         airEntry: AirEntry.fromJson(json["air_entry"]),
-        breathSound: AirEntry.fromJson(json["breath_sound"]),
+        breathSound: BreathSound.fromJson(json["breath_sound"]),
         heartSound: json["heart_sound"],
         skin: List<String>.from(json["skin"].map((x) => x)),
         ecg: json["ecg"],
@@ -462,6 +472,7 @@ class PatientAssessment {
       );
 
   Map<String, dynamic> toJson() => {
+        "timestamp": timestamp,
         "disaster_triage": disasterTriage,
         "appearance": appearance,
         "level_responsive": levelResponsive,
@@ -488,6 +499,26 @@ class AirEntry {
   });
 
   factory AirEntry.fromJson(Map<String, dynamic> json) => AirEntry(
+        rightLung: json["right_lung"],
+        leftLung: json["left_lung"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "right_lung": rightLung,
+        "left_lung": leftLung,
+      };
+}
+
+class BreathSound {
+  String rightLung;
+  String leftLung;
+
+  BreathSound({
+    this.rightLung,
+    this.leftLung,
+  });
+
+  factory BreathSound.fromJson(Map<String, dynamic> json) => BreathSound(
         rightLung: json["right_lung"],
         leftLung: json["left_lung"],
       );
@@ -567,6 +598,7 @@ class PatientInformation {
 }
 
 class TraumaAssessment {
+  DateTime timestamp;
   List<String> head;
   List<String> face;
   List<String> neck;
@@ -578,9 +610,10 @@ class TraumaAssessment {
   List<String> rightChest;
   List<String> leftChest;
   Abdomen abdomen;
-  Map<String, List<Limb>> limb;
+  Limb limb;
 
   TraumaAssessment({
+    this.timestamp,
     this.head,
     this.face,
     this.neck,
@@ -597,25 +630,25 @@ class TraumaAssessment {
 
   factory TraumaAssessment.fromJson(Map<String, dynamic> json) =>
       TraumaAssessment(
-        head: List<String>.from(json["head"].map((x) => x)),
-        face: List<String>.from(json["face"].map((x) => x)),
-        neck: List<String>.from(json["neck"].map((x) => x)),
-        neckAbnormalityLocation:
-            List<String>.from(json["neck_abnormality_location"].map((x) => x)),
-        back: List<String>.from(json["back"].map((x) => x)),
-        backAbnormalityLocation:
-            List<String>.from(json["back_abnormality_location"].map((x) => x)),
-        spine: List<String>.from(json["spine"].map((x) => x)),
-        spineAbnormalityLocation:
-            List<String>.from(json["spine_abnormality_location"].map((x) => x)),
-        rightChest: List<String>.from(json["right_chest"].map((x) => x)),
-        leftChest: List<String>.from(json["left_chest"].map((x) => x)),
-        abdomen: Abdomen.fromJson(json["abdomen"]),
-        limb: Map.from(json["limb"]).map((k, v) => MapEntry<String, List<Limb>>(
-            k, List<Limb>.from(v.map((x) => limbValues.map[x])))),
-      );
+          timestamp: json["timestamp"],
+          head: List<String>.from(json["head"].map((x) => x)),
+          face: List<String>.from(json["face"].map((x) => x)),
+          neck: List<String>.from(json["neck"].map((x) => x)),
+          neckAbnormalityLocation: List<String>.from(
+              json["neck_abnormality_location"].map((x) => x)),
+          back: List<String>.from(json["back"].map((x) => x)),
+          backAbnormalityLocation: List<String>.from(
+              json["back_abnormality_location"].map((x) => x)),
+          spine: List<String>.from(json["spine"].map((x) => x)),
+          spineAbnormalityLocation: List<String>.from(
+              json["spine_abnormality_location"].map((x) => x)),
+          rightChest: List<String>.from(json["right_chest"].map((x) => x)),
+          leftChest: List<String>.from(json["left_chest"].map((x) => x)),
+          abdomen: Abdomen.fromJson(json["abdomen"]),
+          limb: Limb.fromJson(json["limb"]));
 
   Map<String, dynamic> toJson() => {
+        "timestamp": timestamp,
         "head": List<dynamic>.from(head.map((x) => x)),
         "face": List<dynamic>.from(face.map((x) => x)),
         "neck": List<dynamic>.from(neck.map((x) => x)),
@@ -630,9 +663,69 @@ class TraumaAssessment {
         "right_chest": List<dynamic>.from(rightChest.map((x) => x)),
         "left_chest": List<dynamic>.from(leftChest.map((x) => x)),
         "abdomen": abdomen.toJson(),
-        "limb": Map.from(limb).map((k, v) => MapEntry<String, dynamic>(
-            k, List<dynamic>.from(v.map((x) => limbValues.reverse[x])))),
+        "limb": limb.toJson(),
       };
+}
+
+class Limb {
+  List<String> rightArm;
+  List<String> leftArm;
+  List<String> rightForearm;
+  List<String> leftForearm;
+  List<String> rightHand;
+  List<String> leftHand;
+  List<String> rightFemur;
+  List<String> leftFemur;
+  List<String> leftLeg;
+  List<String> rightLeg;
+  List<String> leftFeet;
+  List<String> rightFeet;
+
+  Limb(
+      {this.rightArm,
+      this.leftArm,
+      this.rightForearm,
+      this.leftForearm,
+      this.rightHand,
+      this.leftHand,
+      this.rightFemur,
+      this.leftFemur,
+      this.leftLeg,
+      this.rightLeg,
+      this.leftFeet,
+      this.rightFeet});
+
+  Limb.fromJson(Map<String, dynamic> json) {
+    rightArm = List<String>.from(json["right_arm"].map((x) => x));
+    leftArm = List<String>.from(json["left_arm"].map((x) => x));
+    rightForearm = List<String>.from(json["right_forearm"].map((x) => x));
+    leftForearm = List<String>.from(json["left_forearm"].map((x) => x));
+    rightHand = List<String>.from(json["right_hand"].map((x) => x));
+    leftHand = List<String>.from(json["left_hand"].map((x) => x));
+    rightFemur = List<String>.from(json["right_femur"].map((x) => x));
+    leftFemur = List<String>.from(json["left_femur"].map((x) => x));
+    leftLeg = List<String>.from(json["left_leg"].map((x) => x));
+    rightLeg = List<String>.from(json["right_leg"].map((x) => x));
+    leftFeet = List<String>.from(json["left_feet"].map((x) => x));
+    rightFeet = List<String>.from(json["right_feet"].map((x) => x));
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['right_arm'] = this.rightArm;
+    data['left_arm'] = this.leftArm;
+    data['right_forearm'] = this.rightForearm;
+    data['left_forearm'] = this.leftForearm;
+    data['right_hand'] = this.rightHand;
+    data['left_hand'] = this.leftHand;
+    data['right_femur'] = this.rightFemur;
+    data['left_femur'] = this.leftFemur;
+    data['left_leg'] = this.leftLeg;
+    data['right_leg'] = this.rightLeg;
+    data['left_feet'] = this.leftFeet;
+    data['right_feet'] = this.rightFeet;
+    return data;
+  }
 }
 
 class Abdomen {
@@ -671,10 +764,55 @@ class Abdomen {
       };
 }
 
-enum Limb { TENDERNESS, SWELLING }
+class MedicationAssessment {
+  MedicationAssessment({
+    this.timestamp,
+    this.medication,
+  });
 
-final limbValues =
-    EnumValues({"swelling": Limb.SWELLING, "tenderness": Limb.TENDERNESS});
+  DateTime timestamp;
+  List<Medication> medication;
+
+  factory MedicationAssessment.fromJson(Map<String, dynamic> json) =>
+      MedicationAssessment(
+        timestamp: json["timestamp"],
+        medication: List<Medication>.from(
+            json["medication"].map((x) => Medication.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "timestamp": timestamp,
+        "medication": List<dynamic>.from(medication.map((x) => x.toJson())),
+      };
+}
+
+class Medication {
+  Medication({
+    this.index,
+    this.name,
+    this.timestamp,
+    this.dose,
+  });
+
+  int index;
+  String name;
+  String timestamp;
+  String dose;
+
+  factory Medication.fromJson(Map<String, dynamic> json) => Medication(
+        index: json["index"],
+        name: json["name"],
+        timestamp: json["timestamp"],
+        dose: json["dose"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "index": index,
+        "name": name,
+        "timestamp": timestamp,
+        "dose": dose,
+      };
+}
 
 class VitalSign {
   String id;
@@ -814,13 +952,17 @@ class ResponseTeam {
   factory ResponseTeam.fromJson(Map<String, dynamic> json) => ResponseTeam(
         serviceResponse: json["service_response"],
         vehicleRegno: json["vehicle_regno"],
-        staffs: List<Staff>.from(json["staffs"].map((x) => Staff.fromJson(x))),
+        staffs: json["staffs"] != null || json["staffs"] != ""
+            ? List<Staff>.from(json["staffs"].map((x) => Staff.fromJson(x)))
+            : [],
       );
 
   Map<String, dynamic> toJson() => {
         "service_response": serviceResponse,
         "vehicle_regno": vehicleRegno,
-        "staffs": List<dynamic>.from(staffs.map((x) => x.toJson())),
+        "staffs": staffs != null
+            ? List<dynamic>.from(staffs.map((x) => x.toJson()))
+            : [],
       };
 }
 
@@ -936,13 +1078,15 @@ class SceneAssessment {
 
   factory SceneAssessment.fromJson(Map<String, dynamic> json) =>
       SceneAssessment(
-        typeResponse: json["type_response"],
-        otherServicesAtScene:
-            List<String>.from(json["other_services_atScene"].map((x) => x)),
+        typeResponse:
+            json["type_response"] != null ? json["type_response"] : "",
+        otherServicesAtScene: json["other_services_atScene"] != null
+            ? List<String>.from(json["other_services_atScene"].map((x) => x))
+            : [],
       );
 
   Map<String, dynamic> toJson() => {
-        "type_response": typeResponse,
+        "type_response": typeResponse != null ? typeResponse : "",
         "other_services_atScene":
             List<dynamic>.from(otherServicesAtScene.map((x) => x)),
       };

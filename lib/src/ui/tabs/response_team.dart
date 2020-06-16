@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/rendering.dart';
@@ -14,6 +15,8 @@ import 'package:phcapp/src/models/phc_staff.dart';
 import 'package:phcapp/src/models/team_model.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phcapp/src/ui/tabs/call_information.dart';
+import 'package:phcapp/src/ui/tabs/edit_screen/edit_team.dart';
 import 'package:provider/provider.dart';
 
 import 'staffs.dart';
@@ -36,23 +39,6 @@ const LIST_AGENCIES = [
   "Private"
 ];
 
-// class Team extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         // backgroundColor: Colors.grey[200],
-//         body: _Team(),
-//         floatingActionButton: FloatingActionButton.extended(
-//           onPressed: () {
-//             // Add your onPressed code here!
-//           },
-//           label: Text('ADD TEAM'),
-//           icon: Icon(Icons.add),
-//           // backgroundColor: Colors.purple,
-//         ));
-//   }
-// }
-
 class ResponseTeamScreen extends StatefulWidget {
   final BuildContext context;
   final ResponseTeam response_team;
@@ -73,68 +59,35 @@ class _TeamState extends State<ResponseTeamScreen> //{
   StreamController<String> _serviceController =
       new StreamController.broadcast();
 
-  // void serviceCallback(String selected) {
-  //   setState(() {
-  //     print("selected===" + selected);
-  //     serviceSelected = selected;
-  //   });
-  // }
-
-  // TeamBloc teamBloc;
   StaffBloc staffBloc;
 
   // @override
-  // void initState() {
-  // print("=================INIT STATE============");
-  // print(widget.response_team.staffs.length);
-  //   staffBloc = BlocProvider.of<StaffBloc>(context);
-  //   teamBloc = BlocProvider.of<TeamBloc>(context);
+  // void didChangeDependencies() {
+  //   if (widget.assign_id == null) {}
+  // print("DIDCHANGE START HEERRE");
+  // BlocProvider.of<TeamBloc>(context).add(InitTeam());
+  // if (widget.response_team != null) {
   //   regNoController.text = widget.response_team.vehicleRegno;
-  //   teamBloc.add(LoadTeam(assign_id: widget.assign_id));
+
+  //   _serviceSelected = widget.response_team.serviceResponse;
   // }
 
-  // @override
-  // void initState() {
-  //   super.initState();
+  // final teamBloc = BlocProvider.of<TeamBloc>(context);
+  // teamBloc.add(LoadTeam(
+  //     assign_id: widget.assign_id,
+  //     responseTeam: new ResponseTeam(
+  //         serviceResponse: widget.response_team.serviceResponse,
+  //         vehicleRegno: widget.response_team.vehicleRegno,
+  //         staffs: widget.response_team.staffs)));
+
   // }
+  // BlocProvider.of<TeamBloc>(context).add(Init());
 
-  @override
-  void didChangeDependencies() {
-    print("DIDCHANGE START HEERRE");
-    BlocProvider.of<TeamBloc>(context).add(InitTeam());
-    if (widget.response_team != null) {
-      regNoController.text = widget.response_team.vehicleRegno;
-
-      _serviceSelected = widget.response_team.serviceResponse;
-    }
-
-    // final teamBloc = BlocProvider.of<TeamBloc>(context);
-    // teamBloc.add(LoadTeam(
-    //     assign_id: widget.assign_id,
-    //     responseTeam: new ResponseTeam(
-    //         serviceResponse: widget.response_team.serviceResponse,
-    //         vehicleRegno: widget.response_team.vehicleRegno,
-    //         staffs: widget.response_team.staffs)));
-
-    // }
-    // BlocProvider.of<TeamBloc>(context).add(Init());
-
-    super.didChangeDependencies();
-  }
+  //   super.didChangeDependencies();
+  // }
 
   @override
   void dispose() {
-    // List<Staff> newStaffs = List<Staff>();
-
-    // newStaffs = teamBloc.selectedStaffs.map((data) {
-    //   return Staff(name: data.staffName, position: data.position);
-    // }).toList();
-
-    // print("newStaffs");
-    // print(newStaffs);
-
-    // print(teamBloc.state);
-
     regNoController.dispose();
     _serviceController.close();
     super.dispose();
@@ -146,252 +99,58 @@ class _TeamState extends State<ResponseTeamScreen> //{
   Widget build(BuildContext context) {
     final teamBloc = BlocProvider.of<TeamBloc>(context);
 
-    print("BUILD RESPONSE TEAM======");
-
-    // teamBloc.add(LoadTeam(
-    //     assign_id: widget.assign_id, responseTeam: widget.response_team));
-    // if (widget.response_team != null) {
-    //   print("most wanted");
-    // teamBloc.add(LoadTeam(
-    //     assign_id: widget.assign_id,
-    //     responseTeam: new ResponseTeam(
-    //         serviceResponse: widget.response_team.serviceResponse,
-    //         vehicleRegno: widget.response_team.vehicleRegno,
-    //         staffs: widget.response_team.staffs)));
-    // } else {
-    //   print("not exist");
-    //   teamBloc.add(LoadTeam(
-    //       assign_id: widget.assign_id, responseTeam: new ResponseTeam()));
-    // }
-
-    // final teamBloc = BlocProvider.of<TeamBloc>(context);
-    // teamBloc.add(LoadTeam(
-    //     assign_id: widget.assign_id, responseTeam: new ResponseTeam()));
-    // if (widget.response_team.staffs != null) {
-    //   print("most wanted");
-    //   teamBloc.add(LoadTeam(
-    //       assign_id: widget.assign_id,
-    //       responseTeam: new ResponseTeam(
-    //           serviceResponse: widget.response_team.serviceResponse,
-    //           vehicleRegno: widget.response_team.vehicleRegno,
-    //           staffs: widget.response_team.staffs)));
-    // } else {
-    //   print("not exist");
-    //   teamBloc.add(LoadTeam(
-    //       assign_id: widget.assign_id, responseTeam: new ResponseTeam()));
-    // }
-    Widget circle(count) => new Container(
-          width: 25,
-          height: 25,
-          decoration:
-              BoxDecoration(color: Colors.pinkAccent, shape: BoxShape.circle),
-          child: Center(
-              child: Text(
-            "${count}",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white),
-          )),
-        );
-
     return Scaffold(
-        // backgroundColor: Colors.white,
-        body: BlocBuilder<TeamBloc, TeamState>(
-            // bloc: teamBloc,
-            builder: (context, state) {
-          if (state is TeamEmpty) {
-            // final myTeam = BlocProvider.of<TeamBloc>(context);
-            teamBloc.add(LoadTeam(responseTeam: widget.response_team));
-          } else if (state is TeamLoaded) {
-            print("Bloc in ");
-            // print(state.response_team.staffs);
-            // print("Whatas state now");
-            // print(state.response_team.toJson());
-            return SingleChildScrollView(
-                // padding: EdgeInsets.all(20),
-                physics: BouncingScrollPhysics(),
-                // child:
-                child:
-                    // BlocConsumer<StaffBloc, StaffState>(
-                    // listener: (context, state) {},
-                    // builder: (context, state) {
-                    //       if (state is StaffLoaded) {
-                    // regNoController.text = state.response_team.vehicleRegno;
-
-                    // return ConstrainedBox(
-                    // constraints: BoxConstraints(),
-                    // child:
-                    // return
-//  return Center(
-//       child: Card(
-//           margin: EdgeInsets.all(10.0),
-//           child: Form(
-//             key: _formKey,
-//             child: Column(
-//               children: <Widget>[
-
-                    Center(
-                        child: 
-                        Container(
-                          width: 500,
-                          child: 
-                        Card(
-                            margin: EdgeInsets.only(
-                                top: 10.0, bottom: 80, left: 10, right: 10),
-                            child: Column(
-                                // mainAxisAlignment: MainAxisAlignment.center,
-                                // mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  HeaderSection("Response Details"),
-                                  DropDownList(
-                                      "Type of service response",
-                                      LIST_RESPONSES,
-                                      InputOption.service,
-                                      _serviceSelected),
-                                  // CustomDropDown(
-                                  //     labelText: "Type of service response",
-                                  //     items: LIST_RESPONSES,
-                                  //     callback: serviceCallback,
-                                  //     itemSelected: serviceSelected),
-                                  TextInput(
-                                      labelText: "Vehicle Registration No",
-                                      controller: regNoController),
-                                  // initialData:
-                                  // state.response_team.vehicleRegno),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 20),
-                                    child: Stack(children: <Widget>[
-                                      HeaderSection("Team"),
-                                      Positioned(
-                                        child: circle(
-                                            state.response_team.staffs.length),
-                                        right: 0,
-                                        top: 0,
-                                        width: 20,
-                                      ),
-                                    ]),
-                                  ),
-                                  ListView.builder(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      // addRepaintBoundaries: false,
-                                      shrinkWrap: true,
-                                      // ke: ,
-                                      // padding: EdgeInsets.all(30),
-                                      itemCount:
-                                          state.response_team.staffs.length,
-                                      // state.response_team.staffs.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                            child: Card(
-                                              child: ListTile(
-                                                leading: Icon(Icons.face),
-                                                title: Text(
-                                                  state.response_team
-                                                      .staffs[index].name,
-                                                  style: TextStyle(
-                                                      fontFamily: "Raleway",
-                                                      fontWeight:
-                                                          FontWeight.bold
-                                                      // fontSize: 16
-                                                      // fontWeight: FontWeight.bold
-                                                      ),
-                                                ),
-                                                subtitle: Text(state
-                                                            .response_team
-                                                            .staffs[index]
-                                                            .position !=
-                                                        null
-                                                    ? state.response_team
-                                                        .staffs[index].position
-                                                    : ''),
-                                                trailing: IconButton(
-                                                  icon:
-                                                      Icon(Icons.remove_circle),
-                                                  onPressed: () {
-                                                    // BlocProvider.of<
-                                                    //             TeamBloc>(
-                                                    //         context)
-
-                                                    setState(() {
-                                                      teamBloc.add(RemoveTeam(
-                                                          removeIndex: index));
-                                                    });
-                                                  },
-                                                ),
-                                              ),
-                                            ));
-                                      }),
-                                  Padding(
-                                    padding: EdgeInsets.all(10),
-                                  )
-                                ]))
-                        
-                        
-                        ,)
-                                ));
-          }
-          return Container();
-        }),
-        // return Container();
-        // }), //)),
-        // }
-
-        // return Container();
-        // }
-        // )
-        // ),
-
-        // ))
-
-        // }
-        // return CircularProgressIndicator();
-        // },
-        // )))),
-
-        floatingActionButton: Stack(children: [
-          Padding(
-              padding: EdgeInsets.only(bottom: 70),
-              child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: FloatingActionButton.extended(
-                    heroTag: 200,
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Staffs()));
-                      // Add your onPressed code here!
-                    },
-                    label: Text('ADD STAFF'),
-                    icon: Icon(Icons.add),
-                    // backgroundColor: Colors.purple,
-                  ))),
-          Align(
-              alignment: Alignment.bottomRight,
-              child: FloatingActionButton(
-                heroTag: 102,
-                onPressed: () {
-                  ResponseTeam responseTeam = new ResponseTeam(
-                    serviceResponse: _serviceSelected,
-                    vehicleRegno: regNoController.text,
-                    staffs: teamBloc.state.response_team.staffs,
+      // backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        // padding: EdgeInsets.all(20),
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            BlocBuilder<ResponseBloc, ResponseState>(
+              builder: (context, state) {
+                if (state is LoadedResponse) {
+                  return ResponseDetail(
+                    typeResponse: state.serviceResponse,
+                    vehicleRegno: state.vehicleRegNo,
                   );
+                }
 
-                  print("bye---bye reponseteam");
-                  print(responseTeam.toJson());
+                return ResponseDetail(
+                    typeResponse: (widget.response_team != null)
+                        ? widget.response_team.serviceResponse
+                        : '',
+                    vehicleRegno: (widget.response_team != null)
+                        ? widget.response_team.vehicleRegno
+                        : '');
+              },
+            ),
+            BlocBuilder<TeamBloc, TeamState>(builder: (context, state) {
+              if (state is TeamLoaded) {
+                return TeamList(selectedStaffs: state.selectedStaffs);
+              }
+              return TeamList(
+                selectedStaffs: (widget.response_team != null)
+                    ? widget.response_team.staffs
+                    : null,
+              );
+            })
+          ],
+        ),
+      ),
 
-                  teamBloc.add(AddResponseTeam(
-                      response_team: responseTeam,
-                      assign_id: widget.assign_id));
-
-                  final snackBar = SnackBar(
-                    content: Text("Response team has been saved!"),
-                  );
-                  Scaffold.of(context).showSnackBar(snackBar);
-                },
-                child: Icon(Icons.save),
-              ))
-        ]));
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 200,
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Staffs()));
+          // Add your onPressed code here!
+        },
+        label: Text('ADD STAFF'),
+        icon: Icon(Icons.add),
+        // backgroundColor: Colors.purple,
+      ),
+    );
   }
 
   void setInputOption(selector, value) {
@@ -479,18 +238,18 @@ class Person {
 
 class TextInput extends StatelessWidget {
   final labelText;
-  final controller;
-  final inputType;
-  final maskFormater;
-  final hintText;
+  // final controller;
+  // final inputType;
+  // final maskFormater;
+  // final hintText;
   final initialData;
 
   TextInput(
       {this.labelText,
-      this.controller,
-      this.maskFormater,
-      this.inputType,
-      this.hintText,
+      // this.controller,
+      // this.maskFormater,
+      // this.inputType,
+      // this.hintText,
       this.initialData});
 
   @override
@@ -501,11 +260,12 @@ class TextInput extends StatelessWidget {
         child: Padding(
             padding: EdgeInsets.all(16),
             child: TextFormField(
-                // initialValue: initialData,
+                initialValue: initialData,
+                enabled: false,
                 // validator: validator,
-                inputFormatters: maskFormater != null ? [maskFormater] : [],
+                // inputFormatters: maskFormater != null ? [maskFormater] : [],
                 // keyboardType: inputType,
-                controller: controller,
+                // controller: controller,
                 decoration: InputDecoration(
                     // hintText: hintText,
                     labelText: labelText,
@@ -514,5 +274,191 @@ class TextInput extends StatelessWidget {
                       borderRadius: new BorderRadius.circular(10.0),
                       borderSide: new BorderSide(),
                     )))));
+  }
+}
+
+class TeamList extends StatefulWidget {
+  // final count;
+  final selectedStaffs;
+  TeamList({this.selectedStaffs});
+  _TeamList createState() => _TeamList();
+}
+
+class _TeamList extends State<TeamList> {
+  // final count;
+  // final state;
+
+  // TeamList({this.state, this.count});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(12.0),
+      // width: 500,
+      child: Container(
+        padding: EdgeInsets.all(10.0),
+
+        // margin: EdgeInsets.only(top: 10.0, bottom: 80, left: 10, right: 10),
+        // child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            // Row(children: [
+            Stack(children: <Widget>[
+              HeaderSection("Response Team"),
+              Positioned(
+                child: badgeCircle(widget.selectedStaffs != null
+                    ? widget.selectedStaffs.length
+                    : 0),
+                right: 0,
+                top: 0,
+                width: 20,
+              ),
+            ]),
+
+            Container(
+              height: 1,
+              color: Colors.grey,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            // ]),
+
+            // ),
+            (widget.selectedStaffs != null)
+                ? Container(
+                    constraints: BoxConstraints(),
+                    child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        // addRepaintBoundaries: false,
+                        shrinkWrap: true,
+                        // ke: ,
+                        // padding: EdgeInsets.all(30),
+                        itemCount: widget.selectedStaffs.length,
+                        // state.response_team.staffs.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              child: Card(
+                                child: ListTile(
+                                  leading: Icon(Icons.face),
+                                  title: Text(
+                                    widget.selectedStaffs[index].name != null
+                                        ? widget.selectedStaffs[index].name
+                                        : '',
+                                    style: TextStyle(
+                                        fontFamily: "Raleway",
+                                        fontWeight: FontWeight.bold
+                                        // fontSize: 16
+                                        // fontWeight: FontWeight.bold
+                                        ),
+                                  ),
+                                  subtitle: Text(widget
+                                              .selectedStaffs[index].position !=
+                                          null
+                                      ? widget.selectedStaffs[index].position
+                                      : ''),
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.remove_circle),
+                                    onPressed: () {
+                                      final teamBloc =
+                                          BlocProvider.of<TeamBloc>(context);
+
+                                      setState(() {
+                                        teamBloc.add(
+                                            RemoveTeam(removeIndex: index));
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ));
+                        }),
+                  )
+                : Container()
+          ],
+        ),
+      ),
+      // ),
+    );
+  }
+
+  badgeCircle(count) => new Container(
+        width: 25,
+        height: 25,
+        decoration:
+            BoxDecoration(color: Colors.pinkAccent, shape: BoxShape.circle),
+        child: Center(
+            child: Text(
+          "${count}",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.white),
+        )),
+      );
+}
+
+class ResponseDetail extends StatelessWidget {
+  final vehicleRegno;
+  final typeResponse;
+
+  ResponseDetail({this.vehicleRegno, this.typeResponse});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(12.0),
+      // width: 500,
+      child: Container(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                HeaderSection("Response Details"),
+                IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => EditTeamScreen(
+                                    vehicleRegNo: vehicleRegno,
+                                    serviceResponse: typeResponse,
+                                  )));
+                    }),
+              ],
+            ),
+
+            Container(
+              height: 1,
+              color: Colors.grey,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+
+            Row(children: <Widget>[
+              MyTextField(
+                labelText: "Type of service response",
+                // items: LIST_RESPONSES,
+                // itemSelected: typeResponse),
+                initialData: typeResponse,
+              ),
+            ]),
+            // // InputOption.service, typeResponse),
+            Row(children: <Widget>[
+              MyTextField(
+                labelText: "Vehicle Registration No",
+                initialData: vehicleRegno,
+                //                 controller: regNoController),
+              ),
+            ]),
+          ],
+        ),
+      ),
+    );
   }
 }

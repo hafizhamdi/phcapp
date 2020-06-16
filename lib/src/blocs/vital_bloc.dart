@@ -10,7 +10,10 @@ import 'package:bloc/bloc.dart';
 import 'package:phcapp/src/repositories/repositories.dart';
 
 abstract class VitalEvent extends Equatable {
-  VitalEvent();
+  final List<VitalSign> listVitals;
+  VitalEvent({this.listVitals});
+  @override
+  List get props => [listVitals];
 }
 
 class LoadVital extends VitalEvent {
@@ -22,6 +25,8 @@ class LoadVital extends VitalEvent {
   @override
   List<Object> get props => [listVitals];
 }
+
+class ResetVital extends VitalEvent {}
 
 class AddVital extends VitalEvent {
   VitalSign vital;
@@ -114,6 +119,8 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
       yield* _removeVitalToState(event);
     } else if (event is UpdateVital) {
       yield* _updateVitalToState(event);
+    } else if (event is ResetVital) {
+      yield VitalEmpty();
     }
   }
 
@@ -139,7 +146,8 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
     // // print(blocPatients.length);
 
     // print("ADDD PATIENT");
-    final newList = List<VitalSign>.from(currentState.listVitals)
+    final newList = List<VitalSign>.from(
+        currentState.listVitals != null ? currentState.listVitals : [])
       ..add(event.vital);
     // / blocPatients.add(patient);
     // yield PatientLoading();

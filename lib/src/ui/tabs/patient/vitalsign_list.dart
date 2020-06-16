@@ -117,12 +117,16 @@ class _VitalSignList extends State<VitalSignList>
         trailing: Icon(Icons.arrow_forward_ios),
         onTap: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => VitalDetail(
-                        vitalSign: vital,
-                        index: index,
-                      )));
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return VitalDetail(
+                  vitalSign: vital,
+                  index: index,
+                );
+              },
+            ),
+          );
         },
       ),
     );
@@ -132,13 +136,13 @@ class _VitalSignList extends State<VitalSignList>
   build(BuildContext context) {
     vitalBloc = BlocProvider.of<VitalBloc>(context);
 
-    if (widget.listVitals != null) {
-      vitalBloc.add(LoadVital(listVitals: widget.listVitals));
-    } else if (vitalBloc.state.listVitals == null) {
-      vitalBloc.add(LoadVital(listVitals: []));
-    } else if (vitalBloc.state.listVitals.length > 0) {
-      vitalBloc.add(LoadVital(listVitals: vitalBloc.state.listVitals));
-    }
+    // if (widget.listVitals != null) {
+    //   vitalBloc.add(LoadVital(listVitals: widget.listVitals));
+    // } else if (vitalBloc.state.listVitals == null) {
+    //   vitalBloc.add(LoadVital(listVitals: []));
+    // } else if (vitalBloc.state.listVitals.length > 0) {
+    //   vitalBloc.add(LoadVital(listVitals: vitalBloc.state.listVitals));
+    // }
     // else
     //             vitalBloc.add(LoadVital(listVitals: currentState.listVitals));
 
@@ -148,11 +152,8 @@ class _VitalSignList extends State<VitalSignList>
 
     return Scaffold(
         // backgroundColor: Colors.grey[200],
-        body: BlocBuilder<VitalBloc, VitalState>(
-            // bloc: vitalBloc,
-            builder: (context, state) {
-          final currentState = state;
-          if (currentState is VitalEmpty) {
+        body:
+            // if (currentState is VitalEmpty) {
             // vitalBloc = BlocProvider.of<VitalBloc>(context);
             // if (widget.listVitals != null)
             //   vitalBloc.add(LoadVital(listVitals: widget.listVitals));
@@ -160,50 +161,83 @@ class _VitalSignList extends State<VitalSignList>
             // vitalBloc.add(LoadVital(listVitals: []));
             // // vitalBloc.add(LoadVital());
             // super.didChangeDependencies();
-          } else if (currentState is VitalLoaded) {
-            print("VitalLoaded");
-            print(currentState);
-            return SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Center(
-                    child: Card(
-                        margin: EdgeInsets.only(
-                            left: 10, right: 10, top: 10, bottom: 70),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          // backgroundColor: Colors.grey[200],
-                          // body: ListView(
-                          children: <Widget>[
-                            HeaderSection("Vital Signs"),
+            // } else
+            // if (currentState is VitalLoaded) {
+            //   print("VitalLoaded");
+            //   print(currentState);
+            // return
+            SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Center(
+            child: Card(
+              margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 70),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                // backgroundColor: Colors.grey[200],
+                // body: ListView(
+                children: <Widget>[
+                  HeaderSection("Vital Signs"),
+                  BlocBuilder<VitalBloc, VitalState>(
+                      // bloc: vitalBloc,
+                      builder: (context, state) {
+                    final currentState = state;
 
-                            Container(
-                                width: 500,
-                                padding: EdgeInsets.only(bottom: 10),
-                                child: ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  // addRepaintBoundaries: false,
-                                  shrinkWrap: true,
-                                  // ke: ,
-                                  // padding: EdgeInsets.all(30),
-                                  itemCount: currentState.listVitals.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return _buildCard(
-                                        currentState.listVitals[index], index);
-                                  },
-                                )
-                                // }
+                    if (state is VitalLoaded) {
+                      return (currentState.listVitals != null)
+                          ? Container(
+                              width: 500,
+                              padding: EdgeInsets.only(bottom: 10),
+                              child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                // addRepaintBoundaries: false,
+                                shrinkWrap: true,
+                                // ke: ,
+                                // padding: EdgeInsets.all(30),
+                                itemCount: currentState.listVitals.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return _buildCard(
+                                      currentState.listVitals[index], index);
+                                },
+                              ),
+                            )
+                          : Container();
+                    }
+                    return Container();
+                    //   width: 500,
+                    //   padding: EdgeInsets.only(bottom: 10),
+                    //   child: ListView.builder(
+                    //     physics: NeverScrollableScrollPhysics(),
+                    //     // addRepaintBoundaries: false,
+                    //     shrinkWrap: true,
+                    //     // ke: ,
+                    //     // padding: EdgeInsets.all(30),
+                    //     itemCount: widget.listVitals.length,
+                    //     itemBuilder: (BuildContext context, int index) {
+                    //       return _buildCard(widget.listVitals[index], index);
+                    //     },
+                    //   ),
+                    // );
+                  }
+                      // ),),
+                      // }
 // },
 
-                                ) // )));
-                          ],
-                        ))));
-          }
-          return Container();
-        }),
+                      // ) // )));
+
+                      // }
+                      ),
+                ],
+              ),
+            ),
+          ),
+          //               ))));
+          // // }
+          // return Container();
+          // }
+        ),
         floatingActionButton: FloatingActionButton.extended(
-          heroTag: 101,
+          heroTag: 200,
           onPressed: () {
             //  onTap: () {
             Navigator.push(context,

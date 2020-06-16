@@ -8,10 +8,12 @@ import 'package:phcapp/src/providers/cpr_provider.dart';
 import 'package:phcapp/src/providers/medication_provider.dart';
 import 'package:phcapp/src/providers/patinfo_provider.dart';
 import 'package:phcapp/src/providers/vital_provider.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/trauma_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/cpr/list_cpr.dart';
 import 'package:provider/provider.dart';
+import 'asessments/main_assessment.dart';
 import 'cprlog_list.dart';
-import 'main_assessment.dart';
+// import 'main_assessment.dart';
 import 'information.dart';
 // import 'cprlog.dart';
 // import 'assessment.dart';
@@ -41,10 +43,12 @@ class _PatientTab extends State<PatientTab> {
   }
 
   @override
-  void initState() {
+  void didChangeDependencies() {
     patientBloc = BlocProvider.of<PatientBloc>(context);
-    // print(widget.patient.toJson());
-    super.initState();
+
+    // final provider = Provider.of<PatInfoProvider>(context);
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -54,7 +58,7 @@ class _PatientTab extends State<PatientTab> {
 
   convertDOBtoStandard(data) {
     print("CONVERT DOB");
-    if (data == null) return null;
+    if (data == "") return null;
 
     var split = data.split('/');
     var dd = split[0];
@@ -110,51 +114,67 @@ class _PatientTab extends State<PatientTab> {
       return vitalBloc.state.listVitals;
     }
 
-    createButton(BuildContext context, action, index) => FlatButton(
-        onPressed: () {
-          final provider = Provider.of<PatInfoProvider>(context, listen: false);
-          if (provider.formKey.currentState.validate()) {
+    createButton(BuildContext context, action, index) => InkWell(
+          child: Container(
+            padding: EdgeInsets.all(10),
+            alignment: Alignment.center,
+            margin: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40.0), color: Colors.green),
+            // color: Colors.green,
+            child: Text((action == Action.delete) ? "SAVE NOTE" : "CREATE NOTE",
+                style: TextStyle(color: Colors.white)),
+          ),
+
+          // FlatButton(
+          onTap: () {
+            final provider =
+                Provider.of<PatInfoProvider>(context, listen: false);
+            // if (provider.formKey.currentState.validate()) {
             final patInfo = preparingResultPatientInformation(context);
             // final cprlog = preparingResultCPRlog();
 
             final traumaBloc = BlocProvider.of<TraumaBloc>(context);
 
             print("trauma state");
-            print(traumaBloc.state);
+            // print(traumaBloc.state);
 
             // print(cprlog)
 
             final cprBloc = BlocProvider.of<CprBloc>(context);
             print("CPR RESULT WOHOW");
-            print(cprBloc.state.cpr.toJson());
+            // print(cprBloc.state.cpr.toJson());
             // final cprlog = preparingResultCPRlog(context);
             // print(cprlog);
 
-            final vitalsigns = preparingResultVitalSigns(context);
+            final vitalSigns = BlocProvider.of<VitalBloc>(context);
+            // final vitalsigns = preparingResultVitalSigns(context);
             if (action == Action.delete) {
               //TODO:Update
               patientBloc.add(UpdatePatient(
                   patient: new Patient(
                       cpr: cprBloc.state.cpr,
                       patientInformation: patInfo,
-                      vitalSigns: vitalsigns),
+                      vitalSigns: vitalBloc.state.listVitals),
                   index: widget.index));
             } else {
+              print("ADD PATIENT BLOC");
               patientBloc.add(AddPatient(
                 patient: new Patient(
                     cpr: cprBloc.state.cpr,
                     patientInformation: patInfo,
-                    vitalSigns: vitalsigns),
+                    vitalSigns: vitalBloc.state.listVitals),
               ));
             }
             print("patient created");
             Navigator.pop(context);
-          }
-        },
-        child: Text(
-          (action == Action.delete) ? "SAVE" : "CREATE",
-          style: TextStyle(color: Colors.white),
-        ));
+            // }
+          },
+          // child: Text(
+          //   (action == Action.delete) ? "SAVE" : "CREATE",
+          //   style: TextStyle(color: Colors.white),
+          // )
+        );
 
     print("patient_TAB");
     // print(index);
@@ -185,7 +205,7 @@ class _PatientTab extends State<PatientTab> {
                       ],
                     ),
                     title: Text(
-                      'Patient',
+                      'Patient Note',
                     ),
                     actions: <Widget>[
                       deleteButton(context, action),
@@ -201,7 +221,9 @@ class _PatientTab extends State<PatientTab> {
                     VitalSignList(
                         listVitals: widget.patient.vitalSigns,
                         index: widget.index),
-                    MainAssessment(context: context),
+                    MainAssessment(
+                        // context: context
+                        ),
                   ],
                 ),
               );

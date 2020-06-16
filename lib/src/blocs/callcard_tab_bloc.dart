@@ -44,8 +44,15 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
       if (response != null) {
         print("response sending calcard not null");
         int status_send = 1;
-        final insert = await phcDao.insertHistory(callcard, status_send);
-        print(insert);
+        // final insert = await phcDao.insertHistory(callcard, status_send);
+        // print(insert);
+
+        try {
+          final insert = await phcDao.insertHistory(callcard, status_send);
+          historyBloc.add(LoadHistory());
+        } catch (_) {
+          yield CallcardToSavingError();
+        }
 
         // historyBloc.add(AddHistory(callcard: callcard));
 
@@ -61,9 +68,13 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
       //publish failed
       print('publish failed something wrong');
       int status_send = 0;
-      final insert = await phcDao.insertHistory(callcard, status_send);
 
-      historyBloc.add(LoadHistory());
+      try {
+        final insert = await phcDao.insertHistory(callcard, status_send);
+        historyBloc.add(LoadHistory());
+      } catch (_) {
+        yield CallcardToSavingError();
+      }
       // final update = await phcDao.updateHistory(callcard, status_send);
       // yield CallcardToPublishFailed();
       // yield CallcardToPublishEmpty();
@@ -72,12 +83,11 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
 
   Stream<TabState> publishCallcardToState(PublishCallcard event) async* {
     Callcard callcard = new Callcard(
-      callInformation: event.callInformation,
-      responseTeam: event.responseTeam,
-      responseTime: event.responseTime,
-      patients: event.patients,
-      // sceneAssessment: event.sceneAssessment
-    );
+        callInformation: event.callInformation,
+        responseTeam: event.responseTeam,
+        responseTime: event.responseTime,
+        patients: event.patients,
+        sceneAssessment: event.sceneAssessment);
 
     try {
       //publish to api
@@ -87,14 +97,20 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
       if (response != null) {
         print("response sending calcard not null");
         int status_send = 1;
-        final insert = await phcDao.insertHistory(callcard, status_send);
-        print(insert);
+        // final insert = await phcDao.insertHistory(callcard, status_send);
+        // print(insert);
+        try {
+          final insert = await phcDao.insertHistory(callcard, status_send);
+          historyBloc.add(LoadHistory());
+        } catch (_) {
+          yield CallcardToSavingError();
+        }
 
         // historyBloc.add(AddHistory(callcard: callcard));
 
         // publish success
         yield CallcardToPublishSuccess();
-        yield CallcardToPublishEmpty();
+        // yield CallcardToPublishEmpty();
         // yield CallcardToPublishSuccess();
       }
 
@@ -103,11 +119,14 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
       //publish failed
       print('publish failed something wrong');
       int status_send = 0;
-      final insert = await phcDao.insertHistory(callcard, status_send);
-
+      try {
+        final insert = await phcDao.insertHistory(callcard, status_send);
+      } catch (_) {
+        yield CallcardToSavingError();
+      }
       // final update = await phcDao.updateHistory(callcard, status_send);
       yield CallcardToPublishFailed();
-      yield CallcardToPublishEmpty();
+      // yield CallcardToPublishEmpty();
     }
   }
 }
@@ -157,6 +176,8 @@ class RepublishCallcard extends TabEvent {
 }
 
 class CallcardToPublishEmpty extends TabState {}
+
+class CallcardToSavingError extends TabState {}
 
 class CallcardToPublishSuccess extends TabState {
   CallcardToPublishSuccess();

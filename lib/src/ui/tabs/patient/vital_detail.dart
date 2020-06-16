@@ -134,14 +134,14 @@ class _VitalDetailState extends State<VitalDetail> {
             borderRadius: BorderRadius.circular(10),
             shape: BoxShape.rectangle,
             border: Border.all(color: Colors.grey, width: 0.5)),
-        width: 160,
+        width: 230,
         height: 220,
         child: Column(
           children: <Widget>[
             Row(
               children: <Widget>[
                 Text(title,
-                    textAlign: TextAlign.left, style: TextStyle(fontSize: 16)
+                    textAlign: TextAlign.left, style: TextStyle(fontSize: 18)
                     // style: TextStyle(color: Colors.white),
                     ),
               ],
@@ -154,13 +154,14 @@ class _VitalDetailState extends State<VitalDetail> {
                       child: Text(
                         "E",
                         textAlign: TextAlign.left,
-                        // style: TextStyle(color: Colors.white),
+                        style: TextStyle(fontSize: 16),
                       )),
                   Text(
                     ePicker.getValue != null ? ePicker.getValue.toString() : '',
                     // decimalFormating(,
                     style: TextStyle(
                       fontSize: 30,
+
                       // color: Colors.purple[200]
                     ),
                   ),
@@ -188,6 +189,8 @@ class _VitalDetailState extends State<VitalDetail> {
                       child: Text(
                         "V",
                         textAlign: TextAlign.left,
+                        style: TextStyle(fontSize: 16),
+
                         // style: TextStyle(color: Colors.white),
                       )),
                   //,
@@ -223,6 +226,8 @@ class _VitalDetailState extends State<VitalDetail> {
                       child: Text(
                         "M",
                         textAlign: TextAlign.left,
+                        style: TextStyle(fontSize: 16),
+
                         // style: TextStyle(color: Colors.white),
                       )),
                   Text(
@@ -256,6 +261,8 @@ class _VitalDetailState extends State<VitalDetail> {
                       child: Text(
                         "Total",
                         textAlign: TextAlign.left,
+                        style: TextStyle(fontSize: 16),
+
                         // style: TextStyle(color: Colors.white),
                       )),
                   Text(
@@ -340,8 +347,8 @@ class _VitalDetailState extends State<VitalDetail> {
             borderRadius: BorderRadius.circular(10),
             shape: BoxShape.rectangle,
             border: Border.all(color: Colors.grey, width: 0.5)),
-        width: 160,
-        height: 170,
+        width: 230,
+        height: 200,
         child: Column(
           children: <Widget>[
             Row(
@@ -350,7 +357,7 @@ class _VitalDetailState extends State<VitalDetail> {
                     padding: EdgeInsets.only(bottom: 10),
                     child: Text(title,
                         textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 16)
+                        style: TextStyle(fontSize: 18)
                         // style: TextStyle(color: Colors.white),
                         )),
               ],
@@ -431,8 +438,8 @@ class _VitalDetailState extends State<VitalDetail> {
               borderRadius: BorderRadius.circular(10),
               shape: BoxShape.rectangle,
               border: Border.all(color: Colors.grey, width: 0.5)),
-          width: 160,
-          height: 100,
+          width: 230,
+          height: 200,
           child: Column(children: <Widget>[
             Row(
               children: <Widget>[
@@ -440,7 +447,7 @@ class _VitalDetailState extends State<VitalDetail> {
                     padding: EdgeInsets.only(bottom: 10),
                     child: Text(title,
                         textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 16)
+                        style: TextStyle(fontSize: 18)
                         // style: TextStyle(color: Colors.white),
                         )),
               ],
@@ -488,15 +495,15 @@ class _VitalDetailState extends State<VitalDetail> {
             borderRadius: BorderRadius.circular(10),
             shape: BoxShape.rectangle,
             border: Border.all(color: Colors.grey, width: 0.5)),
-        width: 160,
-        height: 100,
+        width: 230,
+        height: 200,
         child: Column(children: <Widget>[
           Row(
             children: <Widget>[
               Padding(
                   padding: EdgeInsets.only(bottom: 10),
                   child: Text(title,
-                      textAlign: TextAlign.left, style: TextStyle(fontSize: 16)
+                      textAlign: TextAlign.left, style: TextStyle(fontSize: 18)
                       // style: TextStyle(color: Colors.white),
                       )),
             ],
@@ -614,7 +621,9 @@ class _VitalDetailState extends State<VitalDetail> {
       return FlatButton(
           child: Text("DELETE", style: TextStyle(color: Colors.white)),
           onPressed: () {
-            vitalBloc.add(RemoveVital(index: index));
+            setState(() {
+              vitalBloc.add(RemoveVital(index: index));
+            });
             Navigator.pop(context);
           });
     }
@@ -629,10 +638,18 @@ class _VitalDetailState extends State<VitalDetail> {
 
   createButton(action, index) {
     if (action == ActionButton.create) {
-      return FlatButton(
-        child: Text("CREATE", style: TextStyle(color: Colors.white)),
-        onPressed: () {
-          int len = vitalBloc.state.listVitals.length != null
+      return InkWell(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          alignment: Alignment.center,
+          margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40.0), color: Colors.green),
+          // color: Colors.green,
+          child: Text("CREATE VITAL", style: TextStyle(color: Colors.white)),
+        ),
+        onTap: () {
+          int len = vitalBloc.state.listVitals != null
               ? vitalBloc.state.listVitals.length
               : 0;
 
@@ -664,16 +681,27 @@ class _VitalDetailState extends State<VitalDetail> {
 
           print("Vital Sigs");
           // print(vs.toJson());
-          vitalBloc.add(AddVital(vital: vs));
+
+          setState(() {
+            vitalBloc.add(AddVital(vital: vs));
+          });
 
           Navigator.pop(context);
         },
       );
     } else {
       //save -update button
-      return FlatButton(
-          child: Text("SAVE", style: TextStyle(color: Colors.white)),
-          onPressed: () {
+      return InkWell(
+          child: Container(
+            padding: EdgeInsets.all(10),
+            alignment: Alignment.center,
+            margin: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40.0), color: Colors.green),
+            // color: Colors.green,
+            child: Text("EDIT SAVE", style: TextStyle(color: Colors.white)),
+          ),
+          onTap: () {
             VitalSign vs = new VitalSign(
                 // id: (index + 1).toString(),
                 // id: (vitalBloc.state.listVitals.length + 1).toString(),
@@ -701,7 +729,9 @@ class _VitalDetailState extends State<VitalDetail> {
                 m: gcsMpicker.getValue.toString(),
                 gcs: gcsTotalpicker.getValue.toString());
 
-            vitalBloc.add(UpdateVital(index: index, vital: vs));
+            setState(() {
+              vitalBloc.add(UpdateVital(index: index, vital: vs));
+            });
 
             Navigator.pop(context);
           });
@@ -763,44 +793,46 @@ class _VitalDetailState extends State<VitalDetail> {
           ],
           backgroundColor: Colors.purple),
       body: SingleChildScrollView(
-          child: Center(
-              child: Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(10),
-                  child: Wrap(
-                    // alignment: Alignment.center,
-                    children: <Widget>[
-                      Center(
-                          child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: widget.vitalSign == null
-                                  ? Text("Last changes at " + _timestamp)
-                                  : Text("Last changes at " +
-                                      DateFormat("HH:mm aa")
-                                          .format(widget.vitalSign.created)))),
-                      _buildItem(context, bpSysPicker, "BP Systolic", 200, 90),
-                      _buildItem(
-                          context, bpDiasPicker, "BP Diastolic", 200, 60),
-                      // _buildItem(
-                      //     context, "BP Diastolic", bpDiasController, 200),
-                      _buildItem(context, mapPicker, "MAP", 200, 100),
-                      _buildItem(context, prPicker, "PR", 200, 60),
-                      _buildItem(context, ppPicker, "Pulse Pressure", 200, 20),
-                      _buildItem(context, pvPicker, "Pulse Volume", 200, 100),
-                      _buildItem(context, crtPicker, "CRT", 200, 100),
-                      _buildItem(context, siPicker, "Shock Index", 200, 100),
-                      _buildItem(context, rrPicker, "RR", 100, 1),
-                      _buildItem(context, spo2Picker, "Sp02", 200, 95),
-                      _buildItem(context, tempPicker, "Temperature", 100, 30),
-                      _buildItem(context, psPicker, "Pain Score", 11, 1),
-                      _buildItem(context, bgPicker, "Blood Glucose", 200, 100),
-                      _buildItemPupil(context, lpPicker, "Left Pupil", 9, 1),
-                      _buildItemPupil(context, rpPicker, "Right Pupil", 9, 1),
-                      // _buildItemPupil(context, "Right Pupil", rpController),
-                      _buildItemGCS(context, gcsEpicker, gcsVpicker, gcsMpicker,
-                          gcsTotalpicker, "GCS"),
-                    ],
-                  )))),
+        child: Container(
+          // child: Container(
+          //     alignment: Alignment.center,
+          //     padding: EdgeInsets.all(10),
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            children: <Widget>[
+              Center(
+                  child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: widget.vitalSign == null
+                          ? Text("Last changes at " + _timestamp)
+                          : Text("Last changes at " +
+                              DateFormat("HH:mm aa")
+                                  .format(widget.vitalSign.created)))),
+              _buildItem(context, bpSysPicker, "BP Systolic", 200, 90),
+              _buildItem(context, bpDiasPicker, "BP Diastolic", 200, 60),
+              // _buildItem(
+              //     context, "BP Diastolic", bpDiasController, 200),
+              _buildItem(context, mapPicker, "MAP", 200, 100),
+              _buildItem(context, prPicker, "PR", 200, 60),
+              _buildItem(context, ppPicker, "Pulse Pressure", 200, 20),
+              _buildItem(context, pvPicker, "Pulse Volume", 200, 100),
+              _buildItem(context, crtPicker, "CRT", 200, 100),
+              _buildItem(context, siPicker, "Shock Index", 200, 100),
+              _buildItem(context, rrPicker, "RR", 100, 1),
+              _buildItem(context, spo2Picker, "Sp02", 200, 95),
+              _buildItem(context, tempPicker, "Temperature", 100, 30),
+              _buildItem(context, psPicker, "Pain Score", 11, 1),
+              _buildItem(context, bgPicker, "Blood Glucose", 200, 100),
+              _buildItemPupil(context, lpPicker, "Left Pupil", 9, 1),
+              _buildItemPupil(context, rpPicker, "Right Pupil", 9, 1),
+              // _buildItemPupil(context, "Right Pupil", rpController),
+              _buildItemGCS(context, gcsEpicker, gcsVpicker, gcsMpicker,
+                  gcsTotalpicker, "GCS"),
+            ],
+          ),
+        ),
+      ),
+      // ,),
     );
   }
 

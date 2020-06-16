@@ -128,6 +128,8 @@ class _History extends State<History> {
                                     IconButton(
                                         icon: Icon(Icons.edit),
                                         onPressed: () {
+                                          print("EDIT=HISTORY");
+                                          print(data.toJson());
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
