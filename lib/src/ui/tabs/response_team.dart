@@ -399,8 +399,8 @@ class _TeamList extends State<TeamList> {
 }
 
 class ResponseDetail extends StatelessWidget {
-  final vehicleRegno;
-  final typeResponse;
+  final String vehicleRegno;
+  final String typeResponse;
 
   ResponseDetail({this.vehicleRegno, this.typeResponse});
 

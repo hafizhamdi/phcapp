@@ -153,7 +153,7 @@ class _PatientTab extends State<PatientTab> {
               //TODO:Update
               patientBloc.add(UpdatePatient(
                   patient: new Patient(
-                      cpr: cprBloc.state.cpr,
+                      // cpr: cprBloc.state.cpr,
                       patientInformation: patInfo,
                       vitalSigns: vitalBloc.state.listVitals),
                   index: widget.index));
@@ -161,7 +161,7 @@ class _PatientTab extends State<PatientTab> {
               print("ADD PATIENT BLOC");
               patientBloc.add(AddPatient(
                 patient: new Patient(
-                    cpr: cprBloc.state.cpr,
+                    // cpr: cprBloc.state.cpr,
                     patientInformation: patInfo,
                     vitalSigns: vitalBloc.state.listVitals),
               ));

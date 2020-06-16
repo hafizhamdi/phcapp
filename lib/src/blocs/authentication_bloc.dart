@@ -41,7 +41,7 @@ class AuthInitialized extends AuthState {
 
   @override
   List<Object> get props => [staffs];
- 
+
   @override
   String toString() {
     return "bilangan staffs yang ada:" + staffs.length.toString();
@@ -93,10 +93,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final currentState = state;
       print(currentState);
       print(fetchStaffs);
-      final foundUser = fetchStaffs.singleWhere(
-          (data) => data.userid.toLowerCase() == event.username.toLowerCase());
+      final foundUser = fetchStaffs.firstWhere(
+          (data) => data.userId.toLowerCase() == event.username.toLowerCase());
 
       if (foundUser != null) {
+        print("user found not null");
+        print(foundUser.toJson());
         print(foundUser.password);
         final String md5 = generateMd5(event.password);
         print(md5);

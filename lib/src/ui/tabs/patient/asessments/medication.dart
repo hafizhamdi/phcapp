@@ -8,11 +8,11 @@ import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/medication_bloc.dart
 import 'package:phcapp/src/widgets/mycard_single_option.dart';
 
 const _medication = [
-  "D50%",
-  "D10%",
   "NaCl 0.9%",
   "NaCl 0.45%"
-      "Aspirin",
+      "D50%",
+  "D10%",
+  "Aspirin",
   "GTN",
   "adrenalin",
   "tramadol",

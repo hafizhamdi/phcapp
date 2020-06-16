@@ -10,30 +10,37 @@ class PhcApiClient {
 
   PhcApiClient({@required this.httpClient}) : assert(httpClient != null);
 
-  Future<Phc> fetchPhc() async {
+  Future fetchPhc() async {
     final phcUrl = '$baseUrl/callcards';
     final phcResponse = await this.httpClient.get(phcUrl);
 
     if (phcResponse.statusCode != 200) {
       throw Exception("Error getting phc dataset from server");
     }
+    // print("we are here in fetchPhc function");
+    // final phcJson = jsonDecode(phcResponse.body);
+    // final phcJson = json.decode(phcResponse.body);
+    // print("HAJI");
+    // print(phcJson.callcards[0].callInformation.callcardNo);
+    print("OOuuuww.. cannot decode data");
+    // return phcResponse.body;
     final phcJson = jsonDecode(phcResponse.body);
-    return Phc.fromJson(phcJson);
+    return phcJson;
   }
 
   Future postCallcard(Callcard callcard) async {
     assert(callcard != null);
 
     print("post callcard masuk");
-    print(jsonEncode(callcard.call_information));
+    print(jsonEncode(callcard.callInformation));
     // print(jsonEncode(callcard.scene_assessment));
 
     var internal_callcard = {};
-    internal_callcard["call_information"] = callcard.call_information;
-    internal_callcard["response_team"] = callcard.response_team;
-    internal_callcard["response_time"] = callcard.response_time;
-    internal_callcard["scene_assessment"] = callcard.scene_assessment;
-    internal_callcard["patients"] = callcard.listPatients;
+    internal_callcard["call_information"] = callcard.callInformation;
+    internal_callcard["response_team"] = callcard.responseTeam;
+    internal_callcard["response_time"] = callcard.responseTime;
+    internal_callcard["scene_assessment"] = callcard.sceneAssessment;
+    internal_callcard["patients"] = callcard.patients;
     final postResponse = await this.httpClient.post(
         "$baseUrl/upload_result/call_card",
         body: jsonEncode(internal_callcard));

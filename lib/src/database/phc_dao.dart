@@ -35,18 +35,17 @@ class PhcDao {
     await _phcStore.update(await _db, phc.toJson());
   }
 
-  Future updateCallInformation(CallInformation call) async {
+  Future updateCallInformation(call) async {
     print("updateCallInformation");
     var records = await _phcStore.record(getKey).getSnapshot(await _db);
 
     var listCallcards = records["phc.callcards"]; // as List;
 
     var result = listCallcards.map((data) {
-      if (Callcard.fromJson(data).call_information.assign_id ==
-          call.assign_id) {
+      if (Callcard.fromJson(data).callInformation.assign_id == call.assign_id) {
         print("inside list");
         print(data);
-        var temp = cloneMap(Callcard.fromJson(data).call_information.toJson());
+        var temp = cloneMap(Callcard.fromJson(data).callInformation.toJson());
         temp["caller_contactno"] = call.caller_contactno;
         print(temp);
         return temp;
@@ -78,20 +77,23 @@ class PhcDao {
     var listCallcards = records["phc.callcards"] as List;
 
     var result = listCallcards.firstWhere(
-      (data) => Callcard.fromJson(data).call_information.assign_id == assign_id,
+      (data) => Callcard.fromJson(data).callInformation.assign_id == assign_id,
     );
 
     // listCallcards/
     // .
     // print(result.call_information);
-    print(Callcard.fromJson(result).call_information);
+    print(Callcard.fromJson(result).callInformation);
     // print(CallInformation.fromJson(result).toJson());
     var callcard = Callcard.fromJson(result);
     print(callcard.toJson());
-    return callcard.call_information;
+    return callcard.callInformation;
   }
 
   Future getAllPhc() async {
+    // print("try deleting...phc store");
+    // var newRecord = await _phcStore.delete(await _db);
+
     var now = DateFormat("yyyy-MM-dd HH:mm:ss").format(new DateTime.now());
     print(now);
     var finder = Finder(
@@ -100,9 +102,11 @@ class PhcDao {
 
     var record = await _phcStore.findFirst(await _db, finder: finder);
     print(record);
-    print(record.value["phc"]);
-
-    return Phc.fromJson(record.value["phc"]);
+    // print(record.value["phc"]);
+    if (record != null) {
+      return Phc.fromJson(record.value["phc"]);
+    }
+    return null;
   }
 
   Future insertCallInformation(CallInformation call_info) async {
@@ -124,7 +128,7 @@ class PhcDao {
 
     var result = listCallcards.firstWhere(
         (data) =>
-            Callcard.fromJson(data).call_information.assign_id == assign_id,
+            Callcard.fromJson(data).callInformation.assign_id == assign_id,
         orElse: () => null);
 
     // print(result.call_information);
@@ -132,7 +136,7 @@ class PhcDao {
     // print(CallInformation.fromJson(result).toJson());
     var callcard = Callcard.fromJson(result);
     // print(callcard.toJson());
-    return callcard.response_team;
+    return callcard.responseTeam;
   }
 
   Future insertResponseTeam(ResponseTeam responseTeam, assignId) async {
@@ -234,7 +238,7 @@ class PhcDao {
 
     var result = listCallcards.firstWhere(
         (data) =>
-            Callcard.fromJson(data).call_information.assign_id == assign_id,
+            Callcard.fromJson(data).callInformation.assign_id == assign_id,
         orElse: () => null);
 
     // print(result.call_information);
@@ -242,7 +246,7 @@ class PhcDao {
     // print(CallInformation.fromJson(result).toJson());
     var callcard = Callcard.fromJson(result);
     // print(callcard.toJson());
-    return callcard.response_time;
+    return callcard.responseTime;
   }
 
   Future insertResponseTime(ResponseTime responseTime, assignId) async {
@@ -283,7 +287,7 @@ class PhcDao {
 
     var result = listCallcards.firstWhere(
         (data) =>
-            Callcard.fromJson(data).call_information.assign_id == assign_id,
+            Callcard.fromJson(data).callInformation.assign_id == assign_id,
         orElse: () => null);
     var callcard = Callcard.fromJson(result);
 
@@ -322,7 +326,7 @@ class PhcDao {
     // });
     // });
 
-    print(callcard.call_information.callcard_no);
+    // print(callcard.callInformation.callcard_no);
     // if (isExist != null) {
     // } else {}
 
@@ -349,7 +353,7 @@ class PhcDao {
       filter:
           // Filter.and([
           Filter.equals('history.call_information.callcard_no',
-              callcard.call_information.callcard_no),
+              callcard.callInformation.callcard_no),
       // Filter.equals('record_type', "ResponseTime")
       // ]
       // ),
@@ -470,7 +474,7 @@ class PhcDao {
       filter:
           // Filter.and([
           Filter.equals('history.call_information.callcard_no',
-              callcard.call_information.callcard_no),
+              callcard.callInformation.callcard_no),
       // Filter.equals('record_type', "ResponseTime")
       // ]
       // ),

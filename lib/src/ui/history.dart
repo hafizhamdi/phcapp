@@ -114,8 +114,8 @@ class _History extends State<History> {
                       //     child:
 
                       ListTile(
-                          title: Text(data
-                              .historyCallcard.call_information.callcard_no),
+                          title: Text(
+                              data.historyCallcard.callInformation.callcard_no),
                           subtitle: data.statusSend == 1
                               ? Text("Sending successful at " + data.timestamp)
                               : Text(
@@ -137,17 +137,17 @@ class _History extends State<History> {
                                                       CallcardTabs(
                                                         callcard_no: data
                                                             .historyCallcard
-                                                            .call_information
+                                                            .callInformation
                                                             .callcard_no,
                                                         call_information: data
                                                             .historyCallcard
-                                                            .call_information,
+                                                            .callInformation,
                                                         response_team: data
                                                             .historyCallcard
-                                                            .response_team,
+                                                            .responseTeam,
                                                         response_time: data
                                                             .historyCallcard
-                                                            .response_time,
+                                                            .responseTime,
                                                         patients: data
                                                             .historyCallcard
                                                             .patients,
@@ -162,11 +162,11 @@ class _History extends State<History> {
                                         print("RESEND============");
                                         tabBloc.add(RepublishCallcard(
                                           callInformation: data
-                                              .historyCallcard.call_information,
-                                          responseTeam: data
-                                              .historyCallcard.response_team,
-                                          responseTime: data
-                                              .historyCallcard.response_time,
+                                              .historyCallcard.callInformation,
+                                          responseTeam:
+                                              data.historyCallcard.responseTeam,
+                                          responseTime:
+                                              data.historyCallcard.responseTime,
                                           patients:
                                               data.historyCallcard.patients,
                                           // sceneAssessment: data

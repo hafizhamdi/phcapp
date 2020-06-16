@@ -173,9 +173,7 @@ class _ListCallcards extends State<ListCallcards> {
                   //     })
 
                   );
-            }
-
-            if (state is PhcFetched) {
+            } else if (state is PhcFetched) {
               final phc = state.phc;
               print("Phc fetched");
 
@@ -201,7 +199,7 @@ class _ListCallcards extends State<ListCallcards> {
         color: Colors.grey,
       ),
       itemBuilder: (BuildContext context, int index) {
-        final callInfo = phc.callcards[index].call_information;
+        final callInfo = phc.callcards[index].callInformation;
 
         return ListTile(
           title: Row(
@@ -237,9 +235,9 @@ class _ListCallcards extends State<ListCallcards> {
                       Icons.person,
                       size: 16,
                     )),
-                Text(phc.callcards[index].response_team.staffs.length
-                        .toString() +
-                    ' Teams')
+                Text(
+                    phc.callcards[index].responseTeam.staffs.length.toString() +
+                        ' Teams')
               ])
             ]),
             Container(
@@ -273,10 +271,10 @@ class _ListCallcards extends State<ListCallcards> {
 
                   print("OPEN CALLCARD SCENE ASSESMNT");
                   print(phc
-                      .callcards[index].scene_assessment.otherServicesAtScene);
+                      .callcards[index].sceneAssessment.otherServicesAtScene);
                   sceneBloc.add(
                     LoadScene(
-                        selectedServices: phc.callcards[index].scene_assessment
+                        selectedServices: phc.callcards[index].sceneAssessment
                             .otherServicesAtScene),
                   );
 
@@ -288,13 +286,13 @@ class _ListCallcards extends State<ListCallcards> {
                   final teamBloc = BlocProvider.of<TeamBloc>(context);
                   teamBloc.add(LoadTeam(
                       selectedStaffs:
-                          phc.callcards[index].response_team.staffs));
+                          phc.callcards[index].responseTeam.staffs));
 
                   return CallcardTabs(
                     callcard_no: callInfo.callcard_no,
-                    call_information: phc.callcards[index].call_information,
-                    response_team: phc.callcards[index].response_team,
-                    response_time: phc.callcards[index].response_time,
+                    call_information: phc.callcards[index].callInformation,
+                    response_team: phc.callcards[index].responseTeam,
+                    response_time: phc.callcards[index].responseTime,
                     patients: phc.callcards[index].patients,
                     // phcDao: widget.phcDao,
                   );
@@ -316,7 +314,7 @@ class _ListCallcards extends State<ListCallcards> {
         Padding(
             padding: EdgeInsets.only(right: 10),
             child: Text(
-              user.userid,
+              user.userId,
               style: TextStyle(fontFamily: "Raleway"),
             )),
         Container(

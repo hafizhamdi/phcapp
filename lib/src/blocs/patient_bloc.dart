@@ -229,7 +229,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
   Stream<PatientState> _addPatientToState(AddPatient event) async* {
     Patient patient = new Patient(
         patientInformation: event.patient.patientInformation,
-        cpr: event.patient.cpr,
+        // cpr: event.patient.cpr,
         vitalSigns: event.patient.vitalSigns);
 
     final currentState = state;
@@ -259,7 +259,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
         data.patientInformation.name == event.patient.patientInformation.name);
 
     foundPatient.patientInformation = event.patient.patientInformation;
-    foundPatient.cpr = event.patient.cpr;
+    // foundPatient.cpr = event.patient.cpr;
     foundPatient.vitalSigns = event.patient.vitalSigns;
 
     // Patient patient = new Patient(

@@ -92,8 +92,8 @@ class _Information extends State<PatientInformationScreen>
     patientBloc = BlocProvider.of<PatientBloc>(context);
 
     patProvider.setName = widget.patient_information.name;
-    patProvider.setId = widget.patient_information.id_no;
-    patProvider.setIdType = widget.patient_information.id_type;
+    patProvider.setId = widget.patient_information.idNo;
+    patProvider.setIdType = widget.patient_information.idType;
     patProvider.setAge = widget.patient_information.age;
     patProvider.setDob = convertDOBtoStandard(widget.patient_information.dob);
     patProvider.setGender = widget.patient_information.gender;

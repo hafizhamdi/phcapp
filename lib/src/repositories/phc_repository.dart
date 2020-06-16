@@ -7,7 +7,7 @@ class PhcRepository {
 
   PhcRepository({@required this.phcApiClient}) : assert(phcApiClient != null);
 
-  Future<Phc> getPhc() async {
+  Future getPhc() async {
     return phcApiClient.fetchPhc();
   }
 
