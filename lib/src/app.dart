@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
+import 'package:phcapp/src/blocs/setting_bloc.dart';
 // import 'package:phcapp/src/blocs/cpr_bloc.dart';
 import 'package:phcapp/src/database/phc_dao.dart';
+import 'package:phcapp/src/models/environment_model.dart';
 import 'package:phcapp/src/repositories/repositories.dart';
 import 'package:phcapp/src/ui/list_callcard.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,16 +18,49 @@ import 'package:phcapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
-class App extends StatelessWidget {
-  final PhcRepository phcRepository =
-      PhcRepository(phcApiClient: PhcApiClient(httpClient: http.Client()));
+class App extends StatefulWidget {
+  _App createState() => _App();
+}
 
-  final PhcDaoClient phcDaoClient = new PhcDaoClient(phcDao: new PhcDao());
+class _App extends State<App> {
+  Environment myEnv;
+
+  // PhcRepository phcRepository;
+  // PhcDaoClient phcDaoClient;
+  // SettingBloc settingBloc;
+
+  @override
+  void didChangeDependencies() {
+    myEnv =
+        new Environment(id: "dev", name: "Development", ip: "202.171.33.109");
+
+    super.didChangeDependencies();
+  }
+
+//   @override
+// void dispose() {
+
+//   sett
+//     super.dispose();
+//   }
   // final phcDao = new PhcDao();
 
   @override
   build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final settingBloc = BlocProvider.of<SettingBloc>(context);
+    final phcRepository = PhcRepository(
+      phcApiClient: PhcApiClient(
+          httpClient: http.Client(),
+          environment: settingBloc.state.environment != null
+              ? settingBloc.state.environment
+              : myEnv),
+    );
+
+    // phcRepository = PhcRepository(
+    final phcDaoClient = new PhcDaoClient(
+      phcDao: new PhcDao(),
+    );
 
     return MultiBlocProvider(
         // BlocProvider(

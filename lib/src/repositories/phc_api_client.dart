@@ -2,15 +2,20 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
+import 'package:phcapp/src/models/environment_model.dart';
 import 'package:phcapp/src/models/phc.dart';
 
 class PhcApiClient {
-  static const baseUrl = "http://202.171.33.109/phc-mobile/api/v1";
   final http.Client httpClient;
+  final Environment environment;
+  String baseUrl = "";
 
-  PhcApiClient({@required this.httpClient}) : assert(httpClient != null);
+  PhcApiClient({@required this.httpClient, this.environment})
+      : assert(httpClient != null);
 
   Future fetchPhc() async {
+    var ip = environment.ip;
+    baseUrl = "http://$ip/phc-mobile/api/v1";
     final phcUrl = '$baseUrl/callcards';
     final phcResponse = await this.httpClient.get(phcUrl);
 
@@ -30,6 +35,9 @@ class PhcApiClient {
 
   Future postCallcard(Callcard callcard) async {
     assert(callcard != null);
+
+    var ip = environment.ip;
+    baseUrl = "http://$ip/phc-mobile/api/v1";
 
     print("post callcard masuk");
     print(jsonEncode(callcard.callInformation));
@@ -68,6 +76,9 @@ class PhcApiClient {
   }
 
   Future fetchAvailableStaffs() async {
+    var ip = environment.ip;
+    baseUrl = "http://$ip/phc-mobile/api/v1";
+
     final phcUrl = '$baseUrl/available_staffs';
     final phcResponse = await this.httpClient.get(phcUrl);
 

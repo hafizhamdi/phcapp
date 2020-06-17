@@ -30,10 +30,11 @@ final darkTheme = ThemeData(
 
 final lightTheme = ThemeData(
   primarySwatch: Colors.grey,
-  primaryColor: Colors.purple,
+  // primaryColor: Colors.purple,
+  primaryColor: Color(0xFF11249F),
   brightness: Brightness.light,
-  backgroundColor: Colors.purple, //Color(0xFFE5E5E5),
-  accentColor: Colors.pink,
+  backgroundColor: Color(0xFFE5E5E5),
+  accentColor: Colors.blueAccent,
 
   // cardColor: Colors.purple[200],
   accentIconTheme: IconThemeData(color: Colors.white),

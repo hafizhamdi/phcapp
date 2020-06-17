@@ -193,21 +193,26 @@ class _ListCallcards extends State<ListCallcards> {
     // return SliverList(
     //   delegate: SliverChildBuilderDelegate(
     // (_, index) {
-    return ListView.separated(
+    return ListView.builder(
       itemCount: phc.callcards.length,
-      separatorBuilder: (context, index) => Divider(
-        color: Colors.grey,
-      ),
+      // separatorBuilder: (context, index) => Divider(
+      //   color: Colors.grey,
+      // ),
       itemBuilder: (BuildContext context, int index) {
         final callInfo = phc.callcards[index].callInformation;
 
         return ListTile(
+          contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
                   child: Text(
                 callInfo.callcard_no,
+                style: TextStyle(
+                    fontFamily: "OpenSans",
+                    letterSpacing: 1,
+                    fontWeight: FontWeight.bold),
               )),
               Text(
                 DateFormat("d MMM yyyy, hh:mm aaa")
@@ -226,21 +231,28 @@ class _ListCallcards extends State<ListCallcards> {
                     child: Icon(
                       Icons.person,
                       size: 16,
+                      color: Colors.grey,
                     )),
                 Text(phc.callcards[index].patients.length.toString() +
-                    ' Patients'),
+                    ' Patient'),
+                SizedBox(
+                  width: 20,
+                ),
                 Padding(
                     padding: EdgeInsets.only(right: 6),
                     child: Icon(
-                      Icons.person,
+                      Icons.group,
+                      color: Colors.grey,
                       size: 16,
                     )),
                 Text(
                     phc.callcards[index].responseTeam.staffs.length.toString() +
-                        ' Teams')
+                        ' Team')
               ])
             ]),
             Container(
+                width: 100,
+                alignment: Alignment.center,
                 padding: EdgeInsets.all(5),
                 decoration: new BoxDecoration(
                     // color: Colo,
@@ -250,14 +262,15 @@ class _ListCallcards extends State<ListCallcards> {
                     Text((callInfo.plate_no != null) ? callInfo.plate_no : ""))
           ]),
           leading: Container(
-              // alignment: Alignment.centerLeft,
-              width: 60,
-              height: 60,
-              decoration: new BoxDecoration(
-                color: Colors.pinkAccent,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.headset_mic)),
+            // alignment: Alignment.centerLeft,
+            width: 60,
+            height: 60,
+            decoration: new BoxDecoration(
+              color: Colors.grey,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.headset, color: Colors.white),
+          ),
           // trailing: Icon(Icons.arrow_forward_ios),
           onTap: () {
             Navigator.push(
@@ -312,7 +325,7 @@ class _ListCallcards extends State<ListCallcards> {
     return PopupMenuButton<WhatTodo>(
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Padding(
-            padding: EdgeInsets.only(right: 10),
+            padding: EdgeInsets.only(right: 20),
             child: Text(
               user.userId,
               style: TextStyle(fontFamily: "Raleway"),
@@ -325,7 +338,10 @@ class _ListCallcards extends State<ListCallcards> {
               color: Colors.pinkAccent,
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.person))
+            child: Icon(Icons.person)),
+        SizedBox(
+          width: 10,
+        )
       ]),
       onSelected: (WhatTodo result) {
         if (result == WhatTodo.logout) {
