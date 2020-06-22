@@ -18,8 +18,8 @@ import '../../models/phc.dart';
 // import 'package:phcapp/src/tab_screens/patient_screens/main.dart';
 
 const _otherServices = [
-  "Civil defence",
-  "Fire rescue",
+  "APM",
+  "EMRS",
   "Red cresent",
   "St. John ambulance",
   "Private",
