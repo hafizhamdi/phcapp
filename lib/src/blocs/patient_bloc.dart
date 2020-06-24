@@ -230,13 +230,19 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     Patient patient = new Patient(
         patientInformation: event.patient.patientInformation,
         // cpr: event.patient.cpr,
-        vitalSigns: event.patient.vitalSigns);
+        vitalSigns: event.patient.vitalSigns,
+        patientAssessment: event.patient.patientAssessment,
+        intervention: event.patient.intervention,
+        traumaAssessment: event.patient.traumaAssessment,
+        medicationAssessment: event.patient.medicationAssessment,
+        incidentReporting: event.patient.incidentReporting,
+        outcome: event.patient.outcome);
 
     final currentState = state;
     // print(blocPatients.length);
 
     print("ADDD PATIENT");
-    // print(patient.toJson());
+    print(patient.toJson());
     final newList = List<Patient>.from(
         currentState.patients != null ? currentState.patients : [])
       ..add(patient);

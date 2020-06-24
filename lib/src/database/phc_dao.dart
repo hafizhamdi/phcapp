@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:phcapp/src/database/app_database.dart';
+import 'package:phcapp/src/models/environment_model.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/models/history.dart';
 import 'package:sembast/sembast.dart';
@@ -9,12 +10,63 @@ import 'package:sembast/utils/value_utils.dart';
 class PhcDao {
   static const String PHC_STORE_NAME = "phcStore";
   static const String HISTORY_STORE_NAME = "historyStore";
+  static const String SETTING_STORE_NAME = "settingStore";
 
   final _phcStore = intMapStoreFactory.store(PHC_STORE_NAME);
   final _historyStore = intMapStoreFactory.store(HISTORY_STORE_NAME);
+  final _settingStore = stringMapStoreFactory.store(SETTING_STORE_NAME);
+  final _staffStore = stringMapStoreFactory.store("staffsStore");
+  var store = StoreRef.main();
   int key;
 
   Future<Database> get _db async => await AppDatabase.instance.database;
+
+  Future updateStaffs(staffs) async {
+    print(staffs);
+    // print("update staffs sembast..");
+    await _staffStore
+        .record("staffs")
+        .put(await _db, {"staffs": jsonEncode(staffs)});
+    print("update done..");
+    // return null;
+  }
+
+  Future getStaffs() async {
+    final result = await _staffStore.record('staffs').getSnapshot(await _db);
+    print("IN GETSTAFF");
+    final staffs = jsonDecode(result.value["staffs"]);
+    print(staffs);
+    print(staffs.length);
+    final newStaffs = List<dynamic>.from(staffs).map((f) {
+      // print('inmapped');
+      // print(f);
+      return Staff.fromJson(f);
+      // Staff.fromJson(f.toJson());
+    }).toList();
+
+    return newStaffs;
+
+    // return staffs;
+    // return List<Staff>.from(staffs).map((f) {
+    //   print(staffs);
+    //   return Staff.fromJson(f.toJson());
+    // }).toList();
+  }
+
+  Future updateSettings(Environment env) async {
+    // _settingStore.records(keys)
+    await _settingStore.record('settings').put(await _db, env.toJson());
+
+    // _settingStore.record('key')
+  }
+
+  Future getSettings() async {
+    final result =
+        await _settingStore.record('settings').getSnapshot(await _db);
+    print("IN GETSETTINGS");
+    print(result.value);
+    return Environment.fromJson(result.value);
+  }
 
   Future insert(Phc phc) async {
     print("insert phc");

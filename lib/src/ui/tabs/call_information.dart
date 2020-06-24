@@ -166,10 +166,13 @@ class _CallInfoState extends State<CallInformationScreen>
           callReceived: DateFormat("dd/MM/yyyy HH:mm").format(DateTime.now()));
     }
     return Scaffold(
+      backgroundColor: Colors.grey,
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         // child: Center(
         child: Card(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
           margin: EdgeInsets.all(12.0),
 
           child: Form(
@@ -207,10 +210,10 @@ class _CallInfoState extends State<CallInformationScreen>
                                       )));
                         }),
                   ]),
-                  Container(
-                    height: 1,
-                    color: Colors.grey,
-                  ),
+                  // Container(
+                  //   height: 1,
+                  //   color: Colors.grey,
+                  // ),
                   SizedBox(
                     height: 10,
                   ),
@@ -493,7 +496,11 @@ class MyTextField extends StatelessWidget {
             children: <Widget>[
               Text(
                 labelText,
-                style: TextStyle(fontSize: 16, color: Colors.purple),
+                style: TextStyle(
+                    fontFamily: "OpenSans",
+                    // fontWeight: FontWeight.bold,
+                    // fontSize: 16,
+                    color: Colors.grey),
               ),
               Padding(
                   padding: EdgeInsets.all(10),

@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phcapp/src/database/phc_dao.dart';
 import 'package:phcapp/src/models/environment_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 var environment = [
   new Environment(id: "dev", name: "Development", ip: "202.171.33.109"),
@@ -38,6 +40,15 @@ class ToggleEnvironment extends SettingEvent {
   List get props => [toggleEnv];
 }
 
+class LoadEnvironment extends SettingEvent {
+  // final toggleEnv;
+
+  LoadEnvironment();
+
+  @override
+  List get props => [];
+}
+
 class PressSyncButton extends SettingEvent {
   final lastSynced;
 
@@ -57,6 +68,8 @@ class ToggledEnvironment extends SettingState {
 }
 
 class EmptySync extends SettingState {}
+
+class EmptySetting extends SettingState {}
 
 class LastSynced extends SettingState {
   final lastSynced;
@@ -79,12 +92,19 @@ class LoadedSetting extends SettingState {
 }
 
 class SettingBloc extends Bloc<SettingEvent, SettingState> {
+  final PhcDao phcDao;
+  SharedPreferences prefs;
+
+  SettingBloc({this.phcDao});
+
   @override
-  SettingState get initialState => EmptySync();
+  SettingState get initialState => EmptySetting();
 
   @override
   Stream<SettingState> mapEventToState(SettingEvent event) async* {
-    if (event is ToggleEnvironment) {
+    if (event is LoadEnvironment) {
+      yield* mapLoadEnvironment(event);
+    } else if (event is ToggleEnvironment) {
       yield* mapToggleEnvironment(event);
     } else if (event is PressSyncButton) {
       yield* mapPressSyncButton(event);
@@ -94,7 +114,14 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
   Stream<SettingState> mapToggleEnvironment(ToggleEnvironment event) async* {
     var selectedEnv = environment.firstWhere((f) => f.id == event.toggleEnv);
 
-    print(selectedEnv.name);
+    // prefs = await SharedPreferences.getInstance();
+
+    final updateSetting = await phcDao.updateSettings(selectedEnv);
+    // print(updateSetting);
+
+    // await prefs.setString('env_use', event.toggleEnv);
+
+    // print(selectedEnv.name);
     yield LoadedSetting(
         lastSynced: state.lastSynced,
         toggleEnv: event.toggleEnv,
@@ -108,5 +135,18 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         toggleEnv: state.toggleEnv,
         lastSynced: event.lastSynced,
         environment: state.environment);
+  }
+
+  Stream<SettingState> mapLoadEnvironment(LoadEnvironment event) async* {
+    final environment = await phcDao.getSettings();
+    print("in maploadenvironment");
+    print(environment.toJson());
+
+    // print(environment.toJson());
+    // yield LastSynced(lastSynced: event.lastSynced);
+    yield LoadedSetting(
+        toggleEnv: environment.id,
+        lastSynced: event.lastSynced,
+        environment: environment);
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
+import 'package:phcapp/src/database/phc_dao.dart';
 import 'package:phcapp/src/models/phc.dart';
 
 abstract class AuthEvent extends Equatable {
@@ -58,7 +59,9 @@ class AuthLoading extends AuthState {}
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final phcRepository;
-  AuthBloc({this.phcRepository});
+  PhcDao phcDao;
+
+  AuthBloc({this.phcRepository, this.phcDao});
   List<Staff> fetchStaffs = new List<Staff>();
   Staff _user;
 
@@ -81,24 +84,43 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         final staffs = await phcRepository.getAvailableStaffs();
 
-        fetchStaffs = List<Staff>.from(
+        final tmpfetchStaffs = List<Staff>.from(
             staffs["available_staffs"].map((x) => Staff.fromJson(x)));
-        yield AuthInitialized(staffs: fetchStaffs);
+
+        // print(fetchStaffs);
+        print("phcDao");
+        print(phcDao);
+        if (phcDao == null) {
+          phcDao = new PhcDao();
+          final insert = await phcDao.updateStaffs(tmpfetchStaffs);
+        }
+        // print(insert);
+        print("insert ok!");
+        yield AuthInitialized(staffs: tmpfetchStaffs);
       } catch (_) {
         yield AuthUnitialized();
       }
+      // yield AuthUnitialized();
     } else if (event is LoggedIn) {
       yield AuthLoading();
 
-      final currentState = state;
-      print(currentState);
-      print(fetchStaffs);
+      final staffs = await phcDao.getStaffs();
+
+      fetchStaffs = staffs;
+      // print(staffs);
+
+      // print("LOGGEDIN");
+      // final currentState = state;
+      // print(currentState);
+      // print(fetchStaffs);
       final foundUser = fetchStaffs.firstWhere(
-          (data) => data.userId.toLowerCase() == event.username.toLowerCase());
+          (data) => data.userId.toLowerCase() == event.username.toLowerCase(),
+          orElse: () => null);
 
       if (foundUser != null) {
         print("user found not null");
         print(foundUser.toJson());
+        print(foundUser.userId);
         print(foundUser.password);
         final String md5 = generateMd5(event.password);
         print(md5);

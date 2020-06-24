@@ -109,13 +109,15 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
   Stream<StaffState> _mapFetchStaffToState(FetchStaff event) async* {
     yield StaffFetching();
     try {
-      final staffs = await phcRepository.getAvailableStaffs();
+      final staffs = await phcDao.getStaffs();
+
+      // fetchStaffs = staffs;
+
+      // final staffs = await phcRepository.getAvailableStaffs();
 
       print(staffs);
       // print(newList);
-      yield StaffFetched(
-          available_staffs: List<Staff>.from(
-              staffs["available_staffs"].map((x) => Staff.fromJson(x))));
+      yield StaffFetched(available_staffs: staffs);
     } catch (_) {
       yield StaffFetchingError();
     }

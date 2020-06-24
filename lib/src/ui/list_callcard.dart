@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
+import 'package:phcapp/src/blocs/setting_bloc.dart';
 import 'package:phcapp/src/database/phc_dao.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/repositories/phc_dao_client.dart';
@@ -32,18 +33,25 @@ class _ListCallcards extends State<ListCallcards> {
   PhcBloc phcBloc;
   LoginBloc loginBloc;
   AuthBloc authBloc;
+  SettingBloc settingBloc;
 
-  final PhcRepository phcRepository =
-      PhcRepository(phcApiClient: PhcApiClient(httpClient: http.Client()));
-
-  final PhcDaoClient phcDaoClient = new PhcDaoClient(phcDao: new PhcDao());
+  PhcRepository phcRepository;
+  PhcDaoClient phcDaoClient;
   // PhcDao phcDao;
 
   @override
   void didChangeDependencies() {
-    phcBloc = BlocProvider.of<PhcBloc>(context);
+    // phcBloc = BlocProvider.of<PhcBloc>(context);
     loginBloc = BlocProvider.of<LoginBloc>(context);
     authBloc = BlocProvider.of<AuthBloc>(context);
+    settingBloc = BlocProvider.of<SettingBloc>(context);
+
+    phcRepository = PhcRepository(
+        phcApiClient: PhcApiClient(
+            httpClient: http.Client(),
+            environment: settingBloc.state.environment));
+
+    phcDaoClient = new PhcDaoClient(phcDao: new PhcDao());
     super.didChangeDependencies();
   }
 
@@ -139,51 +147,59 @@ class _ListCallcards extends State<ListCallcards> {
         ],
       ),
       body: Center(
-        child: BlocConsumer<PhcBloc, PhcState>(
-          listener: (context, state) {
-            _refreshCompleter?.complete();
-            _refreshCompleter = Completer();
-          },
-          builder: (context, state) {
-            if (state is PhcEmpty) {
-              phcBloc.add(FetchPhc());
-            } else if (state is PhcLoaded) {
-              print("Phc loaded");
-              final phc = state.phc;
+        child: BlocProvider(
+          create: (context) => PhcBloc(
+              phcRepository: phcRepository, phcDao: phcDaoClient.phcDao),
+          child: BlocConsumer<PhcBloc, PhcState>(
+            listener: (context, state) {
+              _refreshCompleter?.complete();
+              _refreshCompleter = Completer();
+            },
+            builder: (context, state) {
+              phcBloc = BlocProvider.of<PhcBloc>(context);
 
-              return RefreshIndicator(
-                  onRefresh: () {
-                    BlocProvider.of<PhcBloc>(context).add(
-                      RefreshPhc(),
+              if (state is PhcEmpty) {
+                state.props.add(FetchPhc());
+
+                phcBloc.add(FetchPhc());
+              } else if (state is PhcLoaded) {
+                print("Phc loaded");
+                final phc = state.phc;
+
+                return RefreshIndicator(
+                    onRefresh: () {
+                      BlocProvider.of<PhcBloc>(context).add(
+                        RefreshPhc(),
+                      );
+                      return _refreshCompleter.future;
+                    },
+                    child: _buildList(phc)
+                    // ListView.builder(
+                    //     itemCount: phc.callcards.length,
+                    //     itemBuilder: (context, index) {
+                    //       final callInfo = phc.callcards[index].call_information;
+                    //       return ListTile(
+                    //         title: Text(callInfo.callcard_no),
+                    //         subtitle: Text(callInfo.callReceived != null
+                    //             ? callInfo.callReceived.substring(
+                    //                 0, callInfo.call_received.length - 2)
+                    //             : callInfo.callReceived),
+                    //       );
+                    //     })
+
                     );
-                    return _refreshCompleter.future;
-                  },
-                  child: _buildList(phc)
-                  // ListView.builder(
-                  //     itemCount: phc.callcards.length,
-                  //     itemBuilder: (context, index) {
-                  //       final callInfo = phc.callcards[index].call_information;
-                  //       return ListTile(
-                  //         title: Text(callInfo.callcard_no),
-                  //         subtitle: Text(callInfo.callReceived != null
-                  //             ? callInfo.callReceived.substring(
-                  //                 0, callInfo.call_received.length - 2)
-                  //             : callInfo.callReceived),
-                  //       );
-                  //     })
+              } else if (state is PhcFetched) {
+                final phc = state.phc;
+                print("Phc fetched");
 
-                  );
-            } else if (state is PhcFetched) {
-              final phc = state.phc;
-              print("Phc fetched");
-
-              phcBloc.add(AddPhc(phc: phc));
-              print("after loadphc");
-            }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+                phcBloc.add(AddPhc(phc: phc));
+                print("after loadphc");
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -193,11 +209,11 @@ class _ListCallcards extends State<ListCallcards> {
     // return SliverList(
     //   delegate: SliverChildBuilderDelegate(
     // (_, index) {
-    return ListView.builder(
+    return ListView.separated(
       itemCount: phc.callcards.length,
-      // separatorBuilder: (context, index) => Divider(
-      //   color: Colors.grey,
-      // ),
+      separatorBuilder: (context, index) => Divider(
+        color: Colors.grey,
+      ),
       itemBuilder: (BuildContext context, int index) {
         final callInfo = phc.callcards[index].callInformation;
 
@@ -307,6 +323,7 @@ class _ListCallcards extends State<ListCallcards> {
                     response_team: phc.callcards[index].responseTeam,
                     response_time: phc.callcards[index].responseTime,
                     patients: phc.callcards[index].patients,
+                    scene_assessment: phc.callcards[index].sceneAssessment,
                     // phcDao: widget.phcDao,
                   );
                 },

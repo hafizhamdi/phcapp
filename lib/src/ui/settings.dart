@@ -2,22 +2,37 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/blocs/setting_bloc.dart';
+import 'package:phcapp/src/repositories/phc_repository.dart';
+import 'package:phcapp/src/repositories/repositories.dart';
 import 'package:phcapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
+
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatefulWidget {
   _Settings createState() => _Settings();
 }
 
 class _Settings extends State<Settings> {
-  bool _devSelect = true;
+  bool _devSelect = false;
   bool _uatSelect = false;
   SettingBloc settingBloc;
+  // AuthBloc authBloc;
 
   @override
   void didChangeDependencies() {
     settingBloc = BlocProvider.of<SettingBloc>(context);
+    // authBloc = BlocProvider.of<AuthBloc>(context);
+
+    setState(() {
+      if (settingBloc.state.environment != null) {
+        _devSelect = settingBloc.state.environment.id == "dev" ?? false;
+        _uatSelect = settingBloc.state.environment.id == "uat" ?? false;
+      }
+    });
 
     super.didChangeDependencies();
   }
@@ -32,9 +47,9 @@ class _Settings extends State<Settings> {
             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
             child: ListView(
               children: <Widget>[
-                Text(settingBloc.state.toggleEnv != null
-                    ? "DATA:" + settingBloc.state.toggleEnv
-                    : ""),
+                // Text(settingBloc.state.toggleEnv != null
+                //     ? "DATA:" + settingBloc.state.toggleEnv
+                //     : ""),
                 Text(
                   "Environment setting",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -65,12 +80,15 @@ class _Settings extends State<Settings> {
                     icon: Icons.brightness_4,
                     child: toggleButton(context)),
                 MyBuildList(
-                    title: "App version", icon: Icons.info, child: appChild()),
+                  title: "App version",
+                  icon: Icons.info,
+                  child: appChild(),
+                ),
               ],
             )));
   }
 
-  appChild() => Text("1.6.06.20");
+  appChild() => Text("1.8.06.20");
 
   toggleButton(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -106,6 +124,9 @@ class _Settings extends State<Settings> {
             _devSelect = !val;
             _uatSelect = val;
           });
+
+          settingBloc
+              .add(ToggleEnvironment(toggleEnv: _uatSelect ? "uat" : "dev"));
         });
   }
 
@@ -115,6 +136,21 @@ class _Settings extends State<Settings> {
       child: Text("Sync Now"),
       onPressed: () {
         var date = DateFormat("HH:mm:ss aaa").format(DateTime.now());
+
+        // PhcRepository phcRepository = PhcRepository(
+        //     phcApiClient: PhcApiClient(
+        //         httpClient: http.Client(),
+        //         environment: settingBloc.state.environment ?? myEnv)
+        //     // settingBloc.state.environment != null
+        new AuthBloc(
+          phcRepository: PhcRepository(
+            phcApiClient: PhcApiClient(
+                httpClient: http.Client(),
+                environment: settingBloc.state.environment),
+          ),
+        )..add(AppStarted());
+
+        // authBloc.add(AppStarted());
         setState(() {
           settingBloc.add(PressSyncButton(lastSynced: "Last sync at $date"));
         });

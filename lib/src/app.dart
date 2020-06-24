@@ -4,6 +4,7 @@ import 'package:phcapp/src/blocs/setting_bloc.dart';
 // import 'package:phcapp/src/blocs/cpr_bloc.dart';
 import 'package:phcapp/src/database/phc_dao.dart';
 import 'package:phcapp/src/models/environment_model.dart';
+import 'package:phcapp/src/providers/cpr_provider.dart';
 import 'package:phcapp/src/repositories/repositories.dart';
 import 'package:phcapp/src/ui/list_callcard.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,22 +18,57 @@ import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/trauma_bloc.dart';
 import 'package:phcapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class App extends StatefulWidget {
+  final environment;
+
+  App({this.environment});
   _App createState() => _App();
 }
 
 class _App extends State<App> {
   Environment myEnv;
 
-  // PhcRepository phcRepository;
-  // PhcDaoClient phcDaoClient;
-  // SettingBloc settingBloc;
+  ThemeProvider themeProvider;
+  PhcRepository phcRepository;
+  PhcDaoClient phcDaoClient;
+  SettingBloc settingBloc;
+
+  @override
+  void initState() {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    myEnv =
+        new Environment(id: "dev", name: "Development", ip: "202.171.33.109");
+    // bool CheckValue = prefs.containsKey('myenv');
+
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
-    myEnv =
-        new Environment(id: "dev", name: "Development", ip: "202.171.33.109");
+    settingBloc = BlocProvider.of<SettingBloc>(context);
+
+    // settingBloc.add(LoadEnvironment());
+    themeProvider = Provider.of<ThemeProvider>(context);
+
+    print("SEtting State environment");
+    print(settingBloc.state.environment);
+    phcRepository = PhcRepository(
+        phcApiClient: PhcApiClient(
+      httpClient: http.Client(),
+      // environment: settingBloc.state.environment ?? myEnv
+    )
+        // settingBloc.state.environment != null
+        //     ? settingBloc.state.environment
+        //     : myEnv),
+        );
+
+    // phcRepository = PhcRepository(
+    phcDaoClient = new PhcDaoClient(
+      phcDao: new PhcDao(),
+    );
 
     super.didChangeDependencies();
   }
@@ -45,105 +81,129 @@ class _App extends State<App> {
 //   }
   // final phcDao = new PhcDao();
 
+  showUnauthorized() => showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Login failed"),
+          content:
+              Text("You're not authorized. Please contact IT administrator"),
+        );
+      });
+
   @override
   build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final settingBloc = BlocProvider.of<SettingBloc>(context);
-    final phcRepository = PhcRepository(
-      phcApiClient: PhcApiClient(
-          httpClient: http.Client(),
-          environment: settingBloc.state.environment != null
-              ? settingBloc.state.environment
-              : myEnv),
-    );
-
-    // phcRepository = PhcRepository(
-    final phcDaoClient = new PhcDaoClient(
-      phcDao: new PhcDao(),
-    );
-
+    print("BUILD APP START");
     return MultiBlocProvider(
-        // BlocProvider(
-        providers: [
-          BlocProvider(
-              create: (context) => PhcBloc(
-                  phcRepository: phcRepository, phcDao: phcDaoClient.phcDao)),
-          BlocProvider<AuthBloc>(create: (context) {
-            return AuthBloc(phcRepository: phcRepository)..add(AppStarted());
-          }),
-          BlocProvider(
-              create: (context) =>
-                  LoginBloc(authBloc: BlocProvider.of<AuthBloc>(context))),
-          BlocProvider(
-            create: (context) => CallInfoBloc(),
-          ),
-          BlocProvider(
-              create: (context) => TeamBloc(phcDao: phcDaoClient.phcDao)),
-          BlocProvider(
-              create: (context) => StaffBloc(
-                  phcRepository: phcRepository, phcDao: phcDaoClient.phcDao)),
-          BlocProvider(
-              create: (context) => TimeBloc(phcDao: phcDaoClient.phcDao)),
-          BlocProvider(
-              create: (context) => PatientBloc(phcDao: phcDaoClient.phcDao)),
-          BlocProvider(
-              create: (context) => VitalBloc(phcDao: phcDaoClient.phcDao)),
-          BlocProvider(
-              create: (context) => HistoryBloc(
-                    phcDao: phcDaoClient.phcDao,
-                  )),
-          BlocProvider(
-              create: (context) => CallCardTabBloc(
+      // BlocProvider(
+      providers: [
+        BlocProvider(
+            create: (context) => PhcBloc(
+                phcRepository: new PhcRepository(
+                    phcApiClient: new PhcApiClient(
+                        httpClient: http.Client(),
+                        environment: settingBloc.state.environment)),
+                phcDao: phcDaoClient.phcDao)),
+        BlocProvider(create: (context) {
+          return AuthBloc(
+              phcRepository: phcRepository,
+              phcDao: phcDaoClient.phcDao); //..add(AppStarted());
+        }),
+        BlocProvider(
+            create: (context) =>
+                LoginBloc(authBloc: BlocProvider.of<AuthBloc>(context))),
+        BlocProvider(
+          create: (context) => CallInfoBloc(),
+        ),
+        BlocProvider(
+            create: (context) => TeamBloc(phcDao: phcDaoClient.phcDao)),
+        BlocProvider(
+            create: (context) => StaffBloc(
+                phcRepository: new PhcRepository(
+                    phcApiClient: new PhcApiClient(
+                        httpClient: http.Client(),
+                        environment: settingBloc.state.environment)),
+                phcDao: phcDaoClient.phcDao)),
+        BlocProvider(
+            create: (context) => TimeBloc(phcDao: phcDaoClient.phcDao)),
+        BlocProvider(
+            create: (context) => PatientBloc(phcDao: phcDaoClient.phcDao)),
+        BlocProvider(
+            create: (context) => VitalBloc(phcDao: phcDaoClient.phcDao)),
+        BlocProvider(
+            create: (context) => HistoryBloc(
                   phcDao: phcDaoClient.phcDao,
-                  phcRepository: phcRepository,
-                  historyBloc: BlocProvider.of<HistoryBloc>(context))),
-          BlocProvider(create: (context) => InterBloc()),
-          BlocProvider(
-            create: (context) => CprBloc(),
-          ),
-          BlocProvider(
-            create: (context) => ResponseBloc(),
-          ),
-          BlocProvider(
-            create: (context) => SceneBloc(),
-          ),
-          BlocProvider(
-            create: (context) => TraumaBloc(),
-          ),
-          BlocProvider(
-            create: (context) => AssPatientBloc(),
-          ),
-          BlocProvider(
-            create: (context) => MedicationBloc(),
-          ),
-          BlocProvider(
-            create: (context) => ReportingBloc(),
-          ),
-          BlocProvider(
-            create: (context) => OutcomeBloc(),
-          ),
-        ],
+                )),
+        BlocProvider(
+            create: (context) => CallCardTabBloc(
+                phcDao: phcDaoClient.phcDao,
+                // phcRepository: phcRepository,
+                // phcDao: ,
+                phcRepository: PhcRepository(
+                    phcApiClient: new PhcApiClient(
+                        httpClient: http.Client(),
+                        environment: settingBloc.state.environment)),
+                historyBloc: BlocProvider.of<HistoryBloc>(context))),
+        BlocProvider(create: (context) => InterBloc()),
+        BlocProvider(
+          create: (context) => CprBloc(),
+        ),
+        BlocProvider(
+          create: (context) => ResponseBloc(),
+        ),
+        BlocProvider(
+          create: (context) => SceneBloc(),
+        ),
+        BlocProvider(
+          create: (context) => TraumaBloc(),
+        ),
+        BlocProvider(
+          create: (context) => AssPatientBloc(),
+        ),
+        BlocProvider(
+          create: (context) => MedicationBloc(),
+        ),
+        BlocProvider(
+          create: (context) => ReportingBloc(),
+        ),
+        BlocProvider(
+          create: (context) => OutcomeBloc(),
+        ),
+      ],
+      child: ChangeNotifierProvider(
+        create: (context) => CPRProvider(),
         child: MaterialApp(
-            theme: themeProvider.getThemeData,
-            // home: ListCallcards(phcDao: phcDaoClient.phcDao),
-            home: BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                // if (state is AuthUnitialized) {
+          theme: themeProvider.getThemeData,
+          // home: ListCallcards(phcDao: phcDaoClient.phcDao),
+          home: BlocBuilder<AuthBloc, AuthState>(
+            // listener: (context, state) {
+            //   if (state is AuthUnaunthenticated) {
+            //     showUnauthorized();
+            //   }
+            // },
+            builder: (context, state) {
+              // if (state is AuthUnitialized) {
 
-                if (state is AuthAunthenticated) {
-                  return ListCallcards();
-                } else if (state is AuthInitialized) {
-                  return LoginScreen();
-                } else if (state is AuthUnaunthenticated) {
-                  return LoginScreen();
-                }
-                //  else if (state is AuthLoading) {
-                //   return Center(
-                //     child: CircularProgressIndicator(),
-                //   );
-                // }
-                return Scaffold(
-                  body: Container(
+              if (state is AuthAunthenticated) {
+                return ListCallcards();
+              } else if (state is AuthInitialized) {
+                return LoginScreen();
+              } else if (state is AuthUnitialized) {
+                return LoginScreen();
+              } else if (state is AuthUnaunthenticated) {
+                // showUnauthorized();
+                return LoginScreen();
+              }
+              //  else if (state is AuthLoading) {
+              //   return Center(
+              //     child: CircularProgressIndicator(),
+              //   );
+              // }
+              return Scaffold(
+                body: SingleChildScrollView(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
@@ -194,9 +254,13 @@ class _App extends State<App> {
                           ]),
                     ),
                   ),
-                );
-                // return Container();
-              },
-            )));
+                ),
+              );
+              // return Container();
+            },
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -9,8 +9,8 @@ import 'package:phcapp/src/widgets/mycard_single_option.dart';
 
 const _medication = [
   "NaCl 0.9%",
-  "NaCl 0.45%"
-      "D50%",
+  "NaCl 0.45%",
+  "D50%",
   "D10%",
   "Aspirin",
   "GTN",
@@ -39,6 +39,7 @@ class _MedicationScreen extends State<MedicationScreen> {
   final _listKey = GlobalKey<AnimatedListState>();
   var _index = 0;
 
+  TextEditingController otherController = new TextEditingController();
   TextEditingController doseController = new TextEditingController();
   TextEditingController timeController = new TextEditingController();
   List<String> listMedicine;
@@ -47,6 +48,15 @@ class _MedicationScreen extends State<MedicationScreen> {
     setState(() {
       listMedicine = listReturn;
     });
+  }
+
+  @override
+  void dispose() {
+    doseController.dispose();
+    timeController.dispose();
+    otherController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -122,6 +132,14 @@ class _MedicationScreen extends State<MedicationScreen> {
                           Container(
                             width: MediaQuery.of(context).size.width * 0.5,
                             child: TextField(
+                              controller: otherController,
+                              decoration:
+                                  InputDecoration(labelText: "Other medicine"),
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            child: TextField(
                               controller: doseController,
                               decoration: InputDecoration(labelText: "Dose"),
                             ),
@@ -159,13 +177,18 @@ class _MedicationScreen extends State<MedicationScreen> {
                                       index: _index,
                                       name: listMedicine.length > 0
                                           ? listMedicine[0]
-                                          : "",
+                                          : otherController.text,
                                       timestamp: timeController.text,
                                       dose: doseController.text),
                                 );
                                 _listKey.currentState.insertItem(_index);
                                 _index++;
                                 // _items.length
+
+                                setState(() {
+                                  listMedicine = new List<String>();
+                                  otherController.text = "";
+                                });
                                 Navigator.pop(context);
                               },
                             ),

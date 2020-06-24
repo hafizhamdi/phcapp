@@ -32,17 +32,19 @@ class CallcardTabs extends StatefulWidget {
   final CallInformation call_information;
   final ResponseTeam response_team;
   final ResponseTime response_time;
+  final SceneAssessment scene_assessment;
   final List<Patient> patients;
   // final PhcDao phcDao;
 
-  CallcardTabs({
-    this.callcard_no,
-    this.call_information,
-    this.response_team,
-    this.response_time,
-    this.patients,
-    // this.phcDao
-  });
+  CallcardTabs(
+      {this.callcard_no,
+      this.call_information,
+      this.response_team,
+      this.response_time,
+      this.patients,
+      this.scene_assessment
+      // this.phcDao
+      });
 
   _CallcardTabs createState() => _CallcardTabs();
 }
@@ -214,6 +216,7 @@ class _CallcardTabs extends State<CallcardTabs> {
                 return Scaffold(
                   // backgroundColor: Colors.white,
                   appBar: AppBar(
+                    automaticallyImplyLeading: false,
                     // shape: ShapeBorder(BorderRadius.only(topLeft:Radius.circular(2.0))),
                     // backgroundColor: Colors.white,
                     bottom: TabBar(
@@ -258,82 +261,123 @@ class _CallcardTabs extends State<CallcardTabs> {
                     actions: <Widget>[
                       Container(
                         alignment: Alignment.center,
-                        margin: EdgeInsets.all(10),
+                        margin: EdgeInsets.all(5),
                         decoration: BoxDecoration(
                             color: Colors.blue,
                             borderRadius: BorderRadius.circular(40.0)),
-                        padding: EdgeInsets.only(right: 10),
-                        child:
-                            // FlatButton.icon(
+                        // padding: EdgeInsets.only(right: 10),
+                        child: InkWell(
+                          onTap: () {
+                            print("callInfoBloc state push toserver");
 
-                            // )
-                            Row(
-                          children: <Widget>[
-                            IconButton(
-                              icon: const Icon(Icons.cloud_upload),
-                              tooltip: "Push to Server",
-                              onPressed: () {
-                                print("callInfoBloc state push toserver");
+                            final call_information =
+                                callInfoBloc.state.callInformation ??
+                                    widget.call_information;
+                            call_information.callReceived =
+                                convertDateToStandard(
+                                    call_information.call_received);
+                            // : convertDateToStandard(
+                            //     widget.call_information.call_received);
 
-                                final call_information =
-                                    callInfoBloc.state.callInformation;
-                                call_information.callReceived =
-                                    convertDateToStandard(callInfoBloc
-                                        .state.callInformation.call_received);
+                            // print(currentState.toJson());
+                            final response_team = new ResponseTeam(
+                                serviceResponse:
+                                    responseBloc.state.serviceResponse,
+                                vehicleRegno: responseBloc.state.vehicleRegNo,
+                                staffs: teamBloc.state.selectedStaffs);
+                            // print(teamState);
 
-                                // print(currentState.toJson());
-                                final response_team = new ResponseTeam(
-                                    serviceResponse:
-                                        responseBloc.state.serviceResponse,
-                                    vehicleRegno:
-                                        responseBloc.state.vehicleRegNo,
-                                    staffs: teamBloc.state.selectedStaffs);
-                                // print(teamState);
+                            final response_time = timeBloc.state.responseTime;
+                            // ??
+                            //     new ResponseTime();
+                            // print(timeState);
 
-                                final response_time =
-                                    timeBloc.state.responseTime;
-                                // print(timeState);
+                            final scene_assessment = new SceneAssessment(
+                                otherServicesAtScene:
+                                    sceneBloc.state.selectedServices);
+                            // print(patientState);
 
-                                final scene_assessment = new SceneAssessment(
-                                    otherServicesAtScene:
-                                        sceneBloc.state.selectedServices);
-                                // print(patientState);
-                                final patientList = patientBloc.state.patients;
+                            final patientList =
+                                patientBloc.state.patients ?? [];
 
-                                // print(patientList.length);
-                                // print(scene_assessment.toJson());
-                                // print(patientList.elementAt(0).patientInformation.idNo);
+                            // print(patientList.length);
+                            // print(scene_assessment.toJson());
+                            // print(patientList.elementAt(0).patientInformation.idNo);
 
-                                // print(patientBloc.sceneAssessment.toJson());
-                                // historyBloc.add(AddHistory(
-                                //     callcard: new Callcard(
-                                //         callInformation: call_information,
-                                //         responseTeam: response_team,
-                                //         responseTime: response_time,
-                                //         patients: List<Patient>(),
-                                //         sceneAssessment: new SceneAssessment())));
+                            // print(patientBloc.sceneAssessment.toJson());
+                            // historyBloc.add(AddHistory(
+                            //     callcard: new Callcard(
+                            //         callInformation: call_information,
+                            //         responseTeam: response_team,
+                            //         responseTime: response_time,
+                            //         patients: List<Patient>(),
+                            //         sceneAssessment: new SceneAssessment())));
 
-                                print("DONE");
+                            print("DONE");
+                            print(call_information);
+                            print(scene_assessment);
+                            print(response_team);
 
-                                tabBloc.add(PublishCallcard(
-                                    callInformation: call_information,
-                                    responseTeam: response_team,
-                                    responseTime: response_time,
-                                    sceneAssessment: scene_assessment,
-                                    patients: patientList
-                                    // responseTeam: response_team,
-                                    // responseTime: response_time,
-                                    // patients: patientList,
-                                    // sceneAssessment:
-                                    //     SceneAssessment(otherServicesAtScene: []
-                                    //     )
-                                    ));
+                            print(response_time);
+                            print(patientList);
+                            if (patientList.length > 0) {
+                              print("PATIENT LIST MORE THAN ONE");
+                              patientList.map((f) {
+                                print("what inside patientlist");
+                                // print((f));
+                                print(f.toJson());
+                              }).toList();
+                            }
+
+                            tabBloc.add(PublishCallcard(
+                              callInformation:
+                                  call_information ?? widget.call_information,
+                              // responseTeam: response_team,
+                              // responseTime: response_time,
+                              sceneAssessment:
+                                  scene_assessment ?? widget.scene_assessment,
+                              // patients: patientList
+                              responseTeam:
+                                  response_team ?? widget.response_team,
+                              responseTime: response_time ??
+                                  widget.response_time ??
+                                  new ResponseTime(),
+                              patients: patientList ?? widget.patients,
+                              // sceneAssessment:
+                              //     SceneAssessment(otherServicesAtScene: []
+                              //     )
+                            ));
+                          },
+                          child:
+                              // )
+                              // FlatButton.icon(
+
+                              // )
+                              Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.all(10),
+                            child:
+
+                                // ,)
+                                Row(
+                              // mainAxisAlignment: MainAxisAlignment.center,
+                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Icons.cloud_upload),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                // ,)
+                                // tooltip: "Push to Server",
+                                // onPressed: () {
                                 // Navigator.push(context,
                                 //     MaterialPageRoute(builder: (context) => History()));
-                              },
+                                // },
+                                // ),
+                                Text("UPLOAD")
+                              ],
                             ),
-                            Text("UPLOAD")
-                          ],
+                          ),
                         ),
                       ),
                     ],

@@ -25,7 +25,9 @@ class MyCardSingleOption extends StatelessWidget {
               padding: EdgeInsets.only(bottom: 20),
               child: Text(
                 name,
-                style: TextStyle(fontSize: 20),
+
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                // style: TextStyle(fontSize: 20),
               ),
             ),
             MySingleOptions(

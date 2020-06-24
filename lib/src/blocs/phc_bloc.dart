@@ -306,6 +306,8 @@ class PhcBloc extends Bloc<PhcEvent, PhcState> {
     } else if (event is AddPhc) {
       final key = await phcDao.insert(event.phc);
       phcDao.setKey(key);
+      print("AddPhc ");
+      print(event.phc.toJson());
       yield* _reloadPhc();
     } else if (event is UpdatePhc) {
       await phcDao.update(event.phc);
@@ -320,8 +322,8 @@ class PhcBloc extends Bloc<PhcEvent, PhcState> {
     // try {
     final phc = await phcRepository.getPhc();
 
-    // final phcInsert = await _phcDao.insert(phc);
-    print("phc fetching");
+    // final phcInsert = await phcDao.insert(phc);
+    // print("phc fetching");
     // print(phcInsert);
 
     // print(phc);
@@ -335,16 +337,27 @@ class PhcBloc extends Bloc<PhcEvent, PhcState> {
   }
 
   Stream<PhcState> _mapRefreshPhcToState(RefreshPhc event) async* {
-    try {
-      final Phc phc = await phcRepository.getPhc();
-      print("refersh");
-      print(phc);
-      yield PhcFetched(phc: phc);
-    } catch (_) {
-      yield PhcFetchingError();
-      // yield state;
-      yield* _reloadPhc();
-    }
+    yield PhcFetching();
+    // try {
+    final phc = await phcRepository.getPhc();
+
+    // final phcInsert = await _phcDao.insert(phc);
+    print("phc refresh");
+    // print(phcInsert);
+
+    // print(phc);
+    // yield* _reloadPhc();
+    yield PhcFetched(phc: Phc.fromJson(phc));
+    // try {
+    //   final Phc phc = await phcRepository.getPhc();
+    //   print("refersh");
+    //   print(phc);
+    //   yield PhcFetched(phc: phc);
+    // } catch (_) {
+    //   yield PhcFetchingError();
+    //   // yield state;
+    //   yield* _reloadPhc();
+    // }
   }
 
   Stream<PhcState> _reloadPhc() async* {

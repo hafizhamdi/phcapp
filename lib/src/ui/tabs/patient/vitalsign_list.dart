@@ -171,70 +171,77 @@ class _VitalSignList extends State<VitalSignList>
           child: Center(
             child: Card(
               margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 70),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                // backgroundColor: Colors.grey[200],
-                // body: ListView(
-                children: <Widget>[
-                  HeaderSection("Vital Signs"),
-                  BlocBuilder<VitalBloc, VitalState>(
-                      // bloc: vitalBloc,
-                      builder: (context, state) {
-                    final currentState = state;
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  // backgroundColor: Colors.grey[200],
+                  // body: ListView(
+                  children: <Widget>[
+                    HeaderSection("Vital Signs"),
+                    BlocBuilder<VitalBloc, VitalState>(
+                        // bloc: vitalBloc,
+                        builder: (context, state) {
+                      final currentState = state;
 
-                    if (state is VitalLoaded) {
-                      return (currentState.listVitals != null)
-                          ? Container(
-                              width: 500,
-                              padding: EdgeInsets.only(bottom: 10),
-                              child: ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                // addRepaintBoundaries: false,
-                                shrinkWrap: true,
-                                // ke: ,
-                                // padding: EdgeInsets.all(30),
-                                itemCount: currentState.listVitals.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return _buildCard(
-                                      currentState.listVitals[index], index);
-                                },
-                              ),
-                            )
-                          : Container();
+                      if (state is VitalLoaded) {
+                        return (currentState.listVitals != null)
+                            ? Container(
+                                width: 500,
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  // addRepaintBoundaries: false,
+                                  shrinkWrap: true,
+                                  // ke: ,
+                                  // padding: EdgeInsets.all(30),
+                                  itemCount: currentState.listVitals.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return _buildCard(
+                                        currentState.listVitals[index], index);
+                                  },
+                                ),
+                              )
+                            : Container();
+                      }
+                      return Center(
+                          child: Container(
+                        child: Text("No Vital signs recorded. Add VITALSIGN"),
+                      ));
+                      //   width: 500,
+                      //   padding: EdgeInsets.only(bottom: 10),
+                      //   child: ListView.builder(
+                      //     physics: NeverScrollableScrollPhysics(),
+                      //     // addRepaintBoundaries: false,
+                      //     shrinkWrap: true,
+                      //     // ke: ,
+                      //     // padding: EdgeInsets.all(30),
+                      //     itemCount: widget.listVitals.length,
+                      //     itemBuilder: (BuildContext context, int index) {
+                      //       return _buildCard(widget.listVitals[index], index);
+                      //     },
+                      //   ),
+                      // );
                     }
-                    return Container();
-                    //   width: 500,
-                    //   padding: EdgeInsets.only(bottom: 10),
-                    //   child: ListView.builder(
-                    //     physics: NeverScrollableScrollPhysics(),
-                    //     // addRepaintBoundaries: false,
-                    //     shrinkWrap: true,
-                    //     // ke: ,
-                    //     // padding: EdgeInsets.all(30),
-                    //     itemCount: widget.listVitals.length,
-                    //     itemBuilder: (BuildContext context, int index) {
-                    //       return _buildCard(widget.listVitals[index], index);
-                    //     },
-                    //   ),
-                    // );
-                  }
-                      // ),),
-                      // }
+                        // ),),
+                        // }
 // },
 
-                      // ) // )));
+                        // ) // )));
 
-                      // }
-                      ),
-                ],
+                        // }
+                        ),
+                  ],
+                ),
               ),
             ),
+            //               ))));
+            // // }
+            // return Container();
+            // }
           ),
-          //               ))));
-          // // }
-          // return Container();
-          // }
         ),
         floatingActionButton: FloatingActionButton.extended(
           heroTag: 200,

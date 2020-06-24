@@ -47,6 +47,8 @@ class MainAssessment extends StatelessWidget {
                         return BuildCard(
                           icon: Icons.accessibility,
                           title: "Patient",
+                          disasterTriage:
+                              state.patientAssessment.disasterTriage,
                           nextRoute: PatientAssessmentScreen(
                             patientAssessment: state.patientAssessment,
                           ),
@@ -144,6 +146,9 @@ class MainAssessment extends StatelessWidget {
                   BuildCard(
                       icon: Icons.note,
                       title: "Outcome",
+                      disasterTriage: outcomeBloc.state.outcome != null
+                          ? outcomeBloc.state.outcome.etdTriage
+                          : null,
                       nextRoute: OutcomeAssessment(
                         outcome: outcomeBloc.state.outcome != null
                             ? outcomeBloc.state.outcome
@@ -167,7 +172,13 @@ class BuildCard extends StatelessWidget {
   final title;
   final nextRoute;
   final timestamp;
-  BuildCard({this.icon, this.title, this.nextRoute, this.timestamp});
+  final disasterTriage;
+  BuildCard(
+      {this.icon,
+      this.title,
+      this.nextRoute,
+      this.timestamp,
+      this.disasterTriage});
 
   generateTime(time) {
     if (time == null) return "No data";
@@ -185,10 +196,14 @@ class BuildCard extends StatelessWidget {
         contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         leading: Icon(
           icon,
-          size: 30,
+          // size: 30,
         ),
-        title: Text(title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         subtitle: Container(
             child: Row(
               children: <Widget>[
@@ -199,15 +214,35 @@ class BuildCard extends StatelessWidget {
                         child: Icon(
                           Icons.access_time,
                           color: Colors.purple,
-                          size: 23,
+                          // size: 23,
                         )),
                     timestamp != null
-                        ? Text("Last changes: " + generateTime(timestamp),
-                            style: TextStyle(fontSize: 16))
+                        ? Text(
+                            generateTime(timestamp),
+                          )
                         : Text(
                             "No data",
-                            style: TextStyle(fontSize: 16),
+                            // style: TextStyle(fontSize: 16),
+                          ),
+                    title == "Patient" || title == "Outcome"
+                        ? Padding(
+                            padding: EdgeInsets.only(left: 15),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.person_pin_circle,
+                                  color: defineColor(disasterTriage),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                title == "Patient"
+                                    ? Text("Disaster Triage")
+                                    : Text("ETD Triage")
+                              ],
+                            ),
                           )
+                        : Container()
                   ]),
                 ),
               ],
@@ -222,5 +257,20 @@ class BuildCard extends StatelessWidget {
         },
       ),
     );
+  }
+
+  defineColor(String color) {
+    if (color != null) {
+      if (color.toLowerCase() == "red")
+        return Colors.red;
+      else if (color.toLowerCase() == "green")
+        return Colors.green;
+      else if (color.toLowerCase() == "yellow")
+        return Colors.yellow;
+      else if (color.toLowerCase() == "white")
+        return Colors.white;
+      else if (color.toLowerCase() == "bid") return Colors.black;
+    } else
+      return Colors.grey;
   }
 }

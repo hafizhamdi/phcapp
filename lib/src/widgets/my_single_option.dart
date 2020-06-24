@@ -38,7 +38,7 @@ class _MySingleOptions extends State<MySingleOptions> {
             child: ChoiceChip(
               label: Text(
                 widget.listDataset[index],
-                style: TextStyle(fontSize: 18),
+                // style: TextStyle(fontSize: 18),
               ),
               selected: listSelected.contains(widget.listDataset[index]),
               onSelected: (bool selected) {

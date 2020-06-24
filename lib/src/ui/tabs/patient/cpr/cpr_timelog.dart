@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phcapp/src/providers/cpr_provider.dart';
+import 'package:phcapp/src/ui/tabs/patient/cpr/cpr_items.dart';
 import 'package:provider/provider.dart';
 
 class CPRTimeLog extends StatefulWidget {
@@ -26,35 +28,121 @@ class _CPRTimeLog extends State<CPRTimeLog>
   //   super.didChangeDependencies();
   // }
 
+  getCounter(string) {
+    if (string != null) {
+      var list = string.split('>');
+      if (list[1] != null) {
+        return int.parse(list[1]);
+      }
+    }
+    return 0;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    // final provider = Provider.of<CPRProvider>(context);
+
+    return Scaffold(
+      body:
+          //     Container(
+          //   child: FlatButton(
+          //     child: Text("NEXT"),
+          //     onPressed: () {
+          //       Navigator.push(
+          //         context,
+          //         CupertinoPageRoute(
+          //             builder: (context) => CPRItems(), maintainState: true),
+          //       );
+          //     },
+          //   ),
+          // )
+
+          Container(
         padding: EdgeInsets.all(10),
         child: Consumer<CPRProvider>(builder: (context, logs, child) {
-          return ListView.builder(
-            itemCount: logs.items.length,
-            itemBuilder: (context, index) {
-              TextEditingController controller =
-                  TextEditingController(text: logs.items[index]);
-              return Container(
-                  child: Row(children: [
-                Expanded(
-                    child: TextField(
-                  controller: controller,
-                  enabled: false,
-                  // enabled: (widget.index != null) ? false : true,
-                )),
-                (widget.index != null)
-                    ? Container()
-                    : IconButton(
-                        onPressed: () {
-                          confirmDeleteLog(context, logs, index);
-                        },
-                        icon: Icon(Icons.delete))
-              ]));
-            },
+          if (logs.items.length > 0) {
+            return ListView.builder(
+              itemCount: logs.items.length,
+              itemBuilder: (context, index) {
+                TextEditingController controller =
+                    TextEditingController(text: logs.items[index]);
+
+                if (!logs.items[index].contains(">")) {
+                  return Container(
+                      child: Row(children: [
+                    Expanded(
+                        child: TextField(
+                      controller: controller,
+                      enabled: false,
+                      // enabled: (widget.index != null) ? false : true,
+                    )),
+                    (widget.index != null)
+                        ? Container()
+                        : IconButton(
+                            onPressed: () {
+                              confirmDeleteLog(context, logs, index);
+                            },
+                            icon: Icon(Icons.delete))
+                  ]));
+                } else {
+                  var counter = getCounter(logs.items[index]);
+
+                  return Container(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.all(10),
+                          alignment: Alignment.center,
+                          width: 60,
+                          height: 60,
+                          decoration: new BoxDecoration(
+                            color: Colors.grey,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            "${counter}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30,
+                                color: Colors.white.withOpacity(0.8)),
+                          ),
+                        ),
+                        Text(
+                          logs.items[index],
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+            );
+          }
+          return Center(
+            child: Container(
+              child: Text("No CPR Log recorded. Press Start CPRLOG"),
+            ),
           );
-        }));
+        }),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        icon: Icon(Icons.play_arrow),
+        label: Text("START CPRLOG"),
+        onPressed: () {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => CPRItems(),
+            ),
+          );
+        },
+      ),
+      // ),
+    );
   }
 
   confirmDeleteLog(context, logs, index) {
