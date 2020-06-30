@@ -70,6 +70,8 @@ class PhcDao {
 
   Future insert(Phc phc) async {
     print("insert phc");
+    print("test phc data");
+    print(jsonEncode(phc));
     key = await _phcStore.add(await _db, {'phc': phc.toJson()});
 
     print("key");
