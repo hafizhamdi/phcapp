@@ -189,11 +189,9 @@ class Patient {
         intervention: json["intervention"] != null
             ? InterventionAss.fromJson(json["intervention"])
             : null,
-        medicationAssessment: 
-        // json["medication"] != null
-        //     ? 
-            MedicationAssessment.fromJson(json["medication"]),
-            // : null,
+        medicationAssessment: json["medication"] != null
+            ? MedicationAssessment.fromJson(json["medication"])
+            : null,
         incidentReporting: json["incident_reporting"] != null
             ? IncidentReporting.fromJson(json["incident_reporting"])
             : null,
@@ -209,16 +207,17 @@ class Patient {
             : List<dynamic>.from(vitalSigns.map((x) => x.toJson())),
 
         // "patient_information": patientInformation.toJson(),
-        // "patient_assessment":
-        //     patientAssessment != null ? patientAssessment.toJson() : null,
-        // "trauma_assessment":
-        //     traumaAssessment != null ? traumaAssessment.toJson() : null,
-        // "intervention": intervention != null ? intervention.toJson() : null,
+        "patient_assessment":
+            patientAssessment != null ? patientAssessment.toJson() : null,
+        "trauma_assessment":
+            traumaAssessment != null ? traumaAssessment.toJson() : null,
+        "intervention": intervention != null ? intervention.toJson() : null,
         "medication":
+            //     // null
             medicationAssessment != null ? medicationAssessment.toJson() : null,
         // // "vital_signs": List<dynamic>.from(vitalSigns.map((x) => x.toJson())),
-        // "incident_reporting":
-        //     incidentReporting != null ? incidentReporting.toJson() : null,
+        "incident_reporting":
+            incidentReporting != null ? incidentReporting.toJson() : null,
         // "outcome": outcome != null ? outcome.toJson() : null,
 //
       };
@@ -294,7 +293,7 @@ class TraumaAssessment {
           limb: Limb.fromJson(json["limb"]));
 
   Map<String, dynamic> toJson() => {
-        "timestamp": timestamp ?? null,
+        "timestamp": timestamp.toString(),
         "head": head != null ? List<dynamic>.from(head.map((x) => x)) : null,
         "face": face != null ? List<dynamic>.from(face.map((x) => x)) : null,
         "neck": neck != null ? List<dynamic>.from(neck.map((x) => x)) : null,
@@ -460,27 +459,20 @@ class MedicationAssessment {
 
   factory MedicationAssessment.fromJson(Map<String, dynamic> json) =>
       MedicationAssessment(
-          timestamp:
-              // parsingDateTime(
-              json["timestamp"],
-          // ),
-          medication:
-              // json["medication"] != null
-              //     ? List<Medication>.from(
-
-              json["medication"].map((x) => Medication.fromJson(x))
-          // )
-          // : null,
-          );
+        timestamp: parsingDateTime(
+          json["timestamp"],
+        ),
+        medication: json["medication"] != null
+            ? List<Medication>.from(
+                json["medication"].map((x) => Medication.fromJson(x)))
+            : null,
+      );
 
   Map<String, dynamic> toJson() => {
-        "timestamp": timestamp,
-        // ?? null,
-        "medication":
-            // medication != null
-            // ?
-            List<dynamic>.from(medication.map((x) => x.toJson()))
-        // :null,
+        "timestamp": timestamp.toString(),
+        "medication": medication != null
+            ? List<dynamic>.from(medication.map((x) => x.toJson()))
+            : null,
       };
 }
 
@@ -624,7 +616,7 @@ class Analysis {
       );
 
   Map<String, dynamic> toJson() => {
-        "timestamp": timestamp,
+        "timestamp": timestamp.toString(),
         "rhythm": rhythm.toJson(),
         "intevention": intevention.toJson(),
         "drugs": drugs.toJson(),
@@ -653,7 +645,7 @@ class IncidentReporting {
       );
 
   Map<String, dynamic> toJson() => {
-        "timestamp": timestamp ?? null,
+        "timestamp": timestamp.toString(),
         "response_delay": responseDelay,
         "scene_delay": sceneDelay,
         "transport_delay": transportDelay,
@@ -702,7 +694,7 @@ class InterventionAss {
       );
 
   Map<String, dynamic> toJson() => {
-        "timestamp": timestamp ?? null,
+        "timestamp": timestamp.toString(),
         "airway_device": airwayDevice,
         "oxygen": oxygen,
         "ext_haemorrhage": extHaemorrhage != null
@@ -757,7 +749,7 @@ class Outcome {
       );
 
   Map<String, dynamic> toJson() => {
-        "timestamp": timestamp ?? null,
+        "timestamp": timestamp.toString(),
         "provision_diagnosis": provisionDiagnosis,
         "etd_triage": etdTriage,
         "transport_status": transportStatus,
@@ -823,7 +815,7 @@ class PatientAssessment {
       );
 
   Map<String, dynamic> toJson() => {
-        "timestamp": timestamp ?? null,
+        "timestamp": timestamp.toString(),
         "disaster_triage": disasterTriage,
         "appearance": appearance,
         "level_responsive": levelResponsive,
