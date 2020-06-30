@@ -15,7 +15,18 @@ import 'package:provider/provider.dart';
 enum InputSelector { gender, idtype }
 
 const LIST_GENDER = ["Male", "Female"];
-const LIST_IDTYPE = ["NRIC", "TEMPORARY ID", "POLICE ID"];
+const LIST_IDTYPE = [
+  "Old IC",
+  "Military ID",
+  "Police ID",
+  "New IC",
+  "Work Permit",
+  "Passport",
+  "Birth Certificate",
+  "Pensioner card",
+  "My PR",
+  "UNHCR"
+];
 
 class PatientInformationScreen extends StatefulWidget {
   PatientInformation patient_information;
@@ -356,5 +367,45 @@ class _Information extends State<PatientInformationScreen>
                             borderSide: new BorderSide(),
                           )));
                 })));
+  }
+}
+
+class MyTextInput extends StatelessWidget {
+  final labelText;
+  final controller;
+  final validator;
+  final formater;
+  final Function onChanged;
+
+  MyTextInput(
+      {this.labelText,
+      this.controller,
+      this.validator,
+      this.formater,
+      this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // width: 500,
+      width: 500,
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: TextFormField(
+          controller: controller,
+          inputFormatters: formater != null ? [formater] : [],
+          validator: validator,
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            labelText: labelText,
+            fillColor: Colors.white,
+            border: new OutlineInputBorder(
+              borderRadius: new BorderRadius.circular(10.0),
+              borderSide: new BorderSide(),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

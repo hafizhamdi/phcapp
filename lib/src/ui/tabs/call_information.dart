@@ -200,7 +200,7 @@ class _CallInfoState extends State<CallInformationScreen>
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     HeaderSection("Call Information"),
                     IconButton(
-                        icon: Icon(Icons.edit),
+                        icon: Icon(Icons.edit, color: Colors.blueAccent),
                         onPressed: () {
                           Navigator.push(
                               context,
@@ -266,7 +266,7 @@ class _CallInfoState extends State<CallInformationScreen>
                   Row(children: [
                     MyTextField(
                         labelText: "Incident Description",
-                        initialData: data.incidentLocation),
+                        initialData: data.incident_desc),
                   ]),
                   Row(children: <Widget>[
                     MyTextField(
@@ -276,8 +276,8 @@ class _CallInfoState extends State<CallInformationScreen>
 
                   Row(
                     children: <Widget>[
-                      // MyTextField(
-                      //     labelText: "Landmark", initialData: data.landmark),
+                      MyTextField(
+                          labelText: "Landmark", initialData: data.landmark),
                     ],
                   ),
 
@@ -499,13 +499,14 @@ class MyTextField extends StatelessWidget {
                 style: TextStyle(
                     fontFamily: "OpenSans",
                     // fontWeight: FontWeight.bold,
-                    // fontSize: 16,
+                    fontSize: 16,
                     color: Colors.grey),
               ),
               Padding(
                   padding: EdgeInsets.all(10),
                   child: Text(
                     (initialData != null) ? initialData : "",
+                    style: TextStyle(fontSize: 16),
                   ))
               // TextFormField(
               //   enabled: false,

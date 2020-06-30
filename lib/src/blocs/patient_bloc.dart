@@ -267,14 +267,13 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     foundPatient.patientInformation = event.patient.patientInformation;
     // foundPatient.cpr = event.patient.cpr;
     foundPatient.vitalSigns = event.patient.vitalSigns;
-
-    // Patient patient = new Patient(
-    //     patientInformation: event.patient.patientInfo//////////////////////rmation,
-    //     cprLogs: event.patient.cprLogs,/
-    //     vitalSigns: event.patient.vitalSigns);
-
-    // final currentState = state;
-    // // print(blocPatients.length);
+    // vitalSigns: event.patient.vitalSigns,
+    foundPatient.patientAssessment = event.patient.patientAssessment;
+    foundPatient.intervention = event.patient.intervention;
+    foundPatient.traumaAssessment = event.patient.traumaAssessment;
+    foundPatient.medicationAssessment = event.patient.medicationAssessment;
+    foundPatient.incidentReporting = event.patient.incidentReporting;
+    foundPatient.outcome = event.patient.outcome;
 
     print("UPDATE PATIENT");
     // print(currentState.patients);

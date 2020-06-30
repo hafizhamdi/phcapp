@@ -192,69 +192,72 @@ class BuildCard extends StatelessWidget {
     return Card(
       elevation: 3.0,
       margin: EdgeInsets.all(10),
-      child: ListTile(
-        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        leading: Icon(
-          icon,
-          // size: 30,
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+      child: Container(
+        color: Colors.grey[200],
+        child: ListTile(
+          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          leading: Icon(
+            icon,
+            // size: 30,
           ),
-        ),
-        subtitle: Container(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Row(children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: Icon(
-                          Icons.access_time,
-                          color: Colors.purple,
-                          // size: 23,
-                        )),
-                    timestamp != null
-                        ? Text(
-                            generateTime(timestamp),
-                          )
-                        : Text(
-                            "No data",
-                            // style: TextStyle(fontSize: 16),
-                          ),
-                    title == "Patient" || title == "Outcome"
-                        ? Padding(
-                            padding: EdgeInsets.only(left: 15),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.person_pin_circle,
-                                  color: defineColor(disasterTriage),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                title == "Patient"
-                                    ? Text("Disaster Triage")
-                                    : Text("ETD Triage")
-                              ],
-                            ),
-                          )
-                        : Container()
-                  ]),
-                ),
-              ],
+          title: Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
             ),
-            padding: EdgeInsets.only(right: 20)),
-        trailing: Icon(Icons.arrow_forward_ios),
-        onTap: () {
-          Navigator.push(
-            context,
-            CupertinoPageRoute(builder: (context) => nextRoute),
-          );
-        },
+          ),
+          subtitle: Container(
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Row(children: <Widget>[
+                      Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child: Icon(
+                            Icons.access_time,
+                            color: Colors.purple,
+                            // size: 23,
+                          )),
+                      timestamp != null
+                          ? Text(
+                              generateTime(timestamp),
+                            )
+                          : Text(
+                              "No data",
+                              // style: TextStyle(fontSize: 16),
+                            ),
+                      title == "Patient" || title == "Outcome"
+                          ? Padding(
+                              padding: EdgeInsets.only(left: 15),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.person_pin_circle,
+                                    color: defineColor(disasterTriage),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  title == "Patient"
+                                      ? Text("Disaster Triage")
+                                      : Text("ETD Triage")
+                                ],
+                              ),
+                            )
+                          : Container()
+                    ]),
+                  ),
+                ],
+              ),
+              padding: EdgeInsets.only(right: 20)),
+          trailing: Icon(Icons.arrow_forward_ios),
+          onTap: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(builder: (context) => nextRoute),
+            );
+          },
+        ),
       ),
     );
   }

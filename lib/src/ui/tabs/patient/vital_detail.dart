@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/src/blocs/vital_bloc.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/theme/theme_provider.dart';
@@ -9,6 +10,10 @@ import 'package:intl/intl.dart';
 
 enum ItemInput { singlePoint, doublePoint }
 enum ActionButton { delete, create }
+
+const pupilList = ["", "Reactive", "Sluggish", "Fixed"];
+const pvList = ["", "Good", "Poor", "NIL"];
+const crtList = ["", "< 2 sec", "> 2 sec"];
 
 class VitalDetail extends StatefulWidget {
   final VitalSign vitalSign;
@@ -26,10 +31,10 @@ class _VitalDetailState extends State<VitalDetail> {
       DateFormat("HH:mm aa").format(new DateTime.now()).toString();
   int totalGcs = 0;
 
-  NumberPicker bpSysPicker = new NumberPicker();
+  NumberPicker bpSysPicker = new NumberPicker(abnormal: false);
   NumberPicker bpDiasPicker = new NumberPicker();
   NumberPicker mapPicker = new NumberPicker();
-  NumberPicker prPicker = new NumberPicker();
+  NumberPicker prPicker = new NumberPicker(abnormal: false);
   NumberPicker ppPicker = new NumberPicker();
   NumberPicker pvPicker = new NumberPicker();
   NumberPicker crtPicker = new NumberPicker();
@@ -38,7 +43,8 @@ class _VitalDetailState extends State<VitalDetail> {
   NumberPicker spo2Picker = new NumberPicker();
   NumberPicker tempPicker = new NumberPicker();
   NumberPicker psPicker = new NumberPicker();
-  NumberPicker bgPicker = new NumberPicker();
+  NumberPicker bgPicker = new NumberPicker(abnormal: false);
+  NumberPicker bkPicker = new NumberPicker(abnormal: false);
   NumberPicker lpPicker = new NumberPicker();
   NumberPicker rpPicker = new NumberPicker();
   NumberPicker gcsEpicker = new NumberPicker();
@@ -48,37 +54,64 @@ class _VitalDetailState extends State<VitalDetail> {
 
   VitalBloc vitalBloc;
 
+  // bool checkBG = false;
+  // bool checkBK = false;
+
   @override
   initState() {
     print("INIT STATE VITAL DETAIL");
 
     if (widget.vitalSign != null) {
+      var bkDecimal = checkDecimal(widget.vitalSign.bloodKetone);
+      var bgDecimal = checkDecimal(widget.vitalSign.bloodGlucose);
+      print(widget.vitalSign.temp);
+      var tempDecimal = checkDecimal(widget.vitalSign.temp);
+
       bpSysPicker = new NumberPicker(
-          value: checkIsNumberNotNull(widget.vitalSign.bpSystolic));
+          value: checkIsNumberNotNull(widget.vitalSign.bpSystolic),
+          abnormal: widget.vitalSign.bpSystolic != "NR" ? false : true);
 
       bpDiasPicker = new NumberPicker(
           value: checkIsNumberNotNull(widget.vitalSign.bpDiastolic));
       mapPicker =
           new NumberPicker(option: checkIsStringNotNull(widget.vitalSign.map));
       prPicker =
-          new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.pr));
+          new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.pr),
+          
+          abnormal: widget.vitalSign.pr != "NP" ? false : true);
       ppPicker = new NumberPicker(
-          value: checkIsNumberNotNull(widget.vitalSign.pulsePressure));
+          option: checkIsStringNotNull(widget.vitalSign.pulsePressure));
       pvPicker = new NumberPicker(
-          value: checkIsNumberNotNull(widget.vitalSign.pulseVolume));
+          option: checkIsStringNotNull(widget.vitalSign.pulseVolume));
       crtPicker =
-          new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.crt));
+          new NumberPicker(option: checkIsStringNotNull(widget.vitalSign.crt));
       siPicker = new NumberPicker(
           option: checkIsStringNotNull(widget.vitalSign.shockIndex));
       rrPicker =
           new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.rr));
       spo2Picker =
           new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.spo2));
-      tempPicker = new NumberPicker();
+      tempPicker = new NumberPicker(
+          option: checkIsStringNotNull(widget.vitalSign.temp),
+          value: tempDecimal != null ? int.tryParse(tempDecimal[0]) : 0,
+          decimal: tempDecimal != null ? int.tryParse(tempDecimal[1]) : 0
+          // );
+
+          );
       psPicker = new NumberPicker(
           value: checkIsNumberNotNull(widget.vitalSign.painScore));
       bgPicker = new NumberPicker(
-          value: checkIsNumberNotNull(widget.vitalSign.bloodGlucose));
+        
+          option: checkIsStringNotNull(widget.vitalSign.bloodGlucose),
+          value: bgDecimal != null ? int.tryParse(bgDecimal[0]) : 0,
+          decimal: bgDecimal != null ? int.tryParse(bgDecimal[1]) : 0,
+          // value: checkIsNumberNotNull(widget.vitalSign.bloodGlucose),
+          abnormal: widget.vitalSign.bloodGlucose != "HI" ? false : true);
+      bkPicker = new NumberPicker(
+          option: checkIsStringNotNull(widget.vitalSign.bloodKetone),
+          value: bkDecimal != null ? int.tryParse(bkDecimal[0]) : 0,
+          decimal: bkDecimal != null ? int.tryParse(bkDecimal[1]) : 0,
+          abnormal: widget.vitalSign.bloodKetone != "HI" ? false : true);
       lpPicker = new NumberPicker(
           value: checkIsNumberNotNull(widget.vitalSign.pupil.leftSize),
           option:
@@ -339,14 +372,15 @@ class _VitalDetailState extends State<VitalDetail> {
   }
 
   Widget _buildItemPupil(
-      context, NumberPicker picker, title, itemCount, initialData) {
+      context, NumberPicker picker, title, itemCount, initialData, list) {
     return Container(
         margin: EdgeInsets.all(5),
         padding: EdgeInsets.only(left: 8, top: 8),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            shape: BoxShape.rectangle,
-            border: Border.all(color: Colors.grey, width: 0.5)),
+          borderRadius: BorderRadius.circular(10),
+          shape: BoxShape.rectangle,
+          border: Border.all(color: Colors.grey, width: 0.5),
+        ),
         width: 230,
         height: 200,
         child: Column(
@@ -354,12 +388,12 @@ class _VitalDetailState extends State<VitalDetail> {
             Row(
               children: <Widget>[
                 Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Text(title,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 18)
-                        // style: TextStyle(color: Colors.white),
-                        )),
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: Text(title,
+                      textAlign: TextAlign.left, style: TextStyle(fontSize: 18)
+                      // style: TextStyle(color: Colors.white),
+                      ),
+                ),
               ],
             ),
             Row(
@@ -412,7 +446,8 @@ class _VitalDetailState extends State<VitalDetail> {
                     onPressed: () {
                       showCupertinoModalPopup(
                           context: context,
-                          builder: (context) => pupilPicker(picker, title));
+                          builder: (context) =>
+                              optionPicker(picker, title, list));
                     },
                   )
                 ])
@@ -421,8 +456,57 @@ class _VitalDetailState extends State<VitalDetail> {
     // );
   }
 
+  Widget _buildItemOption(context, NumberPicker picker, title, list) {
+    return Container(
+      margin: EdgeInsets.all(5),
+      padding: EdgeInsets.only(left: 8, top: 8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          shape: BoxShape.rectangle,
+          border: Border.all(color: Colors.grey, width: 0.5)),
+      width: 230,
+      height: 200,
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: Text(title,
+                      textAlign: TextAlign.left, style: TextStyle(fontSize: 18)
+                      // style: TextStyle(color: Colors.white),
+                      )),
+            ],
+          ),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  picker.getOption != null ? picker.getOption : '',
+                  style: TextStyle(
+                    fontSize: 25,
+                    // color: Colors.purple[200]
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  color: Colors.grey,
+                  iconSize: 25,
+                  onPressed: () {
+                    showCupertinoModalPopup(
+                        context: context,
+                        builder: (context) =>
+                            optionPicker(picker, title, list));
+                  },
+                )
+              ])
+        ],
+      ),
+    );
+  }
+
   Widget _buildItem(
-      context, NumberPicker picker, title, itemCount, initialData) {
+      context, NumberPicker picker, title, itemCount, initialData, unit) {
     // print(title);
     var doneButton = CupertinoButton(
       child: Text("Done"),
@@ -430,7 +514,7 @@ class _VitalDetailState extends State<VitalDetail> {
         Navigator.of(context).pop();
       },
     );
-    if (title == "MAP" || title == "Shock Index") {
+    if (title == "MAP" || title == "Shock Index" || title == "Pulse Pressure") {
       return Container(
           margin: EdgeInsets.all(5),
           padding: EdgeInsets.only(left: 8, top: 8),
@@ -452,7 +536,8 @@ class _VitalDetailState extends State<VitalDetail> {
                         )),
               ],
             ),
-            Row(
+            
+                       (bpSysPicker.abnormal == false) ?Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
@@ -461,78 +546,255 @@ class _VitalDetailState extends State<VitalDetail> {
                     //     controller.firstValue, controller.secondValue),
                     style: TextStyle(
                       fontSize: 40,
-                      // color:
-                      //     picker.getAbnormal ? Colors.red : null
-                      // color: Colors.purple[200]
                     ),
                   ),
-                  // IconButton(
-                  //     icon: Icon(Icons.edit),
-                  //     color: Colors.grey,
-                  //     iconSize: 25,
-                  //     onPressed: () {
-                  //       showCupertinoModalPopup(
-                  //           context: context,
-                  //           builder: (context) => cupertinoPicker(
-                  //               picker, title, itemCount, initialData));
-                  //       // ItemInput.singlePoint == getActionPicker(title)
-                  //       //     ? showCupertinoModalPopup(
-                  //       //         context: context,
-                  //       //         builder: (context) => _actionSinglePicker(
-                  //       //             title, controller, callbackSingle, range))
-                  //       //     : showCupertinoModalPopup(
-                  //       //         context: context,
-                  //       //         builder: (context) => _actionDoublePicker(
-                  //       //             title, controller, callbackSingle));
-                  //     })
-                ])
+                ]):Container()
           ])); //);
     }
+
+    //use attribute option to store decimal value
+
+    var tempDecimal = picker.decimal != null
+        ? picker.value.toString() + "." + picker.decimal.toString()
+        : picker.value != null ? picker.value.toString() : '';
     return Container(
-        margin: EdgeInsets.all(5),
-        padding: EdgeInsets.only(left: 8, top: 8),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            shape: BoxShape.rectangle,
-            border: Border.all(color: Colors.grey, width: 0.5)),
-        width: 230,
-        height: 200,
-        child: Column(children: <Widget>[
+      margin: EdgeInsets.all(5),
+      padding: EdgeInsets.only(left: 8, top: 8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          shape: BoxShape.rectangle,
+          border: Border.all(color: Colors.grey, width: 0.5)),
+      width: 230,
+      height: 200,
+      child: Column(
+        children: <Widget>[
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // crossAxisAlignment: CrossAxisAlignment.,
             children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child: Text(title,
-                      textAlign: TextAlign.left, style: TextStyle(fontSize: 18)
+              Text(title,
+                      textAlign: TextAlign.left, style: TextStyle(fontSize: 18),
+                      
                       // style: TextStyle(color: Colors.white),
-                      )),
-            ],
+                      // ),
+                      ),
+            
+            Padding(padding:EdgeInsets.only(right: 10),child:Text(unit, style: TextStyle(color: Colors.grey,),),)],
           ),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  picker.getValue != null ? picker.getValue.toString() : '',
-                  // decimalFormating(
-                  //     controller.firstValue, controller.secondValue),
-                  style: TextStyle(
-                      fontSize: 40,
-                      color:
-                          picker.getAbnormal == true ? Colors.redAccent : null),
-                ),
-                IconButton(
-                    icon: Icon(Icons.edit),
-                    color: Colors.grey,
-                    iconSize: 25,
-                    onPressed: () {
-                      showCupertinoModalPopup(
-                          context: context,
-                          builder: (context) => cupertinoPicker(
-                              picker, title, itemCount, initialData));
-                    })
-              ])
-        ]));
+          SizedBox(height: 10,),
+          ((title == "Blood Ketone" && picker.abnormal == false) ||
+                  (title == "Blood Glucose" && picker.abnormal == false) || 
+                  (title == "BP Systolic" && picker.abnormal == false)||
+                  (title == "PR" && picker.abnormal == false))
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                      Text(
+                        tempDecimal,
+                        // picker.getValue != null ? picker.getValue.toString() : '',
+                        // decimalFormating(
+                        //     controller.firstValue, controller.secondValue),
+                        style: TextStyle(
+                            fontSize: 40,
+                            color: picker.getAbnormal == true
+                                ? Colors.redAccent
+                                : null),
+                      ),
+                      IconButton(
+                          icon: Icon(Icons.edit),
+                          color: Colors.grey,
+                          iconSize: 25,
+                          onPressed: () {
+                            showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) {
+                                  if (title == "Blood Ketone" || title == "Blood Glucose" ||
+                                      title == "Temperature") {
+                                    return cupertinoDoublePicker(
+                                        picker, title, itemCount, initialData);
+                                  }
+
+                                  return cupertinoPicker(
+                                      picker, title, itemCount, initialData);
+                                });
+                          })
+                    ])
+              :
+              // Container(),
+              ((title == "Blood Ketone" && picker.abnormal != false) ||
+                      (title == "Blood Glucose" && picker.abnormal != false) ||
+                      (title == "BP Systolic" && picker.abnormal != false) ||
+                      (title == "BP Diastolic" && bpSysPicker.abnormal != false) ||
+                      (title == "PR" && picker.abnormal != false) 
+                      
+                      
+                      )
+                  ? Container()
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                          Text(
+                            tempDecimal,
+                            // picker.getValue != null ? picker.getValue.toString() : '',
+                            // decimalFormating(
+                            //     controller.firstValue, controller.secondValue),
+                            style: TextStyle(
+                                fontSize: 40,
+                                color: picker.getAbnormal == true
+                                    ? Colors.redAccent
+                                    : null),
+                          ),
+                          IconButton(
+                              icon: Icon(Icons.edit),
+                              color: Colors.grey,
+                              iconSize: 25,
+                              onPressed: () {
+                                showCupertinoModalPopup(
+                                    context: context,
+                                    builder: (context) {
+                                      if (title == "Blood Ketone" || title == "Blood Glucose" ||
+                                          title == "Temperature") {
+                                        return cupertinoDoublePicker(picker,
+                                            title, itemCount, initialData);
+                                      }
+
+                                      return cupertinoPicker(picker, title,
+                                          itemCount, initialData);
+                                    });
+                              })
+                        ]),
+          //     : Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: <Widget>[
+          //             Text(
+          //               tempDecimal,
+          //               // picker.getValue != null ? picker.getValue.toString() : '',
+          //               // decimalFormating(
+          //               //     controller.firstValue, controller.secondValue),
+          //               style: TextStyle(
+          //                   fontSize: 40,
+          //                   color: picker.getAbnormal == true
+          //                       ? Colors.redAccent
+          //                       : null),
+          //             ),
+          //             IconButton(
+          //                 icon: Icon(Icons.edit),
+          //                 color: Colors.grey,
+          //                 iconSize: 25,
+          //                 onPressed: () {
+          //                   showCupertinoModalPopup(
+          //                       context: context,
+          //                       builder: (context) {
+          //                         if (title == "Blood Ketone" ||
+          //                             title == "Temperature") {
+          //                           return cupertinoDoublePicker(picker,
+          //                               title, itemCount, initialData);
+          //                         }
+
+          //                         return cupertinoPicker(picker, title,
+          //                             itemCount, initialData);
+          //                       });
+          //                 })
+          //           ]),
+          (title == "Blood Ketone")
+              ? Row(
+                  children: <Widget>[
+                    Text("HI"),
+                    Checkbox(
+                      value: picker.abnormal,
+                      onChanged: (value) {
+                        setState(() {
+                          // if (title == "Blood Ketone") {
+                          picker.setAbnormal(value);
+                          if (value == true) {
+                            picker.setValue(null);
+                            picker.setDecimal(null);
+                          }
+                          // }
+                        });
+                      },
+                    )
+                  ],
+                ):Container(),
+              // ?
+
+          (title == "Blood Glucose")
+                  ? Row(
+                      children: <Widget>[
+                        Text("HI"),
+                        Checkbox(
+                          value: picker.abnormal,
+                          onChanged: (value) {
+                           setState(() {
+                          // if (title == "Blood Ketone") {
+                          picker.setAbnormal(value);
+                          if (value == true) {
+                            picker.setValue(null);
+                            picker.setDecimal(null);
+                          }
+                          // }
+                        });
+                      },
+                        )
+                      ],
+                    )
+                 :Container() ,
+                 
+                 
+                 (title == "PR")
+                  ? Row(
+                      children: <Widget>[
+                        Text("Non Palpable"),
+                        Checkbox(
+                          value: picker.abnormal,
+                          onChanged: (value) {
+                            setState(() {
+                              // if (title == "Blood Glucose") {
+                              picker.setAbnormal(value);
+
+                              if (value == true) {
+                                picker.setValue(null);
+                              }
+                              // }
+                            });
+                          },
+                        )
+                      ],
+                    ) 
+                  : Container(),
+                  (title == "BP Systolic")
+                  ? Row(
+                      children: <Widget>[
+                        Text("Non Recordable"),
+                        Checkbox(
+                          value: picker.abnormal,
+                          onChanged: (value) {
+                            setState(() {
+                              // if (title == "Blood Glucose") {
+                              picker.setAbnormal(value);
+
+                              if (value == true) {
+                                picker.setValue(null);
+                              }
+                              // }
+                            });
+                          },
+                        )
+                      ],
+                    ) 
+                  
+                  
+                
+                  
+                  :Container()
+        
+//         ,SizedBox(height: 20,),
+// Row(children:[Text("Celcius")])
+        ],
+      ),
+    );
   }
+
 
   String decimalFormating(first, second) {
     if (first == 0 && second == 0)
@@ -636,107 +898,120 @@ class _VitalDetailState extends State<VitalDetail> {
     return number.toString();
   }
 
-  createButton(action, index) {
-    if (action == ActionButton.create) {
-      return InkWell(
-        child: Container(
-          padding: EdgeInsets.all(10),
-          alignment: Alignment.center,
-          margin: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40.0), color: Colors.green),
-          // color: Colors.green,
-          child: Text("CREATE VITAL", style: TextStyle(color: Colors.white)),
-        ),
-        onTap: () {
-          int len = vitalBloc.state.listVitals != null
-              ? vitalBloc.state.listVitals.length
-              : 0;
+  // createButton(action, index) {
+  //   if (action == ActionButton.create) {
+  //     return InkWell(
+  //       child: Container(
+  //         padding: EdgeInsets.all(10),
+  //         alignment: Alignment.center,
+  //         margin: EdgeInsets.all(10),
+  //         decoration: BoxDecoration(
+  //             borderRadius: BorderRadius.circular(40.0), color: Colors.green),
+  //         // color: Colors.green,
+  //         child: Text("CREATE VITAL", style: TextStyle(color: Colors.white)),
+  //       ),
+  //       onTap: () {
+  //         int len = vitalBloc.state.listVitals != null
+  //             ? vitalBloc.state.listVitals.length
+  //             : 0;
 
-          VitalSign vs = new VitalSign(
-              id: (len + 1).toString(),
-              created: new DateTime.now(),
-              bpSystolic: transformBlankNull(bpSysPicker.getValue),
-              bpDiastolic: transformBlankNull(bpDiasPicker.getValue),
-              map: transformBlankNull(mapPicker.getOption),
-              pr: transformBlankNull(prPicker.getValue),
-              pulsePressure: transformBlankNull(ppPicker.getValue),
-              pulseVolume: transformBlankNull(pvPicker.getValue),
-              crt: transformBlankNull(crtPicker.getValue),
-              rr: transformBlankNull(rrPicker.getValue),
-              spo2: transformBlankNull(spo2Picker.getValue),
-              temp: transformBlankNull(tempPicker.getValue),
-              painScore: transformBlankNull(psPicker.getValue),
-              bloodGlucose: transformBlankNull(bgPicker.getValue),
-              shockIndex: transformBlankNull(siPicker.getOption),
-              pupil: Pupil(
-                  leftResponseTolight: transformBlankNull(lpPicker.getOption),
-                  leftSize: transformBlankNull(lpPicker.getValue),
-                  rightResponseTolight: transformBlankNull(rpPicker.getOption),
-                  rightSize: rpPicker.getValue.toString()),
-              e: transformBlankNull(gcsEpicker.getValue),
-              v: transformBlankNull(gcsVpicker.getValue),
-              m: transformBlankNull(gcsMpicker.getValue),
-              gcs: transformBlankNull(gcsTotalpicker.getValue));
+  //         VitalSign vs = new VitalSign(
+  //             id: (len + 1).toString(),
+  //             created: new DateTime.now(),
+  //             bpSystolic: transformBlankNull(bpSysPicker.getValue),
+  //             bpDiastolic: transformBlankNull(bpDiasPicker.getValue),
+  //             map: transformBlankNull(mapPicker.getOption),
+  //             pr: transformBlankNull(prPicker.getValue),
+  //             pulsePressure: transformBlankNull(ppPicker.getOption),
+  //             pulseVolume: transformBlankNull(pvPicker.getOption),
+  //             crt: transformBlankNull(crtPicker.getOption),
+  //             rr: transformBlankNull(rrPicker.getValue),
+  //             spo2: transformBlankNull(spo2Picker.getValue),
+  //             temp: tempPicker.getValue.toString() +
+  //                 "." +
+  //                 tempPicker.decimal.toString(),
+  //             bloodKetone: bkPicker.getValue.toString() +
+  //                 "." +
+  //                 bkPicker.decimal.toString(),
 
-          print("Vital Sigs");
-          // print(vs.toJson());
+  //             // temp: transformBlankNull(tempPicker.getOption),
+  //             painScore: transformBlankNull(psPicker.getValue),
+  //             bloodGlucose: transformBlankNull(bgPicker.getValue),
+  //             // bloodKetone: transformBlankNull(bkPicker.getOption),
+  //             shockIndex: transformBlankNull(siPicker.getOption),
+  //             pupil: Pupil(
+  //                 leftResponseTolight: transformBlankNull(lpPicker.getOption),
+  //                 leftSize: transformBlankNull(lpPicker.getValue),
+  //                 rightResponseTolight: transformBlankNull(rpPicker.getOption),
+  //                 rightSize: rpPicker.getValue.toString()),
+  //             e: transformBlankNull(gcsEpicker.getValue),
+  //             v: transformBlankNull(gcsVpicker.getValue),
+  //             m: transformBlankNull(gcsMpicker.getValue),
+  //             gcs: transformBlankNull(gcsTotalpicker.getValue));
 
-          setState(() {
-            vitalBloc.add(AddVital(vital: vs));
-          });
+  //         print("Vital Sigs");
+  //         print(vs.toJson());
 
-          Navigator.pop(context);
-        },
-      );
-    } else {
-      //save -update button
-      return InkWell(
-          child: Container(
-            padding: EdgeInsets.all(10),
-            alignment: Alignment.center,
-            margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40.0), color: Colors.green),
-            // color: Colors.green,
-            child: Text("EDIT SAVE", style: TextStyle(color: Colors.white)),
-          ),
-          onTap: () {
-            VitalSign vs = new VitalSign(
-                // id: (index + 1).toString(),
-                // id: (vitalBloc.state.listVitals.length + 1).toString(),
-                created: new DateTime.now(),
-                bpSystolic: bpSysPicker.getValue.toString(),
-                bpDiastolic: bpDiasPicker.getValue.toString(),
-                map: mapPicker.getOption.toString(),
-                pr: prPicker.getValue.toString(),
-                pulsePressure: ppPicker.getValue.toString(),
-                pulseVolume: pvPicker.getValue.toString(),
-                crt: crtPicker.getValue.toString(),
-                rr: rrPicker.getValue.toString(),
-                spo2: spo2Picker.getValue.toString(),
-                temp: tempPicker.getValue.toString(),
-                painScore: psPicker.getValue.toString(),
-                bloodGlucose: bgPicker.getValue.toString(),
-                shockIndex: siPicker.getOption.toString(),
-                pupil: Pupil(
-                    leftResponseTolight: lpPicker.getOption.toString(),
-                    leftSize: lpPicker.getValue.toString(),
-                    rightResponseTolight: rpPicker.getOption.toString(),
-                    rightSize: rpPicker.getValue.toString()),
-                e: gcsEpicker.getValue.toString(),
-                v: gcsVpicker.getValue.toString(),
-                m: gcsMpicker.getValue.toString(),
-                gcs: gcsTotalpicker.getValue.toString());
+  //         setState(() {
+  //           vitalBloc.add(AddVital(vital: vs));
+  //         });
 
-            setState(() {
-              vitalBloc.add(UpdateVital(index: index, vital: vs));
-            });
+  //         Navigator.pop(context);
+  //       },
+  //     );
+  //   } else {
+  //     //save -update button
+  //     return InkWell(
+  //         child: Container(
+  //           padding: EdgeInsets.all(10),
+  //           alignment: Alignment.center,
+  //           margin: EdgeInsets.all(10),
+  //           decoration: BoxDecoration(
+  //               borderRadius: BorderRadius.circular(40.0), color: Colors.green),
+  //           // color: Colors.green,
+  //           child: Text("EDIT SAVE", style: TextStyle(color: Colors.white)),
+  //         ),
+  //         onTap: () {
+  //           VitalSign vs = new VitalSign(
+  //               // id: (index + 1).toString(),
+  //               // id: (vitalBloc.state.listVitals.length + 1).toString(),
+  //               created: new DateTime.now(),
+  //               bpSystolic: bpSysPicker.getValue.toString(),
+  //               bpDiastolic: bpDiasPicker.getValue.toString(),
+  //               map: mapPicker.getOption.toString(),
+  //               pr: prPicker.getValue.toString(),
+  //               pulsePressure: ppPicker.getOption.toString(),
+  //               pulseVolume: pvPicker.getOption.toString(),
+  //               crt: crtPicker.getOption.toString(),
+  //               rr: rrPicker.getValue.toString(),
+  //               painScore: psPicker.getValue.toString(),
+  //               spo2: spo2Picker.getValue.toString(),
+  //               temp: tempPicker.getValue.toString() +
+  //                   "." +
+  //                   tempPicker.decimal.toString(),
+  //               bloodKetone: bkPicker.getValue.toString() +
+  //                   "." +
+  //                   bkPicker.decimal.toString(),
+  //               bloodGlucose: bgPicker.getValue.toString(),
+  //               shockIndex: siPicker.getOption.toString(),
+  //               pupil: Pupil(
+  //                   leftResponseTolight: lpPicker.getOption.toString(),
+  //                   leftSize: lpPicker.getValue.toString(),
+  //                   rightResponseTolight: rpPicker.getOption.toString(),
+  //                   rightSize: rpPicker.getValue.toString()),
+  //               e: gcsEpicker.getValue.toString(),
+  //               v: gcsVpicker.getValue.toString(),
+  //               m: gcsMpicker.getValue.toString(),
+  //               gcs: gcsTotalpicker.getValue.toString());
 
-            Navigator.pop(context);
-          });
-    }
-  }
+  //           setState(() {
+  //             vitalBloc.add(UpdateVital(index: index, vital: vs));
+  //           });
+
+  //           Navigator.pop(context);
+  //         });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -764,7 +1039,7 @@ class _VitalDetailState extends State<VitalDetail> {
       if (bpSysPicker.getValue != null && bpDiasPicker.getValue != null) {
         var pp = bpSysPicker.getValue - bpDiasPicker.getValue;
 
-        ppPicker.setValue(pp);
+        ppPicker.setOption(pp.toString());
       }
 
       if (prPicker.getValue != null && bpSysPicker.getValue != null) {
@@ -779,103 +1054,280 @@ class _VitalDetailState extends State<VitalDetail> {
       changeColorAbnormal();
     });
 
+    formatDecimal(value,decimal){
+      return value!=null && decimal !=null?
+      transformBlankNull(value) +
+                                        "." +
+                                        transformBlankNull(decimal):
+                                        null;
+    }
+
     // final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
+      backgroundColor: Colors.grey,
       // backgroundColor: Colors.grey[900],
-      appBar: AppBar(
-          //  textTheme: themeProvider.getThemeData,
-          title: Text(
-            'Vital signs',
+      // appBar: AppBar(
+      //     //  textTheme: themeProvider.getThemeData,
+      //     title: Text(
+      //       'Vital signs',
+      //     ),
+      // actions: <Widget>[
+      //   cancelButton(action, widget.index),
+      //   createButton(action, widget.index)
+      // ],
+      // backgroundColor: Colors.purple),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            margin: EdgeInsets.all(12.0),
+            child: Container(
+              // child: Container(
+              //     alignment: Alignment.center,
+              //     padding: EdgeInsets.all(10),
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                children: <Widget>[
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        widget.index ==null?HeaderSection("Add Vital Sign"):HeaderSection("Edit Vital Sign"),
+
+                        IconButton(
+                          icon: Icon(Icons.check),
+                          onPressed: () {
+                            if(widget.index == null){
+
+                            int len = vitalBloc.state.listVitals != null
+                                ? vitalBloc.state.listVitals.length
+                                : 0;
+
+                            VitalSign vs = new VitalSign(
+                                id: (len + 1).toString(),
+                                created: new DateTime.now(),
+                                bpSystolic: bpSysPicker.getAbnormal == true? "NR"
+                                    :transformBlankNull(bpSysPicker.getValue),
+                                bpDiastolic: bpSysPicker.getAbnormal == true? "NR":
+                                    transformBlankNull(bpDiasPicker.getValue),
+                                map: bpSysPicker.getAbnormal == true? "":
+                                transformBlankNull(mapPicker.getOption),
+                                pr: 
+                                prPicker.getAbnormal == true? "NP":
+                                transformBlankNull(prPicker.getValue),
+                                pulsePressure:
+                                bpSysPicker.getAbnormal == true? "":
+                                    transformBlankNull(ppPicker.getOption),
+                                pulseVolume:
+                                    transformBlankNull(pvPicker.getOption),
+                                crt: transformBlankNull(crtPicker.getOption),
+                                rr: transformBlankNull(rrPicker.getValue),
+                                spo2: transformBlankNull(spo2Picker.getValue),
+                                temp: tempPicker.getValue.toString() +
+                                    "." +
+                                    tempPicker.decimal.toString(),
+                                bloodKetone: bkPicker.abnormal == true
+                                    ? "HI"
+                                    : formatDecimal(bkPicker.value,bkPicker.decimal),
+
+                                // temp: transformBlankNull(tempPicker.getOption),
+                                painScore:
+                                    transformBlankNull(psPicker.getValue),
+                                bloodGlucose: bgPicker.abnormal == true
+                                    ? "HI"
+                                    : formatDecimal(bgPicker.value,bgPicker.decimal),
+                                // bloodKetone: transformBlankNull(bkPicker.getOption),
+                                shockIndex:
+                                    transformBlankNull(siPicker.getOption),
+                                pupil: Pupil(
+                                    leftResponseTolight:
+                                        transformBlankNull(lpPicker.getOption),
+                                    leftSize:
+                                        transformBlankNull(lpPicker.getValue),
+                                    rightResponseTolight:
+                                        transformBlankNull(rpPicker.getOption),
+                                    rightSize: transformBlankNull(rpPicker.getValue)),
+                                e: transformBlankNull(gcsEpicker.getValue),
+                                v: transformBlankNull(gcsVpicker.getValue),
+                                m: transformBlankNull(gcsMpicker.getValue),
+                                gcs: transformBlankNull(
+                                    gcsTotalpicker.getValue));
+
+                            print("Vital Sigs");
+                            // print(vs.toJson());
+
+                            setState(() {
+                              vitalBloc.add(AddVital(vital: vs));
+                            });
+
+                            Navigator.pop(context);
+
+                            }else{
+                              VitalSign vs = new VitalSign(
+                // id: (index + 1).toString(),
+                // id: (vitalBloc.state.listVitals.length + 1).toString(),
+                created: new DateTime.now(),
+                bpSystolic: transformBlankNull(bpSysPicker.getValue),
+                bpDiastolic: transformBlankNull(bpDiasPicker.getValue),
+                map: transformBlankNull(mapPicker.getOption),
+                pr: transformBlankNull(prPicker.getValue),
+                pulsePressure: transformBlankNull(ppPicker.getOption),
+                pulseVolume: transformBlankNull(pvPicker.getOption),
+                crt: transformBlankNull(crtPicker.getOption),
+                rr: transformBlankNull(rrPicker.getValue),
+                painScore: transformBlankNull(psPicker.getValue),
+                spo2: transformBlankNull(spo2Picker.getValue),
+                temp: formatDecimal(tempPicker.value,tempPicker.decimal),
+                // tempPicker.getValue) +
+                //     "." +
+                //     tempPicker.decimal.toString(),
+                bloodKetone: bkPicker.getAbnormal== true?"HI":    formatDecimal(bkPicker.value,bkPicker.decimal),
+                // bkPicker.getValue.toString() +
+                //     "." +
+                //     bkPicker.decimal.toString(),
+                bloodGlucose: bgPicker.getAbnormal== true?"HI": formatDecimal(bgPicker.value,bgPicker.decimal),
+                // bgPicker.getValue.toString(),
+                shockIndex: transformBlankNull(siPicker.getOption),
+                pupil: Pupil(
+                    leftResponseTolight: transformBlankNull(lpPicker.getOption),
+                    leftSize: transformBlankNull(lpPicker.getValue),
+                    rightResponseTolight: transformBlankNull(rpPicker.getOption),
+                    rightSize: transformBlankNull(rpPicker.getValue)),
+                e: transformBlankNull(gcsEpicker.getValue),
+                v: transformBlankNull(gcsVpicker.getValue),
+                m: transformBlankNull(gcsMpicker.getValue),
+                gcs: transformBlankNull(gcsTotalpicker.getValue));
+
+            setState(() {
+              vitalBloc.add(UpdateVital(index: widget.index, vital: vs));
+            });
+
+            Navigator.pop(context);
+         
+                            }
+                          },
+                        ),
+                      ]),
+                  Center(
+                      child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: widget.vitalSign == null
+                              ? Text("Last changes at " + _timestamp)
+                              : Text("Last changes at " +
+                                  DateFormat("HH:mm aa")
+                                      .format(widget.vitalSign.created)))),
+                  _buildItem(context, bpSysPicker, "BP Systolic", 200, 90, "mmHg"),
+                  _buildItem(context, bpDiasPicker, "BP Diastolic", 200, 60,"mmHg"),
+                  // _buildItem(
+                  //     context, "BP Diastolic", bpDiasController, 200),
+                  _buildItem(context, mapPicker, "MAP", 200, 100, "bpm"),
+                  _buildItem(context, prPicker, "PR", 200, 60, "bpm"),
+                  _buildItem(context, ppPicker, "Pulse Pressure", 200, 20,"bpm"),
+                  _buildItemOption(context, pvPicker, "Pulse Volume", pvList),
+                  _buildItemOption(context, crtPicker, "CRT", crtList),
+                  _buildItem(context, siPicker, "Shock Index", 200, 100,""),
+                  _buildItem(context, rrPicker, "RR", 100, 1,"bpm"),
+                  _buildItem(context, spo2Picker, "Sp02", 200, 95, "%"),
+                  _buildItem(context, tempPicker, "Temperature", 100, 30, "°C"),
+                  _buildItem(context, psPicker, "Pain Score", 11, 1,""),
+                  _buildItem(context, bgPicker, "Blood Glucose", 200, 100 ,"mmol/L"),
+                  _buildItem(context, bkPicker, "Blood Ketone", 200, 100,"mmol/L"),
+                  _buildItemPupil(
+                      context, lpPicker, "Left Pupil", 9, 1, pupilList),
+                  _buildItemPupil(
+                      context, rpPicker, "Right Pupil", 9, 1, pupilList),
+                  // _buildItemPupil(context, "Right Pupil", rpController),
+                  _buildItemGCS(context, gcsEpicker, gcsVpicker, gcsMpicker,
+                      gcsTotalpicker, "GCS"),
+                ],
+              ),
+            ),
           ),
-          actions: <Widget>[
-            cancelButton(action, widget.index),
-            createButton(action, widget.index)
-          ],
-          backgroundColor: Colors.purple),
-      body: SingleChildScrollView(
-        child: Container(
-          // child: Container(
-          //     alignment: Alignment.center,
-          //     padding: EdgeInsets.all(10),
-          child: Wrap(
-            alignment: WrapAlignment.center,
-            children: <Widget>[
-              Center(
-                  child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: widget.vitalSign == null
-                          ? Text("Last changes at " + _timestamp)
-                          : Text("Last changes at " +
-                              DateFormat("HH:mm aa")
-                                  .format(widget.vitalSign.created)))),
-              _buildItem(context, bpSysPicker, "BP Systolic", 200, 90),
-              _buildItem(context, bpDiasPicker, "BP Diastolic", 200, 60),
-              // _buildItem(
-              //     context, "BP Diastolic", bpDiasController, 200),
-              _buildItem(context, mapPicker, "MAP", 200, 100),
-              _buildItem(context, prPicker, "PR", 200, 60),
-              _buildItem(context, ppPicker, "Pulse Pressure", 200, 20),
-              _buildItem(context, pvPicker, "Pulse Volume", 200, 100),
-              _buildItem(context, crtPicker, "CRT", 200, 100),
-              _buildItem(context, siPicker, "Shock Index", 200, 100),
-              _buildItem(context, rrPicker, "RR", 100, 1),
-              _buildItem(context, spo2Picker, "Sp02", 200, 95),
-              _buildItem(context, tempPicker, "Temperature", 100, 30),
-              _buildItem(context, psPicker, "Pain Score", 11, 1),
-              _buildItem(context, bgPicker, "Blood Glucose", 200, 100),
-              _buildItemPupil(context, lpPicker, "Left Pupil", 9, 1),
-              _buildItemPupil(context, rpPicker, "Right Pupil", 9, 1),
-              // _buildItemPupil(context, "Right Pupil", rpController),
-              _buildItemGCS(context, gcsEpicker, gcsVpicker, gcsMpicker,
-                  gcsTotalpicker, "GCS"),
-            ],
-          ),
+          // ,),
         ),
       ),
-      // ,),
     );
   }
 
-  pupilPicker(NumberPicker picker, title) {
-    const list = ["Reactive", "Sluggish", "Fixed"];
+  optionPicker(NumberPicker picker, title, list) {
+    // const list = ["Reactive", "Sluggish", "Fixed"];
     // controller.setTitle(title);
+    // return SizedBox(
+    var titleButton = CupertinoButton(
+      child: Text(title),
+      onPressed: () {
+        // Navigator.of(context).pop();
+      },
+    );
+    var doneButton = CupertinoButton(
+      child: Text("Done"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
     return SizedBox(
-        height: 200,
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Expanded(
-                  child: CupertinoPicker(
-                      itemExtent: 50,
-                      scrollController: FixedExtentScrollController(
-                          initialItem: list
-                              .indexWhere((item) => item == picker.getOption)),
-                      onSelectedItemChanged: (int index) {
-                        setState(() {
-                          picker.setOption(list[index]);
-                        });
-                        // controller.setText(list[index]);
-                        // callback(controller);
-                        // print(index);
-                      },
-                      children: List<Widget>.generate(
-                          list.length, (int index) => Text(list[index]))
+      height: 200.0,
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+                alignment: Alignment.centerRight,
+                decoration: BoxDecoration(
+                    color: const Color.fromRGBO(249, 249, 247, 1.0),
+                    border: Border(
+                        bottom: const BorderSide(
+                            width: 0.5, color: Colors.black38))),
+                child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [titleButton, doneButton]))),
+            Expanded(
+              child: CupertinoPicker(
+                  itemExtent: 50,
+                  scrollController: FixedExtentScrollController(
+                    initialItem:
+                        list.indexWhere((item) => item == picker.getOption),
+                  ),
+                  onSelectedItemChanged: (int index) {
+                    setState(() {
+                      picker.setOption(list[index]);
+                    });
+                    // controller.setText(list[index]);
+                    // callback(controller);
+                    // print(index);
+                  },
+                  children: List<Widget>.generate(
+                    list.length,
+                    (int index) => Text(list[index]),
+                  )
 
-                      // generate(
-                      //         200, (int index) => Text(index.toString())))
-                      // Text("Sluggish")
-                      // ]
-                      )),
-              // Expanded(
-              //     child: CupertinoPicker(
-              //         itemExtent: 50,
-              //         onSelectedItemChanged: (int index) {
-              //           print(index);
-              //         },
-              //         children: List<Widget>.generate(
-              //             10, (int index) => Text(index.toString()))))
-            ]));
+                  // generate(
+                  //         200, (int index) => Text(index.toString())))
+                  // Text("Sluggish")
+                  // ]
+                  ),
+            ),
+          ]),
+    );
+
+    // Expanded(
+    //     child: CupertinoPicker(
+    //         itemExtent: 50,
+    //         onSelectedItemChanged: (int index) {
+    //           print(index);
+    //         },
+    //         children: List<Widget>.generate(
+    //             10, (int index) => Text(index.toString()))))
+    // ]),]),
+    // ],)
+    // ),),);
   }
 
   changeColorAbnormal() {
@@ -917,8 +1369,11 @@ class _VitalDetailState extends State<VitalDetail> {
     }
 
     //PULSE PRESSURE
-    if (ppPicker.getValue != null) {
-      (ppPicker.getValue < 20 || ppPicker.getValue > 100)
+    if (ppPicker.getOption != null ) {
+      print("ppPicker");
+      print(ppPicker.getOption);
+      (int.tryParse(ppPicker.getOption) < 20 ||
+              int.tryParse(ppPicker.getOption) > 100)
           ? ppPicker.setAbnormal(true)
           : ppPicker.setAbnormal(false);
     }
@@ -973,6 +1428,115 @@ class _VitalDetailState extends State<VitalDetail> {
           ],
         ));
   }
+
+  checkDecimal(strVal) {
+    if (strVal != null) {
+      bool isDecimal = strVal.contains(".");
+      // String firstVal;
+      // String secondVal;
+      if (isDecimal == true) {
+        var split = strVal.split(".");
+        return split;
+      }
+    }
+    return null;
+  }
+
+  cupertinoDoublePicker(NumberPicker picker, title, itemCount, initialData) {
+    // var splitData = checkDecimal(initialData);
+
+    var titleButton = CupertinoButton(
+      child: Text(title),
+      onPressed: () {
+        // Navigator.of(context).pop();
+      },
+    );
+    var doneButton = CupertinoButton(
+      child: Text("Done"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    var temp = checkDecimal(picker.getOption);
+    return SizedBox(
+      height: 200.0,
+      child: Column(
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Container(
+            alignment: Alignment.centerRight,
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(249, 249, 247, 1.0),
+              border: Border(
+                bottom: const BorderSide(width: 0.5, color: Colors.black38),
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [titleButton, doneButton],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: CupertinoPicker(
+                    scrollController: FixedExtentScrollController(
+                        initialItem: picker.getValue ?? 37),
+                    itemExtent: 50,
+                    onSelectedItemChanged: (int index) {
+                      print("onselecteditemchanged --cupertinopicker");
+                      print(index);
+
+                      setState(() {
+                        picker.setValue(index);
+                      });
+                      print(picker.getValue);
+                    },
+                    children: List<Widget>.generate(
+                      itemCount,
+                      (int index) => Text(
+                        index.toString(),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: CupertinoPicker(
+                    scrollController: FixedExtentScrollController(
+                        initialItem: picker.getDecimal ?? 0),
+                    itemExtent: 50,
+                    onSelectedItemChanged: (int index) {
+                      // print("onselecteditemchanged --cupertinopicker");
+                      // print(index);
+
+                      setState(() {
+                        picker.setDecimal(index);
+                      });
+                      print(picker.getDecimal);
+                    },
+                    children: List<Widget>.generate(
+                      10,
+                      (int index) => Text(
+                        index.toString(),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // ),
+        ],
+      ),
+    );
+  }
 }
 
 // Widget
@@ -1014,3 +1578,4 @@ class NumberPicker {
   int get getDecimal => decimal;
   bool get getAbnormal => abnormal;
 }
+

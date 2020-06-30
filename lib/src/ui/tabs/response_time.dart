@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:phcapp/custom/drop_downlist.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/models/phc.dart';
@@ -82,6 +83,8 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
   TimeBloc timeBloc;
   ResponseTime responseTime;
 
+  String missionSelected = " ";
+
   @override
   void didChangeDependencies() {
     timeBloc = BlocProvider.of<TimeBloc>(context);
@@ -97,37 +100,58 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
     super.didChangeDependencies();
   }
 
+  void missionCallback(String item) {
+    missionSelected = item;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Card(
-        margin: EdgeInsets.all(12.0),
-        child: Container(
-          padding: EdgeInsets.all(10.0),
-          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-            Center(child: HeaderSection("Response Time")),
-            Container(
-              height: 1,
-              color: Colors.grey,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            _buildCardTime(
-                Response.dispatch, widget.dispatchTime, _onPressedDispatch),
-            _buildCardTime(
-                Response.enroute, widget.enrouteTime, _onPressedEnroute),
-            _buildCardTime(
-                Response.atScene, widget.atSceneTime, _onPressedAtScene),
-            _buildCardTime(
-                Response.atPatient, widget.atPatientTime, _onPressedAtPatient),
-            _buildCardTime(Response.transport, widget.transportingTime,
-                _onPressedTransporting),
-            _buildCardTime(Response.atHospital, widget.atHospitalTime,
-                _onPressedAtHospital),
-            _buildCardTime(
-                Response.reroute, widget.rerouteTime, _onPressedReroute),
-          ]),
+    return Container(
+      color: Colors.grey,
+      child: SingleChildScrollView(
+        child: Card(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          margin: EdgeInsets.all(12.0),
+          child: Container(
+            padding: EdgeInsets.all(10.0),
+            child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+              Center(child: HeaderSection("Response Time")),
+              SizedBox(
+                height: 10,
+              ),
+              _buildCardTime(
+                  Response.dispatch, widget.dispatchTime, _onPressedDispatch),
+              _buildCardTime(
+                  Response.enroute, widget.enrouteTime, _onPressedEnroute),
+              _buildCardTime(
+                  Response.atScene, widget.atSceneTime, _onPressedAtScene),
+              _buildCardTime(Response.atPatient, widget.atPatientTime,
+                  _onPressedAtPatient),
+              _buildCardTime(Response.transport, widget.transportingTime,
+                  _onPressedTransporting),
+              _buildCardTime(Response.atHospital, widget.atHospitalTime,
+                  _onPressedAtHospital),
+              _buildCardTime(
+                  Response.reroute, widget.rerouteTime, _onPressedReroute),
+              SizedBox(
+                height: 20,
+              ),
+              // Container(
+              //   width: 500,
+              //   child: CustomDropDown(
+              //     labelText: "Mission abort",
+              //     items: [
+              //       " ",
+              //       "arrive at scene no patient found",
+              //       "stand down"
+              //     ],
+              //     callback: missionCallback,
+              //     itemSelected: missionSelected,
+              //   ),
+              // )
+            ]),
+          ),
         ),
       ),
     );
@@ -229,9 +253,9 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
             child: Text(
               labelText,
               style: TextStyle(
-                  // color: Colors.black26,
-                  fontSize: 18,
-                  fontFamily: "Raleway"),
+                  color: Colors.grey,
+                  // fontSize: 18,
+                  fontFamily: "OpenSans"),
             ),
           ),
           subtitle: Text(
@@ -239,16 +263,22 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
                 ? DateFormat("HH:mm").format(initialData)
                 : "No data",
             style: TextStyle(
-                fontFamily: "OpenSans",
+                // fontFamily: "OpenSans",
                 fontSize: initialData != null ? 30 : 16,
-                fontWeight: FontWeight.bold,
-                color: initialData != null ? Colors.black : Colors.grey
+                // fontWeight: FontWeight.bold,
+                color:
+                    // initialData != null ?
+                    Colors.black
+                // : Colors.grey
                 // fontSize: 30,
                 ),
           ),
           trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
             IconButton(
-              icon: Icon(Icons.edit),
+              icon: Icon(
+                Icons.edit,
+                color: Colors.blueAccent,
+              ),
               onPressed: () {
                 showCupertinoModalPopup(
                   context: context,
@@ -257,7 +287,15 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
                 );
               },
             ),
+            SizedBox(
+              width: 20,
+            ),
             RaisedButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20.0),
+                  ),
+                ),
                 child: Text(
                   "NOW",
                   style: TextStyle(color: Colors.white),

@@ -58,7 +58,7 @@ class _CPRTimeLog extends State<CPRTimeLog>
           // )
 
           Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Consumer<CPRProvider>(builder: (context, logs, child) {
           if (logs.items.length > 0) {
             return ListView.builder(
@@ -88,11 +88,13 @@ class _CPRTimeLog extends State<CPRTimeLog>
                   var counter = getCounter(logs.items[index]);
 
                   return Container(
+                    // alignment: Alignment.center,
                     padding: EdgeInsets.all(10),
                     child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Container(
-                          margin: EdgeInsets.all(10),
+                          // margin: EdgeInsets.all(10),
                           alignment: Alignment.center,
                           width: 60,
                           height: 60,
@@ -108,8 +110,11 @@ class _CPRTimeLog extends State<CPRTimeLog>
                                 color: Colors.white.withOpacity(0.8)),
                           ),
                         ),
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
-                          logs.items[index],
+                          logs.items[index].replaceAll(">", ""),
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,

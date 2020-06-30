@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/src/models/chip_item.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/pat_ass_bloc.dart';
@@ -96,7 +97,11 @@ class PatientAssessmentScreen extends StatefulWidget {
   _PatientAssessmentScreen createState() => _PatientAssessmentScreen();
 }
 
-class _PatientAssessmentScreen extends State<PatientAssessmentScreen> {
+class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
+    with AutomaticKeepAliveClientMixin<PatientAssessmentScreen> {
+  @override
+  bool get wantKeepAlive => true;
+// {
   List<String> listTriage = new List<String>();
   List<String> listAppearance = new List<String>();
   List<String> listLevelResponsiveness = new List<String>();
@@ -396,12 +401,12 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen> {
         }
 
         // f.value = widget.patientAssessment.abdomenAbnormalityLocation;
-        abnormalTextController.text =
-            widget.patientAssessment.abdomenAbnormalityLocation;
-
-        otherController.text = widget.patientAssessment.appearance;
         return f;
       }).toList();
+      abnormalTextController.text =
+          widget.patientAssessment.abdomenAbnormalityLocation;
+
+      otherController.text = widget.patientAssessment.appearance;
     }
 
     super.didChangeDependencies();
@@ -409,72 +414,149 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Patient Assessment"),
-        actions: <Widget>[
-          FlatButton.icon(
-            icon: Icon(Icons.save, color: Colors.white),
-            label: Text(
-              "SAVE",
-              style: TextStyle(color: Colors.white),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.grey,
+        // appBar: AppBar(
+        //   title: Text("Patient Assessment"),
+        //   actions: <Widget>[
+        //     FlatButton.icon(
+        //       icon: Icon(Icons.save, color: Colors.white),
+        //       label: Text(
+        //         "SAVE",
+        //         style: TextStyle(color: Colors.white),
+        //       ),
+        //       onPressed: () {
+        //         PatientAssessment patientAssessment = new PatientAssessment(
+        //             timestamp: new DateTime.now(),
+        //             disasterTriage: listTriage.length > 0 ? listTriage[0] : "",
+        //             appearance:
+        //                 listAppearance.length > 0 && listAppearance[0] == "Other"
+        //                     ? otherController.text
+        //                     : listAppearance[0],
+        //             levelResponsive: listLevelResponsiveness.length > 0
+        //                 ? listLevelResponsiveness[0]
+        //                 : "",
+        //             airwayPatency: listAirway.length > 0 ? listAirway[0] : "",
+        //             respiratoryEffort:
+        //                 listRespiratory.length > 0 ? listRespiratory[0] : "",
+        //             airEntry: AirEntry(
+        //                 leftLung:
+        //                     listAirEntryL.length > 0 ? listAirEntryL[0] : "",
+        //                 rightLung:
+        //                     listAirEntryR.length > 0 ? listAirEntryR[0] : ""),
+        //             breathSound: BreathSound(
+        //                 leftLung: listBreathSoundL.length > 0
+        //                     ? listBreathSoundL[0]
+        //                     : "",
+        //                 rightLung: listBreathSoundR.length > 0
+        //                     ? listBreathSoundR[0]
+        //                     : ""),
+        //             heartSound:
+        //                 listHeartSound.length > 0 ? listHeartSound[0] : "",
+        //             skin: listSkin,
+        //             ecg: listECG.length > 0 ? listECG[0] : "",
+        //             abdomenPalpation: listAbdomenPalpation.length > 0
+        //                 ? listAbdomenPalpation[0]
+        //                 : "",
+        //             abdomenAbnormalityLocation: abnormalTextController.text,
+        //             strokeScale: StrokeScale(
+        //               arm: listStrokeArm.length > 0 ? listStrokeArm[0] : "",
+        //               face: listStrokeFace.length > 0 ? listStrokeFace[0] : "",
+        //               speech:
+        //                   listStrokeSpeech.length > 0 ? listStrokeSpeech[0] : "",
+        //             ));
+
+        //         BlocProvider.of<AssPatientBloc>(context)
+        //             .add(UpdateAssPatient(patientAssessment: patientAssessment));
+
+        //         Navigator.pop(context);
+        //       },
+        //     )
+        //   ],
+        // ),
+        body: Card(
+          margin: EdgeInsets.all(12),
+          child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                HeaderSection("Patient Assessment"),
+                IconButton(
+                  icon: Icon(Icons.check),
+                  onPressed: () {
+                    PatientAssessment patientAssessment = new PatientAssessment(
+                        timestamp: new DateTime.now(),
+                        disasterTriage:
+                            listTriage.length > 0 ? listTriage[0] : "",
+                        appearance: listAppearance.length > 0 &&
+                                listAppearance[0] == "Other"
+                            ? otherController.text
+                            : listAppearance[0],
+                        levelResponsive: listLevelResponsiveness.length > 0
+                            ? listLevelResponsiveness[0]
+                            : "",
+                        airwayPatency:
+                            listAirway.length > 0 ? listAirway[0] : "",
+                        respiratoryEffort: listRespiratory.length > 0
+                            ? listRespiratory[0]
+                            : "",
+                        airEntry: AirEntry(
+                            leftLung: listAirEntryL.length > 0
+                                ? listAirEntryL[0]
+                                : "",
+                            rightLung: listAirEntryR.length > 0
+                                ? listAirEntryR[0]
+                                : ""),
+                        breathSound: BreathSound(
+                            leftLung: listBreathSoundL.length > 0
+                                ? listBreathSoundL[0]
+                                : "",
+                            rightLung: listBreathSoundR.length > 0
+                                ? listBreathSoundR[0]
+                                : ""),
+                        heartSound:
+                            listHeartSound.length > 0 ? listHeartSound[0] : "",
+                        skin: listSkin.length > 0 ? listSkin : null,
+                        ecg: listECG.length > 0 ? listECG[0] : "",
+                        abdomenPalpation: listAbdomenPalpation.length > 0
+                            ? listAbdomenPalpation[0]
+                            : "",
+                        abdomenAbnormalityLocation: abnormalTextController.text,
+                        strokeScale: StrokeScale(
+                          arm: listStrokeArm.length > 0 ? listStrokeArm[0] : "",
+                          face: listStrokeFace.length > 0
+                              ? listStrokeFace[0]
+                              : "",
+                          speech: listStrokeSpeech.length > 0
+                              ? listStrokeSpeech[0]
+                              : "",
+                        ));
+
+                    BlocProvider.of<AssPatientBloc>(context).add(
+                        UpdateAssPatient(patientAssessment: patientAssessment));
+
+                    Navigator.pop(context);
+                  },
+                )
+              ],
             ),
-            onPressed: () {
-              PatientAssessment patientAssessment = new PatientAssessment(
-                  timestamp: new DateTime.now(),
-                  disasterTriage: listTriage.length > 0 ? listTriage[0] : "",
-                  appearance:
-                      listAppearance.length > 0 && listAppearance[0] == "Other"
-                          ? otherController.text
-                          : listAppearance[0],
-                  levelResponsive: listLevelResponsiveness.length > 0
-                      ? listLevelResponsiveness[0]
-                      : "",
-                  airwayPatency: listAirway.length > 0 ? listAirway[0] : "",
-                  respiratoryEffort:
-                      listRespiratory.length > 0 ? listRespiratory[0] : "",
-                  airEntry: AirEntry(
-                      leftLung:
-                          listAirEntryL.length > 0 ? listAirEntryL[0] : "",
-                      rightLung:
-                          listAirEntryR.length > 0 ? listAirEntryR[0] : ""),
-                  breathSound: BreathSound(
-                      leftLung: listBreathSoundL.length > 0
-                          ? listBreathSoundL[0]
-                          : "",
-                      rightLung: listBreathSoundR.length > 0
-                          ? listBreathSoundR[0]
-                          : ""),
-                  heartSound:
-                      listHeartSound.length > 0 ? listHeartSound[0] : "",
-                  skin: listSkin,
-                  ecg: listECG.length > 0 ? listECG[0] : "",
-                  abdomenPalpation: listAbdomenPalpation.length > 0
-                      ? listAbdomenPalpation[0]
-                      : "",
-                  abdomenAbnormalityLocation: abnormalTextController.text,
-                  strokeScale: StrokeScale(
-                    arm: listStrokeArm.length > 0 ? listStrokeArm[0] : "",
-                    face: listStrokeFace.length > 0 ? listStrokeFace[0] : "",
-                    speech:
-                        listStrokeSpeech.length > 0 ? listStrokeSpeech[0] : "",
-                  ));
-
-              BlocProvider.of<AssPatientBloc>(context)
-                  .add(UpdateAssPatient(patientAssessment: patientAssessment));
-
-              Navigator.pop(context);
-            },
-          )
-        ],
+            _buildBody()
+          ]),
+        ),
       ),
-      body: _buildBody(),
     );
   }
 
   _buildBody() {
-    return Container(
-      margin: EdgeInsets.all(10),
+    return Expanded(
+      // margin: EdgeInsets.all(10),
       child: ListView.builder(
           itemCount: prepareData.length,
           itemBuilder: (context, index) {
