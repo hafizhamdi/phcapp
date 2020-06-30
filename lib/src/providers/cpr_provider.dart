@@ -115,6 +115,22 @@ class CPRProvider extends ChangeNotifier {
     }
   }
 
+  void resetRhythmAnalysis() {
+    itemModels.map((f) {
+      if (f.id != "cpr_start" ||
+          f.id != "bystander_cpr" ||
+          f.id != "witness_cpr" ||
+          f.id != "rosc" ||
+          f.id != "cpr_stop") {
+        f.value = null;
+      }
+
+      return f;
+    }).toList();
+
+    notifyListeners();
+  }
+
   UnmodifiableListView<CprSection> get listCPRs =>
       UnmodifiableListView(_listCPRs);
   // List<CPR> get listCPRs => _listCPRs;
@@ -139,6 +155,17 @@ class CPRProvider extends ChangeNotifier {
   void addLog(String value) {
     _commonCPR.add(value);
 
+    notifyListeners();
+  }
+
+  void resetLogs() {
+    cycleCounter = 0;
+
+    // itemModels.map((f) {
+    //   f.value = null;
+    // }).toList();
+
+    _commonCPR = new List<String>();
     notifyListeners();
   }
 

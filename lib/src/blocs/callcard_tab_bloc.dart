@@ -29,12 +29,11 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
 
   Stream<TabState> republishCallcardToState(RepublishCallcard event) async* {
     Callcard callcard = new Callcard(
-      callInformation: event.callInformation,
-      responseTeam: event.responseTeam,
-      responseTime: event.responseTime,
-      patients: event.patients,
-      // sceneAssessment: event.sceneAssessment
-    );
+        callInformation: event.callInformation,
+        responseTeam: event.responseTeam,
+        responseTime: event.responseTime,
+        patients: event.patients,
+        sceneAssessment: event.sceneAssessment);
 
     try {
       //publish to api
@@ -89,8 +88,18 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
         patients: event.patients,
         sceneAssessment: event.sceneAssessment);
 
+    // Callcard callcard = new Callcard(
+    //   callInformation: event.callInformation,
+    //   responseTeam: event.responseTeam,
+    //   responseTime: event.responseTime,
+    //   patients: event.patients,
+    //   // sceneAssessment: event.sceneAssessment
+    // );
+
+    // print(callcard.toJson());
     try {
       //publish to api
+      print("ready to publish to sending callcard");
       final response = await phcRepository.sendingCallcard(callcard);
       print("FINISH AWAIT DAHH");
 

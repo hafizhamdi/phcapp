@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phcapp/custom/choice_chip.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
+import 'package:phcapp/src/providers/cpr_provider.dart';
 import 'package:phcapp/src/providers/patinfo_provider.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/intervention_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/medication_bloc.dart';
@@ -23,7 +24,6 @@ const _otherServices = [
   "Red cresent",
   "St. John ambulance",
   "Private",
-  "Police",
   "Supervisor vehicle"
 ];
 
@@ -214,6 +214,11 @@ class _Patients extends State<PatientListScreen>
                 final outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
                 outcomeBloc.add(ResetOutcome());
 
+                // setState(() {
+                // final cprlog = Provider.of<CPRProvider>(context);
+                // cprlog.resetLogs();
+                // });
+
                 return PatientTab(
                   patient: new Patient(
                     patientInformation: new PatientInformation(),
@@ -225,7 +230,7 @@ class _Patients extends State<PatientListScreen>
           );
           // Add your onPressed code here!
         },
-        label: Text('ADD PATIENT'),
+        label: Text('ADD PATIENT NOTE'),
         icon: Icon(Icons.add),
         // backgroundColor: Colors.purple,
       ),

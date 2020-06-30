@@ -2,18 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:phcapp/src/providers/cpr_provider.dart';
 import 'package:provider/provider.dart';
 
-class CPRTimeLog extends StatefulWidget {
-  final cprSection;
+class CPRTimeLog extends StatelessWidget {
+  final BuildContext context;
 
-  CPRTimeLog({this.cprSection});
+  CPRTimeLog({this.context});
+//   final cprSection;
 
-  _CPRTimeLog createState() => _CPRTimeLog();
-}
+//   CPRTimeLog({this.cprSection, this.context});
 
-class _CPRTimeLog extends State<CPRTimeLog>
-    with AutomaticKeepAliveClientMixin<CPRTimeLog> {
-  @override
-  bool get wantKeepAlive => true;
+//   _CPRTimeLog createState() => _CPRTimeLog();
+// }
+
+// class _CPRTimeLog extends State<CPRTimeLog>
+//     with AutomaticKeepAliveClientMixin<CPRTimeLog> {
+//   @override
+//   bool get wantKeepAlive => true;
 
   // @override
   // void didChangeDependencies() {

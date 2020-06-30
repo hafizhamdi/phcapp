@@ -15,6 +15,7 @@ class PhcApiClient {
 
   Future fetchPhc() async {
     var ip = environment.ip;
+    print("ip used $ip");
     baseUrl = "http://$ip/phc-mobile/api/v1";
     final phcUrl = '$baseUrl/callcards';
     final phcResponse = await this.httpClient.get(phcUrl);
@@ -37,11 +38,16 @@ class PhcApiClient {
     assert(callcard != null);
 
     var ip = environment.ip;
+    print(ip);
     baseUrl = "http://$ip/phc-mobile/api/v1";
+    print(baseUrl);
 
     print("post callcard masuk");
-    print(jsonEncode(callcard.callInformation));
-    // print(jsonEncode(callcard.scene_assessment));
+    // print(callcard.toJson());
+    // print(jsonEncode(callcard.callInformation));
+    // print(jsonEncode(callcard.sceneAssessment));
+    // print(jsonEncode(callcard.patients));
+    // print(jsonEncode(callcard.responseTime));
 
     var internal_callcard = {};
     internal_callcard["call_information"] = callcard.callInformation;

@@ -5,6 +5,7 @@ import 'package:phcapp/src/models/chip_item.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/pat_ass_bloc.dart';
 import 'package:phcapp/src/widgets/my_multiple_option.dart';
+import 'package:phcapp/src/widgets/my_single_option.dart';
 import 'package:phcapp/src/widgets/mycard_single_option.dart';
 
 const _disasterTriage = ["Red", "Yellow", "Green", "White"];
@@ -115,6 +116,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen> {
   List<String> listStrokeArm = new List<String>();
 
   TextEditingController abnormalTextController = new TextEditingController();
+  TextEditingController otherController = new TextEditingController();
 
   List<ChipItem> prepareData = [
     ChipItem(
@@ -171,7 +173,11 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen> {
         value: List<String>(),
         multiple: true),
     ChipItem(id: "ecg", name: "ECG", listData: _ecg, value: ""),
-    ChipItem(id: "abdomen_palpation", name: "ECG", listData: _ecg, value: ""),
+    ChipItem(
+        id: "abdomen_palpation",
+        name: "Abdomen Palpation",
+        listData: _ecg,
+        value: ""),
     ChipItem(
         id: "stroke_face",
         name: "Stroke Scale: Face",
@@ -393,6 +399,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen> {
         abnormalTextController.text =
             widget.patientAssessment.abdomenAbnormalityLocation;
 
+        otherController.text = widget.patientAssessment.appearance;
         return f;
       }).toList();
     }
@@ -417,7 +424,9 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen> {
                   timestamp: new DateTime.now(),
                   disasterTriage: listTriage.length > 0 ? listTriage[0] : "",
                   appearance:
-                      listAppearance.length > 0 ? listAppearance[0] : "",
+                      listAppearance.length > 0 && listAppearance[0] == "Other"
+                          ? otherController.text
+                          : listAppearance[0],
                   levelResponsive: listLevelResponsiveness.length > 0
                       ? listLevelResponsiveness[0]
                       : "",
@@ -472,13 +481,24 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen> {
             if (prepareData[index].multiple == true) {
               return _buildCardMultiple(prepareData[index]);
             }
-            return MyCardSingleOption(
-              id: prepareData[index].id,
-              name: prepareData[index].name,
-              listData: prepareData[index].listData,
-              mycallback: mycallback,
-              value: prepareData[index].value,
-            );
+            return prepareData[index].id != "appearance"
+                ? MyCardSingleOption(
+                    id: prepareData[index].id,
+                    name: prepareData[index].name,
+                    listData: prepareData[index].listData,
+                    mycallback: mycallback,
+                    value: prepareData[index].value,
+                  )
+                : MyAppearanceOption(
+                    id: prepareData[index].id,
+                    name: prepareData[index].name,
+                    listData: prepareData[index].listData,
+                    mycallback: mycallback,
+                    value: prepareData[index].value,
+                    controller: otherController,
+                  );
+
+            // );
           }),
     );
   }
@@ -501,7 +521,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen> {
               padding: EdgeInsets.only(bottom: 20),
               child: Text(
                 name,
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
             MyMultipleOptions(
@@ -520,7 +540,8 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen> {
                           labelText: "Abdomen Abnormal Location"),
                     ),
                   )
-                : Container()
+                : Container(),
+
             // ],
             // ),
           ],
@@ -529,4 +550,59 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen> {
     );
   }
 // }
+}
+
+class MyAppearanceOption extends StatelessWidget {
+  final id;
+  final name;
+  final listData;
+  final value;
+  final controller;
+  final Function mycallback;
+
+  MyAppearanceOption(
+      {this.id,
+      this.controller,
+      this.name,
+      this.listData,
+      this.value,
+      this.mycallback});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Container(
+        padding: EdgeInsets.all(12),
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.only(bottom: 20),
+              child: Text(
+                name,
+
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                // style: TextStyle(fontSize: 20),
+              ),
+            ),
+            MySingleOptions(
+              id: id,
+              listDataset: listData,
+              initialData: value,
+              callback: mycallback,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.5,
+              child: TextField(
+                style: TextStyle(fontSize: 18),
+                controller: controller,
+                decoration: InputDecoration(labelText: "Other"),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }

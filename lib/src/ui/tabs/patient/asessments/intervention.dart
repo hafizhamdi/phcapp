@@ -24,7 +24,8 @@ const _oxygen = [
   "BVM",
   "Face mask",
   "Venturi mask",
-  "NIV"
+  "NIV",
+  "Room Air"
 ];
 const _extHaemorrhage = ["Bandage", "Haemostatic bandages", "Torniquet"];
 const _vascularAccess = ["IV", "IO"];
@@ -247,7 +248,9 @@ class _InterventionScreen extends State<InterventionScreen> {
               padding: EdgeInsets.only(bottom: 20),
               child: Text(
                 name,
-                style: TextStyle(fontSize: 20),
+
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                // style: TextStyle(fontSize: 20),
               ),
             ),
             MyMultipleOptions(

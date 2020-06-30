@@ -1,14 +1,17 @@
-import 'dart:math';
+// import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/providers/cpr_provider.dart';
+// import 'package:phcapp/src/ui/tabs/patient/cpr/cpr_timelog.dart';
 import 'package:provider/provider.dart';
 
 // import 'cpr_tabs.dart';
 
 class CPRItems extends StatefulWidget {
+  // final BuildContext context;
   final CprSection cprSection;
 
   CPRItems({this.cprSection});
@@ -100,7 +103,7 @@ class _CPRItems extends State<CPRItems>
     // }
 
     // if (widget.cprSection != null) {
-    final cprProvider = Provider.of<CPRProvider>(context);
+    // final cprProvider = Provider.of<CPRProvider>(context);
     //   cprProvider.setLogs(widget.cprSection.logs);
     // }
 
@@ -118,9 +121,16 @@ class _CPRItems extends State<CPRItems>
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(10),
           child: Column(
+            mainAxisSize: MainAxisSize.max,
             children: <Widget>[
+              FlatButton(
+                child: Text("VIEW LOG HISTORY"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
               _buildChoiceChip(context, "witness_cpr", WITNESS),
               _buildChoiceChip(context, "bystander_cpr", WITNESS),
               _buildChoiceChip(
@@ -128,15 +138,30 @@ class _CPRItems extends State<CPRItems>
                 "cpr_start",
                 WITNESS,
               ),
+              _buildAddCycle(),
+              _buildCounterRhythm(),
               _buildAnalysis(),
+              _buildChoiceChip(context, "rosc", WITNESS),
+              _buildChoiceChip(
+                context,
+                "cpr_stop",
+                WITNESS,
+              ),
             ],
           ),
         ),
       ),
+      // ),
     );
   }
 
   onSelected(context, id, value) {
+    //get cprstart button click state
+    if (id == "cpr_start") {
+      print("cpr pressed");
+      print("what the value now " + value);
+    }
+
     final cprProvider = Provider.of<CPRProvider>(context, listen: false);
 
     cprProvider.updateValue(id, value);
@@ -315,27 +340,57 @@ class _CPRItems extends State<CPRItems>
         ));
   }
 
+  _buildCounterRhythm() {
+    final provider = Provider.of<CPRProvider>(context);
+    return SizedBox(
+      height: 150,
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: provider.cycleCounter,
+          itemBuilder: (context, index) {
+            return Container(
+              margin: EdgeInsets.all(5),
+              alignment: Alignment.center,
+              width: 60,
+              height: 60,
+              decoration: new BoxDecoration(
+                color: Colors.grey,
+                shape: BoxShape.circle,
+              ),
+              child: Text(
+                "${index + 1}",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                    color: Colors.white.withOpacity(0.8)),
+              ),
+            );
+          }),
+    );
+  }
+
   _buildAddCycle() {
     final provider = Provider.of<CPRProvider>(context);
     return Padding(
         padding: EdgeInsets.all(10),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text("CPR Cycle: " + provider.cycleCounter.toString()),
+          Text("Rhythm Analysis: " + provider.cycleCounter.toString()),
           RaisedButton.icon(
-            label: Text("Add CPR Cycle"),
+            label: Text("Add Rhythm Analysis"),
             icon: Icon(Icons.add),
             onPressed: () {
+              provider.resetRhythmAnalysis();
               provider.addCycle();
-              provider.addLog("CPR Cycle " +
-                  provider.cycleCounter.toString() +
-                  " is added");
+              provider.addLog(
+                  "Rhythm Analysis > " + provider.cycleCounter.toString());
             },
             color: Theme.of(context).accentColor,
             textColor: Colors.white,
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                side: BorderSide(color: Colors.red)),
+              borderRadius: BorderRadius.circular(20.0),
+              // side: BorderSide(color: Colors.red)
+            ),
             // clipBehavior: Clip.hardEdge,
           )
         ]));
@@ -344,12 +399,16 @@ class _CPRItems extends State<CPRItems>
   _buildAnalysis() {
     final provider = Provider.of<CPRProvider>(context);
     return Container(
+        // padding: EdgeInsets.all(10),
         child: Column(children: [
       Card(
         margin: EdgeInsets.all(10),
         elevation: 2.0,
         child: Column(
           children: <Widget>[
+            SizedBox(
+              height: 10,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -361,13 +420,6 @@ class _CPRItems extends State<CPRItems>
             _showButtonChoices(onShock, onNonShock, onOther),
           ],
         ),
-      ),
-      _buildAddCycle(),
-      _buildChoiceChip(context, "rosc", WITNESS),
-      _buildChoiceChip(
-        context,
-        "cpr_stop",
-        WITNESS,
       ),
     ]));
   }
@@ -408,17 +460,25 @@ class _CPRItems extends State<CPRItems>
   }
 
   _customButton(label, selected) {
-    return RaisedButton(
-      child: Text(label),
-      onPressed: () {
-        onPressed(label);
-      },
-      color: selected != null ? Theme.of(context).accentColor : Colors.white,
-      textColor:
-          selected != null ? Colors.white : Theme.of(context).accentColor,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          side: BorderSide(color: Theme.of(context).accentColor)),
+    return Container(
+      width: 100,
+      height: 50,
+      // alignment: Alignment.center,
+      child: RaisedButton(
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+        ),
+        onPressed: () {
+          onPressed(label);
+        },
+        color: selected != null ? Theme.of(context).accentColor : Colors.white,
+        textColor:
+            selected != null ? Colors.white : Theme.of(context).accentColor,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            side: BorderSide(color: Theme.of(context).accentColor)),
+      ),
     );
   }
 
@@ -514,15 +574,22 @@ class _CPRItems extends State<CPRItems>
           return AlertDialog(
             title: Text("Add log"),
             content: Container(
+                width: MediaQuery.of(context).size.width,
                 child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("Modify the log here"),
-                TextField(
-                  controller: commentController,
-                )
-              ],
-            )),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Log description",
+                      style: TextStyle(
+                          // fontSize: 21,
+                          color: Colors.grey),
+                    ),
+                    TextField(
+                      controller: commentController,
+                    )
+                  ],
+                )),
             actions: <Widget>[
               RaisedButton(
                 shape: RoundedRectangleBorder(

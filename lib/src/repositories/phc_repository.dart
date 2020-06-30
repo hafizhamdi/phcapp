@@ -13,7 +13,7 @@ class PhcRepository {
 
   Future sendingCallcard(callcard) async {
     print("sendingCallcard");
-    print(callcard);
+    // print(callcard.toJson());
     return phcApiClient.postCallcard(callcard);
   }
 
@@ -21,5 +21,4 @@ class PhcRepository {
     print("getavailablestaffs");
     return phcApiClient.fetchAvailableStaffs();
   }
-
 }

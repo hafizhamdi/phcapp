@@ -100,7 +100,7 @@ class _TeamState extends State<ResponseTeamScreen> //{
     final teamBloc = BlocProvider.of<TeamBloc>(context);
 
     return Scaffold(
-      // backgroundColor: Colors.white,
+      backgroundColor: Colors.grey,
       body: SingleChildScrollView(
         // padding: EdgeInsets.all(20),
         physics: BouncingScrollPhysics(),
@@ -138,18 +138,17 @@ class _TeamState extends State<ResponseTeamScreen> //{
           ],
         ),
       ),
-
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: 200,
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Staffs()));
-          // Add your onPressed code here!
-        },
-        label: Text('ADD STAFF'),
-        icon: Icon(Icons.add),
-        // backgroundColor: Colors.purple,
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   heroTag: 200,
+      //   onPressed: () {
+      //     Navigator.push(
+      //         context, MaterialPageRoute(builder: (context) => Staffs()));
+      //     // Add your onPressed code here!
+      //   },
+      //   label: Text('ADD STAFF'),
+      //   icon: Icon(Icons.add),
+      //   // backgroundColor: Colors.purple,
+      // ),
     );
   }
 
@@ -293,6 +292,8 @@ class _TeamList extends State<TeamList> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0))),
       margin: EdgeInsets.all(12.0),
       // width: 500,
       child: Container(
@@ -317,10 +318,10 @@ class _TeamList extends State<TeamList> {
               ),
             ]),
 
-            Container(
-              height: 1,
-              color: Colors.grey,
-            ),
+            // Container(
+            //   height: 1,
+            //   color: Colors.grey,
+            // ),
             SizedBox(
               height: 10,
             ),
@@ -376,7 +377,40 @@ class _TeamList extends State<TeamList> {
                               ));
                         }),
                   )
-                : Container()
+                : Container(),
+            widget.selectedStaffs.length < 1
+                ? Center(
+                    child: Container(
+                      child: Text("No response team",
+                          style: TextStyle(
+                              color: Colors.grey, fontFamily: "OpenSans")),
+                    ),
+                  )
+                : Container(),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              child: RaisedButton.icon(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20.0),
+                  ),
+                ),
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.blueAccent,
+                ),
+                label: Text(
+                  "ADD STAFF",
+                  style: TextStyle(color: Colors.blueAccent),
+                ),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Staffs()));
+                },
+              ),
+            )
           ],
         ),
       ),
@@ -407,6 +441,8 @@ class ResponseDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0))),
       margin: EdgeInsets.all(12.0),
       // width: 500,
       child: Container(
@@ -432,10 +468,10 @@ class ResponseDetail extends StatelessWidget {
               ],
             ),
 
-            Container(
-              height: 1,
-              color: Colors.grey,
-            ),
+            // Container(
+            //   height: 1,
+            //   color: Colors.grey,
+            // ),
             SizedBox(
               height: 10,
             ),

@@ -8,11 +8,17 @@ import 'package:phcapp/src/providers/cpr_provider.dart';
 import 'package:phcapp/src/providers/medication_provider.dart';
 import 'package:phcapp/src/providers/patinfo_provider.dart';
 import 'package:phcapp/src/providers/vital_provider.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/intervention_bloc.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/medication_bloc.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/outcome_bloc.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/pat_ass_bloc.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/reporting_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/trauma_bloc.dart';
-import 'package:phcapp/src/ui/tabs/patient/cpr/list_cpr.dart';
+// import 'package:phcapp/src/ui/tabs/patient/cpr/cpr_detail.dart';
+import 'package:phcapp/src/ui/tabs/patient/cpr/cpr_items.dart';
+import 'package:phcapp/src/ui/tabs/patient/cpr/cpr_timelog.dart';
 import 'package:provider/provider.dart';
 import 'asessments/main_assessment.dart';
-import 'cprlog_list.dart';
 // import 'main_assessment.dart';
 import 'information.dart';
 // import 'cprlog.dart';
@@ -34,6 +40,12 @@ class _PatientTab extends State<PatientTab> {
   PatientBloc patientBloc;
   PatientInformation patientInformation;
   VitalBloc vitalBloc;
+  AssPatientBloc assPatientBloc;
+  InterBloc interBloc;
+  TraumaBloc traumaBloc;
+  MedicationBloc medicationBloc;
+  ReportingBloc reportingBloc;
+  OutcomeBloc outcomeBloc;
 
   Action getAction(index) {
     if (index == null)
@@ -45,6 +57,13 @@ class _PatientTab extends State<PatientTab> {
   @override
   void didChangeDependencies() {
     patientBloc = BlocProvider.of<PatientBloc>(context);
+
+    assPatientBloc = BlocProvider.of<AssPatientBloc>(context);
+    interBloc = BlocProvider.of<InterBloc>(context);
+    traumaBloc = BlocProvider.of<TraumaBloc>(context);
+    medicationBloc = BlocProvider.of<MedicationBloc>(context);
+    reportingBloc = BlocProvider.of<ReportingBloc>(context);
+    outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
 
     // final provider = Provider.of<PatInfoProvider>(context);
 
@@ -147,7 +166,7 @@ class _PatientTab extends State<PatientTab> {
             // final cprlog = preparingResultCPRlog(context);
             // print(cprlog);
 
-            final vitalSigns = BlocProvider.of<VitalBloc>(context);
+            // final vitalSigns = BlocProvider.of<VitalBloc>(context);
             // final vitalsigns = preparingResultVitalSigns(context);
             if (action == Action.delete) {
               //TODO:Update
@@ -155,15 +174,39 @@ class _PatientTab extends State<PatientTab> {
                   patient: new Patient(
                       // cpr: cprBloc.state.cpr,
                       patientInformation: patInfo,
-                      vitalSigns: vitalBloc.state.listVitals),
+                      vitalSigns: vitalBloc.state.listVitals ??
+                          widget.patient.vitalSigns,
+                      patientAssessment:
+                          assPatientBloc.state.patientAssessment ??
+                              widget.patient.patientAssessment,
+                      intervention:
+                          interBloc.state.inter ?? widget.patient.intervention,
+                      traumaAssessment: traumaBloc.state.traumaAssessment ??
+                          widget.patient.traumaAssessment,
+                      medicationAssessment:
+                          medicationBloc.state.medicationAssessment ??
+                              widget.patient.medicationAssessment,
+                      incidentReporting:
+                          reportingBloc.state.incidentReporting ??
+                              widget.patient.incidentReporting,
+                      outcome:
+                          outcomeBloc.state.outcome ?? widget.patient.outcome),
                   index: widget.index));
             } else {
               print("ADD PATIENT BLOC");
               patientBloc.add(AddPatient(
                 patient: new Patient(
                     // cpr: cprBloc.state.cpr,
+
                     patientInformation: patInfo,
-                    vitalSigns: vitalBloc.state.listVitals),
+                    vitalSigns: vitalBloc.state.listVitals,
+                    patientAssessment: assPatientBloc.state.patientAssessment,
+                    intervention: interBloc.state.inter,
+                    traumaAssessment: traumaBloc.state.traumaAssessment,
+                    medicationAssessment:
+                        medicationBloc.state.medicationAssessment,
+                    incidentReporting: reportingBloc.state.incidentReporting,
+                    outcome: outcomeBloc.state.outcome),
               ));
             }
             print("patient created");
@@ -181,12 +224,11 @@ class _PatientTab extends State<PatientTab> {
     // TODO: implement build
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => CPRProvider()),
         ChangeNotifierProvider(create: (context) => PatInfoProvider()),
 
-        BlocProvider(
-          create: (context) => TraumaBloc(),
-        )
+        // BlocProvider(
+        //   create: (context) => TraumaBloc(),
+        // )
         // Provider<PatInfoProvider>(create: (context) => PatInfoProvider())
       ],
       child: DefaultTabController(
@@ -194,8 +236,9 @@ class _PatientTab extends State<PatientTab> {
           child: Consumer<PatInfoProvider>(
             builder: (context, data, child) {
               return Scaffold(
+                backgroundColor: Colors.grey,
                 appBar: AppBar(
-                    // automaticallyImplyLeading: false,
+                    automaticallyImplyLeading: false,
                     bottom: TabBar(
                       tabs: [
                         Tab(icon: Icon(Icons.account_box)),
@@ -217,7 +260,11 @@ class _PatientTab extends State<PatientTab> {
                     PatientInformationScreen(
                         patient_information: widget.patient.patientInformation),
                     // ),
-                    ListCPR(),
+
+                    CPRTimeLog(),
+                    // ),
+
+                    // CPRDetail(),
                     VitalSignList(
                         listVitals: widget.patient.vitalSigns,
                         index: widget.index),
