@@ -142,3 +142,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     return md5.convert(utf8.encode(password)).toString();
   }
 }
+
+//TODO password encrypt/decrypt
+// DECRYPT
+// TEXT -> BASE64 -> BYTES -> MD5 SHA1 decode
+// ENCRYPT
+// TEXT -> BYTES -> MD5 SHA1 -> BASE64

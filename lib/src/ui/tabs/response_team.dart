@@ -101,54 +101,55 @@ class _TeamState extends State<ResponseTeamScreen> //{
 
     return Scaffold(
       backgroundColor: Colors.grey,
-      body: SingleChildScrollView(
-        // padding: EdgeInsets.all(20),
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            BlocBuilder<ResponseBloc, ResponseState>(
-              builder: (context, state) {
-                if (state is LoadedResponse) {
-                  return ResponseDetail(
-                    typeResponse: state.serviceResponse,
-                    vehicleRegno: state.vehicleRegNo,
-                  );
-                }
+      body: SafeArea(
+        child: SingleChildScrollView(
+          // padding: EdgeInsets.all(20),
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              BlocBuilder<ResponseBloc, ResponseState>(
+                builder: (context, state) {
+                  if (state is LoadedResponse) {
+                    return ResponseDetail(
+                      typeResponse: state.serviceResponse,
+                      vehicleRegno: state.vehicleRegNo,
+                    );
+                  }
 
-                return ResponseDetail(
-                    typeResponse: (widget.response_team != null)
-                        ? widget.response_team.serviceResponse
-                        : '',
-                    vehicleRegno: (widget.response_team != null)
-                        ? widget.response_team.vehicleRegno
-                        : '');
-              },
-            ),
-            BlocBuilder<TeamBloc, TeamState>(builder: (context, state) {
-              if (state is TeamLoaded) {
-                return TeamList(selectedStaffs: state.selectedStaffs);
-              }
-              return TeamList(
-                selectedStaffs: (widget.response_team != null)
-                    ? widget.response_team.staffs
-                    : null,
-              );
-            })
-          ],
+                  return ResponseDetail(
+                      typeResponse: (widget.response_team != null)
+                          ? widget.response_team.serviceResponse
+                          : '',
+                      vehicleRegno: (widget.response_team != null)
+                          ? widget.response_team.vehicleRegno
+                          : '');
+                },
+              ),
+              BlocBuilder<TeamBloc, TeamState>(builder: (context, state) {
+                if (state is TeamLoaded) {
+                  return TeamList(selectedStaffs: state.selectedStaffs);
+                }
+                return TeamList(
+                  selectedStaffs: (widget.response_team != null)
+                      ? widget.response_team.staffs
+                      : null,
+                );
+              })
+            ],
+          ),
         ),
+        // floatingActionButton: FloatingActionButton.extended(
+        //   heroTag: 200,
+        //   onPressed: () {
+        //     Navigator.push(
+        //         context, MaterialPageRoute(builder: (context) => Staffs()));
+        //     // Add your onPressed code here!
+        //   },
+        //   label: Text('ADD STAFF'),
+        //   icon: Icon(Icons.add),
+        //   // backgroundColor: Colors.purple,
       ),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   heroTag: 200,
-      //   onPressed: () {
-      //     Navigator.push(
-      //         context, MaterialPageRoute(builder: (context) => Staffs()));
-      //     // Add your onPressed code here!
-      //   },
-      //   label: Text('ADD STAFF'),
-      //   icon: Icon(Icons.add),
-      //   // backgroundColor: Colors.purple,
-      // ),
     );
   }
 
@@ -377,16 +378,17 @@ class _TeamList extends State<TeamList> {
                               ));
                         }),
                   )
-                : Container(),
-            widget.selectedStaffs.length < 1
-                ? Center(
+                // : Container(),
+                // widget.selectedStaffs.length < 1
+                // ?
+                : Center(
                     child: Container(
                       child: Text("No response team",
                           style: TextStyle(
                               color: Colors.grey, fontFamily: "OpenSans")),
                     ),
-                  )
-                : Container(),
+                  ),
+            // : Container(),
             SizedBox(
               height: 10,
             ),
@@ -455,7 +457,10 @@ class ResponseDetail extends StatelessWidget {
               children: [
                 HeaderSection("Response Details"),
                 IconButton(
-                    icon: Icon(Icons.edit),
+                    icon: Icon(
+                      Icons.edit,
+                      color: Colors.blueAccent,
+                    ),
                     onPressed: () {
                       Navigator.push(
                           context,

@@ -86,7 +86,7 @@ class _EditCallInfo extends State<EditCallInfo>
       contactNoController.text = widget.call_information.caller_contactno;
       eventCodeController.text = widget.call_information.event_code;
       incidentController.text = widget.call_information.incident_desc;
-      locationController.text = widget.call_information.location_type;
+      locationController.text = widget.call_information.incidentLocation;
       landmarkController.text = widget.call_information.landmark;
 
       _priority = widget.call_information.priority;
@@ -184,14 +184,61 @@ class _EditCallInfo extends State<EditCallInfo>
 
     return Center(
       child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20.0),
+            ),
+          ),
           margin: EdgeInsets.all(10.0),
           child: Form(
             key: _formKey,
             child: Column(
               children: <Widget>[
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    HeaderSection("Edit Call Information"),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Center(
+                      child: HeaderSection("Edit Call Information"),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.check),
+                      onPressed: () {
+                        // {
+                        // if (_formKey.currentState.validate()) {
+                        // print("widget.call_information.assign_id");
+                        // print(widget.call_information.assign_id);
+                        callInfoBloc.add(SaveCallInfo(
+                            callInformation: new CallInformation(
+                          callcardNo: cardNoValue,
+                          callReceived: receivedController.text,
+                          callerContactno: contactNoController.text,
+                          eventCode: eventCodeController.text,
+                          priority: _priority,
+                          incidentDesc: incidentController.text,
+                          incidentLocation: locationController.text,
+                          landmark: landmarkController.text,
+                          locationType: _location,
+                          distanceToScene: _distance,
+                          assignId: widget.call_information.assign_id,
+                          plateNo: widget.call_information.plate_no,
+                        )));
+
+                        // final snackBar = SnackBar(
+                        //   content: Text("Call information has been saved!"),
+                        // );
+                        // Scaffold.of(context).showSnackBar(snackBar);
+
+                        //   Navigator.pop(context);
+                        // }
+                        Navigator.pop(context);
+                      },
+                    ),
                   ],
                 ),
                 // // TextEditLabel(
@@ -211,7 +258,7 @@ class _EditCallInfo extends State<EditCallInfo>
                   labelText: "Caller Contact No",
                   controller: contactNoController,
                   maskFormater: contactNoFormater,
-                  hintText: "XXX-XXXXXXX",
+                  hintText: "ex: 012-3456789",
                   //     inputType:
                   //         TextInputType.numberWithOptions(signed: true),
                   //     hintText: "0139446197",
@@ -219,6 +266,8 @@ class _EditCallInfo extends State<EditCallInfo>
                 TextInput(
                   labelText: "Event Code",
                   controller: eventCodeController,
+                  // hintText: "37/XC/02/XW",
+                  // maskFormater: eventCodeFormater,
                 ),
                 DropDownList(
                     "Priority", LIST_PRIORITY, InputOption.priority, _priority),
@@ -266,41 +315,20 @@ class _EditCallInfo extends State<EditCallInfo>
     void callback(String item, int index) {}
 
     return Scaffold(
-      appBar: AppBar(),
-      body: SingleChildScrollView(
+      backgroundColor: Colors.grey,
+      // appBar: AppBar(),
+      body: SafeArea(
+        child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
-          child: _buildBloc(context, initialValue)),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 100,
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            // print("widget.call_information.assign_id");
-            // print(widget.call_information.assign_id);
-            callInfoBloc.add(SaveCallInfo(
-                callInformation: new CallInformation(
-                    callcardNo: cardNoValue,
-                    callReceived: receivedController.text,
-                    callerContactno: contactNoController.text,
-                    eventCode: eventCodeController.text,
-                    priority: _priority,
-                    incidentDesc: incidentController.text,
-                    incidentLocation: locationController.text,
-                    landmark: landmarkController.text,
-                    locationType: _location,
-                    distanceToScene: _distance,
-                    assignId: widget.call_information.assign_id,
-                    plateNo: widget.call_information.plate_no)));
-
-            // final snackBar = SnackBar(
-            //   content: Text("Call information has been saved!"),
-            // );
-            // Scaffold.of(context).showSnackBar(snackBar);
-
-            Navigator.pop(context);
-          }
-        },
-        child: Icon(Icons.save),
+          child: _buildBloc(context, initialValue),
+        ),
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   heroTag: 100,
+      //   onPressed: () {
+      //   },
+      //   child: Icon(Icons.save),
+      // ),
     );
   }
 

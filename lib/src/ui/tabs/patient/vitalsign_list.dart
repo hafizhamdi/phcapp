@@ -30,29 +30,29 @@ class _VitalSignList extends State<VitalSignList>
   // @override
   // void didChangeDependencies() {}
 
-  // @override
-  // void initState() {
-  //   vitalBloc = BlocProvider.of<VitalBloc>(context);
+  @override
+  void initState() {
+    vitalBloc = BlocProvider.of<VitalBloc>(context);
 
-  //   print(vitalBloc.state.listVitals);
-  //   if (vitalBloc.state.listVitals == []) {
-  //     vitalBloc.add(LoadVital(listVitals: widget.listVitals));
-  //   }
+    print(vitalBloc.state.listVitals);
+    if (vitalBloc.state.listVitals == null) {
+      vitalBloc.add(LoadVital(listVitals: widget.listVitals));
+    }
 
-  //   print(widget.index);
-  //   if (widget.index == null) {
-  //     print(widget.index);
-  //     vitalBloc.add(LoadVital(listVitals: []));
-  //   }
+    print(widget.index);
+    if (widget.index == null) {
+      print(widget.index);
+      vitalBloc.add(LoadVital(listVitals: []));
+    }
 
-  //   super.initState();
-  // }
+    super.initState();
+  }
 
-  // @override
-  // void dispose() {
-  //   // vitalBloc.add(LoadVital(listVitals: []));
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    vitalBloc.add(LoadVital(listVitals: null));
+    super.dispose();
+  }
 
   @override
   String counterStartingWord(index) {
@@ -104,13 +104,13 @@ class _VitalSignList extends State<VitalSignList>
                     // )
 
                     ),
-                Expanded(
-                    child: Row(children: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.only(right: 5),
-                      child: Icon(Icons.flag, color: Colors.purple)),
-                  Text("Normal")
-                ])),
+                // Expanded(
+                //     child: Row(children: <Widget>[
+                //   Padding(
+                //       padding: EdgeInsets.only(right: 5),
+                //       child: Icon(Icons.flag, color: Colors.purple)),
+                //   Text("Normal")
+                // ]),),
               ],
             ),
             padding: EdgeInsets.only(right: 20)),
@@ -206,10 +206,28 @@ class _VitalSignList extends State<VitalSignList>
                               )
                             : Container();
                       }
-                      return Center(
-                          child: Container(
-                        child: Text("No Vital signs recorded. Add VITALSIGN"),
-                      ));
+
+                      return Container();
+                      // return Container(
+                      //   width: 500,
+                      //   padding: EdgeInsets.only(bottom: 10),
+                      //   child: ListView.builder(
+                      //     physics: NeverScrollableScrollPhysics(),
+                      //     // addRepaintBoundaries: false,
+                      //     shrinkWrap: true,
+                      //     // ke: ,
+                      //     // padding: EdgeInsets.all(30),
+                      //     itemCount: widget.listVitals.length,
+                      //     itemBuilder: (BuildContext context, int index) {
+                      //       return _buildCard(widget.listVitals[index], index);
+                      //     },
+                      //   ),
+                      // );
+                      // : Container();
+                      // return Center(
+                      //     child: Container(
+                      //   child: Text("No Vital signs recorded. Add VITALSIGN"),
+                      // ));
                       //   width: 500,
                       //   padding: EdgeInsets.only(bottom: 10),
                       //   child: ListView.builder(

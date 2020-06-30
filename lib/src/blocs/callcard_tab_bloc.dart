@@ -28,6 +28,7 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
   }
 
   Stream<TabState> republishCallcardToState(RepublishCallcard event) async* {
+    yield CallcardToPublishLoading();
     Callcard callcard = new Callcard(
         callInformation: event.callInformation,
         responseTeam: event.responseTeam,
@@ -49,6 +50,7 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
         try {
           final insert = await phcDao.insertHistory(callcard, status_send);
           historyBloc.add(LoadHistory());
+          // yield CallcardToPublishSuccess();
         } catch (_) {
           yield CallcardToSavingError();
         }
@@ -61,6 +63,7 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
         // yield CallcardToPublishEmpty();
         // yield CallcardToPublishSuccess();
       }
+      yield CallcardToPublishSuccess();
 
       // await Future.delayed(Duration(seconds: 2));
     } catch (_) {
@@ -81,11 +84,12 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
   }
 
   Stream<TabState> publishCallcardToState(PublishCallcard event) async* {
+    yield CallcardToPublishLoading();
     Callcard callcard = new Callcard(
         callInformation: event.callInformation,
         responseTeam: event.responseTeam,
         responseTime: event.responseTime,
-        patients: event.patients,
+        patients: List<Patient>.from(event.patients).toList(),
         sceneAssessment: event.sceneAssessment);
 
     // Callcard callcard = new Callcard(
@@ -110,7 +114,9 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
         // print(insert);
         try {
           final insert = await phcDao.insertHistory(callcard, status_send);
-          historyBloc.add(LoadHistory());
+          // historyBloc.add(LoadHistory());
+          print("insert history success");
+          // yield CallcardToPublishSuccess();
         } catch (_) {
           yield CallcardToSavingError();
         }

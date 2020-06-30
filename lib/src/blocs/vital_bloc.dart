@@ -151,6 +151,7 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
       ..add(event.vital);
     // / blocPatients.add(patient);
     // yield PatientLoading();
+    print(event.vital.toJson());
     print("vitlas lenghts");
     print(newList.length);
 
@@ -177,6 +178,7 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
     foundVital.spo2 = event.vital.spo2;
     foundVital.pulsePressure = event.vital.pulsePressure;
     foundVital.pulseVolume = event.vital.pulseVolume;
+    foundVital.bloodKetone = event.vital.bloodKetone;
     foundVital.crt = event.vital.crt;
     foundVital.painScore = event.vital.painScore;
     foundVital.temp = event.vital.temp;

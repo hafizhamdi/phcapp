@@ -199,14 +199,21 @@ class _PatientTab extends State<PatientTab> {
                     // cpr: cprBloc.state.cpr,
 
                     patientInformation: patInfo,
-                    vitalSigns: vitalBloc.state.listVitals,
-                    patientAssessment: assPatientBloc.state.patientAssessment,
-                    intervention: interBloc.state.inter,
-                    traumaAssessment: traumaBloc.state.traumaAssessment,
+                    vitalSigns:
+                        vitalBloc.state.listVitals ?? widget.patient.vitalSigns,
+                    patientAssessment: assPatientBloc.state.patientAssessment ??
+                        widget.patient.patientAssessment,
+                    intervention:
+                        interBloc.state.inter ?? widget.patient.intervention,
+                    traumaAssessment: traumaBloc.state.traumaAssessment ??
+                        widget.patient.traumaAssessment,
                     medicationAssessment:
-                        medicationBloc.state.medicationAssessment,
-                    incidentReporting: reportingBloc.state.incidentReporting,
-                    outcome: outcomeBloc.state.outcome),
+                        medicationBloc.state.medicationAssessment ??
+                            widget.patient.medicationAssessment,
+                    incidentReporting: reportingBloc.state.incidentReporting ??
+                        widget.patient.incidentReporting,
+                    outcome:
+                        outcomeBloc.state.outcome ?? widget.patient.outcome),
               ));
             }
             print("patient created");

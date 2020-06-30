@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phcapp/custom/choice_chip.dart';
@@ -137,9 +139,15 @@ class _Patients extends State<PatientListScreen>
     }
 
     return Scaffold(
+      backgroundColor: Colors.grey,
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20.0),
+            ),
+          ),
           margin: EdgeInsets.all(12.0),
           child: Container(
             padding: EdgeInsets.all(10),
@@ -152,10 +160,10 @@ class _Patients extends State<PatientListScreen>
                     if (state is LoadedScene) {
                       return Column(children: [
                         HeaderSection("Scene Assessment"),
-                        Container(
-                          height: 1,
-                          color: Colors.grey,
-                        ),
+                        // Container(
+                        //   height: 1,
+                        //   color: Colors.grey,
+                        // ),
                         SizedBox(
                           height: 10,
                         ),
@@ -185,55 +193,55 @@ class _Patients extends State<PatientListScreen>
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: 8,
-        onPressed: () {
-          // BlocProvider.of(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                // final patientBloc = BlocProvider.of<PatientBloc>(context);
-                // patientBloc.add(InitPatient());
-                final vitalBloc = BlocProvider.of<VitalBloc>(context);
-                vitalBloc.add(ResetVital());
+      // floatingActionButton: FloatingActionButton.extended(
+      //   heroTag: 8,
+      //   onPressed: () {
+      //     // BlocProvider.of(context);
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) {
+      //           // final patientBloc = BlocProvider.of<PatientBloc>(context);
+      //           // patientBloc.add(InitPatient());
+      //           final vitalBloc = BlocProvider.of<VitalBloc>(context);
+      //           vitalBloc.add(ResetVital());
 
-                final interBloc = BlocProvider.of<InterBloc>(context);
-                interBloc.add(ResetInter());
+      //           final interBloc = BlocProvider.of<InterBloc>(context);
+      //           interBloc.add(ResetInter());
 
-                final patBloc = BlocProvider.of<AssPatientBloc>(context);
-                patBloc.add(ResetAssPatient());
+      //           final patBloc = BlocProvider.of<AssPatientBloc>(context);
+      //           patBloc.add(ResetAssPatient());
 
-                final traumaBloc = BlocProvider.of<TraumaBloc>(context);
-                traumaBloc.add(ResetTrauma());
+      //           final traumaBloc = BlocProvider.of<TraumaBloc>(context);
+      //           traumaBloc.add(ResetTrauma());
 
-                final medicationBloc = BlocProvider.of<MedicationBloc>(context);
-                medicationBloc.add(ResetMedication());
-                final reportingBloc = BlocProvider.of<ReportingBloc>(context);
-                reportingBloc.add(ResetReporting());
-                final outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
-                outcomeBloc.add(ResetOutcome());
+      //           final medicationBloc = BlocProvider.of<MedicationBloc>(context);
+      //           medicationBloc.add(ResetMedication());
+      //           final reportingBloc = BlocProvider.of<ReportingBloc>(context);
+      //           reportingBloc.add(ResetReporting());
+      //           final outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
+      //           outcomeBloc.add(ResetOutcome());
 
-                // setState(() {
-                // final cprlog = Provider.of<CPRProvider>(context);
-                // cprlog.resetLogs();
-                // });
+      //           // setState(() {
+      //           // final cprlog = Provider.of<CPRProvider>(context);
+      //           // cprlog.resetLogs();
+      //           // });
 
-                return PatientTab(
-                  patient: new Patient(
-                    patientInformation: new PatientInformation(),
-                    // vitalSigns: []
-                  ),
-                );
-              },
-            ),
-          );
-          // Add your onPressed code here!
-        },
-        label: Text('ADD PATIENT NOTE'),
-        icon: Icon(Icons.add),
-        // backgroundColor: Colors.purple,
-      ),
+      //           return PatientTab(
+      //             patient: new Patient(
+      //               patientInformation: new PatientInformation(),
+      //               // vitalSigns: []
+      //             ),
+      //           );
+      //         },
+      //       ),
+      //     );
+      //     // Add your onPressed code here!
+      //   },
+      //   label: Text('ADD PATIENT NOTE'),
+      //   icon: Icon(Icons.add),
+      //   // backgroundColor: Colors.purple,
+      // ),
     );
 
     // ],)
@@ -410,7 +418,7 @@ class BuildPatientList extends StatelessWidget {
           padding: EdgeInsets.all(10),
           child: Stack(
             children: <Widget>[
-              HeaderSection("Patients"),
+              HeaderSection("Patients Note"),
               Positioned(
                 child:
                     badgeCircle(patientList != null ? patientList.length : 0),
@@ -444,7 +452,69 @@ class BuildPatientList extends StatelessWidget {
                       );
                     }),
               )
-            : Container(),
+            : Container(
+                child: Text(
+                  "No patient note",
+                  style: TextStyle(color: Colors.grey, fontFamily: "OpenSans"),
+                ),
+              ),
+        SizedBox(
+          height: 10,
+        ),
+        RaisedButton.icon(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20.0),
+            ),
+          ),
+          icon: Icon(Icons.add, color: Colors.blueAccent),
+          label: Text(
+            "ADD PATIENT NOTE",
+            style: TextStyle(color: Colors.blueAccent),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  // final patientBloc = BlocProvider.of<PatientBloc>(context);
+                  // patientBloc.add(InitPatient());
+                  final vitalBloc = BlocProvider.of<VitalBloc>(context);
+                  vitalBloc.add(ResetVital());
+
+                  final interBloc = BlocProvider.of<InterBloc>(context);
+                  interBloc.add(ResetInter());
+
+                  final patBloc = BlocProvider.of<AssPatientBloc>(context);
+                  patBloc.add(ResetAssPatient());
+
+                  final traumaBloc = BlocProvider.of<TraumaBloc>(context);
+                  traumaBloc.add(ResetTrauma());
+
+                  final medicationBloc =
+                      BlocProvider.of<MedicationBloc>(context);
+                  medicationBloc.add(ResetMedication());
+                  final reportingBloc = BlocProvider.of<ReportingBloc>(context);
+                  reportingBloc.add(ResetReporting());
+                  final outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
+                  outcomeBloc.add(ResetOutcome());
+
+                  // setState(() {
+                  // final cprlog = Provider.of<CPRProvider>(context);
+                  // cprlog.resetLogs();
+                  // });
+
+                  return PatientTab(
+                    patient: new Patient(
+                      patientInformation: new PatientInformation(),
+                      // vitalSigns: []
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        )
       ],
     );
     ;

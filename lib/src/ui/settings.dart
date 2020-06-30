@@ -19,6 +19,7 @@ class Settings extends StatefulWidget {
 class _Settings extends State<Settings> {
   bool _devSelect = false;
   bool _uatSelect = false;
+  bool _prodSelect = false;
   SettingBloc settingBloc;
   // AuthBloc authBloc;
 
@@ -31,6 +32,7 @@ class _Settings extends State<Settings> {
       if (settingBloc.state.environment != null) {
         _devSelect = settingBloc.state.environment.id == "dev" ?? false;
         _uatSelect = settingBloc.state.environment.id == "uat" ?? false;
+        _prodSelect = settingBloc.state.environment.id == "other" ?? false;
       }
     });
 
@@ -63,6 +65,10 @@ class _Settings extends State<Settings> {
                     icon: Icons.mobile_screen_share,
                     child: toggleUAT(context)),
                 MyBuildList(
+                    title: "HRPB",
+                    icon: Icons.home,
+                    child: toggleProd(context)),
+                MyBuildList(
                   title: "Sync data",
                   icon: Icons.sync,
                   child: updateButton(),
@@ -88,7 +94,7 @@ class _Settings extends State<Settings> {
             )));
   }
 
-  appChild() => Text("1.8.06.20");
+  appChild() => Text("1.9.06.20");
 
   toggleButton(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -108,6 +114,8 @@ class _Settings extends State<Settings> {
           setState(() {
             _devSelect = val;
             _uatSelect = !val;
+
+            _prodSelect = !val;
           });
 
           settingBloc
@@ -123,10 +131,27 @@ class _Settings extends State<Settings> {
           setState(() {
             _devSelect = !val;
             _uatSelect = val;
+            _prodSelect = !val;
           });
 
           settingBloc
               .add(ToggleEnvironment(toggleEnv: _uatSelect ? "uat" : "dev"));
+        });
+  }
+
+  toggleProd(BuildContext context) {
+    // final themeProvider = Provider.of<ThemeProvider>(context);
+    return Switch(
+        value: _uatSelect,
+        onChanged: (val) {
+          setState(() {
+            _devSelect = !val;
+            _uatSelect = !val;
+            _prodSelect = val;
+          });
+
+          settingBloc
+              .add(ToggleEnvironment(toggleEnv: _prodSelect ? "prod" : "dev"));
         });
   }
 

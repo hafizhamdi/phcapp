@@ -51,6 +51,7 @@ class CallcardTabs extends StatefulWidget {
 
 class _CallcardTabs extends State<CallcardTabs> {
   CallInfoBloc callInfoBloc;
+  bool isLoading = false;
 
   final PhcRepository phcRepository =
       PhcRepository(phcApiClient: PhcApiClient(httpClient: http.Client()));
@@ -88,9 +89,15 @@ class _CallcardTabs extends State<CallcardTabs> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
             title: Text("Callcard is Publishing..."),
-            content: Center(
-              child: CircularProgressIndicator(),
+            content: Container(
+              width: 100,
+              height: 50,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
             ));
       });
 
@@ -131,9 +138,10 @@ class _CallcardTabs extends State<CallcardTabs> {
           content: Text("View transaction on History"),
           actions: <Widget>[
             FlatButton(
-                child: Text("NO"),
+                child: Text("VIEW LIST CC"),
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ListCallcards()));
                 }),
             FlatButton(
               child: Text("GOTO HISTORY"),
@@ -200,14 +208,30 @@ class _CallcardTabs extends State<CallcardTabs> {
             child: BlocConsumer<CallCardTabBloc, TabState>(
               listener: (context, state) {
                 if (state is CallcardToPublishLoading) {
+                  // setState(() {
+                  //   isLoading = true;
+                  // });
                   //circular progress alert dialog
-                  showLoading();
+                  // showLoading();
                 } else if (state is CallcardToPublishSuccess) {
                   //Callcard success publish dialog with ok
+                  // if (isLoading == true) {
+                  //   Navigator.pop(context);
+                  // }
                   showSuccess();
+                  // setState(() {
+                  //   isLoading = false;
+                  // });
                 } else if (state is CallcardToPublishFailed) {
                   //callcard failed to publish dialog error
+
+                  // if (isLoading == true) {
+                  //   Navigator.pop(context);
+                  // }
                   showError();
+                  // setState(() {
+                  //   isLoading = false;
+                  // });
                 } else if (state is CallcardToSavingError) {
                   savingError();
                 }
@@ -276,15 +300,25 @@ class _CallcardTabs extends State<CallcardTabs> {
                             call_information.callReceived =
                                 convertDateToStandard(
                                     call_information.call_received);
+                            call_information.assignId =
+                                widget.call_information != null
+                                    ? widget.call_information.assign_id
+                                    : null;
+                            // call_information.plateNo =
+                            //     widget.call_information.plate_no;
                             // : convertDateToStandard(
                             //     widget.call_information.call_received);
 
                             // print(currentState.toJson());
+                            print("INSIDE CALL INFO");
+                            print(call_information.toJson());
+                            print("+=======+");
+                            // print(widget.call_information.toJson());
                             final response_team = new ResponseTeam(
                                 serviceResponse:
                                     responseBloc.state.serviceResponse,
                                 vehicleRegno: responseBloc.state.vehicleRegNo,
-                                staffs: teamBloc.state.selectedStaffs);
+                                staffs: teamBloc.state.selectedStaffs ?? []);
                             // print(teamState);
 
                             final response_time = timeBloc.state.responseTime;
@@ -313,21 +347,23 @@ class _CallcardTabs extends State<CallcardTabs> {
                             //         patients: List<Patient>(),
                             //         sceneAssessment: new SceneAssessment())));
 
-                            print("DONE");
-                            print(call_information);
-                            print(scene_assessment);
-                            print(response_team);
+                            // print("DONE");
+                            // print(call_information);
+                            // print(scene_assessment);
+                            // print(response_team);
 
-                            print(response_time);
-                            print(patientList);
-                            if (patientList.length > 0) {
-                              print("PATIENT LIST MORE THAN ONE");
-                              patientList.map((f) {
-                                print("what inside patientlist");
-                                // print((f));
-                                print(f.toJson());
-                              }).toList();
-                            }
+                            // print(response_time);
+                            // print(patientList);
+                            // if (patientList.length > 0) {
+                            //   print("PATIENT LIST MORE THAN ONE");
+                            //   patientList.map((f) {
+                            //     print("what inside patientlist");
+                            //     // print((f));
+                            //     print(f.toJson());
+                            //   }).toList();
+                            // }
+
+                            // print(patientList);
 
                             tabBloc.add(PublishCallcard(
                               callInformation:
@@ -347,6 +383,7 @@ class _CallcardTabs extends State<CallcardTabs> {
                               //     SceneAssessment(otherServicesAtScene: []
                               //     )
                             ));
+                            // Navigator.pop(context);
                           },
                           child:
                               // )
@@ -374,7 +411,7 @@ class _CallcardTabs extends State<CallcardTabs> {
                                 //     MaterialPageRoute(builder: (context) => History()));
                                 // },
                                 // ),
-                                Text("UPLOAD")
+                                Text("Sync HISKKM")
                               ],
                             ),
                           ),

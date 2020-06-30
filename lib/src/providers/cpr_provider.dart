@@ -46,7 +46,7 @@ class CPRProvider extends ChangeNotifier {
   String byStanderCPR;
   String cprStart;
   int cycleCounter = 0;
-  List<CprSection> _listCPRs = new List();
+  // List<CprSection> _listCPRs = new List();
   String rosc;
   String cprStop;
   Analysis shockable = new Analysis();
@@ -71,6 +71,7 @@ class CPRProvider extends ChangeNotifier {
     ItemModel(id: "ointerv", name: "Intervention"),
     ItemModel(id: "odrugs", name: "Drugs"),
     ItemModel(id: "oairway", name: "Airway"),
+    ItemModel(id: "analysis", name: "Analysis"),
   ];
 
   // List<Analysis> itemAnalysis = <Analysis>[
@@ -117,13 +118,18 @@ class CPRProvider extends ChangeNotifier {
 
   void resetRhythmAnalysis() {
     itemModels.map((f) {
-      if (f.id != "cpr_start" ||
-          f.id != "bystander_cpr" ||
-          f.id != "witness_cpr" ||
-          f.id != "rosc" ||
-          f.id != "cpr_stop") {
+      if (f.id == "cpr_start")
+        f.value = f.value;
+      else if (f.id == "bystander_cpr")
+        f.value = f.value;
+      else if (f.id == "witness_cpr")
+        f.value = f.value;
+      else if (f.id == "rosc")
+        f.value = f.value;
+      else if (f.id == "cpr_stop")
+        f.value = f.value;
+      else
         f.value = null;
-      }
 
       return f;
     }).toList();
@@ -131,8 +137,8 @@ class CPRProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  UnmodifiableListView<CprSection> get listCPRs =>
-      UnmodifiableListView(_listCPRs);
+  // UnmodifiableListView<CprSection> get listCPRs =>
+  //     UnmodifiableListView(_listCPRs);
   // List<CPR> get listCPRs => _listCPRs;
 
   // UnmodifiableListView<String> get items => UnmodifiableListView(_commonCPR);
@@ -175,37 +181,37 @@ class CPRProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addCPR(CprSection cpr) {
-    _listCPRs.add(cpr);
+  // void addCPR(CprSection cpr) {
+  //   _listCPRs.add(cpr);
 
-    notifyListeners();
-  }
+  //   notifyListeners();
+  // }
 
-  void updateCPR(CprSection cpr) {
-    witnessCPR = cpr.witnessCpr;
-    byStanderCPR = cpr.bystanderCpr;
-    rosc = cpr.rosc;
-    cprStart = cpr.cprStart;
-    cprStop = cpr.cprStop;
-    shockable.rhythm = cpr.shockable.rhythm;
-    shockable.intervention = cpr.shockable.intervention;
-    shockable.drugs = cpr.shockable.drugs;
-    shockable.airway = cpr.shockable.airway;
+  // void updateCPR(CprSection cpr) {
+  //   witnessCPR = cpr.witnessCpr;
+  //   byStanderCPR = cpr.bystanderCpr;
+  //   rosc = cpr.rosc;
+  //   cprStart = cpr.cprStart;
+  //   cprStop = cpr.cprStop;
+  //   shockable.rhythm = cpr.shockable.rhythm;
+  //   shockable.intervention = cpr.shockable.intervention;
+  //   shockable.drugs = cpr.shockable.drugs;
+  //   shockable.airway = cpr.shockable.airway;
 
-    nonShockable.rhythm = cpr.nonShockable.rhythm;
-    nonShockable.intervention = cpr.nonShockable.intervention;
-    nonShockable.drugs = cpr.nonShockable.drugs;
-    nonShockable.airway = cpr.nonShockable.airway;
+  //   nonShockable.rhythm = cpr.nonShockable.rhythm;
+  //   nonShockable.intervention = cpr.nonShockable.intervention;
+  //   nonShockable.drugs = cpr.nonShockable.drugs;
+  //   nonShockable.airway = cpr.nonShockable.airway;
 
-    other.rhythm = cpr.other.rhythm;
-    other.intervention = cpr.other.intervention;
-    other.drugs = cpr.other.drugs;
-    other.airway = cpr.other.airway;
+  //   other.rhythm = cpr.other.rhythm;
+  //   other.intervention = cpr.other.intervention;
+  //   other.drugs = cpr.other.drugs;
+  //   other.airway = cpr.other.airway;
 
-    _commonCPR = cpr.logs;
+  //   _commonCPR = cpr.logs;
 
-    notifyListeners();
-  }
+  //   notifyListeners();
+  // }
 }
 
 // class CPR {

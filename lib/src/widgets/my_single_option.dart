@@ -12,7 +12,12 @@ class MySingleOptions extends StatefulWidget {
   _MySingleOptions createState() => _MySingleOptions();
 }
 
-class _MySingleOptions extends State<MySingleOptions> {
+class _MySingleOptions extends State<MySingleOptions>
+    with AutomaticKeepAliveClientMixin<MySingleOptions> {
+  @override
+  bool get wantKeepAlive => true;
+
+// {
   List<String> listSelected = new List();
 
   String strSelected;
