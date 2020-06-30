@@ -219,8 +219,6 @@ class _EditCallInfo extends State<EditCallInfo>
                 TextInput(
                   labelText: "Event Code",
                   controller: eventCodeController,
-                  hintText: "37/XC/02/XW",
-                  maskFormater: eventCodeFormater,
                 ),
                 DropDownList(
                     "Priority", LIST_PRIORITY, InputOption.priority, _priority),
