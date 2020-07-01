@@ -21,77 +21,109 @@ class _Settings extends State<Settings> {
   bool _uatSelect = false;
   bool _prodSelect = false;
   SettingBloc settingBloc;
-  // AuthBloc authBloc;
+  AuthBloc authBloc;
 
   @override
   void didChangeDependencies() {
     settingBloc = BlocProvider.of<SettingBloc>(context);
-    // authBloc = BlocProvider.of<AuthBloc>(context);
+    authBloc = BlocProvider.of<AuthBloc>(context);
 
     setState(() {
       if (settingBloc.state.environment != null) {
         _devSelect = settingBloc.state.environment.id == "dev" ?? false;
         _uatSelect = settingBloc.state.environment.id == "uat" ?? false;
-        _prodSelect = settingBloc.state.environment.id == "other" ?? false;
+        _prodSelect = settingBloc.state.environment.id == "prod" ?? false;
       }
     });
 
     super.didChangeDependencies();
   }
 
+  showError() => showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Unable to sync"),
+            content: Text("Server is down"),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(20.0),
+              ),
+            ),
+          );
+        },
+      );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Settings"),
+      appBar: AppBar(
+        title: Text("Settings"),
+      ),
+      body: BlocListener<AuthBloc, AuthState>(
+        // )<AuthBloc, AuthState>(
+        bloc: authBloc,
+        listener: (context, state) {
+          showError();
+          print("inside listener");
+          if (state is AuthUnitialized) {
+            print(state);
+            print("im authunitialized");
+          }
+        },
+        // builder: (context, state) {
+        //   return
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+          child: ListView(
+            children: <Widget>[
+              // Text(settingBloc.state.toggleEnv != null
+              //     ? "DATA:" + settingBloc.state.toggleEnv
+              //     : ""),
+              Text(
+                "Environment setting",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              MyBuildList(
+                  title: "Development",
+                  icon: Icons.android,
+                  child: toggleDev(context)),
+              MyBuildList(
+                  title: "UAT",
+                  icon: Icons.mobile_screen_share,
+                  child: toggleUAT(context)),
+              MyBuildList(
+                  title: "HRPB", icon: Icons.home, child: toggleProd(context)),
+              MyBuildList(
+                title: "Sync data",
+                icon: Icons.sync,
+                child: updateButton(),
+                subtitle: settingBloc.state.lastSynced,
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              Text(
+                "General",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              MyBuildList(
+                  title: "Dark mode",
+                  icon: Icons.brightness_4,
+                  child: toggleButton(context)),
+              MyBuildList(
+                title: "App version",
+                icon: Icons.info,
+                child: appChild(),
+              ),
+            ],
+          ),
         ),
-        body: Container(
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-            child: ListView(
-              children: <Widget>[
-                // Text(settingBloc.state.toggleEnv != null
-                //     ? "DATA:" + settingBloc.state.toggleEnv
-                //     : ""),
-                Text(
-                  "Environment setting",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                MyBuildList(
-                    title: "Development",
-                    icon: Icons.android,
-                    child: toggleDev(context)),
-                MyBuildList(
-                    title: "UAT",
-                    icon: Icons.mobile_screen_share,
-                    child: toggleUAT(context)),
-                MyBuildList(
-                    title: "HRPB",
-                    icon: Icons.home,
-                    child: toggleProd(context)),
-                MyBuildList(
-                  title: "Sync data",
-                  icon: Icons.sync,
-                  child: updateButton(),
-                  subtitle: settingBloc.state.lastSynced,
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                Text(
-                  "General",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                MyBuildList(
-                    title: "Dark mode",
-                    icon: Icons.brightness_4,
-                    child: toggleButton(context)),
-                MyBuildList(
-                  title: "App version",
-                  icon: Icons.info,
-                  child: appChild(),
-                ),
-              ],
-            )));
+        //   );
+        // },
+      ),
+    );
   }
 
   appChild() => Text("1.10.06.20");
@@ -111,15 +143,21 @@ class _Settings extends State<Settings> {
         value: _devSelect,
         onChanged: (val) {
           // val ??
-          setState(() {
-            _devSelect = val;
-            _uatSelect = !val;
 
-            _prodSelect = !val;
-          });
+          if (val == true) {
+            setState(() {
+              _devSelect = val;
+              _uatSelect = !val;
+              _prodSelect = !val;
+            });
+          } else {
+            setState(() {
+              _devSelect = val;
+            });
+          }
 
           settingBloc
-              .add(ToggleEnvironment(toggleEnv: _devSelect ? "dev" : "uat"));
+              .add(ToggleEnvironment(toggleEnv: _devSelect ? "dev" : "dev"));
         });
   }
 
@@ -128,11 +166,17 @@ class _Settings extends State<Settings> {
     return Switch(
         value: _uatSelect,
         onChanged: (val) {
-          setState(() {
-            _devSelect = !val;
-            _uatSelect = val;
-            _prodSelect = !val;
-          });
+          if (val == true) {
+            setState(() {
+              _devSelect = !val;
+              _uatSelect = val;
+              _prodSelect = !val;
+            });
+          } else {
+            setState(() {
+              _uatSelect = val;
+            });
+          }
 
           settingBloc
               .add(ToggleEnvironment(toggleEnv: _uatSelect ? "uat" : "dev"));
@@ -142,13 +186,19 @@ class _Settings extends State<Settings> {
   toggleProd(BuildContext context) {
     // final themeProvider = Provider.of<ThemeProvider>(context);
     return Switch(
-        value: _uatSelect,
+        value: _prodSelect,
         onChanged: (val) {
-          setState(() {
-            _devSelect = !val;
-            _uatSelect = !val;
-            _prodSelect = val;
-          });
+          if (val == true) {
+            setState(() {
+              _devSelect = !val;
+              _uatSelect = !val;
+              _prodSelect = val;
+            });
+          } else {
+            setState(() {
+              _prodSelect = val;
+            });
+          }
 
           settingBloc
               .add(ToggleEnvironment(toggleEnv: _prodSelect ? "prod" : "dev"));
@@ -156,11 +206,12 @@ class _Settings extends State<Settings> {
   }
 
   updateButton() {
+    // showError();
     return FlatButton(
       color: Colors.blue,
       child: Text("Sync Now"),
       onPressed: () {
-        var date = DateFormat("HH:mm:ss aaa").format(DateTime.now());
+        var date = DateFormat("dd/MM/yyyy h:mm aaa").format(DateTime.now());
 
         // PhcRepository phcRepository = PhcRepository(
         //     phcApiClient: PhcApiClient(

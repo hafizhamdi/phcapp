@@ -189,8 +189,8 @@ class Patient {
         intervention: json["intervention"] != null
             ? InterventionAss.fromJson(json["intervention"])
             : null,
-        medicationAssessment: json["medication"] != null
-            ? MedicationAssessment.fromJson(json["medication"])
+        medicationAssessment: json["medication_assessment"] != null
+            ? MedicationAssessment.fromJson(json["medication_assessment"])
             : null,
         incidentReporting: json["incident_reporting"] != null
             ? IncidentReporting.fromJson(json["incident_reporting"])
@@ -212,13 +212,13 @@ class Patient {
         "trauma_assessment":
             traumaAssessment != null ? traumaAssessment.toJson() : null,
         "intervention": intervention != null ? intervention.toJson() : null,
-        "medication":
+        "medication_assessment":
             //     // null
             medicationAssessment != null ? medicationAssessment.toJson() : null,
         // // "vital_signs": List<dynamic>.from(vitalSigns.map((x) => x.toJson())),
         "incident_reporting":
             incidentReporting != null ? incidentReporting.toJson() : null,
-        // "outcome": outcome != null ? outcome.toJson() : null,
+        "outcome": outcome != null ? outcome.toJson() : null,
 //
       };
 }
@@ -263,8 +263,9 @@ class TraumaAssessment {
           face: json["face"] != null
               ? List<String>.from(json["face"].map((x) => x))
               : null,
-          neck: json["neck"] =
-              null ? List<String>.from(json["neck"].map((x) => x)) : null,
+          neck: json["neck"] != null
+              ? List<String>.from(json["neck"].map((x) => x))
+              : null,
           neckAbnormalityLocation: json["neck_abnormality_location"] != null
               ? List<String>.from(
                   json["neck_abnormality_location"].map((x) => x))
@@ -559,7 +560,7 @@ class Cpr {
 
   factory Cpr.fromJson(Map<String, dynamic> json) => Cpr(
         value: json["value"],
-        timestamp: json["timestamp"],
+        timestamp: parsingDateTime(json["timestamp"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -608,7 +609,7 @@ class Analysis {
   Cpr airway;
 
   factory Analysis.fromJson(Map<String, dynamic> json) => Analysis(
-        timestamp: json["timestamp"],
+        timestamp: parsingDateTime(json["timestamp"]),
         rhythm: Cpr.fromJson(json["rhythm"]),
         intevention: Cpr.fromJson(json["intevention"]),
         drugs: Cpr.fromJson(json["drugs"]),
@@ -643,7 +644,7 @@ class IncidentReporting {
         sceneDelay: json["scene_delay"],
         transportDelay: json["transport_delay"],
       );
-
+  // print("Incident reporting ... done");
   Map<String, dynamic> toJson() => {
         "timestamp": timestamp.toString(),
         "response_delay": responseDelay,
@@ -796,7 +797,7 @@ class PatientAssessment {
 
   factory PatientAssessment.fromJson(Map<String, dynamic> json) =>
       PatientAssessment(
-        timestamp: json["timestamp"] ?? null,
+        timestamp: parsingDateTime(json["timestamp"]),
         disasterTriage: json["disaster_triage"],
         appearance: json["appearance"],
         levelResponsive: json["level_responsive"],
@@ -1146,7 +1147,9 @@ DateTime parsingDateTime(data) {
   if (data == null) return null;
   var split = data.split(".");
 
+  print("---timestamp----");
   print(split[0]);
+  print("---------------");
   if (split[0] != "") {
     return DateTime.parse(split[0]);
   } else {

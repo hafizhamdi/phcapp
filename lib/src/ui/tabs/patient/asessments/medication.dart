@@ -28,6 +28,9 @@ const _medication = [
 ];
 
 class MedicationScreen extends StatefulWidget {
+  List<Medication> medications;
+
+  MedicationScreen({this.medications});
   _MedicationScreen createState() => _MedicationScreen();
 }
 
@@ -48,6 +51,15 @@ class _MedicationScreen extends State<MedicationScreen> {
     setState(() {
       listMedicine = listReturn;
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (widget.medications != null) {
+      _items = List<Medication>.from(widget.medications).toList();
+    }
+
+    super.didChangeDependencies();
   }
 
   @override
