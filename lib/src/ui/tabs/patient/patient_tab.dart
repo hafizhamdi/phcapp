@@ -56,6 +56,9 @@ class _PatientTab extends State<PatientTab> {
 
   @override
   void didChangeDependencies() {
+    print("DID DEPENDENCY");
+    print(widget.patient.toJson());
+
     patientBloc = BlocProvider.of<PatientBloc>(context);
 
     assPatientBloc = BlocProvider.of<AssPatientBloc>(context);
@@ -217,6 +220,26 @@ class _PatientTab extends State<PatientTab> {
               ));
             }
             print("patient created");
+
+            // final vitalBloc = BlocProvider.of<VitalBloc>(context);
+            vitalBloc.add(ResetVital());
+
+            // final interBloc = BlocProvider.of<InterBloc>(context);
+            interBloc.add(ResetInter());
+
+            // final patBloc = BlocProvider.of<AssPatientBloc>(context);
+            assPatientBloc.add(ResetAssPatient());
+
+            // final traumaBloc = BlocProvider.of<TraumaBloc>(context);
+            traumaBloc.add(ResetTrauma());
+
+            // final medicationBloc = BlocProvider.of<MedicationBloc>(context);
+            medicationBloc.add(ResetMedication());
+            // final reportingBloc = BlocProvider.of<ReportingBloc>(context);
+            reportingBloc.add(ResetReporting());
+            // final outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
+            outcomeBloc.add(ResetOutcome());
+
             Navigator.pop(context);
             // }
           },
@@ -276,8 +299,15 @@ class _PatientTab extends State<PatientTab> {
                         listVitals: widget.patient.vitalSigns,
                         index: widget.index),
                     MainAssessment(
-                        // context: context
-                        ),
+                      patientAssessment: widget.patient.patientAssessment,
+                      interventionAssessment: widget.patient.intervention,
+                      traumaAssessment: widget.patient.traumaAssessment,
+                      medicationAssessment: widget.patient.medicationAssessment,
+                      reportingAssessment: widget.patient.incidentReporting,
+                      outcomeAssessment: widget.patient.outcome,
+
+                      // context: context
+                    ),
                   ],
                 ),
               );

@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 var environment = [
   new Environment(id: "dev", name: "Development", ip: "202.171.33.109"),
   new Environment(id: "uat", name: "UAT", ip: "202.171.33.112"),
-  new Environment(id: "hrpb", name: "HRPB", ip: "10.138.128.129"),
+  new Environment(id: "prod", name: "HRPB", ip: "10.138.128.129"),
 ];
 
 abstract class SettingEvent extends Equatable {

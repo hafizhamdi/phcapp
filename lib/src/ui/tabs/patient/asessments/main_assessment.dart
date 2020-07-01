@@ -19,6 +19,21 @@ import 'package:phcapp/src/ui/tabs/patient/asessments/patient_assessment.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/trauma.dart';
 
 class MainAssessment extends StatelessWidget {
+  final patientAssessment;
+  final traumaAssessment;
+  final interventionAssessment;
+  final medicationAssessment;
+  final reportingAssessment;
+  final outcomeAssessment;
+
+  MainAssessment({
+    this.patientAssessment,
+    this.traumaAssessment,
+    this.interventionAssessment,
+    this.medicationAssessment,
+    this.reportingAssessment,
+    this.outcomeAssessment,
+  });
   // final BuildContext context;
   // MainAssessment({this.context});
 
@@ -58,8 +73,15 @@ class MainAssessment extends StatelessWidget {
                       return BuildCard(
                         icon: Icons.accessibility,
                         title: "Patient",
-                        nextRoute: PatientAssessmentScreen(),
-                        timestamp: null,
+                        disasterTriage: patientAssessment != null
+                            ? patientAssessment.disasterTriage
+                            : null,
+                        nextRoute: PatientAssessmentScreen(
+                          patientAssessment: patientAssessment ?? null,
+                        ),
+                        timestamp: patientAssessment != null
+                            ? patientAssessment.timestamp
+                            : null,
                       );
                     },
                   ),
@@ -88,8 +110,12 @@ class MainAssessment extends StatelessWidget {
                       return BuildCard(
                         icon: Icons.desktop_mac,
                         title: "Intervention",
-                        nextRoute: InterventionScreen(),
-                        timestamp: null,
+                        nextRoute: InterventionScreen(
+                          interAssessment: interventionAssessment ?? null,
+                        ),
+                        timestamp: interventionAssessment != null
+                            ? interventionAssessment.timestamp
+                            : null,
                       );
                     },
                   ),
@@ -107,10 +133,12 @@ class MainAssessment extends StatelessWidget {
                       nextRoute: TraumaScreen(
                           trauma: traumaBloc.state.traumaAssessment != null
                               ? traumaBloc.state.traumaAssessment
-                              : null),
+                              : traumaAssessment ?? null),
                       timestamp: traumaBloc.state.traumaAssessment != null
                           ? traumaBloc.state.traumaAssessment.timestamp
-                          : null),
+                          : traumaAssessment != null
+                              ? traumaAssessment.timestamp
+                              : null),
                   // }
                   //     return BuildCard(
                   //       icon: Icons.airline_seat_recline_normal,
@@ -123,10 +151,19 @@ class MainAssessment extends StatelessWidget {
                   BuildCard(
                     icon: Icons.dns,
                     title: "Medication",
-                    nextRoute: MedicationScreen(),
+                    nextRoute: MedicationScreen(
+                      medications: medicationBloc.state.medicationAssessment !=
+                              null
+                          ? medicationBloc.state.medicationAssessment.medication
+                          : medicationAssessment != null
+                              ? medicationAssessment.medication
+                              : null,
+                    ),
                     timestamp: medicationBloc.state.medicationAssessment != null
                         ? medicationBloc.state.medicationAssessment.timestamp
-                        : null,
+                        : medicationAssessment != null
+                            ? medicationAssessment.timestamp
+                            : null,
                   ),
 
                   BuildCard(
@@ -136,11 +173,13 @@ class MainAssessment extends StatelessWidget {
                       incidentReporting:
                           reportingBloc.state.incidentReporting != null
                               ? reportingBloc.state.incidentReporting
-                              : null,
+                              : reportingAssessment ?? null,
                     ),
                     timestamp: reportingBloc.state.incidentReporting != null
                         ? reportingBloc.state.incidentReporting.timestamp
-                        : null,
+                        : reportingAssessment != null
+                            ? reportingAssessment.timestamp
+                            : null,
                   ),
 
                   BuildCard(
@@ -148,15 +187,19 @@ class MainAssessment extends StatelessWidget {
                       title: "Outcome",
                       disasterTriage: outcomeBloc.state.outcome != null
                           ? outcomeBloc.state.outcome.etdTriage
-                          : null,
+                          : outcomeAssessment != null
+                              ? outcomeAssessment.etdTriage
+                              : null,
                       nextRoute: OutcomeAssessment(
                         outcome: outcomeBloc.state.outcome != null
                             ? outcomeBloc.state.outcome
-                            : null,
+                            : outcomeAssessment ?? null,
                       ),
                       timestamp: outcomeBloc.state.outcome != null
                           ? outcomeBloc.state.outcome.timestamp
-                          : null),
+                          : outcomeAssessment != null
+                              ? outcomeAssessment.timestamp
+                              : null),
                 ],
               ),
             ),

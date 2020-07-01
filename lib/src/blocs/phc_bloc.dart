@@ -185,6 +185,8 @@
 //   }
 // }
 
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:phcapp/src/database/phc_dao.dart';
 import 'package:phcapp/src/models/phc.dart';
@@ -325,10 +327,19 @@ class PhcBloc extends Bloc<PhcEvent, PhcState> {
     // final phcInsert = await phcDao.insert(phc);
     // print("phc fetching");
     // print(phcInsert);
+    try {
+      print("INSIDE TRY PHC");
+      print(jsonEncode(phc));
+      final phcData = Phc.fromJson(phc);
+
+      yield PhcFetched(phc: phcData);
+    } catch (error) {
+      print("---catch error----");
+      print(error);
+    }
 
     // print(phc);
     // yield* _reloadPhc();
-    yield PhcFetched(phc: Phc.fromJson(phc));
     // } catch (_) {
     // yield PhcFetchingError();
 
