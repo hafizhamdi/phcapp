@@ -43,22 +43,24 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
 
       if (response != null) {
         print("response sending calcard not null");
-        int status_send = 1;
         // final insert = await phcDao.insertHistory(callcard, status_send);
         // print(insert);
 
         try {
+        int status_send = 1;
           final insert = await phcDao.insertHistory(callcard, status_send);
-          historyBloc.add(LoadHistory());
+          // historyBloc.add(LoadHistory());
           // yield CallcardToPublishSuccess();
         } catch (_) {
+          // int status_send = 0;
+          // final insert = await phcDao.insertHistory(callcard, status_send);
           yield CallcardToSavingError();
         }
 
         // historyBloc.add(AddHistory(callcard: callcard));
 
         // publish success
-        historyBloc.add(LoadHistory());
+        // historyBloc.add(LoadHistory());
         // yield CallcardToPublishSuccess();
         // yield CallcardToPublishEmpty();
         // yield CallcardToPublishSuccess();
@@ -73,7 +75,7 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
 
       try {
         final insert = await phcDao.insertHistory(callcard, status_send);
-        historyBloc.add(LoadHistory());
+        // historyBloc.add(LoadHistory());
       } catch (_) {
         yield CallcardToSavingError();
       }

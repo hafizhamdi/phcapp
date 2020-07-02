@@ -130,7 +130,7 @@ class _LoginScreen extends State<LoginScreen> {
                       // right: 70,
                       top: 60,
                       child: Text(
-                        "HRPB Version 1.9",
+                        "HRPB Version 1.11",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
