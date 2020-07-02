@@ -353,6 +353,31 @@ class PhcDao {
   Future insertHistory(Callcard callcard, statusSend) async {
     print("insert callcard history");
     print("statusSend: " + statusSend.toString());
+    // print(jsonEncode(callcard));
+    var internal_callcard = {};
+    internal_callcard["call_information"] = callcard.callInformation;
+    internal_callcard["response_team"] = callcard.responseTeam;
+    internal_callcard["response_time"] = callcard.responseTime;
+    internal_callcard["scene_assessment"] = callcard.sceneAssessment;
+
+    // print("print internal card");
+    // var test = {};
+    // test["adam"] = null;
+    // print(jsonEncode(test));
+
+    final newlist = List<Patient>.from(callcard.patients.map((f) {
+      return f;
+      // print(jsonEncode(f));
+      // return Patient(
+      //   patientInformation: f.patientInformation,
+      //   vitalSigns: f.vitalSigns,
+      //   medicationAssessment: f.medicationAssessment
+      // // )
+      // );
+    })).toList();
+    //     List<Patient>.from(callcard.patients).map((f) {
+    internal_callcard["patients"] = newlist;
+
     // final List<History> listHistory = await showAllHistory();
     // print(listHistory);
     print("*&@&@&@&@(@((@");
@@ -419,19 +444,21 @@ class PhcDao {
     if (findRecord != null) {
       var key = findRecord.key;
 
+      print(key);
       var record = _historyStore.record(key);
       // var test = _historyStore.record(key);
       // test.ge
       print("record found in history which exist before");
-      print(findRecord);
+      // print(findRecord);
+      print(statusSend);
 
       final update = await record.put(await _db, {
-        'history': callcard.toJson(),
+        'history': jsonEncode(internal_callcard),
         'timestamp': DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()),
         "status_send": statusSend
       });
       print("update----");
-      print(update);
+      // print(update);
     } else {
       // } else {
 
@@ -491,7 +518,8 @@ class PhcDao {
         // print(data.value);
         print(data.value["history"]);
         return History(
-            historyCallcard: Callcard.fromJson(data.value["history"]),
+            historyCallcard:
+                Callcard.fromJson(jsonDecode(data.value["history"])),
             statusSend: data.value["status_send"],
             timestamp: data.value["timestamp"]);
         // return Callcard.fromJson(data.value);

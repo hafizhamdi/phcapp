@@ -556,11 +556,11 @@ class Cpr {
   });
 
   String value;
-  DateTime timestamp;
+  String timestamp;
 
   factory Cpr.fromJson(Map<String, dynamic> json) => Cpr(
         value: json["value"],
-        timestamp: parsingDateTime(json["timestamp"]),
+        timestamp: json["timestamp"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -1147,9 +1147,9 @@ DateTime parsingDateTime(data) {
   if (data == null) return null;
   var split = data.split(".");
 
-  print("---timestamp----");
-  print(split[0]);
-  print("---------------");
+  // print("---timestamp----");
+  // print(split[0]);
+  // print("---------------");
   if (split[0] != "") {
     return DateTime.parse(split[0]);
   } else {

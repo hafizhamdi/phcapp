@@ -39,13 +39,21 @@ class _CPRItems extends State<CPRItems>
   String onNonShock;
   String onOther;
 
-  Analysis shockable = new Analysis();
+  Analysis shockable = new Analysis(
+      rhythm: new Cpr(
+    value: null,
+  ));
   Analysis nonShockable = new Analysis();
   Analysis other = new Analysis();
 
   CPRProvider cprProvider;
 
-  CprLog cprLog = new CprLog(witnessCpr: new Cpr());
+  CprLog cprLog = new CprLog(
+      witnessCpr: new Cpr(),
+      bystanderCpr: new Cpr(),
+      cprStart: new Cpr(),
+      rosc: new Cpr(),
+      cprStop: new Cpr());
   String selectWitness;
   String selectBystander;
   String selectCprStart;
@@ -87,15 +95,8 @@ class _CPRItems extends State<CPRItems>
   //   super.initState();
   // }
 
-  ItemModel getValue(context, id) {
-    var myProvider = Provider.of<CPRProvider>(context);
-    var result =
-        myProvider.itemModels.firstWhere((f) => f.id == id, orElse: () => null);
-
-    if (result == null)
-      return null;
-    else
-      return result;
+  getCurrentTime() {
+    return DateFormat("dd/MM/yyyy HH:mm:ss").format(DateTime.now());
   }
 
   @override
@@ -123,7 +124,41 @@ class _CPRItems extends State<CPRItems>
     // super.didChangeDependencies();
   }
 
-  // }
+  void buttonCallback(id, valueSelected) {
+    // print("button callback");
+    final temp = Cpr(value: valueSelected, timestamp: getCurrentTime());
+    if (id == "witness_cpr") {
+      setState(() {
+        cprLog.witnessCpr = temp;
+      });
+    }
+    if (id == "bystander_cpr") {
+      setState(() {
+        cprLog.bystanderCpr = temp;
+      });
+    }
+    if (id == "cpr_start") {
+      setState(() {
+        cprLog.cprStart = temp;
+      });
+    }
+    if (id == "rosc") {
+      setState(() {
+        cprLog.rosc = temp;
+      });
+    }
+    if (id == "cpr_stop") {
+      setState(() {
+        cprLog.cprStop = temp;
+      });
+    }
+
+    if (id == "srhythm") {
+      setState(() {
+        shockable.rhythm = temp;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,12 +206,31 @@ class _CPRItems extends State<CPRItems>
                     Navigator.pop(context);
                   },
                 ),
-                _buildChoiceChip(context, "witness_cpr", WITNESS, selectWitness,
-                    witnessController,),
-                _buildChoiceChip(context, "bystander_cpr", WITNESS,
-                    selectBystander, bystanderController),
-                _buildChoiceChip(context, "cpr_start", WITNESS, selectCprStart,
-                    cprStartController),
+                BuildChoiceChip(
+                  // context,
+                  // cprlog: cprLog,
+                  id: "witness_cpr",
+                  listData: WITNESS,
+                  selectData: cprLog.witnessCpr.value,
+                  txtController: witnessController,
+                  callback: buttonCallback,
+                ),
+                BuildChoiceChip(
+                  // context,
+                  id: "bystander_cpr",
+                  listData: WITNESS,
+                  selectData: cprLog.bystanderCpr.value,
+                  txtController: bystanderController,
+                  callback: buttonCallback,
+                ),
+                BuildChoiceChip(
+                  // context,
+                  id: "cpr_start",
+                  listData: WITNESS,
+                  selectData: cprLog.cprStart.value,
+                  txtController: cprStartController,
+                  callback: buttonCallback,
+                ),
                 // SizedBox(
                 //   height: 10,
                 // ),
@@ -191,10 +245,22 @@ class _CPRItems extends State<CPRItems>
                 // // _buildAnalysis(),
                 _buildAddCycle(),
                 _buildCounterRhythm(),
-                _buildChoiceChip(
-                    context, "rosc", WITNESS, selectRosc, roscController),
-                _buildChoiceChip(context, "cpr_stop", WITNESS, selectCprStop,
-                    cprStopController),
+                BuildChoiceChip(
+                  // context,
+                  id: "rosc",
+                  listData: WITNESS,
+                  selectData: cprLog.rosc.value,
+                  txtController: roscController,
+                  callback: buttonCallback,
+                ),
+                BuildChoiceChip(
+                  // context,
+                  id: "cpr_stop",
+                  listData: WITNESS,
+                  selectData: cprLog.cprStop.value,
+                  txtController: cprStopController,
+                  callback: buttonCallback,
+                ),
               ],
             ),
           ),
@@ -349,327 +415,6 @@ class _CPRItems extends State<CPRItems>
   //   }
   // }
 
-  _buildChoiceChip(context, id, data, select, controller) {
-    ItemModel item = getValue(context, id);
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(item.name),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              // mainAxisAlignment: MainAxisAlignment.end,
-              // crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                // Expanded(
-                // child:
-                Wrap(
-                  // children: [
-                  // Expanded(
-                  children: List<Widget>.generate(data.length, (index) {
-                    return Padding(
-                      padding: EdgeInsets.only(right: 10),
-                      child: ChoiceChip(
-                        pressElevation: 5.0,
-                        elevation: 2.0,
-                        key: UniqueKey(),
-                        label: Text(data[index]),
-                        selected: data[index] == select,
-                        onSelected: (bool selected) {
-                          print("witness cpr pressed!");
-                          print(id);
-                          if (id == "witness_cpr") {
-                            setState(() {
-                              final temp = Cpr(
-                                  value: item.value,
-                                  timestamp: new DateTime.now());
-                              // cprLog.witnessCpr.value = item.value;
-                              // cprLog.witnessCpr.timestamp = new DateTime.now();
-                              print(item.value);
-                              selectWitness = data[index];
-                              cprLog.witnessCpr = temp;
-
-                              controller.text = DateFormat("dd/MM/yyyy HH:mm")
-                                  .format(DateTime.now());
-                            });
-                          }
-                          if (id == "bystander_cpr") {
-                            setState(() {
-                              final temp = Cpr(
-                                  value: item.value,
-                                  timestamp: new DateTime.now());
-                              // cprLog.witnessCpr.value = item.value;
-                              // cprLog.witnessCpr.timestamp = new DateTime.now();
-                              print(item.value);
-                              selectBystander = data[index];
-                              cprLog.bystanderCpr = temp;
-
-                              controller.text = DateFormat("dd/MM/yyyy HH:mm")
-                                  .format(DateTime.now());
-                            });
-                          }
-                          if (id == "cpr_start") {
-                            setState(() {
-                              final temp = Cpr(
-                                  value: item.value,
-                                  timestamp: new DateTime.now());
-                              // cprLog.witnessCpr.value = item.value;
-                              // cprLog.witnessCpr.timestamp = new DateTime.now();
-                              print(item.value);
-                              selectCprStart = data[index];
-                              cprLog.cprStart = temp;
-
-                              controller.text = DateFormat("dd/MM/yyyy HH:mm")
-                                  .format(DateTime.now());
-                            });
-                          }
-                          if (id == "rosc") {
-                            setState(() {
-                              final temp = Cpr(
-                                  value: item.value,
-                                  timestamp: new DateTime.now());
-                              // cprLog.witnessCpr.value = item.value;
-                              // cprLog.witnessCpr.timestamp = new DateTime.now();
-                              print(item.value);
-                              selectRosc = data[index];
-                              cprLog.rosc = temp;
-
-                              controller.text = DateFormat("dd/MM/yyyy HH:mm")
-                                  .format(DateTime.now());
-                            });
-                          }
-                          if (id == "cpr_stop") {
-                            setState(() {
-                              final temp = Cpr(
-                                  value: item.value,
-                                  timestamp: new DateTime.now());
-                              // cprLog.witnessCpr.value = item.value;
-                              // cprLog.witnessCpr.timestamp = new DateTime.now();
-                              print(item.value);
-                              selectCprStop = data[index];
-                              cprLog.cprStop = temp;
-
-                              controller.text = DateFormat("dd/MM/yyyy HH:mm")
-                                  .format(DateTime.now());
-                            });
-                          }
-                          // providerSelected.updateValue(labelText, data[index]);
-                          // if (data[index] != null) {
-                          //   String format = DateFormat("dd/MM/yyyy @ hh:mm aa")
-                          //           .format(DateTime.now()) +
-                          //       " -- " +
-                          //       labelText +
-                          //       " " +
-                          //       data[index];
-
-                          //   cprProvider.addLog(format);
-                          //   // confirmLog(format);
-                          // }
-                          // onSelected(context, id, data[index]);
-                        },
-                        selectedColor: Colors.pink[200],
-                      ),
-                    );
-                  }),
-                ),
-                // ),
-                // Expanded(
-                // child:
-                Container(
-                  width: 150,
-                  child: TextField(controller: controller
-
-                      // cprLog.witnessCpr != null
-                      //   ? DateFormat("dd/MM/yyyy HH:mm")
-                      //       .format(cprLog.witnessCpr.timestamp)
-                      //   : "Time"),
-                      // IconButton(
-                      //   icon: Icon(
-                      //     Icons.edit,
-                      //     color: Colors.blue,
-                      //   ),
-                      //   onPressed: () {},
-                      ),
-                )
-                // )
-                // ])
-              ],
-              // )
-              // ],
-            ),
-          ]),
-    );
-  }
-  _buildChoiceAnalysis(context, id, data, select, controller, setState) {
-    ItemModel item = getValue(context, id);
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(item.name),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              // mainAxisAlignment: MainAxisAlignment.end,
-              // crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                // Expanded(
-                // child:
-                Wrap(
-                  // children: [
-                  // Expanded(
-                  children: List<Widget>.generate(data.length, (index) {
-                    return Padding(
-                      padding: EdgeInsets.only(right: 10),
-                      child: ChoiceChip(
-                        pressElevation: 5.0,
-                        elevation: 2.0,
-                        key: UniqueKey(),
-                        label: Text(data[index]),
-                        selected: data[index] == select,
-                        onSelected: (bool selected) {
-                          print("witness cpr pressed!");
-                          print(id);
-                          if (id == "srhythm") {
-                            setState(() {
-
-    //                           ItemModel(id: "srhythm", name: "Rhythm"),
-    // ItemModel(id: "sinterv", name: "Intervention"),
-    // ItemModel(id: "sdrugs", name: "Drugs"),
-    // ItemModel(id: "sairway", name: "Airway"),
-    // ItemModel(id: "nsrhythm", name: "Rhythm"),
-    // ItemModel(id: "nsinterv", name: "Intervention"),
-    // ItemModel(id: "nsdrugs", name: "Drugs"),
-    // ItemModel(id: "nsairway", name: "Airway"),
-    // ItemModel(id: "orhythm", name: "Rhythm"),
-    // ItemModel(id: "ointerv", name: "Intervention"),
-    // ItemModel(id: "odrugs", name: "Drugs"),
-    // ItemModel(id: "oairway", name: "Airway"),
-    // ItemModel(id: "analysis", name: "Analysis"),
-  
-                              var temp = Cpr(
-                                  value: item.value,
-                                  timestamp: new DateTime.now());
-                              // cprLog.witnessCpr.value = item.value;
-                              // cprLog.witnessCpr.timestamp = new DateTime.now();
-                              // print(item.value);
-                              selectRhythm = data[index];
-                              
-                              // cprLog. = temp;
-
-                              controller.text = DateFormat("dd/MM/yyyy HH:mm")
-                                  .format(DateTime.now());
-                            });
-                          }
-                          if (id == "bystander_cpr") {
-                            setState(() {
-                              final temp = Cpr(
-                                  value: item.value,
-                                  timestamp: new DateTime.now());
-                              // cprLog.witnessCpr.value = item.value;
-                              // cprLog.witnessCpr.timestamp = new DateTime.now();
-                              print(item.value);
-                              selectBystander = data[index];
-                              cprLog.bystanderCpr = temp;
-
-                              controller.text = DateFormat("dd/MM/yyyy HH:mm")
-                                  .format(DateTime.now());
-                            });
-                          }
-                          if (id == "cpr_start") {
-                            setState(() {
-                              final temp = Cpr(
-                                  value: item.value,
-                                  timestamp: new DateTime.now());
-                              // cprLog.witnessCpr.value = item.value;
-                              // cprLog.witnessCpr.timestamp = new DateTime.now();
-                              print(item.value);
-                              selectCprStart = data[index];
-                              cprLog.cprStart = temp;
-
-                              controller.text = DateFormat("dd/MM/yyyy HH:mm")
-                                  .format(DateTime.now());
-                            });
-                          }
-                          if (id == "rosc") {
-                            setState(() {
-                              final temp = Cpr(
-                                  value: item.value,
-                                  timestamp: new DateTime.now());
-                              // cprLog.witnessCpr.value = item.value;
-                              // cprLog.witnessCpr.timestamp = new DateTime.now();
-                              print(item.value);
-                              selectRosc = data[index];
-                              cprLog.rosc = temp;
-
-                              controller.text = DateFormat("dd/MM/yyyy HH:mm")
-                                  .format(DateTime.now());
-                            });
-                          }
-                          if (id == "cpr_stop") {
-                            setState(() {
-                              final temp = Cpr(
-                                  value: item.value,
-                                  timestamp: new DateTime.now());
-                              // cprLog.witnessCpr.value = item.value;
-                              // cprLog.witnessCpr.timestamp = new DateTime.now();
-                              print(item.value);
-                              selectCprStop = data[index];
-                              cprLog.cprStop = temp;
-
-                              controller.text = DateFormat("dd/MM/yyyy HH:mm")
-                                  .format(DateTime.now());
-                            });
-                          }
-                          // providerSelected.updateValue(labelText, data[index]);
-                          // if (data[index] != null) {
-                          //   String format = DateFormat("dd/MM/yyyy @ hh:mm aa")
-                          //           .format(DateTime.now()) +
-                          //       " -- " +
-                          //       labelText +
-                          //       " " +
-                          //       data[index];
-
-                          //   cprProvider.addLog(format);
-                          //   // confirmLog(format);
-                          // }
-                          // onSelected(context, id, data[index]);
-                        },
-                        selectedColor: Colors.pink[200],
-                      ),
-                    );
-                  }),
-                ),
-                // ),
-                // Expanded(
-                // child:
-                Container(
-                  width: 150,
-                  child: TextField(controller: controller
-
-                      // cprLog.witnessCpr != null
-                      //   ? DateFormat("dd/MM/yyyy HH:mm")
-                      //       .format(cprLog.witnessCpr.timestamp)
-                      //   : "Time"),
-                      // IconButton(
-                      //   icon: Icon(
-                      //     Icons.edit,
-                      //     color: Colors.blue,
-                      //   ),
-                      //   onPressed: () {},
-                      ),
-                )
-                // )
-                // ])
-              ],
-              // )
-              // ],
-            ),
-          ]),
-    );
-  }
-
   addRhythmDialog() {
     showDialog(
       context: context,
@@ -802,6 +547,13 @@ class _CPRItems extends State<CPRItems>
       // padding: EdgeInsets.all(10),
       child: Column(
         children: [
+          Text(
+            "Rhythm Analysis",
+            style: TextStyle(letterSpacing: 2.0, fontSize: 18),
+          ),
+          SizedBox(
+            height: 10,
+          ),
           Wrap(
             children: List<Widget>.generate(ANALYSIS.length, (index) {
               return Padding(
@@ -821,6 +573,11 @@ class _CPRItems extends State<CPRItems>
                 ),
               );
             }),
+          ),
+          Container(
+            height: 1,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.grey,
           ),
           // Card(
           //   margin: EdgeInsets.all(10),
@@ -945,14 +702,16 @@ class _CPRItems extends State<CPRItems>
   {
     if (selectAnalysis == "Shockable") {
       return _buildShockable(setState);
-    } else if (selectAnalysis == "Non-Shockable") {
-      return _buildNonShockable(setState);
-    } else
-      return _buildOther(setState);
+    }
+    // else if (selectAnalysis == "Non-Shockable") {
+    //   return _buildNonShockable(setState);
+    // } else
+    //   return _buildOther(setState);
     // if (onShock != null) {
     // if (onNonShock != null) {
     //   return _buildNonShockable();
-    // } else if (onOther != null) {
+    // }
+    // else if (onOther != null) {
     //   return _buildOther();
     // }
     // // return Container(
@@ -967,13 +726,42 @@ class _CPRItems extends State<CPRItems>
     return Container(
       child: Column(
         children: <Widget>[
-          _buildChoiceAnalysis(
-              context, "srhythm", RHYTHM, selectRhythm, rhythmController, setState),
-          _buildChoiceAnalysis(
-              context, "sinterv", INTERV, selectInter, intervController, setState),
-          _buildChoiceAnalysis(context, "sdrugs", DRUG, selectDrug, drugController, setState),
-          _buildChoiceAnalysis(
-              context, "sairway", AIRWAY, selectAirway, airwayController, setState),
+          BuildChoiceChip(
+            setState: setState,
+            // context,
+            id: "srhythm",
+            listData: RHYTHM,
+            selectData:
+                shockable.rhythm != null ? shockable.rhythm.value : null,
+            txtController: rhythmController,
+            callback: buttonCallback,
+// setState: setState
+            //  setState
+          ),
+          BuildChoiceAnalysis(
+            // context,
+            id: "sinterv",
+            listData: INTERV,
+            selectData: selectInter,
+            txtController: intervController,
+            // setState
+          ),
+          BuildChoiceAnalysis(
+            // context,
+            id: "sdrugs",
+            listData: DRUG,
+            selectData: selectDrug,
+            txtController: drugController,
+            // setState
+          ),
+          BuildChoiceAnalysis(
+            // context,
+            id: "sairway",
+            listData: AIRWAY,
+            selectData: selectAirway,
+            txtController: airwayController,
+            // setState
+          ),
         ],
       ),
     );
@@ -985,12 +773,28 @@ class _CPRItems extends State<CPRItems>
     return Container(
       child: Column(
         children: <Widget>[
-          _buildChoiceAnalysis(context, "nsrhythm", RHYTHMNS, selectRhythmNS,
-              rhythmNSController, setState),
-          _buildChoiceAnalysis(
-              context, "nsdrugs", DRUG, selectDrugNS, drugNSController, setState),
-          _buildChoiceAnalysis(
-              context, "nsairway", AIRWAY, selectAirwayNS, airwayNSController,setState),
+          BuildChoiceAnalysis(
+            // context,
+            id: "nsrhythm",
+            listData: RHYTHMNS,
+            selectData: selectRhythmNS,
+            txtController: rhythmNSController,
+            // setState
+          ),
+          BuildChoiceAnalysis(
+            // context,
+            id: "nsdrugs", listData: DRUG,
+            selectData: selectDrugNS,
+            txtController: drugNSController,
+            // setState
+          ),
+          BuildChoiceAnalysis(
+            // context,
+            id: "nsairway", listData: AIRWAY,
+            selectData: selectAirwayNS,
+            txtController: airwayNSController,
+            // setState
+          ),
         ],
       ),
     );
@@ -1002,17 +806,44 @@ class _CPRItems extends State<CPRItems>
       child: Column(
         children: <Widget>[
           SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: _buildChoiceAnalysis(context, "orhythm", RHYTHMOT, 
-                  selectRhythmO, rhythmOController, setState)),
+            scrollDirection: Axis.horizontal,
+            child: BuildChoiceAnalysis(
+              // context,
+              id: "orhythm",
+              listData: RHYTHMOT,
+              selectData: selectRhythmO,
+              txtController: rhythmOController,
+              // setState
+            ),
+          ),
           SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: _buildChoiceAnalysis(context, "ointerv", INTEROT, selectInterO,
-                  intervOController, setState)),
-          _buildChoiceAnalysis(
-              context, "odrugs", DRUG, selectDrugO, drugOController, setState),
-          _buildChoiceAnalysis(
-              context, "oairway", AIRWAY, selectAirwayO, airwayOController, setState)
+            scrollDirection: Axis.horizontal,
+            child: BuildChoiceAnalysis(
+              // context,
+              id: "ointerv",
+              listData: INTEROT,
+              selectData: selectInterO,
+              txtController: intervOController,
+              // setState
+            ),
+          ),
+          BuildChoiceAnalysis(
+            // context,
+            id: "odrugs",
+            listData: DRUG,
+            selectData: selectDrugO,
+            txtController: drugOController,
+            // setState
+          ),
+          BuildChoiceAnalysis(
+            // context,
+
+            id: "oairway",
+            listData: AIRWAY,
+            selectData: selectAirwayO,
+            txtController: airwayOController,
+            // setState
+          )
         ],
       ),
     );
@@ -1100,5 +931,406 @@ class _CPRItems extends State<CPRItems>
                 borderRadius: BorderRadius.all(Radius.circular(20.0))),
           );
         });
+  }
+}
+
+class BuildChoiceChip extends StatefulWidget {
+  // final CprLog cprlog;
+  final id;
+  final listData;
+  final selectData;
+  final txtController;
+  final Function callback;
+  final setState;
+
+  BuildChoiceChip(
+      {
+      // this.cprlog,
+      this.id,
+      this.listData,
+      this.selectData,
+      this.txtController,
+      this.callback,
+      this.setState});
+  _BuildChoiceChip createState() => _BuildChoiceChip();
+}
+
+class _BuildChoiceChip extends State<BuildChoiceChip> {
+  String selectWitness;
+
+  getCurrentTime() {
+    return DateFormat("dd/MM/yyyy HH:mm:ss").format(DateTime.now());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //  _buildChoiceChip(context, id, data, select, controller) {
+    ItemModel item = getItem(context, widget.id);
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(item.name),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              // mainAxisAlignment: MainAxisAlignment.end,
+              // crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                // Expanded(
+                // child:
+                Wrap(
+                  // children: [
+                  // Expanded(
+                  children:
+                      List<Widget>.generate(widget.listData.length, (index) {
+                    return Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: ChoiceChip(
+                        pressElevation: 5.0,
+                        elevation: 2.0,
+                        key: UniqueKey(),
+                        label: Text(widget.listData[index]),
+                        selected:
+                            widget.listData[index] == (widget.selectData ?? ''),
+                        onSelected: (bool selected) {
+                          widget.callback(widget.id, widget.listData[index]);
+
+                          widget.setState(() {
+                            widget.txtController.text = getCurrentTime();
+                          });
+
+                          // print(selected);
+                          // print(widget.listData[index]);
+                          // setState((){
+                          // selectData = listData[index];
+                          // });
+                          // print("witness cpr pressed!");
+                          // print(id);
+                          // if (id == "witness_cpr") {
+                          //   setState(() {
+                          //     final temp = Cpr(
+                          //         value: item.value,
+                          //         timestamp: new DateTime.now());
+                          //     // cprLog.witnessCpr.value = item.value;
+                          //     // cprLog.witnessCpr.timestamp = new DateTime.now();
+                          //     print(item.value);
+                          //     selectWitness = data[index];
+                          //     cprLog.witnessCpr = temp;
+
+                          //     controller.text = DateFormat("dd/MM/yyyy HH:mm")
+                          //         .format(DateTime.now());
+                          //   });
+                          // }
+                          // if (id == "bystander_cpr") {
+                          //   setState(() {
+                          //     final temp = Cpr(
+                          //         value: item.value,
+                          //         timestamp: new DateTime.now());
+                          //     // cprLog.witnessCpr.value = item.value;
+                          //     // cprLog.witnessCpr.timestamp = new DateTime.now();
+                          //     print(item.value);
+                          //     selectBystander = data[index];
+                          //     cprLog.bystanderCpr = temp;
+
+                          //     controller.text = DateFormat("dd/MM/yyyy HH:mm")
+                          //         .format(DateTime.now());
+                          //   });
+                          // }
+                          // if (id == "cpr_start") {
+                          //   setState(() {
+                          //     final temp = Cpr(
+                          //         value: item.value,
+                          //         timestamp: new DateTime.now());
+                          //     // cprLog.witnessCpr.value = item.value;
+                          //     // cprLog.witnessCpr.timestamp = new DateTime.now();
+                          //     print(item.value);
+                          //     selectCprStart = data[index];
+                          //     cprLog.cprStart = temp;
+
+                          //     controller.text = DateFormat("dd/MM/yyyy HH:mm")
+                          //         .format(DateTime.now());
+                          //   });
+                          // }
+                          // if (id == "rosc") {
+                          //   setState(() {
+                          //     final temp = Cpr(
+                          //         value: item.value,
+                          //         timestamp: new DateTime.now());
+                          //     // cprLog.witnessCpr.value = item.value;
+                          //     // cprLog.witnessCpr.timestamp = new DateTime.now();
+                          //     print(item.value);
+                          //     selectRosc = data[index];
+                          //     cprLog.rosc = temp;
+
+                          //     controller.text = DateFormat("dd/MM/yyyy HH:mm")
+                          //         .format(DateTime.now());
+                          //   });
+                          // }
+                          // if (id == "cpr_stop") {
+                          //   setState(() {
+                          //     final temp = Cpr(
+                          //         value: item.value,
+                          //         timestamp: new DateTime.now());
+                          //     // cprLog.witnessCpr.value = item.value;
+                          //     // cprLog.witnessCpr.timestamp = new DateTime.now();
+                          //     print(item.value);
+                          //     selectCprStop = data[index];
+                          //     cprLog.cprStop = temp;
+
+                          //     controller.text = DateFormat("dd/MM/yyyy HH:mm")
+                          //         .format(DateTime.now());
+                          //   });
+                          // }
+                          // // providerSelected.updateValue(labelText, data[index]);
+                          // // if (data[index] != null) {
+                          // //   String format = DateFormat("dd/MM/yyyy @ hh:mm aa")
+                          // //           .format(DateTime.now()) +
+                          // //       " -- " +
+                          // //       labelText +
+                          // //       " " +
+                          // //       data[index];
+
+                          // //   cprProvider.addLog(format);
+                          // //   // confirmLog(format);
+                          // // }
+                          // // onSelected(context, id, data[index]);
+                        },
+                        selectedColor: Colors.pink[200],
+                      ),
+                    );
+                  }),
+                ),
+                // ),
+                // Expanded(
+                // child:
+                Container(
+                  width: 170,
+                  child: TextField(controller: widget.txtController
+
+                      // cprLog.witnessCpr != null
+                      //   ? DateFormat("dd/MM/yyyy HH:mm")
+                      //       .format(cprLog.witnessCpr.timestamp)
+                      //   : "Time"),
+                      // IconButton(
+                      //   icon: Icon(
+                      //     Icons.edit,
+                      //     color: Colors.blue,
+                      //   ),
+                      //   onPressed: () {},
+                      ),
+                )
+                // )
+                // ])
+              ],
+              // )
+              // ],
+            ),
+          ]),
+    );
+  }
+
+  ItemModel getItem(context, id) {
+    var myProvider = Provider.of<CPRProvider>(context);
+    var result =
+        myProvider.itemModels.firstWhere((f) => f.id == id, orElse: () => null);
+
+    if (result == null)
+      return null;
+    else
+      return result;
+  }
+}
+
+class BuildChoiceAnalysis extends StatelessWidget {
+  final id;
+  final listData;
+  final selectData;
+  final txtController;
+  final item;
+
+  BuildChoiceAnalysis(
+      {this.id, this.item, this.listData, this.selectData, this.txtController});
+
+// (context, id, data, select, controller, setState) {
+  // ItemModel item = getValue(context, id);
+
+  @override
+  build(BuildContext context) {
+    ItemModel item = getItem(context, id);
+    // Analysis analysis = new Analysis();
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(item.name),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              // mainAxisAlignment: MainAxisAlignment.end,
+              // crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                // Expanded(
+                // child:
+                Wrap(
+                  // children: [
+                  // Expanded(
+                  children: List<Widget>.generate(listData.length, (index) {
+                    return Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: ChoiceChip(
+                        pressElevation: 5.0,
+                        elevation: 2.0,
+                        key: UniqueKey(),
+                        label: Text(listData[index]),
+                        selected: listData[index] == selectData,
+                        onSelected: (bool selected) {
+                          //                           ItemModel(id: "srhythm", name: "Rhythm"),
+                          // ItemModel(id: "sinterv", name: "Intervention"),
+                          // ItemModel(id: "sdrugs", name: "Drugs"),
+                          // ItemModel(id: "sairway", name: "Airway"),
+                          // ItemModel(id: "nsrhythm", name: "Rhythm"),
+                          // ItemModel(id: "nsinterv", name: "Intervention"),
+                          // ItemModel(id: "nsdrugs", name: "Drugs"),
+                          // ItemModel(id: "nsairway", name: "Airway"),
+                          // ItemModel(id: "orhythm", name: "Rhythm"),
+                          // ItemModel(id: "ointerv", name: "Intervention"),
+                          // ItemModel(id: "odrugs", name: "Drugs"),
+                          // ItemModel(id: "oairway", name: "Airway"),
+                          // ItemModel(id: "analysis", name: "Analysis"),
+                          // if (id == "srhythm") {
+                          //   setState(() {
+                          //     var temp = Cpr(
+                          //         value: item.value,
+                          //         timestamp: new DateTime.now());
+                          //     // cprLog.witnessCpr.value = item.value;
+                          //     analysis.rhythm = data[index];
+                          //     // cprLog..timestamp = new DateTime.now();
+                          //     // print(item.value);
+                          //     selectRhythm = data[index];
+
+                          //     // cprLog. = temp;
+
+                          //     controller.text = DateFormat("dd/MM/yyyy HH:mm")
+                          //         .format(DateTime.now());
+                          //   });
+                          // }
+                          // if (id == "bystander_cpr") {
+                          //   setState(() {
+                          //     final temp = Cpr(
+                          //         value: item.value,
+                          //         timestamp: new DateTime.now());
+                          //     // cprLog.witnessCpr.value = item.value;
+                          //     // cprLog.witnessCpr.timestamp = new DateTime.now();
+                          //     print(item.value);
+                          //     selectBystander = data[index];
+                          //     cprLog.bystanderCpr = temp;
+
+                          //     controller.text = DateFormat("dd/MM/yyyy HH:mm")
+                          //         .format(DateTime.now());
+                          //   });
+                          // }
+                          // if (id == "cpr_start") {
+                          //   setState(() {
+                          //     final temp = Cpr(
+                          //         value: item.value,
+                          //         timestamp: new DateTime.now());
+                          //     // cprLog.witnessCpr.value = item.value;
+                          //     // cprLog.witnessCpr.timestamp = new DateTime.now();
+                          //     print(item.value);
+                          //     selectCprStart = data[index];
+                          //     cprLog.cprStart = temp;
+
+                          //     controller.text = DateFormat("dd/MM/yyyy HH:mm")
+                          //         .format(DateTime.now());
+                          //   });
+                          // }
+                          // if (id == "rosc") {
+                          //   setState(() {
+                          //     final temp = Cpr(
+                          //         value: item.value,
+                          //         timestamp: new DateTime.now());
+                          //     // cprLog.witnessCpr.value = item.value;
+                          //     // cprLog.witnessCpr.timestamp = new DateTime.now();
+                          //     print(item.value);
+                          //     selectRosc = data[index];
+                          //     cprLog.rosc = temp;
+
+                          //     controller.text = DateFormat("dd/MM/yyyy HH:mm")
+                          //         .format(DateTime.now());
+                          //   });
+                          // }
+                          // if (id == "cpr_stop") {
+                          //   setState(() {
+                          //     final temp = Cpr(
+                          //         value: item.value,
+                          //         timestamp: new DateTime.now());
+                          //     // cprLog.witnessCpr.value = item.value;
+                          //     // cprLog.witnessCpr.timestamp = new DateTime.now();
+                          //     print(item.value);
+                          //     selectCprStop = data[index];
+                          //     cprLog.cprStop = temp;
+
+                          //     controller.text = DateFormat("dd/MM/yyyy HH:mm")
+                          //         .format(DateTime.now());
+                          //   });
+                          // }
+                          // // providerSelected.updateValue(labelText, data[index]);
+                          // // if (data[index] != null) {
+                          // //   String format = DateFormat("dd/MM/yyyy @ hh:mm aa")
+                          // //           .format(DateTime.now()) +
+                          // //       " -- " +
+                          // //       labelText +
+                          // //       " " +
+                          // //       data[index];
+
+                          // //   cprProvider.addLog(format);
+                          // //   // confirmLog(format);
+                          // // }
+                          // // onSelected(context, id, data[index]);
+                        },
+                        selectedColor: Colors.pink[200],
+                      ),
+                    );
+                  }),
+                ),
+                // ),
+                // Expanded(
+                // child:
+                Container(
+                  width: 150,
+                  child: TextField(controller: txtController
+
+                      // cprLog.witnessCpr != null
+                      //   ? DateFormat("dd/MM/yyyy HH:mm")
+                      //       .format(cprLog.witnessCpr.timestamp)
+                      //   : "Time"),
+                      // IconButton(
+                      //   icon: Icon(
+                      //     Icons.edit,
+                      //     color: Colors.blue,
+                      //   ),
+                      //   onPressed: () {},
+                      ),
+                )
+                // )
+                // ])
+              ],
+              // )
+              // ],
+            ),
+          ]),
+    );
+  }
+
+  ItemModel getItem(context, id) {
+    var myProvider = Provider.of<CPRProvider>(context);
+    var result =
+        myProvider.itemModels.firstWhere((f) => f.id == id, orElse: () => null);
+
+    if (result == null)
+      return null;
+    else
+      return result;
   }
 }

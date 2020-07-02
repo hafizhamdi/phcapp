@@ -85,29 +85,32 @@ class PhcApiClient {
     //       // patientAssessment: f.patientAssessment
     //       );
     // }).toList();
-    try {
-      print("INTERNAL PATIENT");
-      print(jsonEncode(internal_callcard));
-      final postResponse = await this.httpClient.post(
-          "$baseUrl/upload_result/call_card",
-          body: jsonEncode(internal_callcard));
+    // try {
+    print("INTERNAL PATIENT");
+    print(jsonEncode(internal_callcard));
+    final postResponse = await this.httpClient.post(
+        "$baseUrl/upload_result/call_card",
+        body: jsonEncode(internal_callcard));
 
-      print("post-status-code:");
-      print(postResponse.statusCode);
-      if (postResponse.statusCode != 200) {
-        print("htrow excemptions");
-        throw Exception("Failed to post call card");
-      }
-
+    print("post-status-code:");
+    print(postResponse.statusCode);
+    if (postResponse.statusCode != 200) {
+      print("htrow excemptions");
+      throw Exception("Failed to post call card");
+      // return null;
+    } else {
       print("Lepas throw");
       final callcardJson = jsonDecode(postResponse.body);
       print(callcardJson);
       return callcardJson;
-    } catch (error) {
-      print("catch error");
-      print(error);
-      // print(e.)
     }
+    // return null;
+
+    // } catch (error) {
+    //   print("catch error");
+    //   print(error);
+    //   // print(e.)
+    // }
     // if (postResponse.statusCode == 200) {
     //   print("masuk dalam 200");
     //   final resultResponse = jsonDecode(postResponse.body);
@@ -116,7 +119,7 @@ class PhcApiClient {
     //   // return Callcard.fromJson(resultResponse);
     //   return resultResponse;
     // } else {
-    return null;
+    // return null;
     // return Callcard.fromJson(callcardJson);
   }
 

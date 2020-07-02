@@ -159,7 +159,7 @@ class _ListCallcards extends State<ListCallcards> {
               phcBloc = BlocProvider.of<PhcBloc>(context);
 
               if (state is PhcEmpty) {
-                state.props.add(FetchPhc());
+                // state.props.add(FetchPhc());
 
                 phcBloc.add(FetchPhc());
               } else if (state is PhcLoaded) {
@@ -188,13 +188,14 @@ class _ListCallcards extends State<ListCallcards> {
                     //     })
 
                     );
-              } else if (state is PhcFetched) {
-                final phc = state.phc;
-                print("Phc fetched");
-
-                phcBloc.add(AddPhc(phc: phc));
-                print("after loadphc");
               }
+              // else if (state is PhcFetched) {
+              //   final phc = state.phc;
+              //   print("Phc fetched");
+
+              //   phcBloc.add(AddPhc(phc: phc));
+              //   print("after loadphc");
+              // }
               return Center(
                 child: CircularProgressIndicator(),
               );

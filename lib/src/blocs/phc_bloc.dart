@@ -320,55 +320,64 @@ class PhcBloc extends Bloc<PhcEvent, PhcState> {
   }
 
   Stream<PhcState> _mapFetchPhcToState(FetchPhc event) async* {
-    yield PhcFetching();
+    // yield PhcFetching();
+    yield PhcLoading();
     // try {
-    final phc = await phcRepository.getPhc();
 
-    // final phcInsert = await phcDao.insert(phc);
     // print("phc fetching");
     // print(phcInsert);
     try {
+      final phc = await phcRepository.getPhc();
       print("INSIDE TRY PHC");
-      print(jsonEncode(phc));
+      final phcInsert = await phcDao.insert(Phc.fromJson(phc));
+      // print(jsonEncode(phc));
       final phcData = Phc.fromJson(phc);
 
-      yield PhcFetched(phc: phcData);
+      // yield PhcFetched(phc: phcData);
+      yield PhcLoaded(phc: phcData);
+      // } catch (error) {
+      //   print("---catch error----");
+      //   print(error);
+      // }
+
+      // print(phc);
+      // yield* _reloadPhc();
     } catch (error) {
-      print("---catch error----");
       print(error);
+      yield PhcFetchingError();
+
+      yield* _reloadPhc();
     }
-
-    // print(phc);
-    // yield* _reloadPhc();
-    // } catch (_) {
-    // yield PhcFetchingError();
-
-    // yield* _reloadPhc();
-    // }
   }
 
   Stream<PhcState> _mapRefreshPhcToState(RefreshPhc event) async* {
-    yield PhcFetching();
+    // yield PhcFetching();
+    yield PhcLoading();
     // try {
-    final phc = await phcRepository.getPhc();
 
-    // final phcInsert = await _phcDao.insert(phc);
     print("phc refresh");
     // print(phcInsert);
 
     // print(phc);
     // yield* _reloadPhc();
-    yield PhcFetched(phc: Phc.fromJson(phc));
-    // try {
-    //   final Phc phc = await phcRepository.getPhc();
-    //   print("refersh");
-    //   print(phc);
-    //   yield PhcFetched(phc: phc);
-    // } catch (_) {
-    //   yield PhcFetchingError();
-    //   // yield state;
-    //   yield* _reloadPhc();
-    // }
+    try {
+      final phc = await phcRepository.getPhc();
+      //   final Phc phc = await phcRepository.getPhc();
+      final phcInsert = await phcDao.insert(Phc.fromJson(phc));
+
+      final phcData = Phc.fromJson(phc);
+
+      //   print("refersh");
+      yield PhcLoaded(phc: phcData);
+      //   print(phc);
+      //   yield PhcFetched(phc: phc);
+    } catch (error) {
+      print(error);
+
+      yield PhcFetchingError();
+      //   // yield state;
+      yield* _reloadPhc();
+    }
   }
 
   Stream<PhcState> _reloadPhc() async* {

@@ -92,7 +92,7 @@ class _History extends State<History> {
         ),
         body: BlocConsumer<HistoryBloc, HistoryState>(
           listener: (context, state) {
-            if (state is CallcardToPublishEmpty) {
+            if (state is CallcardToPublishSuccess) {
               historyBloc.add(LoadHistory());
             }
           },

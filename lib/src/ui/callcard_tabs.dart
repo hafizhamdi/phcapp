@@ -108,7 +108,21 @@ class _CallcardTabs extends State<CallcardTabs> {
         return AlertDialog(
           title: Text("Data sending failed"),
           content: Text(
-              "Something went wrong. \nWe keep your last saving in History"),
+              "Something went wrong. \nWe keep your last sending in History"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("GOTO HISTORY"),
+              onPressed: () {
+                Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => History()))
+                    .then((result) {
+                  Navigator.pop(context);
+                });
+
+                // Navigator.pop(context);
+              },
+            )
+          ],
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
