@@ -597,21 +597,21 @@ class Analysis {
   Analysis({
     this.timestamp,
     this.rhythm,
-    this.intevention,
+    this.intervention,
     this.drugs,
     this.airway,
   });
 
   DateTime timestamp;
   Cpr rhythm;
-  Cpr intevention;
+  Cpr intervention;
   Cpr drugs;
   Cpr airway;
 
   factory Analysis.fromJson(Map<String, dynamic> json) => Analysis(
         timestamp: parsingDateTime(json["timestamp"]),
         rhythm: Cpr.fromJson(json["rhythm"]),
-        intevention: Cpr.fromJson(json["intevention"]),
+        intervention: Cpr.fromJson(json["intevention"]),
         drugs: Cpr.fromJson(json["drugs"]),
         airway: Cpr.fromJson(json["airway"]),
       );
@@ -619,7 +619,7 @@ class Analysis {
   Map<String, dynamic> toJson() => {
         "timestamp": timestamp.toString(),
         "rhythm": rhythm.toJson(),
-        "intevention": intevention.toJson(),
+        "intevention": intervention.toJson(),
         "drugs": drugs.toJson(),
         "airway": airway.toJson(),
       };
