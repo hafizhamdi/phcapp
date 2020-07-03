@@ -1369,7 +1369,7 @@ class _VitalDetailState extends State<VitalDetail> {
     }
 
     //PULSE PRESSURE
-    if (ppPicker.getOption != null ) {
+    if (ppPicker.getOption != null && ppPicker.getOption!="") {
       print("ppPicker");
       print(ppPicker.getOption);
       (int.tryParse(ppPicker.getOption) < 20 ||
