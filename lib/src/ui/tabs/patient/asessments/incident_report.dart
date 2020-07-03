@@ -19,7 +19,8 @@ const _sceneDelay = [
   "awaiting secondary responder",
   "awaiting specialized vehicle",
   "awaiting specialized equipment",
-  "awaiting PDRM officer",
+  "awaiting PDRM officer (personal officer)",
+  "awaiting PDRM (left before arrive)"
   "vehicle crash",
   "vehicle failure"
 ];

@@ -130,7 +130,7 @@ class _Information extends State<PatientInformationScreen>
                           patProvider.idController,
                           idValidator,
                           patProvider.ageController,
-                          patProvider.dobController),
+                          patProvider.dobController, patProvider.genderController),
                       // _textInput("Document Type", idTypeController),
                       _textInput("Date of Birth", patProvider.dobController, dobValidator, 
                       patProvider.ageController, dobFormater),
@@ -233,6 +233,8 @@ class _Information extends State<PatientInformationScreen>
                       var rounded = totalYear.round();
                       print(rounded);
                       ageController.text = rounded.toString();
+                  }else{
+                    ageController.clear();
                   }
                 },
                 decoration: InputDecoration(
@@ -245,7 +247,7 @@ class _Information extends State<PatientInformationScreen>
   }
 
   Widget _idInputCalculated(
-      context, labelText, controller, validator, ageController, dobController) {
+      context, labelText, controller, validator, ageController, dobController, genderController) {
     return Container(
         // width: 500,
         width: 500,
@@ -299,12 +301,19 @@ class _Information extends State<PatientInformationScreen>
                     var rounded = totalYear.round();
                     print(rounded);
                     ageController.text = rounded.toString();
+
+                    //to set Gender
+                    print(controller.text.substring(11));
+                    if(int.parse(controller.text.substring(11))%2 == 0){
+                        genderController.sink.add("Female");
+                    }else{
+                        genderController.sink.add("Male");
+                    }
                   }else{
                     dobController.clear();
                     ageController.clear();
                   }
-                  
-                    FocusScope.of(context).unfocus();
+
                 },
                 // onEditingComplete: () {
                 //   print(controller.text);
@@ -410,6 +419,8 @@ class _Information extends State<PatientInformationScreen>
                             value: dropDownStringItem);
                       }).toList(),
                       onChanged: (valueChanged) {
+                        print("initialData: $initialData");
+
                         print("WHATS IS INDESIDE:$valueChanged");
                         controller.sink.add(valueChanged);
                       },

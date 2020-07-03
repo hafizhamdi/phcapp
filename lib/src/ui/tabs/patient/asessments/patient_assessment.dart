@@ -17,7 +17,7 @@ const _airway = [
   "Apnea/agonal respiration",
   "Gag reflex absent",
   "Sonorous sound",
-  "Injury"
+  "Injury involving airway"
 ];
 const _respiratory = [
   "Normal",
@@ -181,7 +181,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
     ChipItem(
         id: "abdomen_palpation",
         name: "Abdomen Palpation",
-        listData: _ecg,
+        listData: _abdomenPalpation,
         value: ""),
     ChipItem(
         id: "stroke_face",
@@ -191,10 +191,10 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
     ChipItem(
         id: "stroke_speech",
         name: "Stroke Scale: Speech",
-        listData: _face,
+        listData: _speech,
         value: ""),
     ChipItem(
-        id: "stroke_arm", name: "Stroke Scale: Arm", listData: _ecg, value: ""),
+        id: "stroke_arm", name: "Stroke Scale: Arm", listData: _arm, value: ""),
   ];
 
   mycallback(id, List<String> dataReturn) {
