@@ -56,27 +56,24 @@ const _chest = [
   "normal",
   "abrasion",
   "burn",
-  "crush",
   "deformity",
-  "mangled",
   "laceration",
   "foreign body",
   "puncture/stab wound",
-  "gunshot wound"
+  "gunshot wound",
+  "swelling",
+  "tenderness"
 ];
 
 const _abdomen = [
   "normal",
   "abrasion",
   "burn",
-  "crush",
   "deformity",
-  "dislocation shoulder",
-  "mangled",
   "laceration",
   "foreign body",
-  "stab wound (with evisceration)",
-  "stab wound (no evisceration)",
+  "puncture/stab wound (no evisceration)",
+  "puncture/stab wound (with evisceration)",
   "gunshot wound",
   "swelling",
   "tenderness",
@@ -351,7 +348,7 @@ class _TraumaScreen extends State<TraumaScreen> {
         multiple: true),
     ChipItem(
         id: "limb_right_feet",
-        name: "Limb: Left feet",
+        name: "Limb: Right feet",
         listData: _limb_feet,
         value: List<String>(),
         multiple: true),

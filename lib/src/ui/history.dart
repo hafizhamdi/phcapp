@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
@@ -117,19 +119,48 @@ class _History extends State<History> {
                           title: Text(
                               data.historyCallcard.callInformation.callcard_no),
                           subtitle: data.statusSend == 1
-                              ? Text("Sending successful at " + data.timestamp)
-                              : Text(
-                                  "Sending unsuccessful at " + data.timestamp),
+                              ? RichText(
+                                  text: TextSpan(
+                                    style: new TextStyle(
+                                      // fontSize: 14.0,
+                                      color: Colors.black,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                          text: "Sent ",
+                                          style: TextStyle(
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.bold)),
+                                      TextSpan(text: "at " + data.timestamp)
+                                    ],
+                                  ),
+                                )
+                              : RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                          text: "Failed sending",
+                                          style: TextStyle(
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold)),
+                                      TextSpan(text: "at " + data.timestamp)
+                                    ],
+                                  ),
+                                ),
                           trailing: data.statusSend == 1
                               ? null
                               : Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
                                     IconButton(
-                                        icon: Icon(Icons.edit),
+                                        icon: Icon(
+                                          Icons.edit,
+                                          color: Colors.blue,
+                                        ),
                                         onPressed: () {
                                           print("EDIT=HISTORY");
-                                          print(data.toJson());
+                                          print(
+                                              jsonEncode(data.historyCallcard));
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -142,9 +173,19 @@ class _History extends State<History> {
                                                         call_information: data
                                                             .historyCallcard
                                                             .callInformation,
-                                                        response_team: data
-                                                            .historyCallcard
-                                                            .responseTeam,
+                                                        response_team: ResponseTeam(
+                                                            staffs: data
+                                                                .historyCallcard
+                                                                .responseTeam
+                                                                .staffs,
+                                                            vehicleRegno: data
+                                                                .historyCallcard
+                                                                .callInformation
+                                                                .plate_no,
+                                                            serviceResponse: data
+                                                                .historyCallcard
+                                                                .responseTeam
+                                                                .serviceResponse),
                                                         response_time: data
                                                             .historyCallcard
                                                             .responseTime,
@@ -155,31 +196,32 @@ class _History extends State<History> {
                                                         // phcDao: widget.phcDao,
                                                       )));
                                         }),
-                                    FlatButton(
-                                      child: Text("RESEND"),
-                                      color: Colors.green,
-                                      onPressed: () {
-                                        print("RESEND============");
-                                        tabBloc.add(RepublishCallcard(
-                                          callInformation: data
-                                              .historyCallcard.callInformation,
-                                          responseTeam:
-                                              data.historyCallcard.responseTeam,
-                                          responseTime:
-                                              data.historyCallcard.responseTime,
-                                          patients:
-                                              data.historyCallcard.patients,
-                                          // sceneAssessment: data
-                                          //     .historyCallcard
-                                          //     .scene_assessment
-                                        ));
+                                    // FlatButton(
+                                    //   child: Text("RESEND"),
+                                    //   color: Colors.green,
+                                    //   onPressed: () {
+                                    //     print("RESEND============");
+                                    //     print(data.historyCallcard.toJson());
+                                    //     tabBloc.add(RepublishCallcard(
+                                    //       callInformation: data
+                                    //           .historyCallcard.callInformation,
+                                    //       responseTeam:
+                                    //           data.historyCallcard.responseTeam,
+                                    //       responseTime:
+                                    //           data.historyCallcard.responseTime,
+                                    //       patients:
+                                    //           data.historyCallcard.patients,
+                                    //       // sceneAssessment: data
+                                    //       //     .historyCallcard
+                                    //       //     .scene_assessment
+                                    //     ));
 
-                                        // setState(() {
-                                        //   print("Setstate is pressed");
-                                        // });
-                                        // historyBloc.add(LoadHistory());
-                                      },
-                                    )
+                                    //     // setState(() {
+                                    //     //   print("Setstate is pressed");
+                                    //     // });
+                                    //     // historyBloc.add(LoadHistory());
+                                    //   },
+                                    // )
                                   ],
                                 ));
                   // )

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
 import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/custom/label.dart';
 import 'package:phcapp/custom/input.dart';
@@ -14,18 +15,14 @@ import 'package:provider/provider.dart';
 
 enum InputSelector { gender, idtype }
 
-const LIST_GENDER = ["Male", "Female"];
+const LIST_GENDER = ["Male", "Female","Unknown"];
 const LIST_IDTYPE = [
   "Old IC",
   "Military ID",
   "Police ID",
   "New IC",
-  "Work Permit",
   "Passport",
-  "Birth Certificate",
-  "Pensioner card",
-  "My PR",
-  "UNHCR"
+  "Birth Certificate"
 ];
 
 class PatientInformationScreen extends StatefulWidget {
@@ -122,8 +119,8 @@ class _Information extends State<PatientInformationScreen>
                   child: Column(
                     children: <Widget>[
                       HeaderSection("Patient Information"),
-                      _textInput("Name", patProvider.nameController,
-                          nameValidator, null),
+                      _textInput("Name", patProvider.nameController, nameValidator, 
+                      patProvider.ageController, null),
 
                       DropDownList("Document Type", LIST_IDTYPE,
                           InputSelector.idtype, patProvider.getIdtype),
@@ -133,12 +130,12 @@ class _Information extends State<PatientInformationScreen>
                           patProvider.idController,
                           idValidator,
                           patProvider.ageController,
-                          patProvider.dobController),
+                          patProvider.dobController, patProvider.genderController),
                       // _textInput("Document Type", idTypeController),
-                      _textInput("Date of Birth", patProvider.dobController,
-                          dobValidator, dobFormater),
+                      _textInput("Date of Birth", patProvider.dobController, dobValidator, 
+                      patProvider.ageController, dobFormater),
                       _textInput(
-                          "Age", patProvider.ageController, ageValidator, null),
+                          "Age", patProvider.ageController, ageValidator, patProvider.ageController, null),
                       DropDownList("Gender", LIST_GENDER, InputSelector.gender,
                           patProvider.gender),
 
@@ -206,7 +203,7 @@ class _Information extends State<PatientInformationScreen>
     }
   }
 
-  Widget _textInput(labelText, controller, validator, formater) {
+  Widget _textInput(labelText, controller, validator, ageController, formater) {
     return Container(
         // width: 500,
         width: 500,
@@ -215,7 +212,31 @@ class _Information extends State<PatientInformationScreen>
             child: TextFormField(
                 controller: controller,
                 inputFormatters: formater != null ? [formater] : [],
-                validator: validator,
+                onChanged: (String text){
+                  print(controller.text);
+
+                  var sliceDate = controller.text.split("/");
+                  print(sliceDate.length);
+                  if(sliceDate.length == 3){
+                    var day = sliceDate[0];
+                    var month = sliceDate[1];
+                    var year = sliceDate[2];
+
+                    var ndate = DateTime(
+                          int.parse(year), int.parse(month), int.parse(day));
+                      var now = DateTime.now();
+
+                      var diff = now.difference(ndate).inDays;
+                      var totalYear = diff / 365;
+                      print("TOTAL YEARS THIS PERSION: $totalYear");
+
+                      var rounded = totalYear.round();
+                      print(rounded);
+                      ageController.text = rounded.toString();
+                  }else{
+                    ageController.clear();
+                  }
+                },
                 decoration: InputDecoration(
                     labelText: labelText,
                     fillColor: Colors.white,
@@ -226,13 +247,14 @@ class _Information extends State<PatientInformationScreen>
   }
 
   Widget _idInputCalculated(
-      context, labelText, controller, validator, ageController, dobController) {
+      context, labelText, controller, validator, ageController, dobController, genderController) {
     return Container(
         // width: 500,
         width: 500,
         child: Padding(
             padding: EdgeInsets.all(16),
-            child: TextFormField(
+            child: 
+            TextFormField(
                 controller: controller,
                 // inputFormatters: formater != null ? [formater] : [],
                 validator: (value) {
@@ -243,31 +265,21 @@ class _Information extends State<PatientInformationScreen>
                   }
                   return null;
                 },
-                onEditingComplete: () {
-                  print(controller.text);
-                  // print(value);
-                  // print(idType);
+                onChanged: (String text){
+                    print(controller.text);
+                    if (controller.text.length == 12) {
+                      print("inside controller lenght");
+                      String idNo = controller.text.substring(0, 6);
+                      // idNo = idNo;
+                      String year = idNo.substring(0, 2);
+                      String month = idNo.substring(2, 4);
+                      String day = idNo.substring(4, 6);
 
-                  // final patProvider = Provider.of<PatInfoProvider>(context);
-                  // final idType = patProvider.getIdtype;
-                  // // final stream = getStreamController(idType);
-                  // print(idType);
-                  // print("HELLO");
-                  // if (idType == "NRIC") {
-                  print(controller.text.length);
-                  if (controller.text.length > 6) {
-                    print("inside controller lenght");
-                    String idNo = controller.text.substring(0, 6);
-                    // idNo = idNo;
-                    String year = idNo.substring(0, 2);
-                    String month = idNo.substring(2, 4);
-                    String day = idNo.substring(4, 6);
-
-                    print(idNo);
-                    print(year);
-                    print(month);
-                    print(day);
-                    var nyear;
+                      print(idNo);
+                      print(year);
+                      print(month);
+                      print(day);
+                      var nyear;
                     if (int.parse(year) > 20) {
                       nyear = "19" + year;
                     } else {
@@ -289,10 +301,70 @@ class _Information extends State<PatientInformationScreen>
                     var rounded = totalYear.round();
                     print(rounded);
                     ageController.text = rounded.toString();
+
+                    //to set Gender
+                    print(controller.text.substring(11));
+                    if(int.parse(controller.text.substring(11))%2 == 0){
+                        genderController.sink.add("Female");
+                    }else{
+                        genderController.sink.add("Male");
+                    }
+                  }else{
+                    dobController.clear();
+                    ageController.clear();
                   }
-                  // }
-                  FocusScope.of(context).unfocus();
+
                 },
+                // onEditingComplete: () {
+                //   print(controller.text);
+                  // print(value);
+                  // print(idType);
+
+                  // final patProvider = Provider.of<PatInfoProvider>(context);
+                  // final idType = patProvider.getIdtype;
+                  // // final stream = getStreamController(idType);
+                  // print(idType);
+                  // print("HELLO");
+                  // if (idType == "NRIC") {
+                //   print(controller.text.length);
+                //   if (controller.text.length > 6) {
+                //     print("inside controller lenght");
+                //     String idNo = controller.text.substring(0, 6);
+                //     // idNo = idNo;
+                //     String year = idNo.substring(0, 2);
+                //     String month = idNo.substring(2, 4);
+                //     String day = idNo.substring(4, 6);
+
+                //     print(idNo);
+                //     print(year);
+                //     print(month);
+                //     print(day);
+                //     var nyear;
+                //     if (int.parse(year) > 20) {
+                //       nyear = "19" + year;
+                //     } else {
+                //       nyear = "20" + year;
+                //     }
+
+                //     String dob = "$day/$month/$nyear";
+
+                //     dobController.text = dob;
+
+                //     var ndate = DateTime(
+                //         int.parse(nyear), int.parse(month), int.parse(day));
+                //     var now = DateTime.now();
+
+                //     var diff = now.difference(ndate).inDays;
+                //     var totalYear = diff / 365;
+                //     print("TOTAL YEARS THIS PERSION: $totalYear");
+
+                //     var rounded = totalYear.round();
+                //     print(rounded);
+                //     ageController.text = rounded.toString();
+                //   }
+                //   // }
+                //   FocusScope.of(context).unfocus();
+                // },
                 decoration: InputDecoration(
                     hintText: "800128016139",
                     labelText: labelText,
@@ -347,6 +419,8 @@ class _Information extends State<PatientInformationScreen>
                             value: dropDownStringItem);
                       }).toList(),
                       onChanged: (valueChanged) {
+                        print("initialData: $initialData");
+
                         print("WHATS IS INDESIDE:$valueChanged");
                         controller.sink.add(valueChanged);
                       },

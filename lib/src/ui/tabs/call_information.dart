@@ -324,6 +324,7 @@ class _CallInfoState extends State<CallInformationScreen>
     final callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
 
     print("build call info run again");
+    // print(widget.call_information.toJson());
 
     void callback(String item, int index) {}
 

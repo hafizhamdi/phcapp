@@ -172,6 +172,21 @@ class _Patients extends State<PatientListScreen>
                             _otherServices, callback, state.selectedServices),
                       ]);
                     }
+                    return Column(children: [
+                      HeaderSection("Scene Assessment"),
+                      // Container(
+                      //   height: 1,
+                      //   color: Colors.grey,
+                      // ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      _buildSceneChips(
+                          "Other services at scene",
+                          _otherServices,
+                          callback,
+                          widget.sceneAssessment.otherServicesAtScene),
+                    ]);
                   },
                 ),
                 SizedBox(

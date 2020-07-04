@@ -1,4 +1,4 @@
-// import 'dart:async';
+import 'dart:async';
 
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,11 +17,21 @@ enum Response {
   atPatient,
   atHospital,
   transport,
-  reroute
+  reroute,
+  abortMission
 }
+
+const MISSION_ABORT = [
+    " ",
+    "arrive at scene no patient found",
+    "stand down"
+];
 
 class ResponseTimeScreen extends StatelessWidget {
   final ResponseTime responseTime;
+
+  // ignore: close_sinks
+
 
   ResponseTimeScreen({this.responseTime});
 
@@ -39,7 +49,8 @@ class ResponseTimeScreen extends StatelessWidget {
               atPatientTime: currentState.responseTime.atPatientTime,
               transportingTime: currentState.responseTime.transportingTime,
               rerouteTime: currentState.responseTime.rerouteTime,
-              atHospitalTime: currentState.responseTime.atHospitalTime);
+              atHospitalTime: currentState.responseTime.atHospitalTime,
+              reasonAbort: currentState.responseTime.reasonAbort);
         }
         return ResponseTimeScreenA(
             dispatchTime: responseTime.dispatchTime,
@@ -48,7 +59,8 @@ class ResponseTimeScreen extends StatelessWidget {
             atPatientTime: responseTime.atPatientTime,
             transportingTime: responseTime.transportingTime,
             rerouteTime: responseTime.rerouteTime,
-            atHospitalTime: responseTime.atHospitalTime);
+            atHospitalTime: responseTime.atHospitalTime,
+            reasonAbort: responseTime.reasonAbort);
       },
     );
   }
@@ -62,6 +74,7 @@ class ResponseTimeScreenA extends StatefulWidget {
   DateTime rerouteTime;
   DateTime transportingTime;
   DateTime atHospitalTime;
+  String reasonAbort;
 
   ResponseTimeScreenA(
       {this.dispatchTime,
@@ -70,7 +83,8 @@ class ResponseTimeScreenA extends StatefulWidget {
       this.atPatientTime,
       this.rerouteTime,
       this.transportingTime,
-      this.atHospitalTime});
+      this.atHospitalTime,
+      this.reasonAbort});
 
   _ResponseTimeScreenA createState() => _ResponseTimeScreenA();
 }
@@ -83,6 +97,7 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
   TimeBloc timeBloc;
   ResponseTime responseTime;
 
+  StreamController<String> abortMissionController = new StreamController.broadcast();
   String missionSelected = " ";
 
   @override
@@ -96,60 +111,66 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
       rerouteTime: widget.rerouteTime,
       transportingTime: widget.transportingTime,
       atHospitalTime: widget.atHospitalTime,
+      reasonAbort: widget.reasonAbort
     );
     super.didChangeDependencies();
   }
 
-  void missionCallback(String item) {
-    missionSelected = item;
+  @override
+  void initState() {
+    missionSelected = widget.reasonAbort;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey,
-      child: SingleChildScrollView(
-        child: Card(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          margin: EdgeInsets.all(12.0),
-          child: Container(
-            padding: EdgeInsets.all(10.0),
-            child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-              Center(child: HeaderSection("Response Time")),
-              SizedBox(
-                height: 10,
-              ),
-              _buildCardTime(
-                  Response.dispatch, widget.dispatchTime, _onPressedDispatch),
-              _buildCardTime(
-                  Response.enroute, widget.enrouteTime, _onPressedEnroute),
-              _buildCardTime(
-                  Response.atScene, widget.atSceneTime, _onPressedAtScene),
-              _buildCardTime(Response.atPatient, widget.atPatientTime,
-                  _onPressedAtPatient),
-              _buildCardTime(Response.transport, widget.transportingTime,
-                  _onPressedTransporting),
-              _buildCardTime(Response.atHospital, widget.atHospitalTime,
-                  _onPressedAtHospital),
-              _buildCardTime(
-                  Response.reroute, widget.rerouteTime, _onPressedReroute),
-              SizedBox(
-                height: 20,
-              ),
-              // Container(
-              //   width: 500,
-              //   child: CustomDropDown(
-              //     labelText: "Mission abort",
-              //     items: [
-              //       " ",
-              //       "arrive at scene no patient found",
-              //       "stand down"
-              //     ],
-              //     callback: missionCallback,
-              //     itemSelected: missionSelected,
-              //   ),
-              // )
+   print("1 $missionSelected");
+        return Container(
+          color: Colors.grey,
+          child: SingleChildScrollView(
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              margin: EdgeInsets.all(12.0),
+              child: Container(
+                padding: EdgeInsets.all(10.0),
+                child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                  Center(child: HeaderSection("Response Time")),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  _buildCardTime(
+                      Response.dispatch, widget.dispatchTime, _onPressedDispatch),
+                  _buildCardTime(
+                      Response.enroute, widget.enrouteTime, _onPressedEnroute),
+                  _buildCardTime(
+                      Response.atScene, widget.atSceneTime, _onPressedAtScene),
+                  _buildCardTime(Response.atPatient, widget.atPatientTime,
+                      _onPressedAtPatient),
+                  _buildCardTime(Response.transport, widget.transportingTime,
+                      _onPressedTransporting),
+                  _buildCardTime(Response.atHospital, widget.atHospitalTime,
+                      _onPressedAtHospital),
+                  _buildCardTime(
+                      Response.reroute, widget.rerouteTime, _onPressedReroute),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: 500,
+                    child: DropDownList("Mission abort", MISSION_ABORT, missionSelected)
+                //     child: CustomDropDown(
+                //       labelText: "Mission abort",
+                //       items: [
+                //         " ",
+                //         "arrive at scene no patient found",
+                //         "stand down"
+                //       ],
+                //       // callback: missionCallback,
+                //       // itemSelected: missionSelected,
+                //       controller: _abortMissionController,
+                //       initialData: "stand down",
+                // ),
+              )
             ]),
           ),
         ),
@@ -179,6 +200,9 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
         break;
       case Response.atHospital:
         return "At Hospital Time";
+        break;
+      case Response.abortMission:
+        return "Mission Abort";
         break;
       default:
         return "";
@@ -306,6 +330,49 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
         ),
       ),
     );
+  }
+
+    Widget DropDownList(labelText, List<String> list, initialData) {
+    final controller = abortMissionController;
+
+    // if (!list.contains(initialData)) initialData = "";
+
+    print("initialData: $initialData");
+    return Container(
+        // width: 500,
+        child: Padding(
+            padding: EdgeInsets.all(16),
+            child: StreamBuilder(
+                stream: controller.stream,
+                initialData: initialData,
+                builder: (context, snapshot) {
+                  print("Streambuilder value");
+                  print(snapshot.data);
+                  // child:
+
+                  return DropdownButtonFormField(
+                      isDense: true,
+                      items: list.map((String dropDownStringItem) {
+                        return DropdownMenuItem<String>(
+                            child: Text(dropDownStringItem),
+                            value: dropDownStringItem);
+                      }).toList(),
+                      onChanged: (valueChanged) {
+                        print("WHATS IS INDESIDE:$valueChanged");
+                        controller.sink.add(valueChanged);
+                        widget.reasonAbort = valueChanged;
+                        responseTime.reasonAbort = widget.reasonAbort;
+                        timeBloc.add(AddTime(responseTime: responseTime));
+                      },
+                      value: snapshot.data,
+                      decoration: InputDecoration(
+                          labelText: labelText,
+                          fillColor: Colors.white,
+                          border: new OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(10.0),
+                            borderSide: new BorderSide(),
+                          )));
+                })));
   }
 
   _timerPopup(labelText, initialData, selector) {
