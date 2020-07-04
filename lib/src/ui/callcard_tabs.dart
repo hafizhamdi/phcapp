@@ -131,7 +131,7 @@ class _CallcardTabs extends State<CallcardTabs> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Data sending failed"),
+          title: Text("Sending Failed"),
           content: Text(
               "Something went wrong. \nWe keep your last sending in History"),
           actions: <Widget>[
@@ -152,20 +152,28 @@ class _CallcardTabs extends State<CallcardTabs> {
               },
             )
           ],
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          // shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
       });
 
   savingError() => showDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Opss Saving failed"),
+          title: Text("Writing Failed"),
           content: Text("We couldn't save in History"),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+          // shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
       });
 
@@ -175,25 +183,34 @@ class _CallcardTabs extends State<CallcardTabs> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            "Data sending successful",
+            "Success",
             // style: TextStyle(fontSize: 14),
           ),
-          content: RichText(
+          content:
+              // Column(children: [
+              RichText(
             text: TextSpan(style: TextStyle(color: Colors.black), children: [
-              TextSpan(text: "To proceed press "),
+              TextSpan(text: "This Call Card # "),
               TextSpan(
-                  text: "CONTINUE \n",
+                  text:
+                      // widget.call_information.callcard_no ??
+                      callInfoBloc.state.callInformation != null
+                          ? callInfoBloc.state.callInformation.callcard_no
+                          : widget.call_information != null
+                              ? widget.call_information.callcard_no
+                              : '',
                   style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: "or to end process press "),
-              TextSpan(
-                  text: "VIEW LIST CC",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(text: " has been synced"),
+              // TextSpan(
+              //     text: "VIEW LIST CC",
+              //     style: TextStyle(fontWeight: FontWeight.bold)),
               // TextSpan(text: " to end process"),
             ]),
           ),
+          // ]),
           actions: <Widget>[
             FlatButton(
-                child: Text("VIEW LIST CC"),
+                child: Text("VIEW LIST CALL CARDS"),
                 onPressed: () {
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
@@ -206,17 +223,17 @@ class _CallcardTabs extends State<CallcardTabs> {
                   //             ListCallcards())).then((result) =>
                   //     Navigator.of(context, rootNavigator: true).pop(result));
                 }),
-            FlatButton(
-                child: Text("CONTINUE"),
-                onPressed: () {
-                  // Navigator.push(context,
-                  //         MaterialPageRoute(builder: (context) => History()))
-                  //     .then((result) {
-                  Navigator.pop(context);
-                })
+            // FlatButton(
+            //     child: Text("CONTINUE EDITING"),
+            //     onPressed: () {
+            //       // Navigator.push(context,
+            //       //         MaterialPageRoute(builder: (context) => History()))
+            //       //     .then((result) {
+            //       Navigator.pop(context);
+            //     })
           ],
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          // shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
       });
 
