@@ -452,12 +452,25 @@ class PhcDao {
       // print(findRecord);
       print(statusSend);
 
+      // try {
+      print(callcard.toJson());
       final update = await record.put(await _db, {
-        'history': jsonEncode(internal_callcard),
+        // 'history': jsonEncode(internal_callcard),
+        'history': callcard.toJson(),
         'timestamp': DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()),
         "status_send": statusSend
       });
       print("update----");
+      // } catch (error) {
+      //   print("catch error");
+      //   final update = await record.put(await _db, {
+      //     'history': jsonEncode(internal_callcard),
+      //     // 'history': callcard.toJson(),
+      //     'timestamp': DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()),
+      //     "status_send": statusSend
+      //   });
+      //   print(error);
+      // }
       // print(update);
     } else {
       // } else {
@@ -515,11 +528,11 @@ class PhcDao {
 
     if (records != null) {
       return List.from(records).map((data) {
-        // print(data.value);
+        // print(data.value["history"].call_information.callcard_no);
         print(data.value["history"]);
+
         return History(
-            historyCallcard:
-                Callcard.fromJson(jsonDecode(data.value["history"])),
+            historyCallcard: Callcard.fromJson(data.value["history"]),
             statusSend: data.value["status_send"],
             timestamp: data.value["timestamp"]);
         // return Callcard.fromJson(data.value);
@@ -540,11 +553,9 @@ class PhcDao {
       // ),
     );
 
-    final deleteAll = await _historyStore.delete(
-        await _db
-        // );
-        ,
-        finder: finder);
+    final deleteAll = await _historyStore.delete(await _db);
+    // ,
+    // finder: finder);
 
     return showAllHistory();
 

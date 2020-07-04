@@ -136,7 +136,15 @@ class _ListCallcards extends State<ListCallcards> {
     //   ),
     // );
 
-    return Scaffold(
+    return
+        // MultiBlocProvider(
+        //   providers: [
+        //     BlocProvider(
+        //       create: (context) => CallInfoBloc(),
+        //     )
+        //   ],
+        //   child:
+        Scaffold(
       appBar: AppBar(
         leading: TopOtherMenu(),
         title: Text("Call Cards"),
@@ -203,6 +211,7 @@ class _ListCallcards extends State<ListCallcards> {
           ),
         ),
       ),
+      // ),
     );
   }
 

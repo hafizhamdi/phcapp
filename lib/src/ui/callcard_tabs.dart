@@ -61,6 +61,13 @@ class _CallcardTabs extends State<CallcardTabs> {
   // final PhcDaoClient phcDaoClient = new PhcDaoClient(phcDao: new PhcDao());
 
   PhcBloc phcBloc;
+  TimeBloc timeBloc;
+  PatientBloc patientBloc;
+  TeamBloc teamBloc;
+  CallCardTabBloc tabBloc;
+  HistoryBloc historyBloc;
+  ResponseBloc responseBloc;
+  SceneBloc sceneBloc;
   // CallcardTabs(
   //     {this.callcard_no,
   //     this.call_information,
@@ -73,11 +80,29 @@ class _CallcardTabs extends State<CallcardTabs> {
 
   @override
   void didChangeDependencies() {
+    teamBloc = BlocProvider.of<TeamBloc>(context);
+    timeBloc = BlocProvider.of<TimeBloc>(context);
+    patientBloc = BlocProvider.of<PatientBloc>(context);
+    tabBloc = BlocProvider.of<CallCardTabBloc>(context);
+    historyBloc = BlocProvider.of<HistoryBloc>(context);
+    callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
+    responseBloc = BlocProvider.of<ResponseBloc>(context);
+    sceneBloc = BlocProvider.of<SceneBloc>(context);
+
     super.didChangeDependencies();
   }
 
   @override
   void dispose() {
+    // callInfoBloc.close();
+
+    callInfoBloc.add(ResetCallInfo());
+    teamBloc.add(ResetTeam());
+    timeBloc.add(ResetTime());
+    sceneBloc.add(ResetScene());
+    patientBloc.add(InitPatient());
+    responseBloc.add(ResetResponse());
+
     // if (BlocProvider.of<TeamBloc>(context).response_team != null)
     //   print("dispose response team");
     // BlocProvider.of<TeamBloc>(context).response_team = new ResponseTeam();
@@ -103,7 +128,7 @@ class _CallcardTabs extends State<CallcardTabs> {
 
   showError() => showDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Data sending failed"),
@@ -116,7 +141,7 @@ class _CallcardTabs extends State<CallcardTabs> {
                 Navigator.push(context,
                         MaterialPageRoute(builder: (context) => History()))
                     .then((result) {
-                  Navigator.pop(context);
+                  Navigator.of(context, rootNavigator: true).pop(result);
                 });
 
                 // Navigator.pop(context);
@@ -142,33 +167,45 @@ class _CallcardTabs extends State<CallcardTabs> {
 
   showSuccess() => showDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
             "Data sending successful",
             // style: TextStyle(fontSize: 14),
           ),
-          content: Text("View transaction on History"),
+          content: RichText(
+            text: TextSpan(style: TextStyle(color: Colors.black), children: [
+              TextSpan(text: "Click "),
+              TextSpan(
+                  text: "CONTINUE",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(text: " to proceed or "),
+              TextSpan(
+                  text: "VIEW LIST CC",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(text: " to end process"),
+            ]),
+          ),
           actions: <Widget>[
             FlatButton(
                 child: Text("VIEW LIST CC"),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ListCallcards()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ListCallcards())).then((result) =>
+                      Navigator.of(context, rootNavigator: true).pop(result));
                 }),
             FlatButton(
-              child: Text("GOTO HISTORY"),
-              onPressed: () {
-                Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => History()))
-                    .then((result) {
+                child: Text("CONTINUE"),
+                onPressed: () {
+                  // Navigator.push(context,
+                  //         MaterialPageRoute(builder: (context) => History()))
+                  //     .then((result) {
                   Navigator.pop(context);
-                });
-
-                // Navigator.pop(context);
-              },
-            )
+                })
           ],
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
@@ -194,14 +231,6 @@ class _CallcardTabs extends State<CallcardTabs> {
 
   @override
   Widget build(BuildContext context) {
-    final teamBloc = BlocProvider.of<TeamBloc>(context);
-    final timeBloc = BlocProvider.of<TimeBloc>(context);
-    final patientBloc = BlocProvider.of<PatientBloc>(context);
-    final tabBloc = BlocProvider.of<CallCardTabBloc>(context);
-    final historyBloc = BlocProvider.of<HistoryBloc>(context);
-    final callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
-    final responseBloc = BlocProvider.of<ResponseBloc>(context);
-    final sceneBloc = BlocProvider.of<SceneBloc>(context);
     // var callcard = Provider.of<Callcard>(context);
 
     // callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
@@ -233,6 +262,14 @@ class _CallcardTabs extends State<CallcardTabs> {
                   //   Navigator.pop(context);
                   // }
                   showSuccess();
+
+                  // clear all state to avoid cache
+                  // callInfoBloc.add(ResetCallInfo());
+                  // teamBloc.add(ResetTeam());
+                  // timeBloc.add(ResetTime());
+                  // sceneBloc.add(ResetScene());
+                  // patientBloc.add(InitPatient());
+
                   // setState(() {
                   //   isLoading = false;
                   // });
@@ -243,6 +280,13 @@ class _CallcardTabs extends State<CallcardTabs> {
                   //   Navigator.pop(context);
                   // }
                   showError();
+
+                  callInfoBloc.add(ResetCallInfo());
+                  teamBloc.add(ResetTeam());
+                  timeBloc.add(ResetTime());
+                  sceneBloc.add(ResetScene());
+                  patientBloc.add(InitPatient());
+
                   // setState(() {
                   //   isLoading = false;
                   // });

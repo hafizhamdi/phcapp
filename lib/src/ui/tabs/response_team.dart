@@ -118,9 +118,10 @@ class _TeamState extends State<ResponseTeamScreen> //{
                   }
 
                   return ResponseDetail(
-                      typeResponse: (widget.response_team != null)
-                          ? widget.response_team.serviceResponse
-                          : '',
+                      typeResponse:
+                          (widget.response_team != null)
+                              ? widget.response_team.serviceResponse
+                              : '',
                       vehicleRegno: (widget.response_team != null)
                           ? widget.response_team.vehicleRegno
                           : '');

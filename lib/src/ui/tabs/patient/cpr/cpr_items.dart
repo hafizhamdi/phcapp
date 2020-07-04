@@ -1,21 +1,13 @@
-// import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/providers/cpr_provider.dart';
-// import 'package:phcapp/src/ui/tabs/patient/cpr/cpr_timelog.dart';
+import 'package:phcapp/src/ui/tabs/patient/cpr/bloc_cpr.dart';
 import 'package:provider/provider.dart';
 
-// import 'cpr_tabs.dart';
-
 class CPRItems extends StatefulWidget {
-  // final BuildContext context;
-  // final CprSection cprSection;
-
-  // CPRItems({this.cprSection});
   _CPRItems createState() => _CPRItems();
 }
 
@@ -40,11 +32,7 @@ class _CPRItems extends State<CPRItems>
   String onNonShock;
   String onOther;
 
-  Analysis shockable = new Analysis(
-      //   rhythm: new Cpr(
-      // value: null,
-      // )
-      );
+  Analysis shockable = new Analysis();
   Analysis nonShockable = new Analysis();
   Analysis other = new Analysis();
 
@@ -92,38 +80,14 @@ class _CPRItems extends State<CPRItems>
   TextEditingController airwayNSController = new TextEditingController();
   TextEditingController airwayOController = new TextEditingController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
-
+  CprBloc cprBloc;
   getCurrentTime() {
     return DateFormat("dd/MM/yyyy HH:mm:ss").format(DateTime.now());
   }
 
   @override
   void didChangeDependencies() {
-    //   if (widget.cprSection != null) {
-
-    //     // setState(() {
-    // var myProvider = Provider.of<CPRProvider>(context);
-
-    // CprSection cprSection = new CprSection(
-    //     witnessCpr: getValue(context, 'witness_cpr').value,
-    //     bystanderCpr: getValue(context, 'bystander_cpr').value,
-    //     cprStart: getValue(context, 'cpr_start').value,
-    //     cprStop: getValue(context, 'cpr_stop').value,
-    //     rosc: getValue(context, 'rosc').value,
-    //     shockable: shockable,
-    //     nonShockable: nonShockable,
-    //     other: other,
-    //     logs: myProvider.allLogs);
-    // print("DID CHANGES");
-    // myProvider.updateCPR(cprSection);
-    // //     // });
-    // // cprProvider = Provider.of<CPRProvider>(context);
-
-    // super.didChangeDependencies();
+    cprBloc = BlocProvider.of<CprBloc>(context);
   }
 
   void buttonCallback(id, valueSelected) {
@@ -132,6 +96,7 @@ class _CPRItems extends State<CPRItems>
     if (id == "witness_cpr") {
       setState(() {
         cprLog.witnessCpr = temp;
+        // cprBloc.cprLog.witnessCpr = temp;
       });
     }
     if (id == "bystander_cpr") {
@@ -157,6 +122,7 @@ class _CPRItems extends State<CPRItems>
 
     if (id == "srhythm") {
       setState(() {
+        cprBloc.add(AddCpr(cpr: temp, id: "srythm", rhythm_type: "Shockable"));
         shockable.rhythm = temp;
       });
     }
@@ -214,35 +180,7 @@ class _CPRItems extends State<CPRItems>
 
   @override
   Widget build(BuildContext context) {
-    // if (widget.cprSection != null) {
-    //   final cpr = widget.cprSection;
-    //   witnessCpr = cpr.witnessCpr;
-    //   bystanderCpr = cpr.bystanderCpr;
-    //   cprStart = cpr.cprStart;
-    //   cprStop = cpr.cprStop;
-    //   rosc = cpr.rosc;
-
-    //   shockable = cpr.shockable;
-    //   nonShockable = cpr.nonShockable;
-    //   other = cpr.other;
-    // }
-
-    // if (widget.cprSection != null) {
-    // final cprProvider = Provider.of<CPRProvider>(context);
-    //   cprProvider.setLogs(widget.cprSection.logs);
-    // }
-
-    // final provider = Provider.of<CPRProvider>(context);
-    // var myProvider = Provider.of<CPRProvider>(context);
-    // if (widget.cprSection != null) {
-    //   // setState(() {
-
-    //   // markNeedBuild() {
-    //   myProvider.updateCPR(widget.cprSection);
-    //   // }
-    //   // setState(() {});
-    //   // });
-    // }
+    cprBloc = BlocProvider.of<CprBloc>(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -259,8 +197,6 @@ class _CPRItems extends State<CPRItems>
                   },
                 ),
                 BuildChoiceChip(
-                  // context,
-                  // cprlog: cprLog,
                   id: "witness_cpr",
                   listData: WITNESS,
                   selectData: cprLog.witnessCpr.value,
@@ -283,18 +219,6 @@ class _CPRItems extends State<CPRItems>
                   txtController: cprStartController,
                   callback: buttonCallback,
                 ),
-                // SizedBox(
-                //   height: 10,
-                // ),
-                // Container(
-                //   padding: EdgeInsets.only(left: 10),
-                //   alignment: Alignment.centerLeft,
-                //   child: Text(
-                //     "Rhythm Analysis:",
-                //     // textAlign: TextAlign.left,
-                //   ),
-                // ),
-                // // _buildAnalysis(),
                 _buildAddCycle(),
                 _buildCounterRhythm(),
                 BuildChoiceChip(
@@ -348,126 +272,9 @@ class _CPRItems extends State<CPRItems>
       // cprProvider.addLog(format);
       confirmAddLog(context, cprProvider, format);
     }
-    // selected.value = value;
-// ItemModel item = getValue(context, id);
   }
 
-  // onSelected(labelText, value) {
-  //   print("IM in ONSELECTED WHY NOT TRIGGER");
-  //   final cprProvider = Provider.of<CPRProvider>(context, listen: false);
-
-  //   if (labelText == "Witness CPR") {
-  //     // setState(() {
-  //     witnessCpr = value;
-  //     // cprProvider.setWitnessCPR(value);
-  //     // });
-  //   }
-  //   if (labelText == "Bystander CPR") {
-  //     // setState(() {
-  //     bystanderCpr = value;
-  //     // provider.byStanderCPR = value;
-  //     // });
-  //   }
-  //   if (labelText == "CPR Start") {
-  //     // setState(() {
-  //     cprStart = value;
-  //     // });
-  //   }
-  //   if (labelText == "ROSC") {
-  //     // setState(() {
-  //     rosc = value;
-  //     // });
-  //   }
-
-  //   if (labelText == "CPR Stop") {
-  //     // setState(() {
-  //     cprStop = value;
-  //     // });
-  //   }
-  //   if (labelText == "Rhythm") {
-  //     if (onShock != null) {
-  //       // setState(() {
-  //       shockable.rhythm = value;
-  //       // });
-  //     } else if (onNonShock != null) {
-  //       // setState(() {
-  //       nonShockable.rhythm = value;
-  //       // });
-  //     } else if (onOther != null) {
-  //       // setState(() {
-  //       other.rhythm = value;
-  //       // });
-  //     }
-  //   }
-
-  //   if (labelText == "Intervention") {
-  //     if (onShock != null) {
-  //       // setState(() {
-  //       shockable.intervention = value;
-  //       // });
-  //     } else if (onNonShock != null) {
-  //       // setState(() {
-  //       nonShockable.intervention = value;
-  //       // });
-  //     } else if (onOther != null) {
-  //       // setState(() {
-  //       other.intervention = value;
-  //       // });
-  //     }
-  //   }
-
-  //   if (labelText == "Drugs") {
-  //     if (onShock != null) {
-  //       // setState(() {
-  //       shockable.drugs = value;
-  //       // });
-  //     } else if (onNonShock != null) {
-  //       // setState(() {
-  //       nonShockable.drugs = value;
-  //       // });
-  //     } else if (onOther != null) {
-  //       // setState(() {
-  //       other.drugs = value;
-  //       // });
-  //     }
-  //   }
-
-  //   if (labelText == "Airway") {
-  //     if (onShock != null) {
-  //       // setState(() {
-  //       shockable.airway = value;
-  //       // });
-  //     } else if (onNonShock != null) {
-  //       // setState(() {
-  //       nonShockable.airway = value;
-  //       // });
-  //     } else if (onOther != null) {
-  //       // setState(() {
-  //       other.airway = value;
-  //       // });
-  //     }
-  //   }
-
-  //   CprSection cpr = new CprSection(
-  //     witnessCpr: witnessCpr,
-  //   );
-
-  //   cprProvider.updateCPR(cpr);
-
-  //   if (value != null) {
-  //     String format =
-  //         DateFormat("dd/MM/yyyy @ hh:mm aa").format(DateTime.now()) +
-  //             " -- " +
-  //             labelText +
-  //             " " +
-  //             value;
-
-  //     cprProvider.addLog(format);
-  //     // confirmLog(format);
-  //   }
-  // }
-
-  addRhythmDialog() {
+  addRhythmDialog(RhythmAnalysis rhythmAnalysis) {
     showDialog(
       context: context,
       // builder: (context, <LogModel> logs, child) {
@@ -483,7 +290,8 @@ class _CPRItems extends State<CPRItems>
             return Container(
               width: MediaQuery.of(context).size.width * 0.8,
               height: MediaQuery.of(context).size.height * 0.6,
-              child: SingleChildScrollView(child: _buildAnalysis(setState)
+              child: SingleChildScrollView(
+                  child: _buildAnalysis(rhythmAnalysis, setState)
                   // ),
                   ),
             );
@@ -494,93 +302,99 @@ class _CPRItems extends State<CPRItems>
   }
 
   _buildCounterRhythm() {
-    final provider = Provider.of<CPRProvider>(context);
-    return SizedBox(
-      height: 120,
-      // child: Row(children: [
-      //   Expanded(
-      child:
-          // provider.cycleCounter == 0
-          //     ? Container(
-          //         margin: EdgeInsets.all(5),
-          //         alignment: Alignment.center,
-          //         width: 60,
-          //         height: 60,
-          //         decoration: new BoxDecoration(
-          //           color: Colors.blue,
-          //           shape: BoxShape.circle,
-          //         ),
-          //         child: IconButton(
-          //           icon: Icon(Icons.add),
-          //           color: Colors.white,
-          //           onPressed: () {
-          //             addRhythmDialog();
-          //           },
-          //         ))
-          // :
-          ListView.builder(
+    // final provider = Provider.of<CPRProvider>(context);
+    return BlocBuilder<CprBloc, CprState>(
+      builder: (context, state) {
+        if (state is CprLoaded) {
+          return SizedBox(
+            height: 120,
+            child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: provider.cycleCounter,
+              itemCount: state.cprLog != null ? state.listAnalysis.length : 0,
               itemBuilder: (context, index) {
-                return
-                    // Row(children: [
-
+                return InkWell(
+                  child: Column(children: [
                     Container(
-                  margin: EdgeInsets.all(5),
-                  alignment: Alignment.center,
-                  width: 60,
-                  height: 60,
-                  decoration: new BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    "${index + 1}",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: Colors.white.withOpacity(0.8)),
-                  ),
+                      margin: EdgeInsets.all(5),
+                      alignment: Alignment.center,
+                      width: 60,
+                      height: 60,
+                      decoration: new BoxDecoration(
+                        color: Colors.grey,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        "${index + 1}",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
+                            color: Colors.white.withOpacity(0.8)),
+                      ),
+                    ),
+                    Text(
+                      state.listAnalysis[index].timestamp != null
+                          ? DateFormat("h:mm aa")
+                              .format(state.listAnalysis[index].timestamp)
+                          : '',
+                    )
+                  ]),
+                  onTap: () {
+                    addRhythmDialog(
+                      new RhythmAnalysis(
+                          shockable: state.listAnalysis[index].shockable,
+                          nonShockable: state.listAnalysis[index].nonShockable,
+                          other: state.listAnalysis[index].other),
+                    );
+                  },
                 );
-                //   index + 1 == provider.cycleCounter
-                //       ? Container(
-                //           margin: EdgeInsets.all(5),
-                //           alignment: Alignment.center,
-                //           width: 60,
-                //           height: 60,
-                //           decoration: new BoxDecoration(
-                //             color: Colors.blue,
-                //             shape: BoxShape.circle,
-                //           ),
-                //           child: IconButton(
-                //             icon: Icon(Icons.add),
-                //             color: Colors.white,
-                //             onPressed: () {
-                //               addRhythmDialog();
-                //             },
-                //           ))
-                //       // : Container()
-                // ]);
-              }),
+              },
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
 
   _buildAddCycle() {
-    final provider = Provider.of<CPRProvider>(context);
+    // final provider = Provider.of<CPRProvider>(context);
+
+    cprBloc = BlocProvider.of<CprBloc>(context);
     return Padding(
         padding: EdgeInsets.all(10),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text("Rhythm Analysis: " + provider.cycleCounter.toString()),
+          Text(
+            "Rhythm Analysis: " +
+                (cprBloc.state.cprLog != null
+                    ? cprBloc.state.cprLog.rhythmAnalysis.length.toString()
+                    : "0"),
+          ),
           RaisedButton.icon(
             label: Text("Add Rhythm Analysis"),
             icon: Icon(Icons.add),
             onPressed: () {
-              addRhythmDialog();
-              // provider.resetRhythmAnalysis();
-              // provider.addCycle();
-              // provider.addLog(
-              //     "Rhythm Analysis > " + provider.cycleCounter.toString());
+              addRhythmDialog(
+                new RhythmAnalysis(
+                    shockable: shockable,
+                    nonShockable: nonShockable,
+                    other: other),
+              );
+
+              rhythmController.clear();
+              intervController.clear();
+              drugController.clear();
+              airwayController.clear();
+
+              rhythmNSController.clear();
+              intervNSController.clear();
+              drugNSController.clear();
+              airwayNSController.clear();
+
+              rhythmOController.clear();
+              intervOController.clear();
+              drugOController.clear();
+              airwayOController.clear();
             },
             color: Theme.of(context).accentColor,
             textColor: Colors.white,
@@ -593,7 +407,7 @@ class _CPRItems extends State<CPRItems>
         ]));
   }
 
-  _buildAnalysis(Function setState) {
+  _buildAnalysis(RhythmAnalysis rhythmAnalysis, Function setState) {
     final provider = Provider.of<CPRProvider>(context);
     return Container(
       // padding: EdgeInsets.all(10),
@@ -631,155 +445,53 @@ class _CPRItems extends State<CPRItems>
             width: MediaQuery.of(context).size.width,
             color: Colors.grey,
           ),
-
           (selectAnalysis != null && selectAnalysis == "Shockable")
-              ? _buildShockable(shockable, setState)
+              ? _buildShockable(rhythmAnalysis.shockable, setState)
               : (selectAnalysis != null && selectAnalysis == "Non-Shockable")
-                  ? _buildNonShockable(nonShockable, setState)
+                  ? _buildNonShockable(rhythmAnalysis.nonShockable, setState)
                   : (selectAnalysis != null && selectAnalysis == "Other")
-                      ? _buildOther(other, setState)
-                      : Container()
-          // Card(
-          //   margin: EdgeInsets.all(10),
-          //   elevation: 2.0,
-          // child:
-          // Column(
-          //   children: <Widget>[
-          //     SizedBox(
-          //       height: 10,
-          //     ),
-          // Row(
-          //   // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: <Widget>[
-          // _buildChoiceChip(context, "analysis", ANALYSIS, selectAnalysis,
-          //     analysisController),
-          // _customButton("Shockable", onShock),
-          // _customButton("Non Shockable", onNonShock),
-          // _customButton("Other", onOther),
-          // ],
-          // ),
-          // _showButtonChoices(setState),
-          //   ],
-          // ),
-          // ),
+                      ? _buildOther(rhythmAnalysis.other, setState)
+                      : Container(),
+          SizedBox(
+            height: 30,
+          ),
+          RaisedButton.icon(
+            icon: Icon(Icons.add),
+            // shape: ,
+            color: Colors.green,
+            label: Text("ADD"),
+            onPressed: () {
+              print("Im pressed!");
+
+              // print(shockable.toJson());
+              // print(nonShockable.toJson());
+              // print(other.toJson());
+
+              setState(() {
+                cprBloc.add(
+                  AddRhythmAnalysis(
+                    rhythmAnalysis: RhythmAnalysis(
+                        timestamp: new DateTime.now(),
+                        shockable: shockable,
+                        nonShockable: nonShockable,
+                        other: other),
+                  ),
+                );
+                shockable = new Analysis();
+                nonShockable = new Analysis();
+                other = new Analysis();
+              });
+
+              //restate
+              setState(() {});
+
+              Navigator.pop(context);
+            },
+          )
         ],
       ),
     );
   }
-
-  onPressed(label) {
-    if (label == "Shockable") {
-      setState(() {
-        onShock = label;
-        onNonShock = null;
-        onOther = null;
-      });
-    } else if (label == "Non Shockable") {
-      setState(() {
-        onShock = null;
-        onNonShock = label;
-        onOther = null;
-      });
-    } else {
-      setState(() {
-        onShock = null;
-        onNonShock = null;
-        onOther = label;
-      });
-    }
-
-    if (label != null) {
-      final provider = Provider.of<CPRProvider>(context, listen: false);
-      String format =
-          DateFormat("dd/MM/yyyy @ hh:mm aa").format(DateTime.now()) +
-              " -- " +
-              label +
-              " start"; // +
-      // " " +
-      // value;
-
-      provider.addLog(format);
-    }
-  }
-
-  _customButton(label, selected) {
-    return Container(
-      width: 100,
-      height: 50,
-      // alignment: Alignment.center,
-      child: RaisedButton(
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-        ),
-        onPressed: () {
-          if (label == "Shockable") {
-            setState(() {
-              onShock = label;
-              onNonShock = null;
-              onOther = null;
-            });
-          } else if (label == "Non Shockable") {
-            setState(() {
-              onShock = null;
-              onNonShock = label;
-              onOther = null;
-            });
-          } else {
-            setState(() {
-              onShock = null;
-              onNonShock = null;
-              onOther = label;
-            });
-          }
-
-          // if (label != null) {
-          //   final provider = Provider.of<CPRProvider>(context, listen: false);
-          //   String format =
-          //       DateFormat("dd/MM/yyyy @ hh:mm aa").format(DateTime.now()) +
-          //           " -- " +
-          //           label +
-          //           " start"; // +
-          //   // " " +
-          //   // value;
-
-          //   provider.addLog(format);
-          // }
-          // onPressed(label);
-        },
-        color: selected != null ? Theme.of(context).accentColor : Colors.white,
-        textColor:
-            selected != null ? Colors.white : Theme.of(context).accentColor,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            side: BorderSide(color: Theme.of(context).accentColor)),
-      ),
-    );
-  }
-
-  // _showButtonChoices(setState)
-  // // onShock, onNonShock, onOther)
-  // {
-  //   if (selectAnalysis == "Shockable") {
-  //     return _buildShockable(setState);
-  //   }
-  // else if (selectAnalysis == "Non-Shockable") {
-  //   return _buildNonShockable(setState);
-  // } else
-  //   return _buildOther(setState);
-  // if (onShock != null) {
-  // if (onNonShock != null) {
-  //   return _buildNonShockable();
-  // }
-  // else if (onOther != null) {
-  //   return _buildOther();
-  // }
-  // // return Container(
-  // return _buildShockable();
-  //   padding: EdgeInsets.all(10),
-  //   child: Text("No analysis start"),
-  // );
-  // }
 
   _buildShockable(Analysis shockable, setState) {
     // final provider = Provider.of<CPRProvider>(context);
@@ -930,31 +642,6 @@ class _CPRItems extends State<CPRItems>
         ],
       ),
     );
-  }
-
-  _buildButtonChip(labelText, data) {
-    return Padding(
-        padding: EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(labelText),
-            Column(
-                children: List<Widget>.generate(data.length, (index) {
-              return Container(
-                  // padding: EdgeInsets.only(right: 10),
-                  child: RaisedButton(
-                child: Text(data[index]),
-                onPressed: () {},
-                textColor: Colors.white,
-                color: Colors.pink,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    side: BorderSide(color: Colors.pink[200])),
-              ));
-            }))
-          ],
-        ));
   }
 
   confirmAddLog(context, logs, value) {
@@ -1117,6 +804,7 @@ class BuildChoiceAnalysis extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("selectData====={$selectData}");
     ItemModel item = getItem(context, id);
     return Padding(
       padding: EdgeInsets.all(10),

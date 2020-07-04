@@ -33,7 +33,7 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
         callInformation: event.callInformation,
         responseTeam: event.responseTeam,
         responseTime: event.responseTime,
-        patients: event.patients,
+        patients: List<Patient>.from(event.patients).toList(),
         sceneAssessment: event.sceneAssessment);
 
     try {
@@ -47,7 +47,7 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
         // print(insert);
 
         try {
-        int status_send = 1;
+          int status_send = 1;
           final insert = await phcDao.insertHistory(callcard, status_send);
           // historyBloc.add(LoadHistory());
           // yield CallcardToPublishSuccess();
