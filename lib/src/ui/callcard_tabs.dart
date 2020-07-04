@@ -138,11 +138,15 @@ class _CallcardTabs extends State<CallcardTabs> {
             FlatButton(
               child: Text("GOTO HISTORY"),
               onPressed: () {
-                Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => History()))
-                    .then((result) {
-                  Navigator.of(context, rootNavigator: true).pop(result);
-                });
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/history', ModalRoute.withName('/listCallcards'));
+
+                // Navigator.popAndPushNamed(context, '/history');
+                // Navigator.push(context,
+                //         MaterialPageRoute(builder: (context) => History()))
+                //     .then((result) => Navigator.of(context, rootNavigator: true)
+                //             .pop(result) //;
+                //         );
 
                 // Navigator.pop(context);
               },
@@ -176,27 +180,31 @@ class _CallcardTabs extends State<CallcardTabs> {
           ),
           content: RichText(
             text: TextSpan(style: TextStyle(color: Colors.black), children: [
-              TextSpan(text: "Click "),
+              TextSpan(text: "To proceed press "),
               TextSpan(
-                  text: "CONTINUE",
+                  text: "CONTINUE \n",
                   style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: " to proceed or "),
+              TextSpan(text: "or to end process press "),
               TextSpan(
                   text: "VIEW LIST CC",
                   style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: " to end process"),
+              // TextSpan(text: " to end process"),
             ]),
           ),
           actions: <Widget>[
             FlatButton(
                 child: Text("VIEW LIST CC"),
                 onPressed: () {
-                  Navigator.push(
-                      context,
+                  Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
-                          builder: (context) =>
-                              ListCallcards())).then((result) =>
-                      Navigator.of(context, rootNavigator: true).pop(result));
+                          builder: (BuildContext context) => ListCallcards()),
+                      ModalRoute.withName('/listCallcards')); //     context,
+                  // )
+                  // (
+                  //     MaterialPageRoute(
+                  //         builder: (context) =>
+                  //             ListCallcards())).then((result) =>
+                  //     Navigator.of(context, rootNavigator: true).pop(result));
                 }),
             FlatButton(
                 child: Text("CONTINUE"),
@@ -281,11 +289,11 @@ class _CallcardTabs extends State<CallcardTabs> {
                   // }
                   showError();
 
-                  callInfoBloc.add(ResetCallInfo());
-                  teamBloc.add(ResetTeam());
-                  timeBloc.add(ResetTime());
-                  sceneBloc.add(ResetScene());
-                  patientBloc.add(InitPatient());
+                  // callInfoBloc.add(ResetCallInfo());
+                  // teamBloc.add(ResetTeam());
+                  // timeBloc.add(ResetTime());
+                  // sceneBloc.add(ResetScene());
+                  // patientBloc.add(InitPatient());
 
                   // setState(() {
                   //   isLoading = false;

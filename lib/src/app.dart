@@ -6,6 +6,7 @@ import 'package:phcapp/src/database/phc_dao.dart';
 import 'package:phcapp/src/models/environment_model.dart';
 import 'package:phcapp/src/providers/cpr_provider.dart';
 import 'package:phcapp/src/repositories/repositories.dart';
+import 'package:phcapp/src/ui/history.dart';
 import 'package:phcapp/src/ui/list_callcard.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phcapp/src/ui/login.dart';
@@ -174,93 +175,75 @@ class _App extends State<App> {
       child: ChangeNotifierProvider(
         create: (context) => CPRProvider(),
         child: MaterialApp(
-          theme: themeProvider.getThemeData,
-          // home: ListCallcards(phcDao: phcDaoClient.phcDao),
-          home: BlocBuilder<AuthBloc, AuthState>(
-            // listener: (context, state) {
-            //   if (state is AuthUnaunthenticated) {
-            //     showUnauthorized();
-            //   }
-            // },
-            builder: (context, state) {
-              // if (state is AuthUnitialized) {
-
-              if (state is AuthAunthenticated) {
-                return ListCallcards();
-              } else if (state is AuthInitialized) {
-                return LoginScreen();
-              } else if (state is AuthUnitialized) {
-                return LoginScreen();
-              } else if (state is AuthUnaunthenticated) {
-                // showUnauthorized();
-                return LoginScreen();
-              }
-              //  else if (state is AuthLoading) {
-              //   return Center(
-              //     child: CircularProgressIndicator(),
-              //   );
-              // }
-              return Scaffold(
-                body: SingleChildScrollView(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment(0.8,
-                            0.0), // 10% of the width, so there are ten blinds.
-                        colors: [
-                          const Color(0xFF33ccff),
-                          const Color(0xFFff99cc)
-                        ], // whitish to gray
-                        tileMode: TileMode
-                            .mirror, // repeats the gradient over the canvas
-                      ),
-                    ),
-                    child: Center(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              height: 300,
-                              child: Image(
-                                  image: AssetImage('assets/ambulance.png')),
-                            ),
-                            Text(
-                              "PH Care",
-                              style: TextStyle(
-                                  fontFamily: "OpenSans",
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 40,
-                                  letterSpacing: 2.0),
-                            ),
-                            Text(
-                              "Pre Hospital Care",
-                              style: TextStyle(
-                                  fontFamily: "Roboto",
-                                  // fontWeight: FontWeight.bold,
-                                  fontSize: 25,
-                                  letterSpacing: 3.0),
-                            ),
-                            SizedBox(
-                              height: 100,
-                            ),
-                            Container(
-                              width: double.infinity,
-                              height: 100,
-                              child: Image(image: AssetImage('assets/kkm.png')),
-                            ),
-                          ]),
-                    ),
-                  ),
-                ),
-              );
-              // return Container();
+            theme: themeProvider.getThemeData,
+            routes: <String, WidgetBuilder>{
+              '/login': (BuildContext context) => LoginScreen(),
+              '/listCallcards': (BuildContext context) => ListCallcards(),
+              '/history': (BuildContext context) => History(),
             },
+            // home: ListCallcards(phcDao: phcDaoClient.phcDao),
+            home: LoginScreen()),
+      ),
+    );
+  }
+}
+
+class SplashScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment(
+                  0.8, 0.0), // 10% of the width, so there are ten blinds.
+              colors: [
+                const Color(0xFF33ccff),
+                const Color(0xFFff99cc)
+              ], // whitish to gray
+              tileMode: TileMode.mirror, // repeats the gradient over the canvas
+            ),
+          ),
+          child: Center(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Container(
+                width: double.infinity,
+                height: 300,
+                child: Image(image: AssetImage('assets/ambulance.png')),
+              ),
+              Text(
+                "PH Care",
+                style: TextStyle(
+                    fontFamily: "OpenSans",
+                    fontWeight: FontWeight.w900,
+                    fontSize: 40,
+                    letterSpacing: 2.0),
+              ),
+              Text(
+                "Pre Hospital Care",
+                style: TextStyle(
+                    fontFamily: "Roboto",
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                    letterSpacing: 3.0),
+              ),
+              SizedBox(
+                height: 100,
+              ),
+              Container(
+                width: double.infinity,
+                height: 100,
+                child: Image(image: AssetImage('assets/kkm.png')),
+              ),
+            ]),
           ),
         ),
       ),
     );
+    ;
   }
 }
