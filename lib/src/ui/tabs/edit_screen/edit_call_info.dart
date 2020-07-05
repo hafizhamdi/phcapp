@@ -448,6 +448,7 @@ class CardNoTextInput extends StatelessWidget {
         child: Padding(
             padding: EdgeInsets.all(16),
             child: TextFormField(
+                autovalidate: true,
                 textCapitalization: TextCapitalization.characters,
                 initialValue: initialData,
                 validator: (value) {
