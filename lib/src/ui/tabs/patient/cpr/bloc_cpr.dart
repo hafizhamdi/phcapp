@@ -61,6 +61,8 @@ class CprEmpty extends CprState {
       ];
 }
 
+class CprLoading extends CprState {}
+
 class CprLoaded extends CprState {
   final CprLog cprLog;
   List<RhythmAnalysis> listAnalysis;
@@ -91,8 +93,10 @@ class CprBloc extends Bloc<CprEvent, CprState> {
   }
 
   Stream<CprState> mapAddRhythmAnalysis(AddRhythmAnalysis event) async* {
+    yield CprLoading();
     var currentState = state;
     print("mapAddRhythmAnalysis");
+
     print(state);
     // print(event.rhythmAnalysis.toJson());
     final mylistAnalysis =
@@ -108,11 +112,16 @@ class CprBloc extends Bloc<CprEvent, CprState> {
   }
 
   Stream<CprState> mapLoadCpr(LoadCpr event) async* {
-    yield CprLoaded();
+    yield CprLoading();
+    CprLog cprLog = new CprLog(rhythmAnalysis: []);
+    yield CprLoaded(cprLog: cprLog);
   }
 
   Stream<CprState> mapAddCpr(AddCpr event) async* {
+    yield CprLoading();
     final currentState = state;
+    print("mapAddCpr");
+    print(currentState);
     if (event.id == "witness_cpr") {
       currentState.cprLog.witnessCpr = event.cpr;
     }

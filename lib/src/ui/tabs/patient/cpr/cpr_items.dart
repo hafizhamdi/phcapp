@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/providers/cpr_provider.dart';
 import 'package:phcapp/src/ui/tabs/patient/cpr/bloc_cpr.dart';
@@ -88,6 +89,7 @@ class _CPRItems extends State<CPRItems>
   @override
   void didChangeDependencies() {
     cprBloc = BlocProvider.of<CprBloc>(context);
+    cprBloc.add(LoadCpr());
   }
 
   void buttonCallback(id, valueSelected) {
@@ -95,39 +97,45 @@ class _CPRItems extends State<CPRItems>
     final temp = Cpr(value: valueSelected, timestamp: getCurrentTime());
     if (id == "witness_cpr") {
       setState(() {
+        cprBloc.add(AddCpr(cpr: temp, id: "witness_cpr"));
         cprLog.witnessCpr = temp;
         // cprBloc.cprLog.witnessCpr = temp;
       });
     }
     if (id == "bystander_cpr") {
       setState(() {
+        cprBloc.add(AddCpr(cpr: temp, id: "bystander_cpr"));
         cprLog.bystanderCpr = temp;
       });
     }
     if (id == "cpr_start") {
       setState(() {
+        cprBloc.add(AddCpr(cpr: temp, id: "cpr_start"));
         cprLog.cprStart = temp;
       });
     }
     if (id == "rosc") {
       setState(() {
+        cprBloc.add(AddCpr(cpr: temp, id: "rosc"));
         cprLog.rosc = temp;
       });
     }
     if (id == "cpr_stop") {
       setState(() {
+        cprBloc.add(AddCpr(cpr: temp, id: "cpr_stop"));
         cprLog.cprStop = temp;
       });
     }
 
     if (id == "srhythm") {
       setState(() {
-        cprBloc.add(AddCpr(cpr: temp, id: "srythm", rhythm_type: "Shockable"));
+        cprBloc.add(AddCpr(cpr: temp, id: "srhythm", rhythm_type: "Shockable"));
         shockable.rhythm = temp;
       });
     }
     if (id == "sdrugs") {
       setState(() {
+// cprBloc.add(AddCpr(cpr: temp, id: "witness_cpr"));
         shockable.drugs = temp;
       });
     }
@@ -310,7 +318,9 @@ class _CPRItems extends State<CPRItems>
             height: 120,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: state.cprLog != null ? state.listAnalysis.length : 0,
+              itemCount: state.cprLog.rhythmAnalysis != null
+                  ? state.cprLog.rhythmAnalysis.length
+                  : 0,
               itemBuilder: (context, index) {
                 return InkWell(
                   child: Column(children: [
@@ -332,18 +342,20 @@ class _CPRItems extends State<CPRItems>
                       ),
                     ),
                     Text(
-                      state.listAnalysis[index].timestamp != null
-                          ? DateFormat("h:mm aa")
-                              .format(state.listAnalysis[index].timestamp)
+                      state.cprLog.rhythmAnalysis[index].timestamp != null
+                          ? DateFormat("h:mm aa").format(
+                              state.cprLog.rhythmAnalysis[index].timestamp)
                           : '',
                     )
                   ]),
                   onTap: () {
                     addRhythmDialog(
                       new RhythmAnalysis(
-                          shockable: state.listAnalysis[index].shockable,
-                          nonShockable: state.listAnalysis[index].nonShockable,
-                          other: state.listAnalysis[index].other),
+                          shockable:
+                              state.cprLog.rhythmAnalysis[index].shockable,
+                          nonShockable:
+                              state.cprLog.rhythmAnalysis[index].nonShockable,
+                          other: state.cprLog.rhythmAnalysis[index].other),
                     );
                   },
                 );
@@ -395,6 +407,10 @@ class _CPRItems extends State<CPRItems>
               intervOController.clear();
               drugOController.clear();
               airwayOController.clear();
+
+              setState(() {
+                selectAirway = "";
+              });
             },
             color: Theme.of(context).accentColor,
             textColor: Colors.white,
@@ -802,6 +818,9 @@ class BuildChoiceAnalysis extends StatelessWidget {
     return DateFormat("dd/MM/yyyy HH:mm:ss").format(DateTime.now());
   }
 
+  var timestampFormater = MaskTextInputFormatter(
+      mask: "##/##/#### ##:##:## -- ", filter: {"#": RegExp(r'[a-zA-Z0-9]')});
+
   @override
   Widget build(BuildContext context) {
     print("selectData====={$selectData}");
@@ -844,7 +863,10 @@ class BuildChoiceAnalysis extends StatelessWidget {
                     ),
                     Container(
                       width: 170,
-                      child: TextField(controller: txtController),
+                      child: TextField(
+                        controller: txtController,
+                        // inputFormatters: [timestampFormater],
+                      ),
                     )
                   ],
                 ),
