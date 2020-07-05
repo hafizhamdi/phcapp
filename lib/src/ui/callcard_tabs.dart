@@ -126,6 +126,26 @@ class _CallcardTabs extends State<CallcardTabs> {
             ));
       });
 
+  mandatoryNotFilledError() => showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Missing required field"),
+          content: Text("Call card no should not be empty"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+          // shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        );
+      });
+
   showError() => showDialog(
       context: context,
       barrierDismissible: false,
@@ -409,6 +429,7 @@ class _CallcardTabs extends State<CallcardTabs> {
                             widget.call_information != null
                                 ? widget.call_information.assign_id
                                 : null;
+                        print(call_information.callcard_no);
                         // call_information.plateNo =
                         //     widget.call_information.plate_no;
                         // : convertDateToStandard(
@@ -467,24 +488,28 @@ class _CallcardTabs extends State<CallcardTabs> {
                         // }
 
                         // print(patientList);
-
-                        tabBloc.add(PublishCallcard(
-                          callInformation:
-                              call_information ?? widget.call_information,
-                          // responseTeam: response_team,
-                          // responseTime: response_time,
-                          sceneAssessment:
-                              scene_assessment ?? widget.scene_assessment,
-                          // patients: patientList
-                          responseTeam: response_team ?? widget.response_team,
-                          responseTime: response_time ??
-                              widget.response_time ??
-                              new ResponseTime(),
-                          patients: patientList ?? widget.patients,
-                          // sceneAssessment:
-                          //     SceneAssessment(otherServicesAtScene: []
-                          //     )
-                        ));
+                        if (call_information.callcard_no != null &&
+                            call_information.callcard_no.isNotEmpty) {
+                          tabBloc.add(PublishCallcard(
+                            callInformation:
+                                call_information ?? widget.call_information,
+                            // responseTeam: response_team,
+                            // responseTime: response_time,
+                            sceneAssessment:
+                                scene_assessment ?? widget.scene_assessment,
+                            // patients: patientList
+                            responseTeam: response_team ?? widget.response_team,
+                            responseTime: response_time ??
+                                widget.response_time ??
+                                new ResponseTime(),
+                            patients: patientList ?? widget.patients,
+                            // sceneAssessment:
+                            //     SceneAssessment(otherServicesAtScene: []
+                            //     )
+                          ));
+                        } else {
+                          mandatoryNotFilledError();
+                        }
                         // Navigator.pop(context);
                       },
                       child:
