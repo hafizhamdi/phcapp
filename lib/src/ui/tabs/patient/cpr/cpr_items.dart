@@ -386,6 +386,10 @@ class _CPRItems extends State<CPRItems>
             label: Text("Add Rhythm Analysis"),
             icon: Icon(Icons.add),
             onPressed: () {
+              shockable = new Analysis();
+              nonShockable = new Analysis();
+              other = new Analysis();
+
               addRhythmDialog(
                 new RhythmAnalysis(
                     shockable: shockable,
@@ -409,7 +413,7 @@ class _CPRItems extends State<CPRItems>
               airwayOController.clear();
 
               setState(() {
-                selectAirway = "";
+                selectAnalysis = "";
               });
             },
             color: Theme.of(context).accentColor,
@@ -499,7 +503,7 @@ class _CPRItems extends State<CPRItems>
               });
 
               //restate
-              setState(() {});
+              // setState(() {});
 
               Navigator.pop(context);
             },
@@ -509,7 +513,19 @@ class _CPRItems extends State<CPRItems>
     );
   }
 
-  _buildShockable(Analysis shockable, setState) {
+  _buildShockable(Analysis myshockable, setState) {
+    setState(() {
+      // shockable = myshockable;
+      rhythmController.text =
+          myshockable.rhythm != null ? myshockable.rhythm.timestamp : '';
+      intervController.text = myshockable.intervention != null
+          ? myshockable.intervention.timestamp
+          : '';
+      drugController.text =
+          myshockable.drugs != null ? myshockable.drugs.timestamp : '';
+      airwayController.text =
+          myshockable.airway != null ? myshockable.airway.timestamp : '';
+    });
     // final provider = Provider.of<CPRProvider>(context);
     return Container(
       child: Column(
@@ -519,7 +535,7 @@ class _CPRItems extends State<CPRItems>
             id: "srhythm",
             listData: RHYTHM,
             selectData:
-                shockable.rhythm != null ? shockable.rhythm.value : null,
+                myshockable.rhythm != null ? myshockable.rhythm.value : null,
             txtController: rhythmController,
             callback: buttonCallback,
           ),
@@ -527,8 +543,8 @@ class _CPRItems extends State<CPRItems>
             setState: setState,
             id: "sinterv",
             listData: INTERV,
-            selectData: shockable.intervention != null
-                ? shockable.intervention.value
+            selectData: myshockable.intervention != null
+                ? myshockable.intervention.value
                 : null,
             txtController: intervController,
             callback: buttonCallback,
@@ -540,7 +556,8 @@ class _CPRItems extends State<CPRItems>
             // context,
             id: "sdrugs",
             listData: DRUG,
-            selectData: shockable.drugs != null ? shockable.drugs.value : null,
+            selectData:
+                myshockable.drugs != null ? myshockable.drugs.value : null,
             txtController: drugController,
             callback: buttonCallback,
             // setState
@@ -553,7 +570,7 @@ class _CPRItems extends State<CPRItems>
             callback: buttonCallback,
             // selectData: selectAirway,
             selectData:
-                shockable.airway != null ? shockable.airway.value : null,
+                myshockable.airway != null ? myshockable.airway.value : null,
             txtController: airwayController,
             // setState
           ),
@@ -562,9 +579,17 @@ class _CPRItems extends State<CPRItems>
     );
   }
 
-  _buildNonShockable(Analysis nonShock, setState) {
+  _buildNonShockable(Analysis mynonShock, setState) {
     // final provider = Provider.of<CPRProvider>(context);
-
+    setState(() {
+      // nonShockable = mynonShock;
+      rhythmController.text =
+          mynonShock.rhythm != null ? mynonShock.rhythm.timestamp : '';
+      drugController.text =
+          mynonShock.drugs != null ? mynonShock.drugs.timestamp : '';
+      airwayController.text =
+          mynonShock.airway != null ? mynonShock.airway.timestamp : '';
+    });
     return Container(
       child: Column(
         children: <Widget>[
@@ -573,7 +598,7 @@ class _CPRItems extends State<CPRItems>
               id: "nsrhythm",
               listData: RHYTHMNS,
               selectData:
-                  nonShock.rhythm != null ? nonShock.rhythm.value : null,
+                  mynonShock.rhythm != null ? mynonShock.rhythm.value : null,
               txtController: rhythmNSController,
               callback: buttonCallback,
               setState: setState),
@@ -581,7 +606,8 @@ class _CPRItems extends State<CPRItems>
               // context,
               id: "nsdrugs",
               listData: DRUG,
-              selectData: nonShock.drugs != null ? nonShock.drugs.value : null,
+              selectData:
+                  mynonShock.drugs != null ? mynonShock.drugs.value : null,
               txtController: drugNSController,
               callback: buttonCallback,
               setState: setState
@@ -592,7 +618,7 @@ class _CPRItems extends State<CPRItems>
               id: "nsairway",
               listData: AIRWAY,
               selectData:
-                  nonShock.airway != null ? nonShock.airway.value : null,
+                  mynonShock.airway != null ? mynonShock.airway.value : null,
               txtController: airwayNSController,
               callback: buttonCallback,
               setState: setState
@@ -603,7 +629,18 @@ class _CPRItems extends State<CPRItems>
     );
   }
 
-  _buildOther(Analysis other, setState) {
+  _buildOther(Analysis myother, setState) {
+    setState(() {
+      // other = myother;
+      rhythmController.text =
+          myother.rhythm != null ? myother.rhythm.timestamp : '';
+      intervController.text =
+          myother.intervention != null ? myother.intervention.timestamp : '';
+      drugController.text =
+          myother.drugs != null ? myother.drugs.timestamp : '';
+      airwayController.text =
+          myother.airway != null ? myother.airway.timestamp : '';
+    });
     // final provider = Provider.of<CPRProvider>(context);
     return Container(
       child: Column(
@@ -612,7 +649,7 @@ class _CPRItems extends State<CPRItems>
               // context,
               id: "orhythm",
               listData: RHYTHMOT,
-              selectData: other.rhythm != null ? other.rhythm.value : null,
+              selectData: myother.rhythm != null ? myother.rhythm.value : null,
               txtController: rhythmOController,
               callback: buttonCallback,
               setState: setState),
@@ -621,8 +658,9 @@ class _CPRItems extends State<CPRItems>
               // context,
               id: "ointerv",
               listData: INTEROT,
-              selectData:
-                  other.intervention != null ? other.intervention.value : null,
+              selectData: myother.intervention != null
+                  ? myother.intervention.value
+                  : null,
               txtController: intervOController,
               callback: buttonCallback,
               setState: setState
@@ -634,7 +672,7 @@ class _CPRItems extends State<CPRItems>
               // context,
               id: "odrugs",
               listData: DRUG,
-              selectData: other.drugs != null ? other.drugs.value : null,
+              selectData: myother.drugs != null ? myother.drugs.value : null,
               txtController: drugOController,
               callback: buttonCallback,
               setState: setState
@@ -647,7 +685,7 @@ class _CPRItems extends State<CPRItems>
 
               id: "oairway",
               listData: AIRWAY,
-              selectData: other.airway != null ? other.airway.value : null,
+              selectData: myother.airway != null ? myother.airway.value : null,
               txtController: airwayOController,
               callback: buttonCallback,
               setState: setState

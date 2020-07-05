@@ -92,6 +92,27 @@ class _PatientTab extends State<PatientTab> {
     return "$yyyy-$MM-$dd";
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want back without create note'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('NO'),
+              ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('YES'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final vitalBloc = BlocProvider.of<VitalBloc>(context);
@@ -252,69 +273,74 @@ class _PatientTab extends State<PatientTab> {
     print("patient_TAB");
     // print(index);
     // TODO: implement build
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => PatInfoProvider()),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => PatInfoProvider()),
 
-        // BlocProvider(
-        //   create: (context) => TraumaBloc(),
-        // )
-        // Provider<PatInfoProvider>(create: (context) => PatInfoProvider())
-      ],
-      child: DefaultTabController(
-          length: 4,
-          child: Consumer<PatInfoProvider>(
-            builder: (context, data, child) {
-              return Scaffold(
-                backgroundColor: Colors.grey,
-                appBar: AppBar(
-                    automaticallyImplyLeading: false,
-                    bottom: TabBar(
-                      tabs: [
-                        Tab(icon: Icon(Icons.account_box)),
-                        Tab(icon: Icon(Icons.airline_seat_flat)),
-                        Tab(icon: Icon(Icons.favorite)),
-                        Tab(icon: Icon(Icons.assessment)),
-                      ],
-                    ),
-                    title: Text(
-                      'Patient Note',
-                    ),
-                    actions: <Widget>[
-                      deleteButton(context, action),
-                      createButton(context, action, widget.index)
-                    ],
-                    backgroundColor: Colors.purple),
-                body: TabBarView(
-                  children: <Widget>[
-                    PatientInformationScreen(
-                        patient_information: widget.patient.patientInformation),
-                    // ),
-
-                    CPRTimeLog(),
-                    // ),
-
-                    // CPRDetail(),
-                    VitalSignList(
-                        listVitals: widget.patient.vitalSigns,
-                        index: widget.index),
-                    MainAssessment(
-                      patientAssessment: widget.patient.patientAssessment,
-                      interventionAssessment: widget.patient.intervention,
-                      traumaAssessment: widget.patient.traumaAssessment,
-                      medicationAssessment: widget.patient.medicationAssessment,
-                      reportingAssessment: widget.patient.incidentReporting,
-                      outcomeAssessment: widget.patient.outcome,
-
-                      // context: context
-                    ),
-                  ],
-                ),
-              );
-            },
-          )
+          // BlocProvider(
+          //   create: (context) => TraumaBloc(),
           // )
-          ),
+          // Provider<PatInfoProvider>(create: (context) => PatInfoProvider())
+        ],
+        child: DefaultTabController(
+            length: 4,
+            child: Consumer<PatInfoProvider>(
+              builder: (context, data, child) {
+                return Scaffold(
+                  backgroundColor: Colors.grey,
+                  appBar: AppBar(
+                      automaticallyImplyLeading: false,
+                      bottom: TabBar(
+                        tabs: [
+                          Tab(icon: Icon(Icons.account_box)),
+                          Tab(icon: Icon(Icons.airline_seat_flat)),
+                          Tab(icon: Icon(Icons.favorite)),
+                          Tab(icon: Icon(Icons.assessment)),
+                        ],
+                      ),
+                      title: Text(
+                        'Patient Note',
+                      ),
+                      actions: <Widget>[
+                        deleteButton(context, action),
+                        createButton(context, action, widget.index)
+                      ],
+                      backgroundColor: Colors.purple),
+                  body: TabBarView(
+                    children: <Widget>[
+                      PatientInformationScreen(
+                          patient_information:
+                              widget.patient.patientInformation),
+                      // ),
+
+                      CPRTimeLog(),
+                      // ),
+
+                      // CPRDetail(),
+                      VitalSignList(
+                          listVitals: widget.patient.vitalSigns,
+                          index: widget.index),
+                      MainAssessment(
+                        patientAssessment: widget.patient.patientAssessment,
+                        interventionAssessment: widget.patient.intervention,
+                        traumaAssessment: widget.patient.traumaAssessment,
+                        medicationAssessment:
+                            widget.patient.medicationAssessment,
+                        reportingAssessment: widget.patient.incidentReporting,
+                        outcomeAssessment: widget.patient.outcome,
+
+                        // context: context
+                      ),
+                    ],
+                  ),
+                );
+              },
+            )
+            // )
+            ),
+      ),
     );
     // PatInfoProvider(),
     // );

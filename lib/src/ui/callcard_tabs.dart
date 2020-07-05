@@ -131,8 +131,8 @@ class _CallcardTabs extends State<CallcardTabs> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Writing Failed"),
-          content: Text("Call Card No cannot be empty"),
+          title: Text("Missing required field"),
+          content: Text("Call card no should not be empty"),
           actions: <Widget>[
             FlatButton(
               child: Text("OK"),
@@ -144,7 +144,7 @@ class _CallcardTabs extends State<CallcardTabs> {
           // shape: RoundedRectangleBorder(
           //     borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
-  });
+      });
 
   showError() => showDialog(
       context: context,
@@ -488,7 +488,8 @@ class _CallcardTabs extends State<CallcardTabs> {
                         // }
 
                         // print(patientList);
-                        if(call_information.callcard_no != null && call_information.callcard_no.isNotEmpty){
+                        if (call_information.callcard_no != null &&
+                            call_information.callcard_no.isNotEmpty) {
                           tabBloc.add(PublishCallcard(
                             callInformation:
                                 call_information ?? widget.call_information,
@@ -506,8 +507,8 @@ class _CallcardTabs extends State<CallcardTabs> {
                             //     SceneAssessment(otherServicesAtScene: []
                             //     )
                           ));
-                        }else{
-                            mandatoryNotFilledError();
+                        } else {
+                          mandatoryNotFilledError();
                         }
                         // Navigator.pop(context);
                       },
