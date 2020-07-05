@@ -49,30 +49,69 @@ class _LoginScreen extends State<LoginScreen> {
   Widget build(BuildContext context) {
     loginBloc = BlocProvider.of<LoginBloc>(context);
     return SafeArea(
-        child: Scaffold(
-            body:
-                BlocConsumer<LoginBloc, LoginState>(listener: (context, state) {
-      if (state is LoginFailure) {
-        showError();
-      }
-      // else if(state is Login)
-      // if (state is LoginUnauthorized) {
-      //   showUnauthorized();
-      // } else if (state is LoginLoading) {
-      //   loginBloc.add(AppStart());
-      // } else if (state is AppStarted) {
-      // } else if (state is LoginError) {
-      //   showError();
-      // } else if (state is LoggedIn) {
-      //   Navigator.push(
-      //       context, MaterialPageRoute(builder: (context) => ListCallcards()));
-      // }
-    }, builder: (context, state) {
-      return
-          // Center(child:
-          _loginPage();
-      // );
-    })));
+      child: Scaffold(
+        body: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthAunthenticated) {
+              Navigator.of(context).pushNamed('/listCallcards');
+            } else if (state is AuthUnaunthenticated) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/login', (Route<dynamic> route) => false);
+              //     showUnauthorized();
+            }
+          },
+          builder: (context, state) {
+            // if (state is AuthUnitialized) {
+
+            // if (state is AuthAunthenticated) {
+            //   // return ListCallcards();
+            //   // }
+            //   // else if (state is AuthInitialized) {
+            //   //   return LoginScreen();
+            //   // } else if (state is AuthUnitialized) {
+            //   //   return LoginScreen();
+            // } else if (state is AuthUnaunthenticated) {
+            //   // showUnauthorized();
+            //   // return LoginScreen();
+            // }
+            //  else if (state is AuthLoading) {
+            //   return Center(
+            //     child: CircularProgressIndicator(),
+            //   );
+            // }
+            // return
+            // return Container();
+            return _loginPage();
+            // );
+          },
+        ),
+        // BlocConsumer<LoginBloc, LoginState>(
+        //   listener: (context, state) {
+        //     if (state is LoginFailure) {
+        //       showError();
+        //     }
+        //     // else if(state is Login)
+        //     // if (state is LoginUnauthorized) {
+        //     //   showUnauthorized();
+        //     // } else if (state is LoginLoading) {
+        //     //   loginBloc.add(AppStart());
+        //     // } else if (state is AppStarted) {
+        //     // } else if (state is LoginError) {
+        //     //   showError();
+        //     // } else if (state is LoggedIn) {
+        //     //   Navigator.push(
+        //     //       context, MaterialPageRoute(builder: (context) => ListCallcards()));
+        //     // }
+        //   },
+        //   builder: (context, state) {
+        //     return
+        //         // Center(child:
+        //         _loginPage();
+        //     // );
+        //   },
+        // ),
+      ),
+    );
   }
 
   Widget _loginPage() {
@@ -130,7 +169,7 @@ class _LoginScreen extends State<LoginScreen> {
                       // right: 70,
                       top: 60,
                       child: Text(
-                        "HRPB Version 1.11",
+                        "HRPB Version 1.12",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,

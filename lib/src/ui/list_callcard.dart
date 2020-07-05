@@ -136,84 +136,136 @@ class _ListCallcards extends State<ListCallcards> {
     //   ),
     // );
 
-    return
-        // MultiBlocProvider(
-        //   providers: [
-        //     BlocProvider(
-        //       create: (context) => CallInfoBloc(),
-        //     )
-        //   ],
-        //   child:
-        Scaffold(
-      appBar: AppBar(
-        leading: TopOtherMenu(),
-        title: Text("Call Cards"),
-        // shape: ShapeBorde,
+    // return
 
-        actions: <Widget>[
-          Padding(padding: EdgeInsets.only(right: 10), child: TopUserMenu()),
-        ],
-      ),
-      body: Center(
-        child: BlocProvider(
-          create: (context) => PhcBloc(
-              phcRepository: phcRepository, phcDao: phcDaoClient.phcDao),
-          child: BlocConsumer<PhcBloc, PhcState>(
-            listener: (context, state) {
-              _refreshCompleter?.complete();
-              _refreshCompleter = Completer();
-            },
-            builder: (context, state) {
-              phcBloc = BlocProvider.of<PhcBloc>(context);
+    return new WillPopScope(
+      onWillPop: _onWillPop,
+      child:
+          // MultiBlocProvider(
+          //   providers: [
+          //     BlocProvider(
+          //       create: (context) => CallInfoBloc(),
+          //     )
+          //   ],
+          //   child:
+          Scaffold(
+        appBar: AppBar(
+          leading: TopOtherMenu(),
+          title: Text("Call Cards"),
+          // shape: ShapeBorde,
 
-              if (state is PhcEmpty) {
-                // state.props.add(FetchPhc());
+          actions: <Widget>[
+            Padding(padding: EdgeInsets.only(right: 10), child: TopUserMenu()),
+          ],
+        ),
+        body: Center(
+          child: BlocProvider(
+            create: (context) => PhcBloc(
+                phcRepository: phcRepository, phcDao: phcDaoClient.phcDao),
+            child: BlocConsumer<PhcBloc, PhcState>(
+              listener: (context, state) {
+                _refreshCompleter?.complete();
+                _refreshCompleter = Completer();
+              },
+              builder: (context, state) {
+                phcBloc = BlocProvider.of<PhcBloc>(context);
 
-                phcBloc.add(FetchPhc());
-              } else if (state is PhcLoaded) {
-                print("Phc loaded");
-                final phc = state.phc;
+                if (state is PhcEmpty) {
+                  // state.props.add(FetchPhc());
 
-                return RefreshIndicator(
-                    onRefresh: () {
-                      BlocProvider.of<PhcBloc>(context).add(
-                        RefreshPhc(),
+                  phcBloc.add(FetchPhc());
+                } else if (state is PhcLoaded) {
+                  print("Phc loaded");
+                  final phc = state.phc;
+
+                  return RefreshIndicator(
+                      onRefresh: () {
+                        BlocProvider.of<PhcBloc>(context).add(
+                          RefreshPhc(),
+                        );
+                        return _refreshCompleter.future;
+                      },
+                      child: _buildList(phc)
+                      // ListView.builder(
+                      //     itemCount: phc.callcards.length,
+                      //     itemBuilder: (context, index) {
+                      //       final callInfo = phc.callcards[index].call_information;
+                      //       return ListTile(
+                      //         title: Text(callInfo.callcard_no),
+                      //         subtitle: Text(callInfo.callReceived != null
+                      //             ? callInfo.callReceived.substring(
+                      //                 0, callInfo.call_received.length - 2)
+                      //             : callInfo.callReceived),
+                      //       );
+                      //     })
+
                       );
-                      return _refreshCompleter.future;
-                    },
-                    child: _buildList(phc)
-                    // ListView.builder(
-                    //     itemCount: phc.callcards.length,
-                    //     itemBuilder: (context, index) {
-                    //       final callInfo = phc.callcards[index].call_information;
-                    //       return ListTile(
-                    //         title: Text(callInfo.callcard_no),
-                    //         subtitle: Text(callInfo.callReceived != null
-                    //             ? callInfo.callReceived.substring(
-                    //                 0, callInfo.call_received.length - 2)
-                    //             : callInfo.callReceived),
-                    //       );
-                    //     })
+                }
+                // else if (state is PhcFetched) {
+                //   final phc = state.phc;
+                //   print("Phc fetched");
 
-                    );
-              }
-              // else if (state is PhcFetched) {
-              //   final phc = state.phc;
-              //   print("Phc fetched");
-
-              //   phcBloc.add(AddPhc(phc: phc));
-              //   print("after loadphc");
-              // }
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            },
+                //   phcBloc.add(AddPhc(phc: phc));
+                //   print("after loadphc");
+                // }
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            ),
           ),
         ),
       ),
-      // ),
     );
   }
+
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to logout'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('NO'),
+              ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('YES'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
+  // showDialog(
+  //                           context: context,
+  //                           barrierDismissible: false,
+  //                           builder: (BuildContext context) {
+  //                             return WillPopScope(
+  //                               onWillPop: () {},
+  //                               child: new AlertDialog(
+  //                                 title: new Text('Title'),
+  //                                 content: new Text('This is Demo'),
+  //                                 actions: <Widget>[
+  //                                   new FlatButton(
+  //                                     onPressed: () {
+  //                                       //Function called
+  //                                     },
+  //                                     child: new Text('Ok Done!'),
+  //                                   ),
+  //                                   new FlatButton(
+  //                                     onPressed: () {
+  //                                       Navigator.pop(context);
+  //                                     },
+  //                                     child: new Text('Go Back'),
+  //                                   ),
+  //                                 ],
+  //                               ),
+  //                             );
+  //                           });
 
   Widget _buildList(phc) {
     // return SliverList(
@@ -373,7 +425,27 @@ class _ListCallcards extends State<ListCallcards> {
       onSelected: (WhatTodo result) {
         if (result == WhatTodo.logout) {
           //  authBloc.add (LogoutButtonPressed());
-          loginBloc.add(LogoutButtonPressed());
+          showDialog(
+            context: context,
+            builder: (context) => new AlertDialog(
+              title: new Text('Are you sure?'),
+              content: new Text('Do you want to logout'),
+              actions: <Widget>[
+                new FlatButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: new Text('NO'),
+                ),
+                new FlatButton(
+                  onPressed: () {
+                    loginBloc.add(LogoutButtonPressed());
+
+                    // Navigator.of(context).pop(true);
+                  },
+                  child: new Text('YES'),
+                ),
+              ],
+            ),
+          );
         }
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<WhatTodo>>[

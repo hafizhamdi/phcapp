@@ -184,7 +184,10 @@ class _Patients extends State<PatientListScreen>
                           "Other services at scene",
                           _otherServices,
                           callback,
-                          widget.sceneAssessment.otherServicesAtScene),
+                          widget.sceneAssessment !=
+                                  null //widget.sceneAssessment.otherServicesAtScene
+                              ? widget.sceneAssessment.otherServicesAtScene
+                              : null),
                     ]);
                   },
                 ),

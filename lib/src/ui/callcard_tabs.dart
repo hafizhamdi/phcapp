@@ -131,37 +131,49 @@ class _CallcardTabs extends State<CallcardTabs> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Data sending failed"),
+          title: Text("Sending Failed"),
           content: Text(
               "Something went wrong. \nWe keep your last sending in History"),
           actions: <Widget>[
             FlatButton(
               child: Text("GOTO HISTORY"),
               onPressed: () {
-                Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => History()))
-                    .then((result) {
-                  Navigator.of(context, rootNavigator: true).pop(result);
-                });
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/history', ModalRoute.withName('/listCallcards'));
+
+                // Navigator.popAndPushNamed(context, '/history');
+                // Navigator.push(context,
+                //         MaterialPageRoute(builder: (context) => History()))
+                //     .then((result) => Navigator.of(context, rootNavigator: true)
+                //             .pop(result) //;
+                //         );
 
                 // Navigator.pop(context);
               },
             )
           ],
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          // shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
       });
 
   savingError() => showDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Opss Saving failed"),
+          title: Text("Writing Failed"),
           content: Text("We couldn't save in History"),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+          // shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
       });
 
@@ -171,44 +183,57 @@ class _CallcardTabs extends State<CallcardTabs> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            "Data sending successful",
+            "Success",
             // style: TextStyle(fontSize: 14),
           ),
-          content: RichText(
+          content:
+              // Column(children: [
+              RichText(
             text: TextSpan(style: TextStyle(color: Colors.black), children: [
-              TextSpan(text: "Click "),
+              TextSpan(text: "This Call Card # "),
               TextSpan(
-                  text: "CONTINUE",
+                  text:
+                      // widget.call_information.callcard_no ??
+                      callInfoBloc.state.callInformation != null
+                          ? callInfoBloc.state.callInformation.callcard_no
+                          : widget.call_information != null
+                              ? widget.call_information.callcard_no
+                              : '',
                   style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: " to proceed or "),
-              TextSpan(
-                  text: "VIEW LIST CC",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: " to end process"),
+              TextSpan(text: " has been synced"),
+              // TextSpan(
+              //     text: "VIEW LIST CC",
+              //     style: TextStyle(fontWeight: FontWeight.bold)),
+              // TextSpan(text: " to end process"),
             ]),
           ),
+          // ]),
           actions: <Widget>[
             FlatButton(
-                child: Text("VIEW LIST CC"),
+                child: Text("VIEW LIST CALL CARDS"),
                 onPressed: () {
-                  Navigator.push(
-                      context,
+                  Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
-                          builder: (context) =>
-                              ListCallcards())).then((result) =>
-                      Navigator.of(context, rootNavigator: true).pop(result));
+                          builder: (BuildContext context) => ListCallcards()),
+                      ModalRoute.withName('/listCallcards')); //     context,
+                  // )
+                  // (
+                  //     MaterialPageRoute(
+                  //         builder: (context) =>
+                  //             ListCallcards())).then((result) =>
+                  //     Navigator.of(context, rootNavigator: true).pop(result));
                 }),
-            FlatButton(
-                child: Text("CONTINUE"),
-                onPressed: () {
-                  // Navigator.push(context,
-                  //         MaterialPageRoute(builder: (context) => History()))
-                  //     .then((result) {
-                  Navigator.pop(context);
-                })
+            // FlatButton(
+            //     child: Text("CONTINUE EDITING"),
+            //     onPressed: () {
+            //       // Navigator.push(context,
+            //       //         MaterialPageRoute(builder: (context) => History()))
+            //       //     .then((result) {
+            //       Navigator.pop(context);
+            //     })
           ],
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          // shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
       });
 
@@ -229,6 +254,27 @@ class _CallcardTabs extends State<CallcardTabs> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit callcard without sync'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('NO'),
+              ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('YES'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     // var callcard = Provider.of<Callcard>(context);
@@ -238,288 +284,288 @@ class _CallcardTabs extends State<CallcardTabs> {
 
     phcBloc = BlocProvider.of<PhcBloc>(context);
 
-    return
-        // MultiProvider(
-        //     providers: [
-        //       BlocProvider(create: (context) => TeamBloc(phcDao: new PhcDao())),
-        //       // BlocProvider(
-        //       //     create: (context) => StaffBloc(phcRepository: phcRepository))
-        //     ],
-        //     child:
-        DefaultTabController(
-            length: 4,
-            child: BlocConsumer<CallCardTabBloc, TabState>(
-              listener: (context, state) {
-                if (state is CallcardToPublishLoading) {
-                  // setState(() {
-                  //   isLoading = true;
-                  // });
-                  //circular progress alert dialog
-                  // showLoading();
-                } else if (state is CallcardToPublishSuccess) {
-                  //Callcard success publish dialog with ok
-                  // if (isLoading == true) {
-                  //   Navigator.pop(context);
-                  // }
-                  showSuccess();
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child:
+          // MultiProvider(
+          //     providers: [
+          //       BlocProvider(create: (context) => TeamBloc(phcDao: new PhcDao())),
+          //       // BlocProvider(
+          //       //     create: (context) => StaffBloc(phcRepository: phcRepository))
+          //     ],
+          //     child:
+          DefaultTabController(
+        length: 4,
+        child: BlocConsumer<CallCardTabBloc, TabState>(
+          listener: (context, state) {
+            if (state is CallcardToPublishLoading) {
+              // setState(() {
+              //   isLoading = true;
+              // });
+              //circular progress alert dialog
+              // showLoading();
+            } else if (state is CallcardToPublishSuccess) {
+              //Callcard success publish dialog with ok
+              // if (isLoading == true) {
+              //   Navigator.pop(context);
+              // }
+              showSuccess();
 
-                  // clear all state to avoid cache
-                  // callInfoBloc.add(ResetCallInfo());
-                  // teamBloc.add(ResetTeam());
-                  // timeBloc.add(ResetTime());
-                  // sceneBloc.add(ResetScene());
-                  // patientBloc.add(InitPatient());
+              // clear all state to avoid cache
+              // callInfoBloc.add(ResetCallInfo());
+              // teamBloc.add(ResetTeam());
+              // timeBloc.add(ResetTime());
+              // sceneBloc.add(ResetScene());
+              // patientBloc.add(InitPatient());
 
-                  // setState(() {
-                  //   isLoading = false;
-                  // });
-                } else if (state is CallcardToPublishFailed) {
-                  //callcard failed to publish dialog error
+              // setState(() {
+              //   isLoading = false;
+              // });
+            } else if (state is CallcardToPublishFailed) {
+              //callcard failed to publish dialog error
 
-                  // if (isLoading == true) {
-                  //   Navigator.pop(context);
-                  // }
-                  showError();
+              // if (isLoading == true) {
+              //   Navigator.pop(context);
+              // }
+              showError();
 
-                  callInfoBloc.add(ResetCallInfo());
-                  teamBloc.add(ResetTeam());
-                  timeBloc.add(ResetTime());
-                  sceneBloc.add(ResetScene());
-                  patientBloc.add(InitPatient());
+              // callInfoBloc.add(ResetCallInfo());
+              // teamBloc.add(ResetTeam());
+              // timeBloc.add(ResetTime());
+              // sceneBloc.add(ResetScene());
+              // patientBloc.add(InitPatient());
 
-                  // setState(() {
-                  //   isLoading = false;
-                  // });
-                } else if (state is CallcardToSavingError) {
-                  savingError();
-                }
-              },
-              builder: (context, state) {
-                return Scaffold(
-                  // backgroundColor: Colors.white,
-                  appBar: AppBar(
-                    automaticallyImplyLeading: false,
-                    // shape: ShapeBorder(BorderRadius.only(topLeft:Radius.circular(2.0))),
-                    // backgroundColor: Colors.white,
-                    bottom: TabBar(
-                      labelColor: Colors.pinkAccent,
-                      unselectedLabelColor: Colors.white,
+              // setState(() {
+              //   isLoading = false;
+              // });
+            } else if (state is CallcardToSavingError) {
+              savingError();
+            }
+          },
+          builder: (context, state) {
+            return Scaffold(
+              // backgroundColor: Colors.white,
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                // shape: ShapeBorder(BorderRadius.only(topLeft:Radius.circular(2.0))),
+                // backgroundColor: Colors.white,
+                bottom: TabBar(
+                  labelColor: Colors.pinkAccent,
+                  unselectedLabelColor: Colors.white,
 
-                      // indicatorPadding: EdgeInsets.symmetric(vertical: 40),
-                      // indicatorWeight: 4.0,
-                      // indicatorSize: TabBarIndicatorSize.tab,
-                      indicator: BoxDecoration(
-                          // border: Border.,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10)),
-                          color: Colors.white),
+                  // indicatorPadding: EdgeInsets.symmetric(vertical: 40),
+                  // indicatorWeight: 4.0,
+                  // indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: BoxDecoration(
+                      // border: Border.,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10)),
+                      color: Colors.white),
 
-                      // unselectedLabelColor: Colors.red,
-                      // labelColor: Colors.blue,
-                      // indicatorColor: Color(0x880E4F00),
-                      tabs: [
-                        Tab(icon: Icon(Icons.info)),
-                        Tab(icon: Icon(Icons.directions_car)),
-                        Tab(icon: Icon(Icons.timer)),
-                        Tab(icon: Icon(Icons.person)),
-                      ],
-                    ),
-                    title: Center(
-                        child: StreamBuilder(
-                            initialData: widget.callcard_no != null
-                                ? widget.callcard_no
-                                : '',
-                            stream: callInfoBloc.cardNoController.stream,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return Text(snapshot.data,
-                                    style: TextStyle(
-                                        fontFamily: "OpenSans", fontSize: 20));
-                              }
-                              return Container();
-                            })),
+                  // unselectedLabelColor: Colors.red,
+                  // labelColor: Colors.blue,
+                  // indicatorColor: Color(0x880E4F00),
+                  tabs: [
+                    Tab(icon: Icon(Icons.info)),
+                    Tab(icon: Icon(Icons.directions_car)),
+                    Tab(icon: Icon(Icons.timer)),
+                    Tab(icon: Icon(Icons.person)),
+                  ],
+                ),
+                title: Center(
+                    child: StreamBuilder(
+                        initialData: widget.callcard_no != null
+                            ? widget.callcard_no
+                            : '',
+                        stream: callInfoBloc.cardNoController.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(snapshot.data,
+                                style: TextStyle(
+                                    fontFamily: "OpenSans", fontSize: 20));
+                          }
+                          return Container();
+                        })),
 
-                    actions: <Widget>[
-                      Container(
+                actions: <Widget>[
+                  Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(40.0)),
+                    // padding: EdgeInsets.only(right: 10),
+                    child: InkWell(
+                      onTap: () {
+                        print("callInfoBloc state push toserver");
+
+                        final call_information =
+                            callInfoBloc.state.callInformation ??
+                                widget.call_information;
+                        call_information.callReceived = convertDateToStandard(
+                            call_information.call_received);
+                        call_information.assignId =
+                            widget.call_information != null
+                                ? widget.call_information.assign_id
+                                : null;
+                        // call_information.plateNo =
+                        //     widget.call_information.plate_no;
+                        // : convertDateToStandard(
+                        //     widget.call_information.call_received);
+
+                        // print(currentState.toJson());
+                        print("INSIDE CALL INFO");
+                        print(call_information.toJson());
+                        print("+=======+");
+                        // print(widget.call_information.toJson());
+                        final response_team = new ResponseTeam(
+                            serviceResponse: responseBloc.state.serviceResponse,
+                            vehicleRegno: responseBloc.state.vehicleRegNo,
+                            staffs: teamBloc.state.selectedStaffs ?? []);
+                        // print(teamState);
+
+                        final response_time = timeBloc.state.responseTime;
+                        // ??
+                        //     new ResponseTime();
+                        // print(timeState);
+
+                        final scene_assessment = new SceneAssessment(
+                            otherServicesAtScene:
+                                sceneBloc.state.selectedServices);
+                        // print(patientState);
+
+                        final patientList = patientBloc.state.patients ?? [];
+
+                        // print(patientList.length);
+                        // print(scene_assessment.toJson());
+                        // print(patientList.elementAt(0).patientInformation.idNo);
+
+                        // print(patientBloc.sceneAssessment.toJson());
+                        // historyBloc.add(AddHistory(
+                        //     callcard: new Callcard(
+                        //         callInformation: call_information,
+                        //         responseTeam: response_team,
+                        //         responseTime: response_time,
+                        //         patients: List<Patient>(),
+                        //         sceneAssessment: new SceneAssessment())));
+
+                        // print("DONE");
+                        // print(call_information);
+                        // print(scene_assessment);
+                        // print(response_team);
+
+                        // print(response_time);
+                        // print(patientList);
+                        // if (patientList.length > 0) {
+                        //   print("PATIENT LIST MORE THAN ONE");
+                        //   patientList.map((f) {
+                        //     print("what inside patientlist");
+                        //     // print((f));
+                        //     print(f.toJson());
+                        //   }).toList();
+                        // }
+
+                        // print(patientList);
+
+                        tabBloc.add(PublishCallcard(
+                          callInformation:
+                              call_information ?? widget.call_information,
+                          // responseTeam: response_team,
+                          // responseTime: response_time,
+                          sceneAssessment:
+                              scene_assessment ?? widget.scene_assessment,
+                          // patients: patientList
+                          responseTeam: response_team ?? widget.response_team,
+                          responseTime: response_time ??
+                              widget.response_time ??
+                              new ResponseTime(),
+                          patients: patientList ?? widget.patients,
+                          // sceneAssessment:
+                          //     SceneAssessment(otherServicesAtScene: []
+                          //     )
+                        ));
+                        // Navigator.pop(context);
+                      },
+                      child:
+                          // )
+                          // FlatButton.icon(
+
+                          // )
+                          Container(
                         alignment: Alignment.center,
-                        margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(40.0)),
-                        // padding: EdgeInsets.only(right: 10),
-                        child: InkWell(
-                          onTap: () {
-                            print("callInfoBloc state push toserver");
+                        padding: EdgeInsets.all(10),
+                        child:
 
-                            final call_information =
-                                callInfoBloc.state.callInformation ??
-                                    widget.call_information;
-                            call_information.callReceived =
-                                convertDateToStandard(
-                                    call_information.call_received);
-                            call_information.assignId =
-                                widget.call_information != null
-                                    ? widget.call_information.assign_id
-                                    : null;
-                            // call_information.plateNo =
-                            //     widget.call_information.plate_no;
-                            // : convertDateToStandard(
-                            //     widget.call_information.call_received);
-
-                            // print(currentState.toJson());
-                            print("INSIDE CALL INFO");
-                            print(call_information.toJson());
-                            print("+=======+");
-                            // print(widget.call_information.toJson());
-                            final response_team = new ResponseTeam(
-                                serviceResponse:
-                                    responseBloc.state.serviceResponse,
-                                vehicleRegno: responseBloc.state.vehicleRegNo,
-                                staffs: teamBloc.state.selectedStaffs ?? []);
-                            // print(teamState);
-
-                            final response_time = timeBloc.state.responseTime;
-                            // ??
-                            //     new ResponseTime();
-                            // print(timeState);
-
-                            final scene_assessment = new SceneAssessment(
-                                otherServicesAtScene:
-                                    sceneBloc.state.selectedServices);
-                            // print(patientState);
-
-                            final patientList =
-                                patientBloc.state.patients ?? [];
-
-                            // print(patientList.length);
-                            // print(scene_assessment.toJson());
-                            // print(patientList.elementAt(0).patientInformation.idNo);
-
-                            // print(patientBloc.sceneAssessment.toJson());
-                            // historyBloc.add(AddHistory(
-                            //     callcard: new Callcard(
-                            //         callInformation: call_information,
-                            //         responseTeam: response_team,
-                            //         responseTime: response_time,
-                            //         patients: List<Patient>(),
-                            //         sceneAssessment: new SceneAssessment())));
-
-                            // print("DONE");
-                            // print(call_information);
-                            // print(scene_assessment);
-                            // print(response_team);
-
-                            // print(response_time);
-                            // print(patientList);
-                            // if (patientList.length > 0) {
-                            //   print("PATIENT LIST MORE THAN ONE");
-                            //   patientList.map((f) {
-                            //     print("what inside patientlist");
-                            //     // print((f));
-                            //     print(f.toJson());
-                            //   }).toList();
-                            // }
-
-                            // print(patientList);
-
-                            tabBloc.add(PublishCallcard(
-                              callInformation:
-                                  call_information ?? widget.call_information,
-                              // responseTeam: response_team,
-                              // responseTime: response_time,
-                              sceneAssessment:
-                                  scene_assessment ?? widget.scene_assessment,
-                              // patients: patientList
-                              responseTeam:
-                                  response_team ?? widget.response_team,
-                              responseTime: response_time ??
-                                  widget.response_time ??
-                                  new ResponseTime(),
-                              patients: patientList ?? widget.patients,
-                              // sceneAssessment:
-                              //     SceneAssessment(otherServicesAtScene: []
-                              //     )
-                            ));
-                            // Navigator.pop(context);
-                          },
-                          child:
-                              // )
-                              // FlatButton.icon(
-
-                              // )
-                              Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(10),
-                            child:
-
-                                // ,)
-                                Row(
-                              // mainAxisAlignment: MainAxisAlignment.center,
-                              // crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(Icons.cloud_upload),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                // ,)
-                                // tooltip: "Push to Server",
-                                // onPressed: () {
-                                // Navigator.push(context,
-                                //     MaterialPageRoute(builder: (context) => History()));
-                                // },
-                                // ),
-                                Text("Sync HISKKM")
-                              ],
+                            // ,)
+                            Row(
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          // crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.cloud_upload),
+                            SizedBox(
+                              width: 10,
                             ),
-                          ),
+                            // ,)
+                            // tooltip: "Push to Server",
+                            // onPressed: () {
+                            // Navigator.push(context,
+                            //     MaterialPageRoute(builder: (context) => History()));
+                            // },
+                            // ),
+                            Text("Sync HISKKM")
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                  // backgroundColor: Colors.purple),
-                  body:
-                      // Consumer<CallInformation>(builder: (context, info, child) {
-                      //   return
-                      TabBarView(
-                    children: <Widget>[
-                      CallInformationScreen(
-                          call_information: widget.call_information),
-                      ResponseTeamScreen(
-                          // context: context,
-                          response_team: widget.response_team,
-                          assign_id: (widget.call_information != null)
-                              ? widget.call_information.assign_id
-                              : null),
-                      ResponseTimeScreen(
-                        // responseTime: widget.response_time,
-                        responseTime: widget.response_time != null
-                            ? widget.response_time
-                            : new ResponseTime(),
-                        // assign_id: (widget.call_information != null)
-                        //     ? widget.call_information.assign_id
-                        //     : null
-                      ),
+                ],
+              ),
+              // backgroundColor: Colors.purple),
+              body:
+                  // Consumer<CallInformation>(builder: (context, info, child) {
+                  //   return
+                  TabBarView(
+                children: <Widget>[
+                  CallInformationScreen(
+                      call_information: widget.call_information),
+                  ResponseTeamScreen(
+                      // context: context,
+                      response_team: widget.response_team,
+                      assign_id: (widget.call_information != null)
+                          ? widget.call_information.assign_id
+                          : null),
+                  ResponseTimeScreen(
+                    // responseTime: widget.response_time,
+                    responseTime: widget.response_time != null
+                        ? widget.response_time
+                        : new ResponseTime(),
+                    // assign_id: (widget.call_information != null)
+                    //     ? widget.call_information.assign_id
+                    //     : null
+                  ),
 
-                      PatientListScreen(
-                        patients: widget.patients,
-                        assign_id: (widget.call_information != null)
-                            ? widget.call_information.assign_id
-                            : null,
-                      )
-                      // Icon(Icons.ev_station),
-                      // Icon(Icons.ev_station),
-                      // Team(),
-                      // Timer(),
-                      // Patients(),
-                    ],
-                    // );
-                    // }
-                  ),
-                );
-              },
-              // child:
-            ));
+                  PatientListScreen(
+                    patients: widget.patients,
+                    assign_id: (widget.call_information != null)
+                        ? widget.call_information.assign_id
+                        : null,
+                  )
+                  // Icon(Icons.ev_station),
+                  // Icon(Icons.ev_station),
+                  // Team(),
+                  // Timer(),
+                  // Patients(),
+                ],
+                // );
+                // }
+              ),
+            );
+          },
+          // child:
+        ),
+      ),
+    );
     // );
   }
 
