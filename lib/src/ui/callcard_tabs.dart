@@ -132,7 +132,7 @@ class _CallcardTabs extends State<CallcardTabs> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Writing Failed"),
-          content: Text("Call Card cannot be empty"),
+          content: Text("Call Card No cannot be empty"),
           actions: <Widget>[
             FlatButton(
               child: Text("OK"),
