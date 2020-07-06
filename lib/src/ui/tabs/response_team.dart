@@ -101,55 +101,67 @@ class _TeamState extends State<ResponseTeamScreen> //{
 
     return Scaffold(
       backgroundColor: Colors.grey,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          // padding: EdgeInsets.all(20),
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              BlocBuilder<ResponseBloc, ResponseState>(
-                builder: (context, state) {
-                  if (state is LoadedResponse) {
-                    return ResponseDetail(
-                      typeResponse: state.serviceResponse,
-                      vehicleRegno: state.vehicleRegNo,
-                    );
-                  }
-
-                  return ResponseDetail(
-                      typeResponse:
-                          (widget.response_team != null)
-                              ? widget.response_team.serviceResponse
-                              : '',
-                      vehicleRegno: (widget.response_team != null)
-                          ? widget.response_team.vehicleRegno
-                          : '');
-                },
-              ),
-              BlocBuilder<TeamBloc, TeamState>(builder: (context, state) {
-                if (state is TeamLoaded) {
-                  return TeamList(selectedStaffs: state.selectedStaffs);
-                }
-                return TeamList(
-                  selectedStaffs: (widget.response_team != null)
-                      ? widget.response_team.staffs
-                      : null,
-                );
-              })
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Color(0xFF3383CD),
+              Color(0xFF11249F),
             ],
           ),
         ),
-        // floatingActionButton: FloatingActionButton.extended(
-        //   heroTag: 200,
-        //   onPressed: () {
-        //     Navigator.push(
-        //         context, MaterialPageRoute(builder: (context) => Staffs()));
-        //     // Add your onPressed code here!
-        //   },
-        //   label: Text('ADD STAFF'),
-        //   icon: Icon(Icons.add),
-        //   // backgroundColor: Colors.purple,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            // padding: EdgeInsets.all(20),
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                BlocBuilder<ResponseBloc, ResponseState>(
+                  builder: (context, state) {
+                    if (state is LoadedResponse) {
+                      return ResponseDetail(
+                        typeResponse: state.serviceResponse,
+                        vehicleRegno: state.vehicleRegNo,
+                      );
+                    }
+
+                    return ResponseDetail(
+                        typeResponse: (widget.response_team != null)
+                            ? widget.response_team.serviceResponse
+                            : '',
+                        vehicleRegno: (widget.response_team != null)
+                            ? widget.response_team.vehicleRegno
+                            : '');
+                  },
+                ),
+                BlocBuilder<TeamBloc, TeamState>(builder: (context, state) {
+                  if (state is TeamLoaded) {
+                    return TeamList(selectedStaffs: state.selectedStaffs);
+                  }
+                  return TeamList(
+                    selectedStaffs: (widget.response_team != null)
+                        ? widget.response_team.staffs
+                        : null,
+                  );
+                })
+              ],
+            ),
+          ),
+          // floatingActionButton: FloatingActionButton.extended(
+          //   heroTag: 200,
+          //   onPressed: () {
+          //     Navigator.push(
+          //         context, MaterialPageRoute(builder: (context) => Staffs()));
+          //     // Add your onPressed code here!
+          //   },
+          //   label: Text('ADD STAFF'),
+          //   icon: Icon(Icons.add),
+          //   // backgroundColor: Colors.purple,
+        ),
       ),
     );
   }

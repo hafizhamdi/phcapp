@@ -285,61 +285,59 @@ class _PatientTab extends State<PatientTab> {
           // Provider<PatInfoProvider>(create: (context) => PatInfoProvider())
         ],
         child: DefaultTabController(
-            length: 4,
-            child: Consumer<PatInfoProvider>(
-              builder: (context, data, child) {
-                return Scaffold(
-                  backgroundColor: Colors.grey,
-                  appBar: AppBar(
-                      automaticallyImplyLeading: false,
-                      bottom: TabBar(
-                        tabs: [
-                          Tab(icon: Icon(Icons.account_box)),
-                          Tab(icon: Icon(Icons.airline_seat_flat)),
-                          Tab(icon: Icon(Icons.favorite)),
-                          Tab(icon: Icon(Icons.assessment)),
-                        ],
-                      ),
-                      title: Text(
-                        'Patient Note',
-                      ),
-                      actions: <Widget>[
-                        deleteButton(context, action),
-                        createButton(context, action, widget.index)
-                      ],
-                      backgroundColor: Colors.purple),
-                  body: TabBarView(
-                    children: <Widget>[
-                      PatientInformationScreen(
-                          patient_information:
-                              widget.patient.patientInformation),
-                      // ),
-
-                      CPRTimeLog(),
-                      // ),
-
-                      // CPRDetail(),
-                      VitalSignList(
-                          listVitals: widget.patient.vitalSigns,
-                          index: widget.index),
-                      MainAssessment(
-                        patientAssessment: widget.patient.patientAssessment,
-                        interventionAssessment: widget.patient.intervention,
-                        traumaAssessment: widget.patient.traumaAssessment,
-                        medicationAssessment:
-                            widget.patient.medicationAssessment,
-                        reportingAssessment: widget.patient.incidentReporting,
-                        outcomeAssessment: widget.patient.outcome,
-
-                        // context: context
-                      ),
+          length: 4,
+          child: Consumer<PatInfoProvider>(
+            builder: (context, data, child) {
+              return Scaffold(
+                // backgroundColor: Colors.grey,
+                appBar: AppBar(
+                  automaticallyImplyLeading: false,
+                  bottom: TabBar(
+                    tabs: [
+                      Tab(icon: Icon(Icons.account_box)),
+                      Tab(icon: Icon(Icons.airline_seat_flat)),
+                      Tab(icon: Icon(Icons.favorite)),
+                      Tab(icon: Icon(Icons.assessment)),
                     ],
                   ),
-                );
-              },
-            )
-            // )
-            ),
+                  title: Text(
+                    'Patient Note',
+                  ),
+                  actions: <Widget>[
+                    deleteButton(context, action),
+                    createButton(context, action, widget.index)
+                  ],
+                  backgroundColor: Color(0xFF11249F),
+                ),
+                body: TabBarView(
+                  children: <Widget>[
+                    PatientInformationScreen(
+                        patient_information: widget.patient.patientInformation),
+                    // ),
+
+                    CPRTimeLog(),
+                    // ),
+
+                    // CPRDetail(),
+                    VitalSignList(
+                        listVitals: widget.patient.vitalSigns,
+                        index: widget.index),
+                    MainAssessment(
+                      patientAssessment: widget.patient.patientAssessment,
+                      interventionAssessment: widget.patient.intervention,
+                      traumaAssessment: widget.patient.traumaAssessment,
+                      medicationAssessment: widget.patient.medicationAssessment,
+                      reportingAssessment: widget.patient.incidentReporting,
+                      outcomeAssessment: widget.patient.outcome,
+
+                      // context: context
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
     // PatInfoProvider(),

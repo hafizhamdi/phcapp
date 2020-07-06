@@ -166,139 +166,151 @@ class _CallInfoState extends State<CallInformationScreen>
           callReceived: DateFormat("dd/MM/yyyy HH:mm").format(DateTime.now()));
     }
     return Scaffold(
-      backgroundColor: Colors.grey,
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        // child: Center(
-        child: Card(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          margin: EdgeInsets.all(12.0),
+      // backgroundColor: Colors.grey,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Color(0xFF3383CD),
+              Color(0xFF11249F),
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            margin: EdgeInsets.all(12.0),
 
-          child: Form(
-            autovalidate: true,
-            key: _formKey,
-            // child:
+            child: Form(
+              autovalidate: true,
+              key: _formKey,
+              // child:
 
-            // Column(
-            //   // crossAxisAlignment: CrossAxisAlignment.start,
-            //   // mainAxisAlignment: MainAxisAlignment.start,
-            //   children: <Widget>[
-            //     Expanded(
-            // child:
-            child: Container(
-              padding: EdgeInsets.all(10),
-              // width: 500,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                // physics:
-                // physics: BouncingScrollPhysics(),
-                // crossAxisCount: 2,
+              // Column(
+              //   // crossAxisAlignment: CrossAxisAlignment.start,
+              //   // mainAxisAlignment: MainAxisAlignment.start,
+              //   children: <Widget>[
+              //     Expanded(
+              // child:
+              child: Container(
+                padding: EdgeInsets.all(10),
+                // width: 500,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  // physics:
+                  // physics: BouncingScrollPhysics(),
+                  // crossAxisCount: 2,
 
-                // mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    HeaderSection("Call Information"),
-                    IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blueAccent),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => EditCallInfo(
-                                        call_information: data,
-                                      )));
-                        }),
-                  ]),
-                  // Container(
-                  //   height: 1,
-                  //   color: Colors.grey,
-                  // ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  // Expanded(
-                  //     flex: 2,
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      MyTextField(
-                          labelText: "Call Card No",
-                          // controller: callInfoBloc.cardNoController,
-                          initialData: data.callcardNo
-                          // controller: cardNoController,
-                          // stream: infoBloc.callcarNoStream,
-                          // updateText: infoBloc.setCallcardNo,
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      HeaderSection("Call Information"),
+                      IconButton(
+                          icon: Icon(Icons.edit, color: Colors.blueAccent),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => EditCallInfo(
+                                          call_information: data,
+                                        )));
+                          }),
+                    ]),
+                    // Container(
+                    //   height: 1,
+                    //   color: Colors.grey,
+                    // ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    // Expanded(
+                    //     flex: 2,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        MyTextField(
+                            labelText: "Call Card No",
+                            // controller: callInfoBloc.cardNoController,
+                            initialData: data.callcardNo
+                            // controller: cardNoController,
+                            // stream: infoBloc.callcarNoStream,
+                            // updateText: infoBloc.setCallcardNo,
+                            ),
+                        MyTextField(
+                            labelText: "Date Received",
+                            initialData: data.callReceived),
+                      ],
+                    ),
+                    Row(crossAxisAlignment: CrossAxisAlignment.start,
+                        // mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          // ),
+                          MyTextField(
+                            labelText: "Caller Contact No",
+                            initialData: data.callerContactno,
                           ),
+                          MyTextField(
+                            labelText: "Event Code",
+                            initialData: data.eventCode,
+                          ),
+                        ]),
+                    Row(crossAxisAlignment: CrossAxisAlignment.start,
+                        // mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          MyTextField(
+                              labelText: "Location type",
+                              // LIST_LOCTYPE,
+                              //     InputOption.location,
+                              initialData: data.locationType),
+                          MyTextField(
+                              labelText: "Priority",
+                              // LIST_PRIORITY, InputOption.priority,
+                              initialData: data.priority),
+                        ]),
+
+                    Row(children: [
                       MyTextField(
-                          labelText: "Date Received",
-                          initialData: data.callReceived),
-                    ],
-                  ),
-                  Row(crossAxisAlignment: CrossAxisAlignment.start,
-                      // mainAxisAlignment: MainAxisAlignment.center,
+                          labelText: "Incident Description",
+                          initialData: data.incident_desc),
+                    ]),
+                    Row(children: <Widget>[
+                      MyTextField(
+                          labelText: "Incident Location",
+                          initialData: data.incidentLocation),
+                    ]),
+
+                    Row(
                       children: <Widget>[
-                        // ),
                         MyTextField(
-                          labelText: "Caller Contact No",
-                          initialData: data.callerContactno,
-                        ),
-                        MyTextField(
-                          labelText: "Event Code",
-                          initialData: data.eventCode,
-                        ),
-                      ]),
-                  Row(crossAxisAlignment: CrossAxisAlignment.start,
-                      // mainAxisAlignment: MainAxisAlignment.center,
+                            labelText: "Landmark", initialData: data.landmark),
+                      ],
+                    ),
+
+                    Row(
                       children: <Widget>[
                         MyTextField(
-                            labelText: "Location type",
-                            // LIST_LOCTYPE,
-                            //     InputOption.location,
-                            initialData: data.locationType),
-                        MyTextField(
-                            labelText: "Priority",
-                            // LIST_PRIORITY, InputOption.priority,
-                            initialData: data.priority),
-                      ]),
-
-                  Row(children: [
-                    MyTextField(
-                        labelText: "Incident Description",
-                        initialData: data.incident_desc),
-                  ]),
-                  Row(children: <Widget>[
-                    MyTextField(
-                        labelText: "Incident Location",
-                        initialData: data.incidentLocation),
-                  ]),
-
-                  Row(
-                    children: <Widget>[
-                      MyTextField(
-                          labelText: "Landmark", initialData: data.landmark),
-                    ],
-                  ),
-
-                  Row(
-                    children: <Widget>[
-                      MyTextField(
-                          labelText: "Distance to scene",
-                          // LIST_DISTANCES,
-                          //     InputOption.distance,
-                          initialData: data.distanceToScene),
-                    ],
-                  )
-                ],
+                            labelText: "Distance to scene",
+                            // LIST_DISTANCES,
+                            //     InputOption.distance,
+                            initialData: data.distanceToScene),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
+            // ],
+            // ),
+            // ),
+            // ),
+            // ),
           ),
-          // ],
-          // ),
-          // ),
-          // ),
-          // ),
         ),
       ),
     );
