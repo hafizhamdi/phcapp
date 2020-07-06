@@ -140,25 +140,50 @@ class _Patients extends State<PatientListScreen>
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey,
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(20.0),
-            ),
+      // backgroundColor: Colors.grey,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Color(0xFF3383CD),
+              Color(0xFF11249F),
+            ],
           ),
-          margin: EdgeInsets.all(12.0),
-          child: Container(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                BlocBuilder<SceneBloc, SceneState>(
-                  builder: (context, state) {
-                    if (state is LoadedScene) {
+        ),
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(20.0),
+              ),
+            ),
+            margin: EdgeInsets.all(12.0),
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  BlocBuilder<SceneBloc, SceneState>(
+                    builder: (context, state) {
+                      if (state is LoadedScene) {
+                        return Column(children: [
+                          HeaderSection("Scene Assessment"),
+                          // Container(
+                          //   height: 1,
+                          //   color: Colors.grey,
+                          // ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          _buildSceneChips("Other services at scene",
+                              _otherServices, callback, state.selectedServices),
+                        ]);
+                      }
                       return Column(children: [
                         HeaderSection("Scene Assessment"),
                         // Container(
@@ -168,46 +193,34 @@ class _Patients extends State<PatientListScreen>
                         SizedBox(
                           height: 10,
                         ),
-                        _buildSceneChips("Other services at scene",
-                            _otherServices, callback, state.selectedServices),
+                        _buildSceneChips(
+                            "Other services at scene",
+                            _otherServices,
+                            callback,
+                            widget.sceneAssessment !=
+                                    null //widget.sceneAssessment.otherServicesAtScene
+                                ? widget.sceneAssessment.otherServicesAtScene
+                                : null),
                       ]);
-                    }
-                    return Column(children: [
-                      HeaderSection("Scene Assessment"),
-                      // Container(
-                      //   height: 1,
-                      //   color: Colors.grey,
-                      // ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      _buildSceneChips(
-                          "Other services at scene",
-                          _otherServices,
-                          callback,
-                          widget.sceneAssessment !=
-                                  null //widget.sceneAssessment.otherServicesAtScene
-                              ? widget.sceneAssessment.otherServicesAtScene
-                              : null),
-                    ]);
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                BlocBuilder<PatientBloc, PatientState>(
-                    builder: (context, state) {
-                  if (state is PatientLoaded) {
-                    print("Patient Loaded");
-                    return BuildPatientList(
-                      patientList: state.patients,
-                    );
-                  }
-                  return BuildPatientList(
-                      //   patientList: widget.patients,
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  BlocBuilder<PatientBloc, PatientState>(
+                      builder: (context, state) {
+                    if (state is PatientLoaded) {
+                      print("Patient Loaded");
+                      return BuildPatientList(
+                        patientList: state.patients,
                       );
-                })
-              ],
+                    }
+                    return BuildPatientList(
+                        //   patientList: widget.patients,
+                        );
+                  })
+                ],
+              ),
             ),
           ),
         ),

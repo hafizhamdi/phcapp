@@ -30,29 +30,29 @@ class _VitalSignList extends State<VitalSignList>
   // @override
   // void didChangeDependencies() {}
 
-  @override
-  void initState() {
-    vitalBloc = BlocProvider.of<VitalBloc>(context);
+  // @override
+  // void initState() {
+  //   vitalBloc = BlocProvider.of<VitalBloc>(context);
 
-    print(vitalBloc.state.listVitals);
-    if (vitalBloc.state.listVitals == null) {
-      vitalBloc.add(LoadVital(listVitals: widget.listVitals));
-    }
+  //   print(vitalBloc.state.listVitals);
+  //   if (vitalBloc.state.listVitals == null) {
+  //     vitalBloc.add(LoadVital(listVitals: widget.listVitals));
+  //   }
 
-    print(widget.index);
-    if (widget.index == null) {
-      print(widget.index);
-      vitalBloc.add(LoadVital(listVitals: []));
-    }
+  //   print(widget.index);
+  //   if (widget.index == null) {
+  //     print(widget.index);
+  //     vitalBloc.add(LoadVital(listVitals: []));
+  //   }
 
-    super.initState();
-  }
+  //   super.initState();
+  // }
 
-  @override
-  void dispose() {
-    vitalBloc.add(LoadVital(listVitals: null));
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   vitalBloc.add(LoadVital(listVitals: null));
+  //   super.dispose();
+  // }
 
   @override
   String counterStartingWord(index) {

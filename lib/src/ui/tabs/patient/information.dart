@@ -107,61 +107,78 @@ class _Information extends State<PatientInformationScreen>
     patProvider.setGender = widget.patient_information.gender;
 
     return Scaffold(
-        backgroundColor: Colors.grey,
-        body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Center(
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              margin: EdgeInsets.all(12.0),
-              child: Form(
-                key: patProvider.formKey,
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      HeaderSection("Patient Information"),
-                      _textInput("Name", patProvider.nameController,
-                          nameValidator, patProvider.ageController, null),
+      // backgroundColor: Colors.grey,
 
-                      DropDownList("Document Type", LIST_IDTYPE,
-                          InputSelector.idtype, patProvider.getIdtype),
-                      _idInputCalculated(
-                          context,
-                          "ID No.",
-                          patProvider.idController,
-                          idValidator,
-                          patProvider.ageController,
-                          patProvider.dobController,
-                          patProvider.genderController),
-                      // _textInput("Document Type", idTypeController),
-                      _textInput("Date of Birth", patProvider.dobController,
-                          dobValidator, patProvider.ageController, dobFormater),
-                      _textInput("Age", patProvider.ageController, ageValidator,
-                          patProvider.ageController, null),
-                      DropDownList("Gender", LIST_GENDER, InputSelector.gender,
-                          patProvider.gender),
+      body: Container(
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Color(0xFF3383CD),
+                Color(0xFF11249F),
+              ],
+            ),
+          ),
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Center(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                margin: EdgeInsets.all(12.0),
+                child: Form(
+                  key: patProvider.formKey,
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        HeaderSection("Patient Information"),
+                        _textInput("Name", patProvider.nameController,
+                            nameValidator, patProvider.ageController, null),
 
-                      // _textInput("Gender", patProvider.genderController),
-                    ],
+                        DropDownList("Document Type", LIST_IDTYPE,
+                            InputSelector.idtype, patProvider.getIdtype),
+                        _idInputCalculated(
+                            context,
+                            "ID No.",
+                            patProvider.idController,
+                            idValidator,
+                            patProvider.ageController,
+                            patProvider.dobController,
+                            patProvider.genderController),
+                        // _textInput("Document Type", idTypeController),
+                        _textInput(
+                            "Date of Birth",
+                            patProvider.dobController,
+                            dobValidator,
+                            patProvider.ageController,
+                            dobFormater),
+                        _textInput("Age", patProvider.ageController,
+                            ageValidator, patProvider.ageController, null),
+                        DropDownList("Gender", LIST_GENDER,
+                            InputSelector.gender, patProvider.gender),
+
+                        // _textInput("Gender", patProvider.genderController),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
+          )
+          // floatingActionButton: FloatingActionButton.extended(
+          //   onPressed: () {
+          //     // Add your onPressed code here!
+          //   },
+          //   label: Text('EDIT'),
+          //   icon: Icon(Icons.edit),
+          //   // backgroundColor: Colors.purple,
+          // )
           ),
-        )
-        // floatingActionButton: FloatingActionButton.extended(
-        //   onPressed: () {
-        //     // Add your onPressed code here!
-        //   },
-        //   label: Text('EDIT'),
-        //   icon: Icon(Icons.edit),
-        //   // backgroundColor: Colors.purple,
-        // )
-        // ),
-        );
+    );
   }
 
   String nameValidator(value) {
