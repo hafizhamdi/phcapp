@@ -112,6 +112,25 @@ class _PatientTab extends State<PatientTab> {
         )) ??
         false;
   }
+  invalidInputError() => showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Error"),
+          content: Text("Input is Empty or Invalid"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+          // shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        );
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -171,98 +190,104 @@ class _PatientTab extends State<PatientTab> {
 
           // FlatButton(
           onTap: () {
-            final provider =
-                Provider.of<PatInfoProvider>(context, listen: false);
-            // if (provider.formKey.currentState.validate()) {
-            final patInfo = preparingResultPatientInformation(context);
-            // final cprlog = preparingResultCPRlog();
+            final patProvider = Provider.of<PatInfoProvider>(context, listen: false);
 
-            final traumaBloc = BlocProvider.of<TraumaBloc>(context);
+            if(patProvider.formKey.currentState.validate()){
+                final provider =
+                    Provider.of<PatInfoProvider>(context, listen: false);
+                // if (provider.formKey.currentState.validate()) {
+                final patInfo = preparingResultPatientInformation(context);
+                // final cprlog = preparingResultCPRlog();
 
-            print("trauma state");
-            // print(traumaBloc.state);
+                final traumaBloc = BlocProvider.of<TraumaBloc>(context);
 
-            // print(cprlog)
+                print("trauma state");
+                // print(traumaBloc.state);
 
-            final cprBloc = BlocProvider.of<CprBloc>(context);
-            print("CPR RESULT WOHOW");
-            // print(cprBloc.state.cpr.toJson());
-            // final cprlog = preparingResultCPRlog(context);
-            // print(cprlog);
+                // print(cprlog)
 
-            // final vitalSigns = BlocProvider.of<VitalBloc>(context);
-            // final vitalsigns = preparingResultVitalSigns(context);
-            if (action == Action.delete) {
-              //TODO:Update
-              patientBloc.add(UpdatePatient(
-                  patient: new Patient(
-                      // cpr: cprBloc.state.cpr,
-                      patientInformation: patInfo,
-                      vitalSigns: vitalBloc.state.listVitals ??
-                          widget.patient.vitalSigns,
-                      patientAssessment:
-                          assPatientBloc.state.patientAssessment ??
-                              widget.patient.patientAssessment,
-                      intervention:
-                          interBloc.state.inter ?? widget.patient.intervention,
-                      traumaAssessment: traumaBloc.state.traumaAssessment ??
-                          widget.patient.traumaAssessment,
-                      medicationAssessment:
-                          medicationBloc.state.medicationAssessment ??
-                              widget.patient.medicationAssessment,
-                      incidentReporting:
-                          reportingBloc.state.incidentReporting ??
-                              widget.patient.incidentReporting,
-                      outcome:
-                          outcomeBloc.state.outcome ?? widget.patient.outcome),
-                  index: widget.index));
-            } else {
-              print("ADD PATIENT BLOC");
-              patientBloc.add(AddPatient(
-                patient: new Patient(
-                    // cpr: cprBloc.state.cpr,
+                final cprBloc = BlocProvider.of<CprBloc>(context);
+                print("CPR RESULT WOHOW");
+                // print(cprBloc.state.cpr.toJson());
+                // final cprlog = preparingResultCPRlog(context);
+                // print(cprlog);
 
-                    patientInformation: patInfo,
-                    vitalSigns:
-                        vitalBloc.state.listVitals ?? widget.patient.vitalSigns,
-                    patientAssessment: assPatientBloc.state.patientAssessment ??
-                        widget.patient.patientAssessment,
-                    intervention:
-                        interBloc.state.inter ?? widget.patient.intervention,
-                    traumaAssessment: traumaBloc.state.traumaAssessment ??
-                        widget.patient.traumaAssessment,
-                    medicationAssessment:
-                        medicationBloc.state.medicationAssessment ??
-                            widget.patient.medicationAssessment,
-                    incidentReporting: reportingBloc.state.incidentReporting ??
-                        widget.patient.incidentReporting,
-                    outcome:
-                        outcomeBloc.state.outcome ?? widget.patient.outcome),
-              ));
-            }
-            print("patient created");
+                // final vitalSigns = BlocProvider.of<VitalBloc>(context);
+                // final vitalsigns = preparingResultVitalSigns(context);
+                if (action == Action.delete) {
+                  //TODO:Update
+                  patientBloc.add(UpdatePatient(
+                      patient: new Patient(
+                          // cpr: cprBloc.state.cpr,
+                          patientInformation: patInfo,
+                          vitalSigns: vitalBloc.state.listVitals ??
+                              widget.patient.vitalSigns,
+                          patientAssessment:
+                              assPatientBloc.state.patientAssessment ??
+                                  widget.patient.patientAssessment,
+                          intervention:
+                              interBloc.state.inter ?? widget.patient.intervention,
+                          traumaAssessment: traumaBloc.state.traumaAssessment ??
+                              widget.patient.traumaAssessment,
+                          medicationAssessment:
+                              medicationBloc.state.medicationAssessment ??
+                                  widget.patient.medicationAssessment,
+                          incidentReporting:
+                              reportingBloc.state.incidentReporting ??
+                                  widget.patient.incidentReporting,
+                          outcome:
+                              outcomeBloc.state.outcome ?? widget.patient.outcome),
+                      index: widget.index));
+                } else {
+                  print("ADD PATIENT BLOC");
+                  patientBloc.add(AddPatient(
+                    patient: new Patient(
+                        // cpr: cprBloc.state.cpr,
 
-            // final vitalBloc = BlocProvider.of<VitalBloc>(context);
-            vitalBloc.add(ResetVital());
+                        patientInformation: patInfo,
+                        vitalSigns:
+                            vitalBloc.state.listVitals ?? widget.patient.vitalSigns,
+                        patientAssessment: assPatientBloc.state.patientAssessment ??
+                            widget.patient.patientAssessment,
+                        intervention:
+                            interBloc.state.inter ?? widget.patient.intervention,
+                        traumaAssessment: traumaBloc.state.traumaAssessment ??
+                            widget.patient.traumaAssessment,
+                        medicationAssessment:
+                            medicationBloc.state.medicationAssessment ??
+                                widget.patient.medicationAssessment,
+                        incidentReporting: reportingBloc.state.incidentReporting ??
+                            widget.patient.incidentReporting,
+                        outcome:
+                            outcomeBloc.state.outcome ?? widget.patient.outcome),
+                  ));
+                }
+                print("patient created");
 
-            // final interBloc = BlocProvider.of<InterBloc>(context);
-            interBloc.add(ResetInter());
+                // final vitalBloc = BlocProvider.of<VitalBloc>(context);
+                vitalBloc.add(ResetVital());
 
-            // final patBloc = BlocProvider.of<AssPatientBloc>(context);
-            assPatientBloc.add(ResetAssPatient());
+                // final interBloc = BlocProvider.of<InterBloc>(context);
+                interBloc.add(ResetInter());
 
-            // final traumaBloc = BlocProvider.of<TraumaBloc>(context);
-            traumaBloc.add(ResetTrauma());
+                // final patBloc = BlocProvider.of<AssPatientBloc>(context);
+                assPatientBloc.add(ResetAssPatient());
 
-            // final medicationBloc = BlocProvider.of<MedicationBloc>(context);
-            medicationBloc.add(ResetMedication());
-            // final reportingBloc = BlocProvider.of<ReportingBloc>(context);
-            reportingBloc.add(ResetReporting());
-            // final outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
-            outcomeBloc.add(ResetOutcome());
+                // final traumaBloc = BlocProvider.of<TraumaBloc>(context);
+                traumaBloc.add(ResetTrauma());
 
-            Navigator.pop(context);
-            // }
+                // final medicationBloc = BlocProvider.of<MedicationBloc>(context);
+                medicationBloc.add(ResetMedication());
+                // final reportingBloc = BlocProvider.of<ReportingBloc>(context);
+                reportingBloc.add(ResetReporting());
+                // final outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
+                outcomeBloc.add(ResetOutcome());
+
+                Navigator.pop(context);
+                // }
+           }else{
+             invalidInputError();
+           }
           },
           // child: Text(
           //   (action == Action.delete) ? "SAVE" : "CREATE",

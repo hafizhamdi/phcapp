@@ -22,7 +22,8 @@ const LIST_IDTYPE = [
   "Police ID",
   "New IC",
   "Passport",
-  "Birth Certificate"
+  "Birth Certificate",
+  "Temporary ID"
 ];
 
 class PatientInformationScreen extends StatefulWidget {
@@ -43,6 +44,7 @@ class _Information extends State<PatientInformationScreen>
   TextEditingController genderController = new TextEditingController();
 
   String idType;
+  String idHintText;
 
   PatientBloc patientBloc;
 
@@ -240,6 +242,7 @@ class _Information extends State<PatientInformationScreen>
             child: TextFormField(
                 controller: controller,
                 inputFormatters: formater != null ? [formater] : [],
+                validator: validator,
                 onChanged: (String text) {
                   print(controller.text);
 
@@ -276,23 +279,55 @@ class _Information extends State<PatientInformationScreen>
 
   Widget _idInputCalculated(context, labelText, controller, validator,
       ageController, dobController, genderController) {
+
     return Container(
         // width: 500,
         width: 500,
         child: Padding(
             padding: EdgeInsets.all(16),
             child: TextFormField(
+                autovalidate: true,
                 controller: controller,
                 // inputFormatters: formater != null ? [formater] : [],
                 validator: (value) {
-                  if (idType == "NRIC") {
-                    if (value.length != 12) {
-                      return "Enter valid NRIC number";
+                    if (idType == "New IC") {
+                      if (value.length != 12) {
+                        return "Enter a valid New IC number";
+                      }
+                    }else if (idType == "Old IC") {
+                      if (value.length > 8) {
+                        return "Enter a valid Old IC number";
+                      }
+                    }else if (idType == "Passport") {
+                      if (value.length > 20) {
+                        return "Enter a valid passport number";
+                      }
+                    }else if (idType == "Birth Certificate") {
+                      if (value.length > 20) {
+                        return "Enter a valid birth certificate number";
+                      }
+                    }else if (idType == "Police ID") {
+                      if (value.length > 20) {
+                        return "Enter a valid Police ID";
+                      }
+                    }else if (idType == "Military ID") {
+                      if (value.length > 20) {
+                        return "Enter a valid Military ID";
+                      }
+                    }else if (idType == "Temporary Id") {
+                      if (value.length >= 15) {
+                        return "Temporary ID cannot more than 15";
+                      }
                     }
+
+                  if(value == null && value.isEmpty){
+                      return "ID No. is required";
                   }
+
                   return null;
                 },
                 onChanged: (String text) {
+                  print("idtype: $idType");
                   print(controller.text);
                   if (controller.text.length == 12) {
                     print("inside controller lenght");
@@ -332,9 +367,9 @@ class _Information extends State<PatientInformationScreen>
                     //to set Gender
                     print(controller.text.substring(11));
                     if (int.parse(controller.text.substring(11)) % 2 == 0) {
-                      genderController.sink.add("Female");
+                        genderController.sink.add("Female");
                     } else {
-                      genderController.sink.add("Male");
+                          genderController.sink.add("Male");
                     }
                   } else {
                     dobController.clear();
@@ -391,8 +426,9 @@ class _Information extends State<PatientInformationScreen>
                 //   // }
                 //   FocusScope.of(context).unfocus();
                 // },
+                
                 decoration: InputDecoration(
-                    hintText: "800128016139",
+                    hintText: idHintText,
                     labelText: labelText,
                     fillColor: Colors.white,
                     border: new OutlineInputBorder(
@@ -449,12 +485,30 @@ class _Information extends State<PatientInformationScreen>
 
                         print("WHATS IS INDESIDE:$valueChanged");
                         controller.sink.add(valueChanged);
+                        setState(() {
+                          idType = valueChanged;
+                          if (idType == "New IC") {
+                            idHintText = "800128016139";
+                          }else if (idType == "Old IC") {
+                            idHintText = "43111520";
+                          }else if (idType == "Passport") {
+                            idHintText = "A00000000";
+                          }else if (idType == "Birth Certificate") {
+                            idHintText = "PK031612";
+                          }else if (idType == "Police ID") {
+                            idHintText = "RF154190";
+                          }else if (idType == "Military ID") {
+                            idHintText = "1149282";
+                          }else if (idType == "Temporary ID") {
+                            idHintText = "HRPBD060725B21";
+                          }
+                        });
                       },
                       value: snapshot.data,
                       validator: (value) {
                         print("DROPDOWNVALUE");
                         print(value);
-                        if (value == null) {
+                        if (value == null && snapshot.data == null ) {
                           return 'Please choose option';
                         }
                         return null;
