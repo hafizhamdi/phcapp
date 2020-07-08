@@ -26,6 +26,7 @@ const LIST_IDTYPE = [
   "Temporary ID"
 ];
 
+
 class PatientInformationScreen extends StatefulWidget {
   PatientInformation patient_information;
   PatientInformationScreen({this.patient_information});
@@ -43,21 +44,23 @@ class _Information extends State<PatientInformationScreen>
   TextEditingController ageController = new TextEditingController();
   TextEditingController genderController = new TextEditingController();
 
+  PatientBloc patientBloc;
   String idType;
   String idHintText;
+  String docType;
+  String gender;
+  @override
+  initState() {
 
-  PatientBloc patientBloc;
-
-  // @override
-  // initState() {
-
+    docType = widget.patient_information.idType;
+    gender = widget.patient_information.gender;
   // nameController.text = widget.patient_information.nama;
   // idNoController.text = widget.patient_information.id_no;
   // idTypeController.text = widget.patient_information.id_type;
   // ageController.text = widget.patient_information.age;
   // genderController.text = widget.patient_information.jantina;
   // dobController.text = widget.patient_information.dateOfBirth;
-  // }
+  }
 
   @override
   void dispose() {
@@ -94,6 +97,7 @@ class _Information extends State<PatientInformationScreen>
     print("$dd/$MM/$yyyy");
     return "$dd/$MM/$yyyy";
   }
+  
 
   @override
   build(BuildContext context) {
@@ -107,7 +111,7 @@ class _Information extends State<PatientInformationScreen>
     patProvider.setAge = widget.patient_information.age;
     patProvider.setDob = convertDOBtoStandard(widget.patient_information.dob);
     patProvider.setGender = widget.patient_information.gender;
-
+    print("id type: $docType");
     return Scaffold(
       // backgroundColor: Colors.grey,
 
@@ -142,7 +146,8 @@ class _Information extends State<PatientInformationScreen>
                             nameValidator, patProvider.ageController, null),
 
                         DropDownList("Document Type", LIST_IDTYPE,
-                            InputSelector.idtype, patProvider.getIdtype),
+                            InputSelector.idtype, patProvider.getIdtype == null || patProvider.getIdtype.isEmpty ?
+                            docType : patProvider.getIdtype),
                         _idInputCalculated(
                             context,
                             "ID No.",
@@ -368,8 +373,14 @@ class _Information extends State<PatientInformationScreen>
                     print(controller.text.substring(11));
                     if (int.parse(controller.text.substring(11)) % 2 == 0) {
                         genderController.sink.add("Female");
+                        setState(() {
+                            widget.patient_information.gender = "Female";
+                        });
                     } else {
-                          genderController.sink.add("Male");
+                        genderController.sink.add("Male");
+                        setState(() {
+                            widget.patient_information.gender = "Male";
+                        });
                     }
                   } else {
                     dobController.clear();
@@ -501,6 +512,13 @@ class _Information extends State<PatientInformationScreen>
                             idHintText = "1149282";
                           }else if (idType == "Temporary ID") {
                             idHintText = "HRPBD060725B21";
+                          }
+
+                          if(labelText == "Document Type"){
+                            widget.patient_information.idType = valueChanged;
+                          }
+                          if(labelText == "Gender"){
+                            widget.patient_information.gender = valueChanged;
                           }
                         });
                       },
