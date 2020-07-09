@@ -27,6 +27,8 @@ const _medication = [
   "neb salbutamol"
 ];
 
+const _route = ["IV", "IM", "IO"];
+
 class MedicationScreen extends StatefulWidget {
   List<Medication> medications;
 
@@ -46,10 +48,17 @@ class _MedicationScreen extends State<MedicationScreen> {
   TextEditingController doseController = new TextEditingController();
   TextEditingController timeController = new TextEditingController();
   List<String> listMedicine;
+  List<String> listRoute;
 
   medicationCallback(id, List<String> listReturn) {
     setState(() {
       listMedicine = listReturn;
+    });
+  }
+
+  routeCallback(id, List<String> listReturn) {
+    setState(() {
+      listRoute = listReturn;
     });
   }
 
@@ -158,6 +167,15 @@ class _MedicationScreen extends State<MedicationScreen> {
                           ),
                           Container(
                             width: MediaQuery.of(context).size.width * 0.5,
+                            child: MyCardSingleOption(
+                              id: "route",
+                              name: "Add Route",
+                              listData: _route,
+                              mycallback: routeCallback,
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
                             child: TextField(
                               controller: timeController,
                               decoration: InputDecoration(labelText: "Time"),
@@ -191,7 +209,10 @@ class _MedicationScreen extends State<MedicationScreen> {
                                           ? listMedicine[0]
                                           : otherController.text,
                                       timestamp: timeController.text,
-                                      dose: doseController.text),
+                                      dose: doseController.text,
+                                      route: listRoute.length > 0
+                                          ? listRoute[0]
+                                          : ""),
                                 );
                                 _listKey.currentState.insertItem(_index);
                                 _index++;
@@ -200,6 +221,7 @@ class _MedicationScreen extends State<MedicationScreen> {
                                 setState(() {
                                   listMedicine = new List<String>();
                                   otherController.text = "";
+                                  listRoute = new List<String>();
                                 });
                                 Navigator.pop(context);
                               },
@@ -230,7 +252,8 @@ class _MedicationScreen extends State<MedicationScreen> {
               index: (index + 1).toString(),
               name: _items[index].name,
               timestamp: _items[index].timestamp,
-              dose: _items[index].dose),
+              dose: _items[index].dose,
+              route: _items[index].route),
         );
       },
     );
@@ -244,12 +267,14 @@ class MedicationCard extends StatelessWidget {
   final name;
   final timestamp;
   final dose;
+  final route;
 
   MedicationCard(
       {this.index,
       this.name,
       this.timestamp,
       this.dose = "",
+      this.route,
       this.items,
       this.currentState});
   @override
@@ -274,14 +299,23 @@ class MedicationCard extends StatelessWidget {
                 (context, animation) => MedicationCard(
                       index: index,
                       dose: dose,
+                      route: route,
                       name: name,
                       timestamp: timestamp,
                     ));
           },
         ),
-        subtitle: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [Text("Dose: " + dose), Text(timestamp)],
+        subtitle: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Text(timestamp)],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Text("Dose: " + dose), Text("Route: " + route)],
+            ),
+          ],
         ),
       ),
     );
@@ -293,6 +327,8 @@ class MedicationModel {
   final name;
   final timestamp;
   final dose;
+  final route;
 
-  MedicationModel({this.index, this.name, this.timestamp, this.dose});
+  MedicationModel(
+      {this.index, this.name, this.timestamp, this.dose, this.route});
 }

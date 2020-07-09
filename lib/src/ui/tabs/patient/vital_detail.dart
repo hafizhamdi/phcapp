@@ -28,13 +28,13 @@ class VitalDetail extends StatefulWidget {
 class _VitalDetailState extends State<VitalDetail> {
   // ControllerInput
   String _timestamp =
-      DateFormat("HH:mm aa").format(new DateTime.now()).toString();
+      DateFormat("h:mm aa").format(new DateTime.now()).toString();
   int totalGcs = 0;
 
-  NumberPicker bpSysPicker = new NumberPicker(abnormal: false);
+  NumberPicker bpSysPicker = new NumberPicker(abnormal: false, hi: false);
   NumberPicker bpDiasPicker = new NumberPicker();
   NumberPicker mapPicker = new NumberPicker();
-  NumberPicker prPicker = new NumberPicker(abnormal: false);
+  NumberPicker prPicker = new NumberPicker(abnormal: false, hi: false);
   NumberPicker ppPicker = new NumberPicker();
   NumberPicker pvPicker = new NumberPicker();
   NumberPicker crtPicker = new NumberPicker();
@@ -43,8 +43,8 @@ class _VitalDetailState extends State<VitalDetail> {
   NumberPicker spo2Picker = new NumberPicker();
   NumberPicker tempPicker = new NumberPicker();
   NumberPicker psPicker = new NumberPicker();
-  NumberPicker bgPicker = new NumberPicker(abnormal: false);
-  NumberPicker bkPicker = new NumberPicker(abnormal: false);
+  NumberPicker bgPicker = new NumberPicker(abnormal: false, hi: false);
+  NumberPicker bkPicker = new NumberPicker(abnormal: false, hi: false);
   NumberPicker lpPicker = new NumberPicker();
   NumberPicker rpPicker = new NumberPicker();
   NumberPicker gcsEpicker = new NumberPicker();
@@ -69,7 +69,7 @@ class _VitalDetailState extends State<VitalDetail> {
 
       bpSysPicker = new NumberPicker(
           value: checkIsNumberNotNull(widget.vitalSign.bpSystolic),
-          abnormal: widget.vitalSign.bpSystolic != "NR" ? false : true);
+          hi: widget.vitalSign.bpSystolic != "NR" ? false : true);
 
       bpDiasPicker = new NumberPicker(
           value: checkIsNumberNotNull(widget.vitalSign.bpDiastolic));
@@ -78,7 +78,7 @@ class _VitalDetailState extends State<VitalDetail> {
       prPicker =
           new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.pr),
           
-          abnormal: widget.vitalSign.pr != "NP" ? false : true);
+          hi: widget.vitalSign.pr != "NP" ? false : true);
       ppPicker = new NumberPicker(
           option: checkIsStringNotNull(widget.vitalSign.pulsePressure));
       pvPicker = new NumberPicker(
@@ -106,12 +106,12 @@ class _VitalDetailState extends State<VitalDetail> {
           value: bgDecimal != null ? int.tryParse(bgDecimal[0]) : 0,
           decimal: bgDecimal != null ? int.tryParse(bgDecimal[1]) : 0,
           // value: checkIsNumberNotNull(widget.vitalSign.bloodGlucose),
-          abnormal: widget.vitalSign.bloodGlucose != "HI" ? false : true);
+          hi: widget.vitalSign.bloodGlucose != "HI" ? false : true);
       bkPicker = new NumberPicker(
           option: checkIsStringNotNull(widget.vitalSign.bloodKetone),
           value: bkDecimal != null ? int.tryParse(bkDecimal[0]) : 0,
           decimal: bkDecimal != null ? int.tryParse(bkDecimal[1]) : 0,
-          abnormal: widget.vitalSign.bloodKetone != "HI" ? false : true);
+          hi: widget.vitalSign.bloodKetone != "HI" ? false : true);
       lpPicker = new NumberPicker(
           value: checkIsNumberNotNull(widget.vitalSign.pupil.leftSize),
           option:
@@ -200,7 +200,7 @@ class _VitalDetailState extends State<VitalDetail> {
                   ),
                   IconButton(
                     icon: Icon(Icons.edit),
-                    color: Colors.grey,
+                    color: Colors.blue,
                     iconSize: 25,
                     onPressed: () {
                       showCupertinoModalPopup(
@@ -236,7 +236,7 @@ class _VitalDetailState extends State<VitalDetail> {
                   ),
                   IconButton(
                     icon: Icon(Icons.edit),
-                    color: Colors.grey,
+                    color: Colors.blue,
                     iconSize: 25,
                     onPressed: () {
                       showCupertinoModalPopup(
@@ -272,7 +272,7 @@ class _VitalDetailState extends State<VitalDetail> {
                   ),
                   IconButton(
                     icon: Icon(Icons.edit),
-                    color: Colors.grey,
+                    color: Colors.blue,
                     iconSize: 25,
                     onPressed: () {
                       showCupertinoModalPopup(
@@ -408,7 +408,7 @@ class _VitalDetailState extends State<VitalDetail> {
                   ),
                   IconButton(
                     icon: Icon(Icons.edit),
-                    color: Colors.grey,
+                    color: Colors.blue,
                     iconSize: 25,
                     onPressed: () {
                       showCupertinoModalPopup(
@@ -441,7 +441,7 @@ class _VitalDetailState extends State<VitalDetail> {
                   ),
                   IconButton(
                     icon: Icon(Icons.edit),
-                    color: Colors.grey,
+                    color: Colors.blue,
                     iconSize: 25,
                     onPressed: () {
                       showCupertinoModalPopup(
@@ -490,7 +490,7 @@ class _VitalDetailState extends State<VitalDetail> {
                 ),
                 IconButton(
                   icon: Icon(Icons.edit),
-                  color: Colors.grey,
+                  color: Colors.blue,
                   iconSize: 25,
                   onPressed: () {
                     showCupertinoModalPopup(
@@ -537,7 +537,7 @@ class _VitalDetailState extends State<VitalDetail> {
               ],
             ),
             
-                       (bpSysPicker.abnormal == false) ?Row(
+                       (bpSysPicker.hi == false) ?Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
@@ -582,10 +582,10 @@ class _VitalDetailState extends State<VitalDetail> {
             Padding(padding:EdgeInsets.only(right: 10),child:Text(unit, style: TextStyle(color: Colors.grey,),),)],
           ),
           SizedBox(height: 10,),
-          ((title == "Blood Ketone" && picker.abnormal == false) ||
-                  (title == "Blood Glucose" && picker.abnormal == false) || 
-                  (title == "BP Systolic" && picker.abnormal == false)||
-                  (title == "PR" && picker.abnormal == false))
+          ((title == "Blood Ketone" && picker.hi == false) ||
+                  (title == "Blood Glucose" && picker.hi == false) || 
+                  (title == "BP Systolic" && picker.hi == false)||
+                  (title == "PR" && picker.hi == false))
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -602,7 +602,7 @@ class _VitalDetailState extends State<VitalDetail> {
                       ),
                       IconButton(
                           icon: Icon(Icons.edit),
-                          color: Colors.grey,
+                          color: Colors.blue,
                           iconSize: 25,
                           onPressed: () {
                             showCupertinoModalPopup(
@@ -621,11 +621,11 @@ class _VitalDetailState extends State<VitalDetail> {
                     ])
               :
               // Container(),
-              ((title == "Blood Ketone" && picker.abnormal != false) ||
-                      (title == "Blood Glucose" && picker.abnormal != false) ||
-                      (title == "BP Systolic" && picker.abnormal != false) ||
-                      (title == "BP Diastolic" && bpSysPicker.abnormal != false) ||
-                      (title == "PR" && picker.abnormal != false) 
+              ((title == "Blood Ketone" && picker.hi != false) ||
+                      (title == "Blood Glucose" && picker.hi != false) ||
+                      (title == "BP Systolic" && picker.hi != false) ||
+                      (title == "BP Diastolic" && bpSysPicker.hi != false) ||
+                      (title == "PR" && picker.hi != false) 
                       
                       
                       )
@@ -646,7 +646,7 @@ class _VitalDetailState extends State<VitalDetail> {
                           ),
                           IconButton(
                               icon: Icon(Icons.edit),
-                              color: Colors.grey,
+                              color: Colors.blue,
                               iconSize: 25,
                               onPressed: () {
                                 showCupertinoModalPopup(
@@ -701,11 +701,11 @@ class _VitalDetailState extends State<VitalDetail> {
                   children: <Widget>[
                     Text("HI"),
                     Checkbox(
-                      value: picker.abnormal,
+                      value: picker.getHI,
                       onChanged: (value) {
                         setState(() {
                           // if (title == "Blood Ketone") {
-                          picker.setAbnormal(value);
+                          picker.setHI(value);
                           if (value == true) {
                             picker.setValue(null);
                             picker.setDecimal(null);
@@ -723,11 +723,11 @@ class _VitalDetailState extends State<VitalDetail> {
                       children: <Widget>[
                         Text("HI"),
                         Checkbox(
-                          value: picker.abnormal,
+                          value: picker.getHI,
                           onChanged: (value) {
                            setState(() {
                           // if (title == "Blood Ketone") {
-                          picker.setAbnormal(value);
+                          picker.setHI(value);
                           if (value == true) {
                             picker.setValue(null);
                             picker.setDecimal(null);
@@ -746,11 +746,11 @@ class _VitalDetailState extends State<VitalDetail> {
                       children: <Widget>[
                         Text("Non Palpable"),
                         Checkbox(
-                          value: picker.abnormal,
+                          value: picker.getHI,
                           onChanged: (value) {
                             setState(() {
                               // if (title == "Blood Glucose") {
-                              picker.setAbnormal(value);
+                              picker.setHI(value);
 
                               if (value == true) {
                                 picker.setValue(null);
@@ -767,11 +767,11 @@ class _VitalDetailState extends State<VitalDetail> {
                       children: <Widget>[
                         Text("Non Recordable"),
                         Checkbox(
-                          value: picker.abnormal,
+                          value: picker.getHI,
                           onChanged: (value) {
                             setState(() {
                               // if (title == "Blood Glucose") {
-                              picker.setAbnormal(value);
+                              picker.setHI(value);
 
                               if (value == true) {
                                 picker.setValue(null);
@@ -898,120 +898,6 @@ class _VitalDetailState extends State<VitalDetail> {
     return number.toString();
   }
 
-  // createButton(action, index) {
-  //   if (action == ActionButton.create) {
-  //     return InkWell(
-  //       child: Container(
-  //         padding: EdgeInsets.all(10),
-  //         alignment: Alignment.center,
-  //         margin: EdgeInsets.all(10),
-  //         decoration: BoxDecoration(
-  //             borderRadius: BorderRadius.circular(40.0), color: Colors.green),
-  //         // color: Colors.green,
-  //         child: Text("CREATE VITAL", style: TextStyle(color: Colors.white)),
-  //       ),
-  //       onTap: () {
-  //         int len = vitalBloc.state.listVitals != null
-  //             ? vitalBloc.state.listVitals.length
-  //             : 0;
-
-  //         VitalSign vs = new VitalSign(
-  //             id: (len + 1).toString(),
-  //             created: new DateTime.now(),
-  //             bpSystolic: transformBlankNull(bpSysPicker.getValue),
-  //             bpDiastolic: transformBlankNull(bpDiasPicker.getValue),
-  //             map: transformBlankNull(mapPicker.getOption),
-  //             pr: transformBlankNull(prPicker.getValue),
-  //             pulsePressure: transformBlankNull(ppPicker.getOption),
-  //             pulseVolume: transformBlankNull(pvPicker.getOption),
-  //             crt: transformBlankNull(crtPicker.getOption),
-  //             rr: transformBlankNull(rrPicker.getValue),
-  //             spo2: transformBlankNull(spo2Picker.getValue),
-  //             temp: tempPicker.getValue.toString() +
-  //                 "." +
-  //                 tempPicker.decimal.toString(),
-  //             bloodKetone: bkPicker.getValue.toString() +
-  //                 "." +
-  //                 bkPicker.decimal.toString(),
-
-  //             // temp: transformBlankNull(tempPicker.getOption),
-  //             painScore: transformBlankNull(psPicker.getValue),
-  //             bloodGlucose: transformBlankNull(bgPicker.getValue),
-  //             // bloodKetone: transformBlankNull(bkPicker.getOption),
-  //             shockIndex: transformBlankNull(siPicker.getOption),
-  //             pupil: Pupil(
-  //                 leftResponseTolight: transformBlankNull(lpPicker.getOption),
-  //                 leftSize: transformBlankNull(lpPicker.getValue),
-  //                 rightResponseTolight: transformBlankNull(rpPicker.getOption),
-  //                 rightSize: rpPicker.getValue.toString()),
-  //             e: transformBlankNull(gcsEpicker.getValue),
-  //             v: transformBlankNull(gcsVpicker.getValue),
-  //             m: transformBlankNull(gcsMpicker.getValue),
-  //             gcs: transformBlankNull(gcsTotalpicker.getValue));
-
-  //         print("Vital Sigs");
-  //         print(vs.toJson());
-
-  //         setState(() {
-  //           vitalBloc.add(AddVital(vital: vs));
-  //         });
-
-  //         Navigator.pop(context);
-  //       },
-  //     );
-  //   } else {
-  //     //save -update button
-  //     return InkWell(
-  //         child: Container(
-  //           padding: EdgeInsets.all(10),
-  //           alignment: Alignment.center,
-  //           margin: EdgeInsets.all(10),
-  //           decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(40.0), color: Colors.green),
-  //           // color: Colors.green,
-  //           child: Text("EDIT SAVE", style: TextStyle(color: Colors.white)),
-  //         ),
-  //         onTap: () {
-  //           VitalSign vs = new VitalSign(
-  //               // id: (index + 1).toString(),
-  //               // id: (vitalBloc.state.listVitals.length + 1).toString(),
-  //               created: new DateTime.now(),
-  //               bpSystolic: bpSysPicker.getValue.toString(),
-  //               bpDiastolic: bpDiasPicker.getValue.toString(),
-  //               map: mapPicker.getOption.toString(),
-  //               pr: prPicker.getValue.toString(),
-  //               pulsePressure: ppPicker.getOption.toString(),
-  //               pulseVolume: pvPicker.getOption.toString(),
-  //               crt: crtPicker.getOption.toString(),
-  //               rr: rrPicker.getValue.toString(),
-  //               painScore: psPicker.getValue.toString(),
-  //               spo2: spo2Picker.getValue.toString(),
-  //               temp: tempPicker.getValue.toString() +
-  //                   "." +
-  //                   tempPicker.decimal.toString(),
-  //               bloodKetone: bkPicker.getValue.toString() +
-  //                   "." +
-  //                   bkPicker.decimal.toString(),
-  //               bloodGlucose: bgPicker.getValue.toString(),
-  //               shockIndex: siPicker.getOption.toString(),
-  //               pupil: Pupil(
-  //                   leftResponseTolight: lpPicker.getOption.toString(),
-  //                   leftSize: lpPicker.getValue.toString(),
-  //                   rightResponseTolight: rpPicker.getOption.toString(),
-  //                   rightSize: rpPicker.getValue.toString()),
-  //               e: gcsEpicker.getValue.toString(),
-  //               v: gcsVpicker.getValue.toString(),
-  //               m: gcsMpicker.getValue.toString(),
-  //               gcs: gcsTotalpicker.getValue.toString());
-
-  //           setState(() {
-  //             vitalBloc.add(UpdateVital(index: index, vital: vs));
-  //           });
-
-  //           Navigator.pop(context);
-  //         });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -1112,17 +998,17 @@ class _VitalDetailState extends State<VitalDetail> {
                             VitalSign vs = new VitalSign(
                                 id: (len + 1).toString(),
                                 created: new DateTime.now(),
-                                bpSystolic: bpSysPicker.getAbnormal == true? "NR"
+                                bpSystolic: bpSysPicker.getHI == true? "NR"
                                     :transformBlankNull(bpSysPicker.getValue),
-                                bpDiastolic: bpSysPicker.getAbnormal == true? "NR":
+                                bpDiastolic: bpSysPicker.getHI == true? "NR":
                                     transformBlankNull(bpDiasPicker.getValue),
-                                map: bpSysPicker.getAbnormal == true? "":
+                                map: bpSysPicker.getHI == true? "":
                                 transformBlankNull(mapPicker.getOption),
                                 pr: 
-                                prPicker.getAbnormal == true? "NP":
+                                prPicker.getHI == true? "NP":
                                 transformBlankNull(prPicker.getValue),
                                 pulsePressure:
-                                bpSysPicker.getAbnormal == true? "":
+                                bpSysPicker.getHI == true? "":
                                     transformBlankNull(ppPicker.getOption),
                                 pulseVolume:
                                     transformBlankNull(pvPicker.getOption),
@@ -1132,14 +1018,14 @@ class _VitalDetailState extends State<VitalDetail> {
                                 temp: tempPicker.getValue.toString() +
                                     "." +
                                     tempPicker.decimal.toString(),
-                                bloodKetone: bkPicker.abnormal == true
+                                bloodKetone: bkPicker.getHI == true
                                     ? "HI"
                                     : formatDecimal(bkPicker.value,bkPicker.decimal),
 
                                 // temp: transformBlankNull(tempPicker.getOption),
                                 painScore:
                                     transformBlankNull(psPicker.getValue),
-                                bloodGlucose: bgPicker.abnormal == true
+                                bloodGlucose: bgPicker.getHI == true
                                     ? "HI"
                                     : formatDecimal(bgPicker.value,bgPicker.decimal),
                                 // bloodKetone: transformBlankNull(bkPicker.getOption),
@@ -1160,7 +1046,7 @@ class _VitalDetailState extends State<VitalDetail> {
                                     gcsTotalpicker.getValue));
 
                             print("Vital Sigs");
-                            // print(vs.toJson());
+                            // // print(vs.toJson());
 
                             setState(() {
                               vitalBloc.add(AddVital(vital: vs));
@@ -1187,11 +1073,11 @@ class _VitalDetailState extends State<VitalDetail> {
                 // tempPicker.getValue) +
                 //     "." +
                 //     tempPicker.decimal.toString(),
-                bloodKetone: bkPicker.getAbnormal== true?"HI":    formatDecimal(bkPicker.value,bkPicker.decimal),
+                bloodKetone: bkPicker.getHI== true?"HI":    formatDecimal(bkPicker.value,bkPicker.decimal),
                 // bkPicker.getValue.toString() +
                 //     "." +
                 //     bkPicker.decimal.toString(),
-                bloodGlucose: bgPicker.getAbnormal== true?"HI": formatDecimal(bgPicker.value,bgPicker.decimal),
+                bloodGlucose: bgPicker.getHI== true?"HI": formatDecimal(bgPicker.value,bgPicker.decimal),
                 // bgPicker.getValue.toString(),
                 shockIndex: transformBlankNull(siPicker.getOption),
                 pupil: Pupil(
@@ -1220,9 +1106,9 @@ class _VitalDetailState extends State<VitalDetail> {
                           child: widget.vitalSign == null
                               ? Text("Last changes at " + _timestamp)
                               : Text("Last changes at " +
-                                  DateFormat("HH:mm aa")
+                                  DateFormat("h:mm aa")
                                       .format(widget.vitalSign.created)))),
-                  _buildItem(context, bpSysPicker, "BP Systolic", 200, 90, "mmHg"),
+                  _buildItem(context, bpSysPicker, "BP Systolic", 300, 90, "mmHg"),
                   _buildItem(context, bpDiasPicker, "BP Diastolic", 200, 60,"mmHg"),
                   // _buildItem(
                   //     context, "BP Diastolic", bpDiasController, 200),
@@ -1232,12 +1118,12 @@ class _VitalDetailState extends State<VitalDetail> {
                   _buildItemOption(context, pvPicker, "Pulse Volume", pvList),
                   _buildItemOption(context, crtPicker, "CRT", crtList),
                   _buildItem(context, siPicker, "Shock Index", 200, 100,""),
-                  _buildItem(context, rrPicker, "RR", 100, 1,"bpm"),
-                  _buildItem(context, spo2Picker, "Sp02", 200, 95, "%"),
-                  _buildItem(context, tempPicker, "Temperature", 100, 30, "°C"),
+                  _buildItem(context, rrPicker, "RR", 41, 1,"bpm"),
+                  _buildItem(context, spo2Picker, "Sp02", 101, 100, "%"),
+                  _buildItem(context, tempPicker, "Temperature", 50, 30, "°C"),
                   _buildItem(context, psPicker, "Pain Score", 11, 1,""),
-                  _buildItem(context, bgPicker, "Blood Glucose", 200, 100 ,"mmol/L"),
-                  _buildItem(context, bkPicker, "Blood Ketone", 200, 100,"mmol/L"),
+                  _buildItem(context, bgPicker, "Blood Glucose", 31, 10 ,"mmol/L"),
+                  _buildItem(context, bkPicker, "Blood Ketone", 31, 1,"mmol/L"),
                   _buildItemPupil(
                       context, lpPicker, "Left Pupil", 9, 1, pupilList),
                   _buildItemPupil(
@@ -1412,7 +1298,7 @@ class _VitalDetailState extends State<VitalDetail> {
             Expanded(
                 child: CupertinoPicker(
                     scrollController:
-                        FixedExtentScrollController(initialItem: initialData),
+                        FixedExtentScrollController(initialItem:picker.getValue??initialData),
                     itemExtent: 50,
                     onSelectedItemChanged: (int index) {
                       print("onselecteditemchanged --cupertinopicker");
@@ -1488,7 +1374,7 @@ class _VitalDetailState extends State<VitalDetail> {
                 Expanded(
                   child: CupertinoPicker(
                     scrollController: FixedExtentScrollController(
-                        initialItem: picker.getValue ?? 37),
+                        initialItem: picker.getValue ?? initialData),
                     itemExtent: 50,
                     onSelectedItemChanged: (int index) {
                       print("onselecteditemchanged --cupertinopicker");
@@ -1548,9 +1434,10 @@ class NumberPicker {
   int value;
   int decimal;
   bool abnormal = false;
+  bool hi = false;
 
   NumberPicker(
-      {this.title, this.option, this.value, this.abnormal, this.decimal});
+      {this.title, this.option, this.value, this.abnormal, this.decimal, this.hi});
 
   setOption(_option) {
     option = _option;
@@ -1572,10 +1459,15 @@ class NumberPicker {
     decimal = _value;
   }
 
+  setHI(_value) {
+    hi = _value;
+  }
+
   String get getTitle => title;
   String get getOption => option;
   int get getValue => value;
   int get getDecimal => decimal;
   bool get getAbnormal => abnormal;
+  bool get getHI => hi;
 }
 

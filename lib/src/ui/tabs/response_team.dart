@@ -102,6 +102,7 @@ class _TeamState extends State<ResponseTeamScreen> //{
     return Scaffold(
       backgroundColor: Colors.grey,
       body: Container(
+        padding: EdgeInsets.symmetric(vertical: 40),
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(

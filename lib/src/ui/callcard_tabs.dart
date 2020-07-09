@@ -258,7 +258,8 @@ class _CallcardTabs extends State<CallcardTabs> {
       });
 
   convertDateToStandard(String datetime) {
-    if (datetime.contains("-") != true) {
+    // if (datetime != null) {
+    if (datetime != null && datetime.contains("-") != true) {
       //dd/MM/yyyy HH:mm:ss to yyyy-MM-dd HH:mm:ss
       var split = datetime.split("/");
       var dd = split[0];
@@ -272,6 +273,8 @@ class _CallcardTabs extends State<CallcardTabs> {
     } else {
       return datetime;
     }
+    // }
+    // return null;
   }
 
   Future<bool> _onWillPop() async {
@@ -387,10 +390,10 @@ class _CallcardTabs extends State<CallcardTabs> {
                   // labelColor: Colors.blue,
                   // indicatorColor: Color(0x880E4F00),
                   tabs: [
-                    Tab(icon: Icon(Icons.info)),
-                    Tab(icon: Icon(Icons.directions_car)),
-                    Tab(icon: Icon(Icons.timer)),
-                    Tab(icon: Icon(Icons.person)),
+                    Tab(icon: Icon(Icons.info), text: "CALL INFO"),
+                    Tab(icon: Icon(Icons.directions_car), text: "RESPONDER"),
+                    Tab(icon: Icon(Icons.timer), text: "TIMING"),
+                    Tab(icon: Icon(Icons.person), text: "PATIENT"),
                   ],
                 ),
                 title: Center(
@@ -422,14 +425,26 @@ class _CallcardTabs extends State<CallcardTabs> {
 
                         final call_information =
                             callInfoBloc.state.callInformation ??
-                                widget.call_information;
-                        call_information.callReceived = convertDateToStandard(
-                            call_information.call_received);
+                                widget.call_information ??
+                                new CallInformation();
+                        // if (call_information != null) {
+                        call_information.callReceived = call_information != null
+                            ? convertDateToStandard(
+                                call_information.call_received)
+                            : DateTime.now().toString();
+                        // }
+
                         call_information.assignId =
                             widget.call_information != null
                                 ? widget.call_information.assign_id
                                 : null;
-                        print(call_information.callcard_no);
+                        call_information.plateNo =
+                            responseBloc.state.vehicleRegNo != null
+                                ? responseBloc.state.vehicleRegNo
+                                : widget.response_team.vehicleRegno != null
+                                    ? widget.response_team.vehicleRegno
+                                    : null;
+                        // print(call_information.callcard_no);
                         // call_information.plateNo =
                         //     widget.call_information.plate_no;
                         // : convertDateToStandard(
@@ -437,13 +452,29 @@ class _CallcardTabs extends State<CallcardTabs> {
 
                         // print(currentState.toJson());
                         print("INSIDE CALL INFO");
-                        print(call_information.toJson());
-                        print("+=======+");
+                        // print(call_information.toJson());
+                        // print("+=======+");
+                        // print(responseBloc.state.serviceResponse);
+                        // print(responseBloc.state.vehicleRegNo);
                         // print(widget.call_information.toJson());
                         final response_team = new ResponseTeam(
-                            serviceResponse: responseBloc.state.serviceResponse,
-                            vehicleRegno: responseBloc.state.vehicleRegNo,
-                            staffs: teamBloc.state.selectedStaffs ?? []);
+                            serviceResponse:
+                                responseBloc.state.serviceResponse != null
+                                    ? responseBloc.state.serviceResponse
+                                    : widget.response_team != null
+                                        ? widget.response_team.serviceResponse
+                                        : '',
+                            vehicleRegno:
+                                responseBloc.state.vehicleRegNo != null
+                                    ? responseBloc.state.vehicleRegNo
+                                    : widget.call_information != null
+                                        ? widget.call_information.plate_no
+                                        : '',
+                            staffs: teamBloc.state.selectedStaffs != null
+                                ? teamBloc.state.selectedStaffs
+                                : widget.response_team != null
+                                    ? widget.response_team.staffs
+                                    : []);
                         // print(teamState);
 
                         final response_time = timeBloc.state.responseTime;
@@ -453,10 +484,19 @@ class _CallcardTabs extends State<CallcardTabs> {
 
                         final scene_assessment = new SceneAssessment(
                             otherServicesAtScene:
-                                sceneBloc.state.selectedServices);
+                                sceneBloc.state.selectedServices != null
+                                    ? sceneBloc.state.selectedServices
+                                    : widget.scene_assessment != null
+                                        ? widget.scene_assessment
+                                            .otherServicesAtScene
+                                        : []);
                         // print(patientState);
 
-                        final patientList = patientBloc.state.patients ?? [];
+                        final patientList = patientBloc.state.patients != null
+                            ? patientBloc.state.patients
+                            : widget.patients != null
+                                ? List<dynamic>.from(widget.patients).toList()
+                                : [];
 
                         // print(patientList.length);
                         // print(scene_assessment.toJson());
@@ -491,18 +531,19 @@ class _CallcardTabs extends State<CallcardTabs> {
                         if (call_information.callcard_no != null &&
                             call_information.callcard_no.isNotEmpty) {
                           tabBloc.add(PublishCallcard(
-                            callInformation:
-                                call_information ?? widget.call_information,
-                            // responseTeam: response_team,
+                            callInformation: call_information,
+                            // ?? widget.call_information,
+                            responseTeam: response_team,
                             // responseTime: response_time,
-                            sceneAssessment:
-                                scene_assessment ?? widget.scene_assessment,
-                            // patients: patientList
-                            responseTeam: response_team ?? widget.response_team,
+                            sceneAssessment: scene_assessment,
+                            patients: patientList != null
+                                ? List<Patient>.from(patientList).toList()
+                                : [],
+                            // responseTeam: response_team,
                             responseTime: response_time ??
                                 widget.response_time ??
                                 new ResponseTime(),
-                            patients: patientList ?? widget.patients,
+                            // patients: patientList,
                             // sceneAssessment:
                             //     SceneAssessment(otherServicesAtScene: []
                             //     )
@@ -571,6 +612,7 @@ class _CallcardTabs extends State<CallcardTabs> {
                   ),
 
                   PatientListScreen(
+                    sceneAssessment: widget.scene_assessment,
                     patients: widget.patients,
                     assign_id: (widget.call_information != null)
                         ? widget.call_information.assign_id

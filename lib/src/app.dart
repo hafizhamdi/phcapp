@@ -6,6 +6,7 @@ import 'package:phcapp/src/database/phc_dao.dart';
 import 'package:phcapp/src/models/environment_model.dart';
 import 'package:phcapp/src/providers/cpr_provider.dart';
 import 'package:phcapp/src/repositories/repositories.dart';
+import 'package:phcapp/src/ui/callcard_tabs.dart';
 import 'package:phcapp/src/ui/history.dart';
 import 'package:phcapp/src/ui/list_callcard.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +17,7 @@ import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/outcome_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/pat_ass_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/reporting_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/trauma_bloc.dart';
+import 'package:phcapp/src/ui/tabs/patient/patient_tab.dart';
 import 'package:phcapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -54,8 +56,8 @@ class _App extends State<App> {
     // settingBloc.add(LoadEnvironment());
     themeProvider = Provider.of<ThemeProvider>(context);
 
-    print("SEtting State environment");
-    print(settingBloc.state.environment);
+    // print("SEtting State environment");
+    // print(settingBloc.state.environment);
     phcRepository = PhcRepository(
         phcApiClient: PhcApiClient(
       httpClient: http.Client(),
@@ -180,6 +182,7 @@ class _App extends State<App> {
               '/login': (BuildContext context) => LoginScreen(),
               '/listCallcards': (BuildContext context) => ListCallcards(),
               '/history': (BuildContext context) => History(),
+              // '/patientTab': (BuildContext context) => PatientTab(),
             },
             // home: ListCallcards(phcDao: phcDaoClient.phcDao),
             home: LoginScreen()),

@@ -46,6 +46,7 @@ class _MySingleOptions extends State<MySingleOptions>
                 // style: TextStyle(fontSize: 18),
               ),
               selected: listSelected.contains(widget.listDataset[index]),
+              selectedColor: Colors.pink[200],
               onSelected: (bool selected) {
                 setState(() {
                   if (listSelected.length < 1) {

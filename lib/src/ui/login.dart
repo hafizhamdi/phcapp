@@ -57,8 +57,11 @@ class _LoginScreen extends State<LoginScreen> {
             } else if (state is AuthUnaunthenticated) {
               Navigator.of(context).pushNamedAndRemoveUntil(
                   '/login', (Route<dynamic> route) => false);
-              //     showUnauthorized();
-            }
+            } 
+            // else if( state is AuthUnitialized){
+            //   //     showUnauthorized();
+
+            // }
           },
           builder: (context, state) {
             // if (state is AuthUnitialized) {
@@ -169,7 +172,7 @@ class _LoginScreen extends State<LoginScreen> {
                       // right: 70,
                       top: 60,
                       child: Text(
-                        "HRPB Version 1.12",
+                        "HRPB Version 1.16",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,

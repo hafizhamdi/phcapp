@@ -150,8 +150,7 @@ class CallInformation {
 
 class Patient {
   Patient(
-      {
-      // this.cpr,
+      {this.cprLog,
       this.patientInformation,
       this.vitalSigns,
       this.patientAssessment,
@@ -160,7 +159,7 @@ class Patient {
       this.intervention,
       this.incidentReporting,
       this.outcome});
-  // CPR cpr;
+  CprLog cprLog;
   PatientInformation patientInformation;
   List<VitalSign> vitalSigns;
   PatientAssessment patientAssessment;
@@ -177,9 +176,8 @@ class Patient {
             ? null
             : List<VitalSign>.from(
                 json["vital_signs"].map((x) => VitalSign.fromJson(x))),
-        // cpr: (json["cpr_logs"] != null)
-        //     ? CPR.fromJson(json["cpr_logs"])
-        //     : new CPR(),
+        cprLog:
+            json["cpr_log"] != null ? CprLog.fromJson(json["cpr_log"]) : null,
         patientAssessment: json["patient_assessment"] != null
             ? PatientAssessment.fromJson(json["patient_assessment"])
             : null,
@@ -200,7 +198,7 @@ class Patient {
       );
 
   Map<String, dynamic> toJson() => {
-        // "cpr_logs": cpr.toJson(),
+        "cpr_log": cprLog != null ? cprLog.toJson() : null,
         "patient_information": patientInformation.toJson(),
         "vital_signs": vitalSigns == null
             ? null
@@ -527,25 +525,36 @@ class CprLog {
   List<String> log;
 
   factory CprLog.fromJson(Map<String, dynamic> json) => CprLog(
-        witnessCpr: Cpr.fromJson(json["witness_cpr"]),
-        bystanderCpr: Cpr.fromJson(json["bystander_cpr"]),
-        cprStart: Cpr.fromJson(json["cpr_start"]),
-        rosc: Cpr.fromJson(json["rosc"]),
-        cprStop: Cpr.fromJson(json["cpr_stop"]),
-        rhythmAnalysis: List<RhythmAnalysis>.from(
-            json["rhythm_analysis"].map((x) => RhythmAnalysis.fromJson(x))),
-        log: List<String>.from(json["log"].map((x) => x)),
+        witnessCpr: json["witness_cpr"] != null
+            ? Cpr.fromJson(json["witness_cpr"])
+            : null,
+        bystanderCpr: json["bystander_cpr"] != null
+            ? Cpr.fromJson(json["bystander_cpr"])
+            : null,
+        cprStart:
+            json["cpr_start"] != null ? Cpr.fromJson(json["cpr_start"]) : null,
+        rosc: json["rosc"] != null ? Cpr.fromJson(json["rosc"]) : null,
+        cprStop:
+            json["cpr_stop"] != null ? Cpr.fromJson(json["cpr_stop"]) : null,
+        rhythmAnalysis: json["rhythm_analysis"] != null
+            ? List<RhythmAnalysis>.from(
+                json["rhythm_analysis"].map((x) => RhythmAnalysis.fromJson(x)))
+            : null,
+        log: json["log"] != null
+            ? List<String>.from(json["log"].map((x) => x))
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
-        "witness_cpr": witnessCpr.toJson(),
-        "bystander_cpr": bystanderCpr.toJson(),
-        "cpr_start": cprStart.toJson(),
-        "rosc": rosc.toJson(),
-        "cpr_stop": cprStop.toJson(),
-        "rhythm_analysis":
-            List<dynamic>.from(rhythmAnalysis.map((x) => x.toJson())),
-        "log": List<dynamic>.from(log.map((x) => x)),
+        "witness_cpr": witnessCpr != null ? witnessCpr.toJson() : null,
+        "bystander_cpr": bystanderCpr != null ? bystanderCpr.toJson() : null,
+        "cpr_start": cprStart != null ? cprStart.toJson() : null,
+        "rosc": rosc != null ? rosc.toJson() : null,
+        "cpr_stop": cprStop != null ? cprStop.toJson() : null,
+        "rhythm_analysis": rhythmAnalysis != null
+            ? List<dynamic>.from(rhythmAnalysis.map((x) => x.toJson()))
+            : [],
+        "log": log != null ? List<dynamic>.from(log.map((x) => x)) : [],
       };
 }
 
@@ -584,16 +593,20 @@ class RhythmAnalysis {
 
   factory RhythmAnalysis.fromJson(Map<String, dynamic> json) => RhythmAnalysis(
         timestamp: parsingDateTime(json["timestamp"]),
-        shockable: Analysis.fromJson(json["shockable"]),
-        nonShockable: Analysis.fromJson(json["non_shockable"]),
-        other: Analysis.fromJson(json["other"]),
+        shockable: json["shockable"] != null
+            ? Analysis.fromJson(json["shockable"])
+            : null,
+        nonShockable: json["non_shockable"] != null
+            ? Analysis.fromJson(json["non_shockable"])
+            : null,
+        other: json["other"] != null ? Analysis.fromJson(json["other"]) : null,
       );
 
   Map<String, dynamic> toJson() => {
-        "timestamp": timestamp,
-        "shockable": shockable.toJson(),
-        "non_shockable": nonShockable.toJson(),
-        "other": other.toJson(),
+        "timestamp": timestamp.toString(),
+        "shockable": shockable != null ? shockable.toJson() : null,
+        "non_shockable": nonShockable != null ? nonShockable.toJson() : null,
+        "other": other != null ? other.toJson() : null,
       };
 }
 
@@ -614,18 +627,20 @@ class Analysis {
 
   factory Analysis.fromJson(Map<String, dynamic> json) => Analysis(
         timestamp: parsingDateTime(json["timestamp"]),
-        rhythm: Cpr.fromJson(json["rhythm"]),
-        intervention: Cpr.fromJson(json["intevention"]),
-        drugs: Cpr.fromJson(json["drugs"]),
-        airway: Cpr.fromJson(json["airway"]),
+        rhythm: json["rhythm"] != null ? Cpr.fromJson(json["rhythm"]) : null,
+        intervention: json["intervention"] != null
+            ? Cpr.fromJson(json["intervention"])
+            : null,
+        drugs: json["drugs"] != null ? Cpr.fromJson(json["drugs"]) : null,
+        airway: json["airway"] != null ? Cpr.fromJson(json["airway"]) : null,
       );
 
   Map<String, dynamic> toJson() => {
-        "timestamp": timestamp.toString(),
-        "rhythm": rhythm.toJson(),
-        "intevention": intervention.toJson(),
-        "drugs": drugs.toJson(),
-        "airway": airway.toJson(),
+        "timestamp": timestamp != null ? timestamp.toString() : null,
+        "rhythm": rhythm != null ? rhythm.toJson() : null,
+        "intervention": intervention != null ? intervention.toJson() : null,
+        "drugs": drugs != null ? drugs.toJson() : null,
+        "airway": airway != null ? airway.toJson() : null,
       };
 }
 
@@ -1148,7 +1163,7 @@ class Staff {
 }
 
 DateTime parsingDateTime(data) {
-  if (data == null) return null;
+  if (data == null || data == "null") return null;
   var split = data.split(".");
 
   // print("---timestamp----");

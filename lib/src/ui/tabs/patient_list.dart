@@ -54,6 +54,7 @@ class _Patients extends State<PatientListScreen>
   List<String> wantedList;
 
   SceneBloc sceneBloc;
+  // CprBloc cprBloc;
 
   // @override
   // initState() {
@@ -64,7 +65,7 @@ class _Patients extends State<PatientListScreen>
 
   @override
   void didChangeDependencies() {
-    // BlocProvider.of<PatientBloc>(context).add(InitPatient());
+    // cprBloc = BlocProvider.of<CprBloc>(context);
 
     // if (widget.patients != null) {
     // patientBloc.add(LoadPatient(
@@ -142,6 +143,7 @@ class _Patients extends State<PatientListScreen>
     return Scaffold(
       // backgroundColor: Colors.grey,
       body: Container(
+        padding: EdgeInsets.symmetric(vertical: 40),
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -164,6 +166,7 @@ class _Patients extends State<PatientListScreen>
             margin: EdgeInsets.all(12.0),
             child: Container(
               padding: EdgeInsets.all(10),
+              // height: MediaQuery.of(context).size.height * 0.7,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -216,9 +219,12 @@ class _Patients extends State<PatientListScreen>
                       );
                     }
                     return BuildPatientList(
-                        //   patientList: widget.patients,
-                        );
-                  })
+                      patientList: widget.patients,
+                    );
+                  }),
+                  SizedBox(
+                    height: 40,
+                  )
                 ],
               ),
             ),
@@ -377,6 +383,7 @@ class BuildPatientList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cprBloc = BlocProvider.of<CprBloc>(context);
     _buildPatient(data, route) => Container(
           // child: Container(
           // width: 500,
@@ -421,6 +428,7 @@ class BuildPatientList extends StatelessWidget {
                   //  onPressed: () {
                   Navigator.push(
                       context, MaterialPageRoute(builder: (context) => route));
+
                   // Add your onPressed code here!
                 }
                 // },
@@ -478,6 +486,19 @@ class BuildPatientList extends StatelessWidget {
                       //     LoadVital(listVitals: patientList[index].vitalSigns));
                       // Patient()
 
+                      cprBloc.add(
+                        LoadCpr(
+                          cprLog: patientList[index].cprLog != null
+                              ? patientList[index].cprLog
+                              : new CprLog(
+                                  witnessCpr: new Cpr(),
+                                  bystanderCpr: new Cpr(),
+                                  cprStart: new Cpr(),
+                                  cprStop: new Cpr(),
+                                  rosc: new Cpr(),
+                                  rhythmAnalysis: []),
+                        ),
+                      );
                       return _buildPatient(
                         patientList[index].patientInformation,
                         PatientTab(patient: patientList[index], index: index),
@@ -530,6 +551,9 @@ class BuildPatientList extends StatelessWidget {
                   reportingBloc.add(ResetReporting());
                   final outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
                   outcomeBloc.add(ResetOutcome());
+
+                  final cprBloc = BlocProvider.of<CprBloc>(context);
+                  cprBloc.add(ResetCprLog());
 
                   // setState(() {
                   // final cprlog = Provider.of<CPRProvider>(context);

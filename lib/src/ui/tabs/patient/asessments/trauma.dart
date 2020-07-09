@@ -658,7 +658,7 @@ class _TraumaScreen extends State<TraumaScreen> {
                     rightFeet: listLimbFeetR),
               );
 
-              print(traumaAssessment.toJson());
+              // print(traumaAssessment.toJson());
 
               traumaBloc.add(UpdateTrauma(traumaAssessment: traumaAssessment));
 

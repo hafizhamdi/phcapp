@@ -83,6 +83,7 @@ class SingleChoiceChip extends State<SingleOption> {
                 elevation: 2.0,
                 label: Text(item),
                 selected: selectedItems.contains(widget.stateList[index]),
+                selectedColor: Colors.pink[200],
                 onSelected: (selected) {
                   setState(() {
                     // if (widget.multiple == true) {

@@ -22,7 +22,7 @@ class ResetTeam extends TeamEvent {}
 class LoadTeam extends TeamEvent {
   final ResponseTeam responseTeam;
   final selectedStaffs;
-   // final assign_id;
+  // final assign_id;
 
   LoadTeam({this.responseTeam, this.selectedStaffs});
 
@@ -186,7 +186,7 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
     // print(event.responseTeam.toJson());
 
     print("EVENT LOADTEAM");
-    print(event.responseTeam);
+    // print(event.responseTeam);
 
     yield TeamLoaded(response_team: responseTeam);
     // }
@@ -218,7 +218,7 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
 
     List<Staff> newList = selectedStaffs..add(event.staff);
 
-    print(newList);
+    // print(newList);
     // ResponseTeam responseTeam = currentState.response_team;
     // if (state is TeamLoaded) {
     // state
@@ -289,7 +289,7 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
     // final currentState = state;
 
     print("addreponesteam");
-    print(event.response_team.toJson());
+    // print(event.response_team.toJson());
     response_team = event.response_team;
 
     yield TeamLoaded(response_team: response_team);

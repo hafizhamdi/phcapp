@@ -46,6 +46,7 @@ class _PatientTab extends State<PatientTab> {
   MedicationBloc medicationBloc;
   ReportingBloc reportingBloc;
   OutcomeBloc outcomeBloc;
+  CprBloc cprBloc;
 
   Action getAction(index) {
     if (index == null)
@@ -57,7 +58,7 @@ class _PatientTab extends State<PatientTab> {
   @override
   void didChangeDependencies() {
     print("DID DEPENDENCY");
-    print(widget.patient.toJson());
+    // print(widget.patient.toJson());
 
     patientBloc = BlocProvider.of<PatientBloc>(context);
 
@@ -67,7 +68,10 @@ class _PatientTab extends State<PatientTab> {
     medicationBloc = BlocProvider.of<MedicationBloc>(context);
     reportingBloc = BlocProvider.of<ReportingBloc>(context);
     outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
+    cprBloc = BlocProvider.of<CprBloc>(context);
+    vitalBloc = BlocProvider.of<VitalBloc>(context);
 
+    vitalBloc.add(ResetVital());
     // final provider = Provider.of<PatInfoProvider>(context);
 
     super.didChangeDependencies();
@@ -97,14 +101,18 @@ class _PatientTab extends State<PatientTab> {
           context: context,
           builder: (context) => new AlertDialog(
             title: new Text('Are you sure?'),
-            content: new Text('Do you want back without create note'),
+            content: new Text('Do you want to go back without create note?'),
             actions: <Widget>[
               new FlatButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 child: new Text('NO'),
               ),
               new FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () {
+                  // cprBloc.add(ResetCprLog());
+
+                  Navigator.of(context).pop(true);
+                },
                 child: new Text('YES'),
               ),
             ],
@@ -113,11 +121,31 @@ class _PatientTab extends State<PatientTab> {
         false;
   }
 
+  invalidInputError() => showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Cannot create note"),
+          content: Text("Please fill required fields."),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+          // shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        );
+      });
+
   @override
   Widget build(BuildContext context) {
     final vitalBloc = BlocProvider.of<VitalBloc>(context);
     final action = getAction(widget.index);
-    // final patProvider = Provider.of<PatInfoProvider>(context);
+    // final patProvider = Provider.of<PatInfoProvider>(context, listen: false);
 
     PatientInformation preparingResultPatientInformation(BuildContext context) {
       final patProvider = Provider.of<PatInfoProvider>(context, listen: false);
@@ -171,8 +199,15 @@ class _PatientTab extends State<PatientTab> {
 
           // FlatButton(
           onTap: () {
-            final provider =
+            final patProvider =
                 Provider.of<PatInfoProvider>(context, listen: false);
+
+            //         if (patientBloc.formKey.currentState!=null
+            // )
+            // {
+            //   if(patientBloc.formKey.currentState.validate()) {
+            // final provider =
+            //     Provider.of<PatInfoProvider>(context, listen: false);
             // if (provider.formKey.currentState.validate()) {
             final patInfo = preparingResultPatientInformation(context);
             // final cprlog = preparingResultCPRlog();
@@ -184,9 +219,9 @@ class _PatientTab extends State<PatientTab> {
 
             // print(cprlog)
 
-            final cprBloc = BlocProvider.of<CprBloc>(context);
+            // final cprBloc = BlocProvider.of<CprBloc>(context);
             print("CPR RESULT WOHOW");
-            // print(cprBloc.state.cpr.toJson());
+            // print(cprBloc.state.cprLog.toJson());
             // final cprlog = preparingResultCPRlog(context);
             // print(cprlog);
 
@@ -196,8 +231,9 @@ class _PatientTab extends State<PatientTab> {
               //TODO:Update
               patientBloc.add(UpdatePatient(
                   patient: new Patient(
-                      // cpr: cprBloc.state.cpr,
+                      // cprLog: cprBloc.state.cpr,
                       patientInformation: patInfo,
+                      cprLog: cprBloc.state.cprLog ?? widget.patient.cprLog,
                       vitalSigns: vitalBloc.state.listVitals ??
                           widget.patient.vitalSigns,
                       patientAssessment:
@@ -216,6 +252,8 @@ class _PatientTab extends State<PatientTab> {
                       outcome:
                           outcomeBloc.state.outcome ?? widget.patient.outcome),
                   index: widget.index));
+
+              // print(patien)
             } else {
               print("ADD PATIENT BLOC");
               patientBloc.add(AddPatient(
@@ -223,6 +261,7 @@ class _PatientTab extends State<PatientTab> {
                     // cpr: cprBloc.state.cpr,
 
                     patientInformation: patInfo,
+                    cprLog: cprBloc.state.cprLog ?? widget.patient.cprLog,
                     vitalSigns:
                         vitalBloc.state.listVitals ?? widget.patient.vitalSigns,
                     patientAssessment: assPatientBloc.state.patientAssessment ??
@@ -261,7 +300,12 @@ class _PatientTab extends State<PatientTab> {
             // final outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
             outcomeBloc.add(ResetOutcome());
 
+            // cprBloc.add(ResetCprLog());
+
             Navigator.pop(context);
+            // }
+            // } else {
+            //   invalidInputError();
             // }
           },
           // child: Text(
@@ -271,6 +315,7 @@ class _PatientTab extends State<PatientTab> {
         );
 
     print("patient_TAB");
+    print(widget.patient.vitalSigns);
     // print(index);
     // TODO: implement build
     return WillPopScope(
@@ -294,15 +339,19 @@ class _PatientTab extends State<PatientTab> {
                   automaticallyImplyLeading: false,
                   bottom: TabBar(
                     tabs: [
-                      Tab(icon: Icon(Icons.account_box)),
-                      Tab(icon: Icon(Icons.airline_seat_flat)),
-                      Tab(icon: Icon(Icons.favorite)),
-                      Tab(icon: Icon(Icons.assessment)),
+                      Tab(icon: Icon(Icons.account_box), text: "PATIENT INFO"),
+                      Tab(icon: Icon(Icons.airline_seat_flat), text: "CPRLOG"),
+                      Tab(icon: Icon(Icons.favorite), text: "VITALS"),
+                      Tab(icon: Icon(Icons.assessment), text: "ASSESSMENT"),
                     ],
                   ),
-                  title: Text(
-                    'Patient Note',
-                  ),
+                  title: RichText(
+                      text: TextSpan(style: TextStyle(fontSize: 18), children: [
+                    TextSpan(text: 'Patient Note : '),
+                    (widget.patient.patientInformation != null)
+                        ? TextSpan(text: widget.patient.patientInformation.name)
+                        : TextSpan(text: '')
+                  ])),
                   actions: <Widget>[
                     deleteButton(context, action),
                     createButton(context, action, widget.index)
@@ -314,8 +363,8 @@ class _PatientTab extends State<PatientTab> {
                     PatientInformationScreen(
                         patient_information: widget.patient.patientInformation),
                     // ),
-
-                    CPRTimeLog(),
+                    CPRItems(cprLog: widget.patient.cprLog),
+                    // CPRTimeLog(),
                     // ),
 
                     // CPRDetail(),

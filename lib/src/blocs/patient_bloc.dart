@@ -124,6 +124,8 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
   TextEditingController genderController = new TextEditingController();
   SceneAssessment sceneAssessment;
 
+  final formKey = GlobalKey<FormState>();
+
   List<String> selectedChipOtherServices = new List<String>();
 
   PatientBloc(
@@ -229,7 +231,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
   Stream<PatientState> _addPatientToState(AddPatient event) async* {
     Patient patient = new Patient(
         patientInformation: event.patient.patientInformation,
-        // cpr: event.patient.cpr,
+        cprLog: event.patient.cprLog,
         vitalSigns: event.patient.vitalSigns,
         patientAssessment: event.patient.patientAssessment,
         intervention: event.patient.intervention,
@@ -242,7 +244,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     // print(blocPatients.length);
 
     print("ADDD PATIENT");
-    print(patient.toJson());
+    // print(patient.toJson());
     final newList = List<Patient>.from(
         currentState.patients != null ? currentState.patients : [])
       ..add(patient);
@@ -265,7 +267,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
         data.patientInformation.name == event.patient.patientInformation.name);
 
     foundPatient.patientInformation = event.patient.patientInformation;
-    // foundPatient.cpr = event.patient.cpr;
+    foundPatient.cprLog = event.patient.cprLog;
     foundPatient.vitalSigns = event.patient.vitalSigns;
     // vitalSigns: event.patient.vitalSigns,
     foundPatient.patientAssessment = event.patient.patientAssessment;

@@ -42,6 +42,7 @@ class _MyMultipleOptions extends State<MyMultipleOptions> {
                 // style: TextStyle(fontSize: 18),
               ),
               selected: listSelected.contains(widget.listDataset[index]),
+              selectedColor: Colors.pink[200],
               onSelected: (bool selected) {
                 setState(() {
                   listSelected.contains(widget.listDataset[index])

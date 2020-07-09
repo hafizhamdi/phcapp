@@ -203,7 +203,7 @@ class _OutcomeAssessment extends State<OutcomeAssessment> {
                     listDeterioration.length > 0 ? listDeterioration[0] : "",
               );
 
-              print(outcome.toJson());
+              // print(outcome.toJson());
 
               BlocProvider.of<OutcomeBloc>(context)
                   .add(LoadOutcome(outcome: outcome));
