@@ -235,6 +235,17 @@ class TraumaAssessment {
   List<String> leftChest;
   Abdomen abdomen;
   Limb limb;
+  List<String> rightElbow;
+  List<String> leftElbow;
+  List<String> rightWrist;
+  List<String> leftWrist;
+  List<String> pelvic;
+  List<String> rightHip;
+  List<String> leftHip;
+  List<String> rightKnee;
+  List<String> leftKnee;
+  List<String> rightAnkle;
+  List<String> leftAnkle;
 
   TraumaAssessment({
     this.timestamp,
@@ -250,6 +261,17 @@ class TraumaAssessment {
     this.leftChest,
     this.abdomen,
     this.limb,
+    this.rightElbow,
+    this.leftElbow,
+    this.rightWrist,
+    this.leftWrist,
+    this.pelvic,
+    this.rightHip,
+    this.leftHip,
+    this.rightKnee,
+    this.leftKnee,
+    this.rightAnkle,
+    this.leftAnkle,
   });
 
   factory TraumaAssessment.fromJson(Map<String, dynamic> json) =>
@@ -289,7 +311,41 @@ class TraumaAssessment {
               ? List<String>.from(json["left_chest"].map((x) => x))
               : null,
           abdomen: Abdomen.fromJson(json["abdomen"]),
-          limb: Limb.fromJson(json["limb"]));
+          limb: Limb.fromJson(json["limb"]),
+          rightElbow: json["right_elbow"] != null
+              ? List<String>.from(json["right_elbow"].map((x) => x))
+              : null,
+          leftElbow: json["left_elbow"] != null
+              ? List<String>.from(json["left_elbow"].map((x) => x))
+              : null,
+          rightWrist: json["right_wrist"] != null
+              ? List<String>.from(json["right_wrist"].map((x) => x))
+              : null,
+          leftWrist: json["left_wrist"] != null
+              ? List<String>.from(json["left_wrist"].map((x) => x))
+              : null,
+          pelvic: json["pelvic"] != null
+              ? List<String>.from(json["pelvic"].map((x) => x))
+              : null,
+          rightHip: json["right_Hip"] != null
+              ? List<String>.from(json["right_hip"].map((x) => x))
+              : null,
+          leftHip: json["left_hip"] != null
+              ? List<String>.from(json["left_hip"].map((x) => x))
+              : null,
+          rightKnee: json["right_knee"] != null
+              ? List<String>.from(json["right_knee"].map((x) => x))
+              : null,
+          leftKnee: json["left_knee"] != null
+              ? List<String>.from(json["left_knee"].map((x) => x))
+              : null,
+          rightAnkle: json["right_ankle"] != null
+              ? List<String>.from(json["right_ankle"].map((x) => x))
+              : null,
+          leftAnkle: json["left_ankle"] != null
+              ? List<String>.from(json["left_ankle"].map((x) => x))
+              : null);
+          
 
   Map<String, dynamic> toJson() => {
         "timestamp": timestamp.toString(),
@@ -315,6 +371,18 @@ class TraumaAssessment {
             : null,
         "abdomen": abdomen.toJson(),
         "limb": limb.toJson(),
+         'right_elbow': rightElbow != null ? List<dynamic>.from(rightElbow.map((x) => x)) : null,
+        'left_elbow': leftElbow != null ? List<dynamic>.from(leftElbow.map((x) => x)) : null,
+        'right_wrist': rightWrist != null ? List<dynamic>.from(rightWrist.map((x) => x)) : null,
+        'left_wrist': leftWrist != null ? List<dynamic>.from(leftWrist.map((x) => x)) : null,
+        'pelvic': pelvic != null ? List<dynamic>.from(pelvic.map((x) => x)) : null,
+        'right_hip': rightHip != null ? List<dynamic>.from(rightHip.map((x) => x)) : null,
+        'left_hip': leftHip != null ? List<dynamic>.from(leftHip.map((x) => x)) : null,
+        'right_knee': rightKnee != null ? List<dynamic>.from(rightKnee.map((x) => x)) : null,
+        'left_knee': leftKnee != null ? List<dynamic>.from(leftKnee.map((x) => x)) : null,
+        'right_ankle': rightAnkle != null ? List<dynamic>.from(rightAnkle.map((x) => x)) : null,
+        'left_ankle': leftAnkle != null ? List<dynamic>.from(leftAnkle.map((x) => x)) : null,
+
       };
 }
 
