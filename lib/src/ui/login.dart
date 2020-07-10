@@ -57,7 +57,7 @@ class _LoginScreen extends State<LoginScreen> {
             } else if (state is AuthUnaunthenticated) {
               Navigator.of(context).pushNamedAndRemoveUntil(
                   '/login', (Route<dynamic> route) => false);
-            } 
+            }
             // else if( state is AuthUnitialized){
             //   //     showUnauthorized();
 
@@ -154,32 +154,50 @@ class _LoginScreen extends State<LoginScreen> {
                       // right: 0,
                       child: Container(
                         width: double.infinity,
-                        child: SvgPicture.asset("assets/medicine.svg"),
+                        child:
+                            Image(image: AssetImage('assets/medicineMY.png')),
+                        // SvgPicture.asset("assets/medicine.svg"),
                       ),
                     ),
                     Positioned(
-                      // right: 70,
-                      child: Text(
-                        "PH Care",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 50,
-                            fontFamily: "Raleway"),
-                      ),
-                    ),
-                    Positioned(
-                      // right: 70,
-                      top: 60,
-                      child: Text(
-                        "HRPB Version 1.16",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          // fontFamily: "Raleway"
+                        child: Column(
+                      children: <Widget>[
+                        // (
+                        // child:
+                        Container(
+                          width: 200,
+                          child: Image(
+                              image: AssetImage('assets/ambulanceMY.png')),
+                          // )
                         ),
-                      ),
-                    ),
+                        // SizedBox(
+                        //   height: 40,
+                        // ),
+                        Container(
+                          // right: 70,
+                          child: Text(
+                            "PH Care",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 50,
+                                fontFamily: "Raleway"),
+                          ),
+                        ),
+                        Container(
+                          // right: 70,
+                          // top: 60,
+                          child: Text(
+                            "HRPB Version 1.16",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              // fontFamily: "Raleway"
+                            ),
+                          ),
+                        ),
+                      ],
+                    ))
                   ]),
             ),
             // ),

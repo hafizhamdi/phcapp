@@ -26,7 +26,26 @@ const _otherServices = [
   "Red cresent",
   "St. John ambulance",
   "Private",
-  "Supervisor vehicle"
+  "Supervisor vehicle",
+];
+
+const _ppe = ["Gown", "Glove", "Mask", "Safety Helmet", "Faceshield"];
+
+const _environment = [
+  "Safe",
+  "Unsafe",
+];
+const _trauma = [
+  "Trauma",
+  "Non-Trauma",
+];
+const _patient = [
+  "Single",
+  "Multiple",
+];
+const _backup = [
+  "Required",
+  "Not Required",
 ];
 
 class PatientListScreen extends StatefulWidget {
@@ -52,6 +71,8 @@ class _Patients extends State<PatientListScreen>
   PatientBloc patientBloc;
   List<String> wantedList;
 
+  TextEditingController ppeOtherController = TextEditingController();
+  TextEditingController otherServicesController = TextEditingController();
   SceneBloc sceneBloc;
   // CprBloc cprBloc;
 
@@ -89,7 +110,49 @@ class _Patients extends State<PatientListScreen>
     super.dispose();
   }
 
-  _buildSceneChips(header, List<String> list, callback, initialData) {
+  _buildSceneChips(
+      header, List<String> list, callback, initialData, otherController) {
+    return Container(
+      // width: 500,
+      margin: EdgeInsets.all(10),
+      child: Card(
+        child: ListTile(
+            title: Padding(
+              child: Text(header),
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SingleOption(
+                    header: header,
+                    stateList: list,
+                    callback: callback,
+                    multiple: true,
+                    initialData: initialData),
+                Container(
+                  padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: TextField(
+                    controller: otherController,
+                    decoration: InputDecoration(
+                      labelText: "Other separated with comma(,)",
+                    ),
+                  ),
+                )
+              ],
+            )
+            //  Wrap(
+            //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: <Widget>[
+            // ],
+            // ),
+            ),
+      ),
+    );
+  }
+
+  _defaultChips(header, List<String> list, callback, initialData) {
     return Container(
       // width: 500,
       margin: EdgeInsets.all(10),
@@ -107,7 +170,7 @@ class _Patients extends State<PatientListScreen>
                   header: header,
                   stateList: list,
                   callback: callback,
-                  multiple: true,
+                  multiple: false,
                   initialData: initialData),
           // ],
           // ),
@@ -122,15 +185,18 @@ class _Patients extends State<PatientListScreen>
 
     // final patientBloc = Provider
 
+    void nothingCallback(String item, List<String> selectedItems) {}
     void callback(String item, List<String> selectedItems) {
-      setState(() {
-        wantedList = selectedItems;
-      });
-      sceneBloc = BlocProvider.of<SceneBloc>(context);
+      if (item == "Other services at scene") {
+        setState(() {
+          wantedList = selectedItems;
+        });
+        sceneBloc = BlocProvider.of<SceneBloc>(context);
 
-      sceneBloc.add(LoadScene(selectedServices: wantedList));
-      print("callback");
-      print(selectedItems.length.toString());
+        sceneBloc.add(LoadScene(selectedServices: wantedList));
+        print("callback");
+        print(selectedItems.length.toString());
+      }
 
       // patientBloc.add(LoadPatient(
       //     assign_id: widget.assign_id,
@@ -142,7 +208,7 @@ class _Patients extends State<PatientListScreen>
     return Scaffold(
       // backgroundColor: Colors.grey,
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 40),
+        // padding: EdgeInsets.symmetric(vertical: 40),
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -162,7 +228,7 @@ class _Patients extends State<PatientListScreen>
                 Radius.circular(20.0),
               ),
             ),
-            margin: EdgeInsets.all(12.0),
+            margin: EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom: 12),
             child: Container(
               padding: EdgeInsets.all(10),
               // height: MediaQuery.of(context).size.height * 0.7,
@@ -182,8 +248,23 @@ class _Patients extends State<PatientListScreen>
                           SizedBox(
                             height: 10,
                           ),
-                          _buildSceneChips("Other services at scene",
-                              _otherServices, callback, state.selectedServices),
+
+                          _buildSceneChips("PPE", _ppe, nothingCallback,
+                              state.selectedServices, ppeOtherController),
+                          _defaultChips("Environment", _environment,
+                              nothingCallback, state.selectedServices),
+                          _defaultChips("Case Type", _trauma, nothingCallback,
+                              state.selectedServices),
+                          _defaultChips("Patient", _patient, nothingCallback,
+                              state.selectedServices),
+                          _defaultChips("Backup", _backup, nothingCallback,
+                              state.selectedServices),
+                          _buildSceneChips(
+                              "Other services at scene",
+                              _otherServices,
+                              callback,
+                              state.selectedServices,
+                              otherServicesController),
                         ]);
                       }
                       return Column(children: [
@@ -195,6 +276,16 @@ class _Patients extends State<PatientListScreen>
                         SizedBox(
                           height: 10,
                         ),
+                        _buildSceneChips("PPE", _ppe, nothingCallback,
+                            state.selectedServices, ppeOtherController),
+                        _defaultChips("Environment", _environment,
+                            nothingCallback, state.selectedServices),
+                        _defaultChips("Case Type", _trauma, nothingCallback,
+                            state.selectedServices),
+                        _defaultChips("Patient", _patient, nothingCallback,
+                            state.selectedServices),
+                        _defaultChips("Backup", _backup, nothingCallback,
+                            state.selectedServices),
                         _buildSceneChips(
                             "Other services at scene",
                             _otherServices,
@@ -202,7 +293,8 @@ class _Patients extends State<PatientListScreen>
                             widget.sceneAssessment !=
                                     null //widget.sceneAssessment.otherServicesAtScene
                                 ? widget.sceneAssessment.otherServicesAtScene
-                                : null),
+                                : null,
+                            otherServicesController),
                       ]);
                     },
                   ),
@@ -383,19 +475,28 @@ class BuildPatientList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cprBloc = BlocProvider.of<CprBloc>(context);
-    _buildPatient(data, route) => Container(
-          // child: Container(
-          // width: 500,
-          child: Card(
-            // color: Colors.purple[100],
-            margin: EdgeInsets.only(
-              top: 10,
-              left: 10,
-              right: 10,
-            ),
-            child: ListTile(
+    _buildPatient(data, route) {
+      var callInfo = data.patientInformation;
+
+      return Container(
+        margin: EdgeInsets.all(5),
+        padding: EdgeInsets.only(left: 8, top: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            shape: BoxShape.rectangle,
+            border: Border.all(color: Colors.grey, width: 0.5)),
+
+        //  return   Container(
+        // color: Colors.grey[200],
+        child:
+
+            // ListTile(
+            //   leading: Icon(Icons.face
+            ListTile(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 leading: Icon(Icons.face),
-                title: Text(data.name != null ? data.name : "Not set",
+                title: Text(callInfo.name != null ? callInfo.name : "Not set",
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, fontFamily: "Raleway")),
@@ -410,10 +511,10 @@ class BuildPatientList extends StatelessWidget {
                             size: 20,
                           ),
                           Text(
-                            (data.age != null ? data.age : "0") +
+                            (callInfo.age != null ? callInfo.age : "0") +
                                 " yrs (" +
-                                (data.gender != null
-                                    ? data.gender.substring(0, 1)
+                                (callInfo.gender != null
+                                    ? callInfo.gender.substring(0, 1)
                                     : 'N') +
                                 ")",
                             style: TextStyle(fontFamily: "Arial"),
@@ -425,6 +526,19 @@ class BuildPatientList extends StatelessWidget {
                 trailing: Icon(Icons.arrow_forward_ios),
                 onTap: () {
                   //  onPressed: () {
+                  cprBloc.add(
+                    LoadCpr(
+                      cprLog: data.cprLog != null
+                          ? data.cprLog
+                          : new CprLog(
+                              witnessCpr: new Cpr(),
+                              bystanderCpr: new Cpr(),
+                              cprStart: new Cpr(),
+                              cprStop: new Cpr(),
+                              rosc: new Cpr(),
+                              rhythmAnalysis: []),
+                    ),
+                  );
                   Navigator.push(
                       context, MaterialPageRoute(builder: (context) => route));
 
@@ -432,10 +546,75 @@ class BuildPatientList extends StatelessWidget {
                 }
                 // },
                 ),
-          ),
-          // )
-          // )
-        );
+      );
+
+      // return Container(
+      //   // child: Container(
+      //   // width: 500,
+      //   child: Card(
+      //     // color: Colors.purple[100],
+      //     margin: EdgeInsets.only(
+      //       top: 10,
+      //       left: 10,
+      //       right: 10,
+      //     ),
+      //     child: ListTile(
+      //         leading: Icon(Icons.face),
+      //         title: Text(callInfo.name != null ? callInfo.name : "Not set",
+      //             overflow: TextOverflow.ellipsis,
+      //             style: TextStyle(
+      //                 fontWeight: FontWeight.bold, fontFamily: "Raleway")),
+      //         subtitle: Container(
+      //             child: Row(
+      //               children: <Widget>[
+      //                 Expanded(
+      //                     child: Row(children: <Widget>[
+      //                   Icon(
+      //                     Icons.accessibility_new,
+      //                     color: Colors.purple,
+      //                     size: 20,
+      //                   ),
+      //                   Text(
+      //                     (callInfo.age != null ? callInfo.age : "0") +
+      //                         " yrs (" +
+      //                         (callInfo.gender != null
+      //                             ? callInfo.gender.substring(0, 1)
+      //                             : 'N') +
+      //                         ")",
+      //                     style: TextStyle(fontFamily: "Arial"),
+      //                   )
+      //                 ])),
+      //               ],
+      //             ),
+      //             padding: EdgeInsets.only(right: 20)),
+      //         trailing: Icon(Icons.arrow_forward_ios),
+      //         onTap: () {
+      //           //  onPressed: () {
+      //           cprBloc.add(
+      //             LoadCpr(
+      //               cprLog: data.cprLog != null
+      //                   ? data.cprLog
+      //                   : new CprLog(
+      //                       witnessCpr: new Cpr(),
+      //                       bystanderCpr: new Cpr(),
+      //                       cprStart: new Cpr(),
+      //                       cprStop: new Cpr(),
+      //                       rosc: new Cpr(),
+      //                       rhythmAnalysis: []),
+      //             ),
+      //           );
+      //           Navigator.push(
+      //               context, MaterialPageRoute(builder: (context) => route));
+
+      //           // Add your onPressed code here!
+      //         }
+      //         // },
+      //         ),
+      //   ),
+      //   // )
+      //   // )
+      // );
+    }
 
     badgeCircle(count) => Container(
           width: 25,
@@ -485,21 +664,21 @@ class BuildPatientList extends StatelessWidget {
                       //     LoadVital(listVitals: patientList[index].vitalSigns));
                       // Patient()
 
-                      cprBloc.add(
-                        LoadCpr(
-                          cprLog: patientList[index].cprLog != null
-                              ? patientList[index].cprLog
-                              : new CprLog(
-                                  witnessCpr: new Cpr(),
-                                  bystanderCpr: new Cpr(),
-                                  cprStart: new Cpr(),
-                                  cprStop: new Cpr(),
-                                  rosc: new Cpr(),
-                                  rhythmAnalysis: []),
-                        ),
-                      );
+                      // cprBloc.add(
+                      //   LoadCpr(
+                      //     cprLog: patientList[index].cprLog != null
+                      //         ? patientList[index].cprLog
+                      //         : new CprLog(
+                      //             witnessCpr: new Cpr(),
+                      //             bystanderCpr: new Cpr(),
+                      //             cprStart: new Cpr(),
+                      //             cprStop: new Cpr(),
+                      //             rosc: new Cpr(),
+                      //             rhythmAnalysis: []),
+                      //   ),
+                      // );
                       return _buildPatient(
-                        patientList[index].patientInformation,
+                        patientList[index],
                         PatientTab(patient: patientList[index], index: index),
                       );
                     }),
@@ -552,7 +731,20 @@ class BuildPatientList extends StatelessWidget {
                   outcomeBloc.add(ResetOutcome());
 
                   final cprBloc = BlocProvider.of<CprBloc>(context);
+
                   cprBloc.add(ResetCprLog());
+                  cprBloc.add(
+                    LoadCpr(
+                      cprLog: new CprLog(
+                          witnessCpr: new Cpr(),
+                          bystanderCpr: new Cpr(),
+                          cprStart: new Cpr(),
+                          cprStop: new Cpr(),
+                          rosc: new Cpr(),
+                          rhythmAnalysis: []),
+                    ),
+                  );
+                  // cprBloc.add(ResetCprLog());
 
                   // setState(() {
                   // final cprlog = Provider.of<CPRProvider>(context);
@@ -572,6 +764,6 @@ class BuildPatientList extends StatelessWidget {
         )
       ],
     );
-    ;
+    // ;
   }
 }

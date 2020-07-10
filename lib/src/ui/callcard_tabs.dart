@@ -441,7 +441,7 @@ class _CallcardTabs extends State<CallcardTabs> {
                         call_information.plateNo =
                             responseBloc.state.vehicleRegNo != null
                                 ? responseBloc.state.vehicleRegNo
-                                : widget.response_team.vehicleRegno != null
+                                : widget.response_team != null
                                     ? widget.response_team.vehicleRegno
                                     : null;
                         // print(call_information.callcard_no);

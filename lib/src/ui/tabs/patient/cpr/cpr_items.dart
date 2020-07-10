@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:phcapp/custom/choice_chip.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/providers/cpr_provider.dart';
@@ -26,6 +27,7 @@ const AIRWAY = ["BVM", "LMA", "ETT"];
 const RHYTHMNS = ["Asystole", "PEA"];
 const RHYTHMOT = ["Tachyarythmias", "Bradyarrythmias"];
 const ANALYSIS = ["Shockable", "Non-Shockable", "Other"];
+const _cpr = ["Required", "Not Required"];
 
 class _CPRItems extends State<CPRItems>
     with AutomaticKeepAliveClientMixin<CPRItems> {
@@ -255,9 +257,31 @@ class _CPRItems extends State<CPRItems>
     }
   }
 
+  List<String> wantedList = new List<String>();
+
+  void callback(String item, List<String> selectedItems) {
+    if (item == "Other services at scene") {
+      setState(() {
+        wantedList = selectedItems;
+      });
+      // sceneBloc = BlocProvider.of<SceneBloc>(context);
+
+      // sceneBloc.add(LoadScene(selectedServices: wantedList));
+      // print("callback");
+      // print(selectedItems.length.toString());
+    }
+
+    // patientBloc.add(LoadPatient(
+    //     assign_id: widget.assign_id,
+    //     patients: patientBloc.state.patients,
+    //     sceneAssessment:
+    //         SceneAssessment(otherServicesAtScene: selectedItems)));
+  }
+
   @override
   Widget build(BuildContext context) {
     cprBloc = BlocProvider.of<CprBloc>(context);
+
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -272,12 +296,13 @@ class _CPRItems extends State<CPRItems>
             ],
           ),
         ),
-        padding: EdgeInsets.symmetric(vertical: 40),
-        child: Card(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          margin: EdgeInsets.all(12),
-          child: SingleChildScrollView(
+        // padding: EdgeInsets.symmetric(vertical: 40),
+        child: SingleChildScrollView(
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            margin: EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom: 12),
+            // child: SingleChildScrollView(
             child: BlocBuilder<CprBloc, CprState>(builder: (context, state) {
               // print("is it widget got cprlog?");
 
@@ -339,6 +364,8 @@ class _CPRItems extends State<CPRItems>
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       HeaderSection("CPR Log"),
+
+                      _defaultChips("CPR", _cpr, callback, wantedList),
                       // FlatButton.icon(
                       //   icon: Icon(Icons.remove_red_eye),
                       //   label: Text("VIEW LOG HISTORY"),
@@ -583,6 +610,7 @@ class _CPRItems extends State<CPRItems>
                   onTap: () {
                     addRhythmDialog(
                         new RhythmAnalysis(
+                            id: index.toString(),
                             shockable:
                                 state.cprLog.rhythmAnalysis[index].shockable,
                             nonShockable:
@@ -657,6 +685,33 @@ class _CPRItems extends State<CPRItems>
             // clipBehavior: Clip.hardEdge,
           )
         ]));
+  }
+
+  _defaultChips(header, List<String> list, callback, initialData) {
+    return Container(
+      // width: 500,
+      margin: EdgeInsets.all(10),
+      child: Card(
+        child: ListTile(
+          title: Padding(
+            child: Text(header),
+            padding: EdgeInsets.symmetric(vertical: 10.0),
+          ),
+          subtitle:
+              //  Wrap(
+              //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: <Widget>[
+              SingleOption(
+                  header: header,
+                  stateList: list,
+                  callback: callback,
+                  multiple: false,
+                  initialData: initialData),
+          // ],
+          // ),
+        ),
+      ),
+    );
   }
 
   _buildAnalysis(RhythmAnalysis rhythmAnalysis, Function setState, index) {
@@ -756,6 +811,7 @@ class _CPRItems extends State<CPRItems>
                           cprBloc.add(
                             AddRhythmAnalysis(
                               rhythmAnalysis: RhythmAnalysis(
+                                  id: index.toString(),
                                   timestamp: timeCreated,
                                   shockable: shockable,
                                   nonShockable: nonShockable,
@@ -783,6 +839,7 @@ class _CPRItems extends State<CPRItems>
                           cprBloc.add(
                             UpdateRhythmAnalysis(
                                 rhythmAnalysis: RhythmAnalysis(
+                                    id: index.toString(),
                                     timestamp: timeCreated,
                                     shockable: shockable,
                                     nonShockable: nonShockable,
@@ -997,65 +1054,6 @@ class _CPRItems extends State<CPRItems>
       ),
     );
   }
-
-  // confirmAddLog(context, logs, value) {
-  //   TextEditingController commentController =
-  //       new TextEditingController(text: value);
-  //   // final provider = Provider.of<CPRProvider>(context);
-  //   showDialog(
-  //       barrierDismissible: false,
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text("Add log"),
-  //           content: Container(
-  //               width: MediaQuery.of(context).size.width,
-  //               child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 mainAxisSize: MainAxisSize.min,
-  //                 children: [
-  //                   Text(
-  //                     "Log description",
-  //                     style: TextStyle(
-  //                         // fontSize: 21,
-  //                         color: Colors.grey),
-  //                   ),
-  //                   TextField(
-  //                     controller: commentController,
-  //                   )
-  //                 ],
-  //               )),
-  //           actions: <Widget>[
-  //             RaisedButton(
-  //               shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.all(Radius.circular(20.0))),
-  //               // color: Colors.lightGreen,
-  //               child: Text(
-  //                 "CANCEL",
-  //               ),
-  //               onPressed: () {
-  //                 Navigator.pop(context);
-  //               },
-  //             ),
-  //             RaisedButton(
-  //               shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.all(Radius.circular(20.0))),
-  //               color: Colors.lightGreen,
-  //               child: Text(
-  //                 "ADD LOG",
-  //               ),
-  //               onPressed: () {
-  //                 logs.addLog(value);
-
-  //                 Navigator.pop(context);
-  //               },
-  //             ),
-  //           ],
-  //           shape: RoundedRectangleBorder(
-  //               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-  //         );
-  //       });
-  // }
 }
 
 class BuildChoiceChip extends StatelessWidget {

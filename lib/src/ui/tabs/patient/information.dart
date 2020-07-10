@@ -138,14 +138,15 @@ class _Information extends State<PatientInformationScreen>
               ],
             ),
           ),
-          padding: EdgeInsets.symmetric(vertical: 40),
+          // padding: EdgeInsets.symmetric(vertical: 40),
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Center(
               child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                margin: EdgeInsets.all(12.0),
+                margin:
+                    EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom: 12),
                 child: Form(
                   key: patientBloc.formKey,
                   child: Container(

@@ -14,8 +14,10 @@ import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/trauma_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/incident_report.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/intervention.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/medication.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/other_information.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/outcome_assessment.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/patient_assessment.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/sample_screen.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/trauma.dart';
 
 class MainAssessment extends StatelessWidget {
@@ -56,14 +58,15 @@ class MainAssessment extends StatelessWidget {
             ],
           ),
         ),
-        padding: EdgeInsets.symmetric(vertical: 40),
+        // padding: EdgeInsets.symmetric(vertical: 40),
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Center(
             child: Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              margin: EdgeInsets.all(12.0),
+              margin:
+                  EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom: 12),
               child: Container(
                 padding: EdgeInsets.all(10),
                 // width: 500,
@@ -105,12 +108,6 @@ class MainAssessment extends StatelessWidget {
                       },
                     ),
 
-                    // BuildCard(
-                    //   icon: Icons.airline_seat_recline_normal,
-                    //   title: "Trauma",
-                    //   nextRoute: Trauma(),
-                    // ),
-
                     BlocBuilder<InterBloc, InterState>(
                       builder: (context, state) {
                         if (state is InterLoaded) {
@@ -137,6 +134,12 @@ class MainAssessment extends StatelessWidget {
                               : null,
                         );
                       },
+                    ),
+
+                    BuildCard(
+                      icon: Icons.change_history,
+                      title: "SAMPLER",
+                      nextRoute: SampleScreen(),
                     ),
 
                     // BlocBuilder<TraumaBloc, TraumaState>(
@@ -185,6 +188,12 @@ class MainAssessment extends StatelessWidget {
                           : medicationAssessment != null
                               ? medicationAssessment.timestamp
                               : null,
+                    ),
+
+                    BuildCard(
+                      icon: Icons.chrome_reader_mode,
+                      title: "Other Information",
+                      nextRoute: OtherInformation(),
                     ),
 
                     BuildCard(
@@ -248,7 +257,7 @@ class BuildCard extends StatelessWidget {
   generateTime(time) {
     if (time == null) return "No data";
 
-    return DateFormat("HH:mm aa").format(time);
+    return "Last updated " + DateFormat("h:mm aa").format(time);
   }
 
   @override
@@ -287,11 +296,11 @@ class BuildCard extends StatelessWidget {
                 Expanded(
                   child: Row(children: <Widget>[
                     Padding(
-                        padding: EdgeInsets.only(right: 10),
+                        padding: EdgeInsets.only(right: 5),
                         child: Icon(
                           Icons.access_time,
                           color: Colors.purple,
-                          size: 18,
+                          // size: 18,
                         )),
                     timestamp != null
                         ? Text(

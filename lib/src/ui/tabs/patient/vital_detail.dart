@@ -203,10 +203,13 @@ class _VitalDetailState extends State<VitalDetail> {
                     color: Colors.blue,
                     iconSize: 25,
                     onPressed: () {
+                      setState(() {
+                       ePicker.setValue(4); 
+                      });
                       showCupertinoModalPopup(
                           context: context,
                           builder: (context) =>
-                              cupertinoPicker(ePicker, "GCS E", 5, 1));
+                              cupertinoPicker(ePicker, "GCS E", 5, ePicker.getValue));
                       // showCupertinoModalPopup(
                       //     context: context,
                       //     builder: (context) => _actionSinglePicker(
@@ -239,10 +242,15 @@ class _VitalDetailState extends State<VitalDetail> {
                     color: Colors.blue,
                     iconSize: 25,
                     onPressed: () {
+                      setState((){
+vPicker.setValue(5);
+
+
+                      });
                       showCupertinoModalPopup(
                           context: context,
                           builder: (context) =>
-                              cupertinoPicker(vPicker, "GCS V", 6, 1));
+                              cupertinoPicker(vPicker, "GCS V", 6, vPicker.getValue));
 
                       // showCupertinoModalPopup(
                       //     context: context,
@@ -275,10 +283,13 @@ class _VitalDetailState extends State<VitalDetail> {
                     color: Colors.blue,
                     iconSize: 25,
                     onPressed: () {
+                      setState((){
+                        mPicker.setValue(6);
+                      });
                       showCupertinoModalPopup(
                           context: context,
                           builder: (context) =>
-                              cupertinoPicker(mPicker, "GCS M", 7, 1));
+                              cupertinoPicker(mPicker, "GCS M", 7, mPicker.getValue));
                       // showCupertinoModalPopup(
                       //     context: context,
                       //     builder: (context) => _actionSinglePicker(
@@ -411,6 +422,10 @@ class _VitalDetailState extends State<VitalDetail> {
                     color: Colors.blue,
                     iconSize: 25,
                     onPressed: () {
+                      setState((){
+                        picker.setValue(3);
+
+                      });
                       showCupertinoModalPopup(
                           context: context,
                           builder: (context) => cupertinoPicker(
@@ -605,6 +620,9 @@ class _VitalDetailState extends State<VitalDetail> {
                           color: Colors.blue,
                           iconSize: 25,
                           onPressed: () {
+                            setState((){
+                              picker.setValue(initialData);
+                            });
                             showCupertinoModalPopup(
                                 context: context,
                                 builder: (context) {
@@ -649,6 +667,10 @@ class _VitalDetailState extends State<VitalDetail> {
                               color: Colors.blue,
                               iconSize: 25,
                               onPressed: () {
+                                
+                            setState((){
+                              picker.setValue(initialData);
+                            });
                                 showCupertinoModalPopup(
                                     context: context,
                                     builder: (context) {
@@ -942,9 +964,9 @@ class _VitalDetailState extends State<VitalDetail> {
 
     formatDecimal(value,decimal){
       return value!=null && decimal !=null?
-      transformBlankNull(value) +
+    value.toString() +
                                         "." +
-                                        transformBlankNull(decimal):
+                                        decimal.toString():
                                         null;
     }
 
@@ -1015,9 +1037,8 @@ class _VitalDetailState extends State<VitalDetail> {
                                 crt: transformBlankNull(crtPicker.getOption),
                                 rr: transformBlankNull(rrPicker.getValue),
                                 spo2: transformBlankNull(spo2Picker.getValue),
-                                temp: tempPicker.getValue.toString() +
-                                    "." +
-                                    tempPicker.decimal.toString(),
+                                temp: formatDecimal(tempPicker.getValue,
+                                    tempPicker.decimal),
                                 bloodKetone: bkPicker.getHI == true
                                     ? "HI"
                                     : formatDecimal(bkPicker.value,bkPicker.decimal),
@@ -1108,19 +1129,19 @@ class _VitalDetailState extends State<VitalDetail> {
                               : Text("Last changes at " +
                                   DateFormat("h:mm aa")
                                       .format(widget.vitalSign.created)))),
-                  _buildItem(context, bpSysPicker, "BP Systolic", 300, 90, "mmHg"),
-                  _buildItem(context, bpDiasPicker, "BP Diastolic", 200, 60,"mmHg"),
+                  _buildItem(context, bpSysPicker, "BP Systolic", 300, 120, "mmHg"),
+                  _buildItem(context, bpDiasPicker, "BP Diastolic", 200, 80,"mmHg"),
                   // _buildItem(
                   //     context, "BP Diastolic", bpDiasController, 200),
                   _buildItem(context, mapPicker, "MAP", 200, 100, "bpm"),
-                  _buildItem(context, prPicker, "PR", 200, 60, "bpm"),
-                  _buildItem(context, ppPicker, "Pulse Pressure", 200, 20,"bpm"),
+                  _buildItem(context, prPicker, "PR", 200, 70, "bpm"),
+                  _buildItem(context, ppPicker, "Pulse Pressure", 200, 40,"bpm"),
                   _buildItemOption(context, pvPicker, "Pulse Volume", pvList),
                   _buildItemOption(context, crtPicker, "CRT", crtList),
                   _buildItem(context, siPicker, "Shock Index", 200, 100,""),
-                  _buildItem(context, rrPicker, "RR", 41, 1,"bpm"),
+                  _buildItem(context, rrPicker, "RR", 61, 20,"bpm"),
                   _buildItem(context, spo2Picker, "Sp02", 101, 100, "%"),
-                  _buildItem(context, tempPicker, "Temperature", 50, 30, "°C"),
+                  _buildItem(context, tempPicker, "Temperature", 50, 37, "°C"),
                   _buildItem(context, psPicker, "Pain Score", 11, 1,""),
                   _buildItem(context, bgPicker, "Blood Glucose", 31, 10 ,"mmol/L"),
                   _buildItem(context, bkPicker, "Blood Ketone", 31, 1,"mmol/L"),
@@ -1235,16 +1256,16 @@ class _VitalDetailState extends State<VitalDetail> {
 
     // PULSE RATE
     if (prPicker.getValue != null) {
-      (prPicker.getValue < 60 || prPicker.getValue > 90)
+      (prPicker.getValue < 60 || prPicker.getValue >= 100)
           ? prPicker.setAbnormal(true)
           : prPicker.setAbnormal(false);
     }
 
     // RR
     if (rrPicker.getValue != null) {
-      (rrPicker.getValue >= 20)
-          ? prPicker.setAbnormal(true)
-          : prPicker.setAbnormal(false);
+      (rrPicker.getValue >= 25 || rrPicker.getValue <11)
+          ? rrPicker.setAbnormal(true)
+          : rrPicker.setAbnormal(false);
     }
 
     // SpO2
@@ -1262,6 +1283,14 @@ class _VitalDetailState extends State<VitalDetail> {
               int.tryParse(ppPicker.getOption) > 100)
           ? ppPicker.setAbnormal(true)
           : ppPicker.setAbnormal(false);
+    }
+
+    //BLOOD GLUCOSE
+    if(bgPicker.getValue !=null){
+
+    (bgPicker.getValue >=12 || bgPicker.getValue<4)?
+      bgPicker.setAbnormal(true):
+      bgPicker.setAbnormal(false);
     }
   }
 
