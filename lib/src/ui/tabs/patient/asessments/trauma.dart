@@ -7,163 +7,351 @@ import 'package:phcapp/src/widgets/my_multiple_option.dart';
 import 'package:phcapp/src/widgets/mycard_single_option.dart';
 
 const _head = [
-  "normal",
-  "abrasion",
-  "burn",
-  "deformity",
-  "laceration",
-  "foreign body",
-  "puncture/stab wound",
-  "gunshot wound",
-  "swelling",
-  "tenderness"
+  "Normal",
+  "Abrasion",
+  "Burn",
+  "Deformity",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness"
 ];
 const _neck_abnormal = [
-  "anterior right",
-  "anteriror left",
-  "posterior right",
-  "posterior left"
+  "Anterior right",
+  "Anteriror left",
+  "Posterior right",
+  "Posterior left"
 ];
 const _back_abnormal = [
-  "thoracic right",
-  "thoracic left",
-  "lumbar right",
-  "lumbar left",
-  "sacral right",
-  "sacral left"
+  "Thoracic right",
+  "Thoracic left",
+  "Lumbar right",
+  "Lumbar left",
+  "Sacral right",
+  "Sacral left"
 ];
 
-const _spine = ["normal", "tender", "deformity"];
-const _spine_abnormal = ["cervical", "thoracic", "lumbar", "sacral"];
+const _spine = ["Normal", "Tender", "Deformity"];
+const _spine_abnormal = ["Cervical", "Thoracic", "Lumbar", "Sacral"];
 const _limb = [
-  "normal",
-  "abrasion",
-  "amputation above elbow",
-  "burn",
-  "crush",
-  "deformity",
-  "dislocation shoulder",
-  "mangled",
-  "laceration",
-  "foreign body",
-  "puncture/stab wound",
-  "gunshot wound",
-  "swelling",
-  "tenderness",
+  "Normal",
+  "Abrasion",
+  "Amputation above elbow",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation shoulder",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
 ];
 
 const _chest = [
-  "normal",
-  "abrasion",
-  "burn",
-  "deformity",
-  "laceration",
-  "foreign body",
-  "puncture/stab wound",
-  "gunshot wound",
-  "swelling",
-  "tenderness"
+  "Normal",
+  "Abrasion",
+  "Burn",
+  "Deformity",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness"
 ];
 
 const _abdomen = [
-  "normal",
-  "abrasion",
-  "burn",
-  "deformity",
-  "laceration",
-  "foreign body",
-  "puncture/stab wound (no evisceration)",
-  "puncture/stab wound (with evisceration)",
-  "gunshot wound",
-  "swelling",
-  "tenderness",
+  "Normal",
+  "Abrasion",
+  "Burn",
+  "Deformity",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound (no evisceration)",
+  "Puncture/stab wound (with evisceration)",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
 ];
 
 const _limb_forearm = [
-  "normal",
-  "abrasion",
-  "amputation below elbow",
-  "amputation above wrist",
-  "burn",
-  "crush",
-  "deformity",
-  "dislocation elbow",
-  "mangled",
-  "laceration",
-  "foreign body",
-  "puncture/stab wound",
-  "gunshot wound",
-  "swelling",
-  "tenderness",
+  "Normal",
+  "Abrasion",
+  "Amputation below elbow",
+  "Amputation above wrist",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation elbow",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
 ];
 
 const _limb_hand = [
-  "normal",
-  "abrasion",
-  "amputation of digit(s)",
-  "burn",
-  "crush",
-  "deformity",
-  "dislocation digit(s)",
-  "mangled",
-  "laceration",
-  "foreign body",
-  "puncture/stab wound",
-  "gunshot wound",
-  "swelling",
-  "tenderness",
+  "Normal",
+  "Abrasion",
+  "Amputation of digit(s)",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation digit(s)",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
 ];
 
 const _limb_femur = [
-  "normal",
-  "abrasion",
-  "amputation above knee",
-  "burn",
-  "crush",
-  "deformity",
-  "dislocation hip",
-  "mangled",
-  "laceration",
-  "foreign body",
-  "puncture/stab wound",
-  "gunshot wound",
-  "swelling",
-  "tenderness",
+  "Normal",
+  "Abrasion",
+  "Amputation above knee",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation hip",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
 ];
 
 const _limb_leg = [
-  "normal",
-  "abrasion",
-  "amputation below knee",
-  "burn",
-  "crush",
-  "deformity",
-  "dislocation knee",
-  "mangled",
-  "laceration",
-  "foreign body",
-  "puncture/stab wound",
-  "gunshot wound",
-  "swelling",
-  "tenderness",
+  "Normal",
+  "Abrasion",
+  "Amputation below knee",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation knee",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
 ];
 
 const _limb_feet = [
-  "normal",
-  "abrasion",
-  "amputation of ankle",
-  "amputation of toe(s)",
-  "burn",
-  "crush",
-  "deformity",
-  "dislocation toe(s)",
-  "mangled",
-  "laceration",
-  "foreign body",
-  "puncture/stab wound",
-  "gunshot wound",
-  "swelling",
-  "tenderness",
+  "Normal",
+  "Abrasion",
+  "Amputation of ankle",
+  "Amputation of toe(s)",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation toe(s)",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
+];
+
+const _elbow_right = [
+  "Normal",
+  "Abrasion",
+  "Amputation of elbow",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation elbow",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
+];
+
+const _elbow_left = [
+  "Normal",
+  "Abrasion",
+  "Amputation of elbow",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation elbow",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
+];
+
+const _wrist_right = [
+  "Normal",
+  "Abrasion",
+  "Amputation of wrist",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation wrist",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
+];
+
+const _wrist_left = [
+  "Normal",
+  "Abrasion",
+  "Amputation of wrist",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation wrist",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
+];
+
+const _pelvic = [
+  "Normal",
+  "Abrasion",
+  "Amputation of pelvic",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation pelvic",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
+  "stability",
+];
+
+const _hip_right = [
+  "Normal",
+  "Abrasion",
+  "Amputation of hip",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation hip",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
+];
+
+const _hip_left = [
+  "Normal",
+  "Abrasion",
+  "Amputation of hip",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation hip",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
+];
+
+const _knee_right = [
+  "Normal",
+  "Abrasion",
+  "Amputation of knee",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation knee",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
+];
+
+const _knee_left = [
+  "Normal",
+  "Abrasion",
+  "Amputation of knee",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation knee",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
+];
+
+const _ankle_right = [
+  "Normal",
+  "Abrasion",
+  "Amputation of ankle",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation ankle",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
+];
+
+const _ankle_left = [
+  "Normal",
+  "Abrasion",
+  "Amputation of ankle",
+  "Burn",
+  "Crush",
+  "Deformity",
+  "Dislocation ankle",
+  "Mangled",
+  "Laceration",
+  "Foreign body",
+  "Puncture/stab wound",
+  "Gunshot wound",
+  "Swelling",
+  "Tenderness",
 ];
 
 class TraumaScreen extends StatefulWidget {
@@ -200,6 +388,17 @@ class _TraumaScreen extends State<TraumaScreen> {
   List<String> listLimbLegL = new List<String>();
   List<String> listLimbFeetR = new List<String>();
   List<String> listLimbFeetL = new List<String>();
+  List<String> listElbowR = new List<String>();
+  List<String> listElbowL = new List<String>();
+  List<String> listWristR = new List<String>();
+  List<String> listWristL = new List<String>();
+  List<String> listPelvic = new List<String>();
+  List<String> listHipR = new List<String>();
+  List<String> listHipL = new List<String>();
+  List<String> listKneeR = new List<String>();
+  List<String> listKneeL = new List<String>();
+  List<String> listAnkleR = new List<String>();
+  List<String> listAnkleL = new List<String>();
 
   List<ChipItem> prepareData = [
     ChipItem(
@@ -358,6 +557,72 @@ class _TraumaScreen extends State<TraumaScreen> {
         listData: _limb_feet,
         value: List<String>(),
         multiple: true),
+    ChipItem(
+        id: "right_elbow",
+        name: "Right Elbow ",
+        listData: _elbow_right,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "left_elbow",
+        name: "Left Elbow ",
+        listData: _elbow_left,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "right_wrist",
+        name: "Right Wrist",
+        listData: _wrist_right,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "left_wrist",
+        name: "Left Wrist",
+        listData: _wrist_left,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "pelvic",
+        name: "Pelvic",
+        listData: _pelvic,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "right_hip",
+        name: "Right Hip",
+        listData: _hip_right,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "left_hip",
+        name: "Left Hip",
+        listData: _hip_left,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "right_knee",
+        name: "Right Knee",
+        listData: _knee_right,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "left_knee",
+        name: "Left Knee",
+        listData: _knee_left,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "right_ankle",
+        name: "Right Ankle",
+        listData: _ankle_right,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "left_ankle",
+        name: "Left Ankle",
+        listData: _ankle_left,
+        value: List<String>(),
+        multiple: true),
   ];
 
   mycallback(id, List<String> dataReturn) {
@@ -493,6 +758,61 @@ class _TraumaScreen extends State<TraumaScreen> {
         listLimbFeetR = dataReturn;
       });
     }
+    if (id == "right_elbow") {
+      setState(() {
+        listElbowR = dataReturn;
+      });
+    }
+    if (id == "left_elbow") {
+      setState(() {
+        listElbowL = dataReturn;
+      });
+    }
+    if (id == "right_wrist") {
+      setState(() {
+        listWristR = dataReturn;
+      });
+    }
+    if (id == "left_wrist") {
+      setState(() {
+        listWristL= dataReturn;
+      });
+    }
+    if (id == "pelvic") {
+      setState(() {
+        listPelvic = dataReturn;
+      });
+    }
+    if (id == "right_hip") {
+      setState(() {
+        listHipR = dataReturn;
+      });
+    }
+    if (id == "left_hip") {
+      setState(() {
+        listHipL = dataReturn;
+      });
+    }
+    if (id == "right_knee") {
+      setState(() {
+        listKneeR = dataReturn;
+      });
+    }
+    if (id == "left_knee") {
+      setState(() {
+        listKneeL = dataReturn;
+      });
+    }
+    if (id == "right_ankle") {
+      setState(() {
+        listAnkleR = dataReturn;
+      });
+    }
+    if (id == "left_ankle") {
+      setState(() {
+        listAnkleL = dataReturn;
+      });
+    }
   }
 
   @override
@@ -604,6 +924,50 @@ class _TraumaScreen extends State<TraumaScreen> {
           f.value = widget.trauma.limb.leftFeet;
           listLimbFeetL = widget.trauma.limb.leftFeet;
         }
+        if (f.id == "right_elbow") {
+          f.value = widget.trauma.rightElbow;
+          listElbowR = widget.trauma.rightElbow;
+        }
+        if (f.id == "left_elbow") {
+          f.value = widget.trauma.leftElbow;
+          listElbowL = widget.trauma.leftElbow;
+        }
+        if (f.id == "right_wrist") {
+          f.value = widget.trauma.rightWrist;
+          listWristR = widget.trauma.rightWrist;
+        }
+        if (f.id == "left_wrist") {
+          f.value = widget.trauma.leftWrist;
+          listWristL = widget.trauma.leftWrist;
+        }
+        if (f.id == "pelvic") {
+          f.value = widget.trauma.pelvic;
+          listPelvic = widget.trauma.pelvic;
+        }
+        if (f.id == "right_hip") {
+          f.value = widget.trauma.rightHip;
+          listHipR = widget.trauma.rightHip;
+        }
+        if (f.id == "left_hip") {
+          f.value = widget.trauma.leftHip;
+          listHipL = widget.trauma.leftHip;
+        }
+        if (f.id == "right_knee") {
+          f.value = widget.trauma.rightKnee;
+          listKneeR = widget.trauma.rightKnee;
+        }
+        if (f.id == "left_knee") {
+          f.value = widget.trauma.leftKnee;
+          listKneeL = widget.trauma.leftKnee;
+        }
+        if (f.id == "right_ankle") {
+          f.value = widget.trauma.rightAnkle;
+          listAnkleR = widget.trauma.rightAnkle;
+        }
+        if (f.id == "left_ankle") {
+          f.value = widget.trauma.leftAnkle;
+          listAnkleL = widget.trauma.leftAnkle;
+        }
         return f;
       }).toList();
     }
@@ -656,6 +1020,18 @@ class _TraumaScreen extends State<TraumaScreen> {
                     leftHand: listLimbHandL,
                     leftFeet: listLimbFeetL,
                     rightFeet: listLimbFeetR),
+                rightElbow: listElbowR,
+                leftElbow: listElbowL,
+                rightWrist: listWristR,
+                leftWrist: listWristL,
+                pelvic: listPelvic,
+                rightHip: listHipR,
+                leftHip: listHipL,
+                rightKnee: listKneeR,
+                leftKnee: listKneeL,
+                rightAnkle: listAnkleR,
+                leftAnkle: listAnkleL,
+
               );
 
               // print(traumaAssessment.toJson());
