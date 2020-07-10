@@ -580,18 +580,21 @@ class Cpr {
 
 class RhythmAnalysis {
   RhythmAnalysis({
+    this.id,
     this.timestamp,
     this.shockable,
     this.nonShockable,
     this.other,
   });
 
+  String id;
   DateTime timestamp;
   Analysis shockable;
   Analysis nonShockable;
   Analysis other;
 
   factory RhythmAnalysis.fromJson(Map<String, dynamic> json) => RhythmAnalysis(
+        id: json["id"],
         timestamp: parsingDateTime(json["timestamp"]),
         shockable: json["shockable"] != null
             ? Analysis.fromJson(json["shockable"])
@@ -603,6 +606,7 @@ class RhythmAnalysis {
       );
 
   Map<String, dynamic> toJson() => {
+        "id:": id,
         "timestamp": timestamp.toString(),
         "shockable": shockable != null ? shockable.toJson() : null,
         "non_shockable": nonShockable != null ? nonShockable.toJson() : null,

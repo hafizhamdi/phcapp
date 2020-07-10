@@ -102,7 +102,7 @@ class _TeamState extends State<ResponseTeamScreen> //{
     return Scaffold(
       backgroundColor: Colors.grey,
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 40),
+        // padding: EdgeInsets.symmetric(vertical: 40),
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -457,9 +457,11 @@ class ResponseDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
-      margin: EdgeInsets.all(12.0),
+      margin: EdgeInsets.only(left: 12.0, right: 12, top: 40),
+      // margin: EdgeInsets.all(12.0),
       // width: 500,
       child: Container(
         padding: EdgeInsets.all(10.0),

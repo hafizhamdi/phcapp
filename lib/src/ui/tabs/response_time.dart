@@ -122,7 +122,7 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
     return Scaffold(
       body: Container(
         // color: Colors.grey,
-        padding: EdgeInsets.symmetric(vertical: 40),
+        // padding: EdgeInsets.symmetric(vertical: 40),
 
 // Container(
         // height: MediaQuery.of(context).size.height,
@@ -142,7 +142,7 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
           child: Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            margin: EdgeInsets.all(12.0),
+            margin: EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom:12),
             child: Container(
               padding: EdgeInsets.all(10.0),
               child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[

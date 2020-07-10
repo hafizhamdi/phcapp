@@ -345,13 +345,28 @@ class _PatientTab extends State<PatientTab> {
                       Tab(icon: Icon(Icons.assessment), text: "ASSESSMENT"),
                     ],
                   ),
-                  title: RichText(
-                      text: TextSpan(style: TextStyle(fontSize: 18), children: [
-                    TextSpan(text: 'Patient Note : '),
-                    (widget.patient.patientInformation != null)
-                        ? TextSpan(text: widget.patient.patientInformation.name)
-                        : TextSpan(text: '')
-                  ])),
+                  title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Patient Name",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.grey)),
+                        widget.patient.patientInformation.name != null
+                            ? Text(widget.patient.patientInformation.name)
+                            : Container()
+
+                        // RichText(
+                        //   text: TextSpan(style: TextStyle(fontSize: 18), children: [
+                        //     TextSpan(text: 'Patient Note : '),
+                        //     (widget.patient.patientInformation != null)
+                        //         ? TextSpan(
+                        //             text: widget.patient.patientInformation.name)
+                        //         : TextSpan(text: '')
+                        //   ]),
+                        // ),
+                      ]),
                   actions: <Widget>[
                     deleteButton(context, action),
                     createButton(context, action, widget.index)

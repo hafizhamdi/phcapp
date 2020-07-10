@@ -182,13 +182,13 @@ class _CallInfoState extends State<CallInformationScreen>
             ],
           ),
         ),
-        padding: EdgeInsets.symmetric(vertical: 40),
+        // padding: EdgeInsets.symmetric(vertical: 40),
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            margin: EdgeInsets.all(12.0),
+            margin: EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom: 12),
 
             child: Form(
               autovalidate: true,
@@ -212,6 +212,9 @@ class _CallInfoState extends State<CallInformationScreen>
 
                   // mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    // SizedBox(
+                    //   height: 40,
+                    // ),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       HeaderSection("Call Information"),
                       IconButton(
@@ -264,7 +267,7 @@ class _CallInfoState extends State<CallInformationScreen>
                             labelText: "Caller Contact No",
                             initialData: data.callerContactno,
                           ),
-                          MyTextField(
+                          EventCodeField(
                             labelText: "Event Code",
                             initialData: data.eventCode,
                           ),
@@ -285,7 +288,7 @@ class _CallInfoState extends State<CallInformationScreen>
 
                     Row(children: [
                       MyTextField(
-                          labelText: "Incident Description",
+                          labelText: "Complaint",
                           initialData: data.incident_desc),
                     ]),
                     Row(children: <Widget>[
@@ -485,19 +488,10 @@ class _CallInfoState extends State<CallInformationScreen>
 
 class MyTextField extends StatelessWidget {
   final labelText;
-  // final controller;
-  // final inputType;
-  // final maskFormater;
-  // final hintText;
   final initialData;
-  // final validator;
 
   MyTextField({
     this.labelText,
-    // this.controller,
-    // this.maskFormater,
-    // this.inputType,
-    // this.hintText,
     this.initialData,
     // this.validator
   });
@@ -530,6 +524,118 @@ class MyTextField extends StatelessWidget {
                     (initialData != null) ? initialData : "",
                     style: TextStyle(fontSize: 16),
                   ))
+              // TextFormField(
+              //   enabled: false,
+              //   initialValue: initialData,
+              //   validator: (value) {
+              //     if (value.length > 20) {
+              //       return "Call Card No cannot be more than 20 characters";
+              //     }
+
+              //     if (value.isEmpty) {
+              //       return 'This field is required';
+              //     }
+              //     return null;
+              //   },
+              //   inputFormatters: maskFormater != null ? [maskFormater] : [],
+              //   onChanged: (value) {
+              //     controller.sink.add(value.toUpperCase());
+              //   },
+
+              //   // onEditingComplete: (){
+
+              //   // },
+              //   // keyboardType: inputType,
+              //   // controller: myController,
+              //   decoration: InputDecoration(border: InputBorder.none
+              //       //   // hintText: hintText,
+              //       //   labelText: labelText,
+              //       //   fillColor: Colors.white,
+              //       //   border: new OutlineInputBorder(
+              //       //     borderRadius: new BorderRadius.circular(10.0),
+              //       //     borderSide: new BorderSide(),
+              //       //   ),
+              //       ),
+              // ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class EventCodeField extends StatelessWidget {
+  final labelText;
+  final initialData;
+
+  EventCodeField({
+    this.labelText,
+    this.initialData,
+    // this.validator
+  });
+
+  TextEditingController myController = new TextEditingController();
+
+  var split = ["", "", "", ""];
+  _buildBox(text) {
+    return Container(
+      width: 80,
+      height: 50,
+      decoration: BoxDecoration(
+          color: Colors.yellow[100], borderRadius: BorderRadius.circular(10)),
+      child: Center(
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 16),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (initialData != null) {
+      if (initialData.contains(',') == true) {
+        split = initialData.split(',');
+      }
+    }
+    return Expanded(
+      child: Container(
+        // height: 50,
+        // width: 500,
+        // width: 170,
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                labelText,
+                style: TextStyle(
+                    fontFamily: "OpenSans",
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.grey),
+              ),
+              Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        _buildBox(split[0]),
+                        _buildBox(split[1]),
+                        _buildBox(split[2]),
+                        _buildBox(split[3]),
+                      ],
+                    ),
+                  )
+                  // Text(
+                  //   (initialData != null) ? initialData : "",
+                  //   style: TextStyle(fontSize: 16),
+                  // )
+                  )
               // TextFormField(
               //   enabled: false,
               //   initialValue: initialData,

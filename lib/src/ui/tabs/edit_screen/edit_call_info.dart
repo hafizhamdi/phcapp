@@ -65,14 +65,18 @@ class _EditCallInfo extends State<EditCallInfo>
       text: DateFormat("dd/MM/yyyy HH:mm:ss").format(DateTime.now()));
   TextEditingController cardNoController = TextEditingController();
   TextEditingController contactNoController = TextEditingController();
-  TextEditingController eventCodeController = TextEditingController();
+  TextEditingController eventCol1Controller = TextEditingController();
+  TextEditingController eventCol2Controller = TextEditingController();
+  TextEditingController eventCol3Controller = TextEditingController();
+  TextEditingController eventCol4Controller = TextEditingController();
   TextEditingController incidentController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController landmarkController = TextEditingController();
   String initialValue;
   String cardNoValue = "";
+
   @override
-  void didChangeDependencies() {
+  initState() {
     callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
     // print("widget.call_information.assign_id");
     // print(widget.call_information.assign_id);
@@ -84,7 +88,8 @@ class _EditCallInfo extends State<EditCallInfo>
           .add(widget.call_information.callcard_no);
       // cardNoController.text = widget.call_information.callcard_no;
       contactNoController.text = widget.call_information.caller_contactno;
-      eventCodeController.text = widget.call_information.event_code;
+      // eventCodeController.text =
+      splittingEventCode(widget.call_information.event_code);
       incidentController.text = widget.call_information.incident_desc;
       locationController.text = widget.call_information.incidentLocation;
       landmarkController.text = widget.call_information.landmark;
@@ -93,6 +98,10 @@ class _EditCallInfo extends State<EditCallInfo>
       _distance = widget.call_information.distance_to_scene;
       _location = widget.call_information.location_type;
     }
+  }
+
+  @override
+  void didChangeDependencies() {
     // else {
     //   print("NEW CALLCARD");
     //   receivedController.text = DateTime.now().toIso8601String();
@@ -104,6 +113,44 @@ class _EditCallInfo extends State<EditCallInfo>
     });
 
     super.didChangeDependencies();
+  }
+
+  mergingEventCode(controller1, controller2, controller3, controller4) {
+    var string = controller1.text +
+        "," +
+        controller2.text +
+        "," +
+        controller3.text +
+        "," +
+        controller4.text;
+
+    return string;
+  }
+
+  splittingEventCode(String event_code) {
+    if (event_code != null) {
+      if (event_code.contains(',') == true) {
+        var split = event_code.split(',');
+        var i = 0;
+        split.map((f) {
+          setState(() {
+            if (i == 0) {
+              eventCol1Controller.text = split[i];
+            }
+            if (i == 1) {
+              eventCol2Controller.text = split[i];
+            }
+            if (i == 2) {
+              eventCol3Controller.text = split[i];
+            }
+            if (i == 3) {
+              eventCol4Controller.text = split[i];
+            }
+            i++;
+          });
+        }).toList();
+      }
+    }
   }
 
   @override
@@ -119,7 +166,10 @@ class _EditCallInfo extends State<EditCallInfo>
     // cardNoController.dispose();
     receivedController.dispose();
     contactNoController.dispose();
-    eventCodeController.dispose();
+    eventCol1Controller.dispose();
+    eventCol2Controller.dispose();
+    eventCol3Controller.dispose();
+    eventCol4Controller.dispose();
     incidentController.dispose();
     locationController.dispose();
     landmarkController.dispose();
@@ -218,7 +268,11 @@ class _EditCallInfo extends State<EditCallInfo>
                           callcardNo: cardNoValue,
                           callReceived: receivedController.text,
                           callerContactno: contactNoController.text,
-                          eventCode: eventCodeController.text,
+                          eventCode: mergingEventCode(
+                              eventCol1Controller,
+                              eventCol2Controller,
+                              eventCol3Controller,
+                              eventCol4Controller),
                           priority: _priority,
                           incidentDesc: incidentController.text,
                           incidentLocation: locationController.text,
@@ -261,25 +315,40 @@ class _EditCallInfo extends State<EditCallInfo>
                   )
                 ]),
                 Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: TextInput(
-                        labelText: "Caller Contact No",
-                        controller: contactNoController,
-                        maskFormater: contactNoFormater,
-                        hintText: "ex: 012-3456789",
-                      ),
-                    ), //     inputType:
-                    Expanded(
-                      child: TextInput(
                         labelText: "Event Code",
-                        controller: eventCodeController,
+                        controller: eventCol1Controller,
                         // hintText: "37/XC/02/XW",
                         // maskFormater: eventCodeFormater,
                       ),
                     ),
-                    //         TextInputType.numberWithOptions(signed: true),
-                    //     hintText: "0139446197",
+                    Expanded(
+                      child: TextInput(
+                        // labelText: "Event Code",
+                        controller: eventCol2Controller,
+                        // hintText: "37/XC/02/XW",
+                        // maskFormater: eventCodeFormater,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextInput(
+                        // labelText: "Event Code",
+                        controller: eventCol3Controller,
+                        // hintText: "37/XC/02/XW",
+                        // maskFormater: eventCodeFormater,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextInput(
+                        // labelText: "Event Code",
+                        controller: eventCol4Controller,
+                        // hintText: "37/XC/02/XW",
+                        // maskFormater: eventCodeFormater,
+                      ),
+                    ),
                   ],
                 ),
                 Row(children: [
@@ -293,15 +362,44 @@ class _EditCallInfo extends State<EditCallInfo>
                   ),
                 ]),
                 TextInput(
-                    labelText: "Incident Description",
-                    controller: incidentController),
-                TextInput(
                     labelText: "Incident Location",
                     controller: locationController),
                 TextInput(
+                    labelText: "Complaint", controller: incidentController),
+                TextInput(
                     labelText: "Landmark", controller: landmarkController),
                 DropDownList("Distance to scene", LIST_DISTANCES,
-                    InputOption.distance, _distance)
+                    InputOption.distance, _distance),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        padding: EdgeInsets.all(15),
+                        // Expanded(
+
+                        child: TextFormField(
+                          controller: contactNoController,
+                          inputFormatters: [contactNoFormater],
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            hintText: "ex: 012-3456789",
+                            labelText: "Caller Contact No",
+                            fillColor: Colors.white,
+                            border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(10.0),
+                              borderSide: new BorderSide(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ), //     inputType:
+                    // Expanded(
+                    //     child: ),
+                    //         TextInputType.numberWithOptions(signed: true),
+                    //     hintText: "0139446197",
+                  ],
+                ),
               ],
             ),
           )),
