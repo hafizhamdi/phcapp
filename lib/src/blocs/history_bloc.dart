@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phcapp/src/database/phc_dao.dart';
 import 'package:phcapp/src/models/history.dart';
@@ -85,7 +86,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   }
 
   Stream<HistoryState> mapAddHistoryToState(AddHistory event) async* {
-    print("mapAddHistoryToState");
+    // print("mapAddHistoryToState");
     int statusSend = 1;
     final insert = await phcDao.insertHistory(event.callcard, statusSend);
 
@@ -94,8 +95,9 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
 
   Stream<HistoryState> reloadHistoryToState() async* {
     final showAll = await phcDao.showAllHistory();
-    print(showAll);
-    print("IM HERE RELOAD HISTORY");
+    // debugPrint()
+    // print(showAll);
+    // print("IM HERE RELOAD HISTORY");
     yield HistoryLoaded(listHistory: showAll);
   }
 }

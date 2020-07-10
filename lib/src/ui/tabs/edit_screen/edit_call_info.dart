@@ -245,32 +245,53 @@ class _EditCallInfo extends State<EditCallInfo>
                 // //     labelText: "Call Card No",
                 // //     controller: cardNoController),
 
-                CardNoTextInput(
-                  labelText: "Call Card No",
-                  controller: callInfoBloc.cardNoController,
-                  initialData: cardNoValue,
-                  // controller: cardNoController,
-                  // stream: infoBloc.callcarNoStream,
-                  // updateText: infoBloc.setCallcardNo,
+                Row(children: [
+                  Expanded(
+                    child: CardNoTextInput(
+                      labelText: "Call Card No",
+                      controller: callInfoBloc.cardNoController,
+                      initialData: cardNoValue,
+                      // controller: cardNoController,
+                      // stream: infoBloc.callcarNoStream,
+                      // updateText: infoBloc.setCallcardNo,
+                    ),
+                  ),
+                  Expanded(
+                    child: _dateReceived("Date Received", receivedController),
+                  )
+                ]),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextInput(
+                        labelText: "Caller Contact No",
+                        controller: contactNoController,
+                        maskFormater: contactNoFormater,
+                        hintText: "ex: 012-3456789",
+                      ),
+                    ), //     inputType:
+                    Expanded(
+                      child: TextInput(
+                        labelText: "Event Code",
+                        controller: eventCodeController,
+                        // hintText: "37/XC/02/XW",
+                        // maskFormater: eventCodeFormater,
+                      ),
+                    ),
+                    //         TextInputType.numberWithOptions(signed: true),
+                    //     hintText: "0139446197",
+                  ],
                 ),
-                _dateReceived("Date Received", receivedController),
-                TextInput(
-                  labelText: "Caller Contact No",
-                  controller: contactNoController,
-                  maskFormater: contactNoFormater,
-                  hintText: "ex: 012-3456789",
-                  //     inputType:
-                  //         TextInputType.numberWithOptions(signed: true),
-                  //     hintText: "0139446197",
-                ),
-                TextInput(
-                  labelText: "Event Code",
-                  controller: eventCodeController,
-                  hintText: "37/XC/02/XW",
-                  maskFormater: eventCodeFormater,
-                ),
-                DropDownList(
-                    "Priority", LIST_PRIORITY, InputOption.priority, _priority),
+                Row(children: [
+                  Expanded(
+                    child: DropDownList("Location type", LIST_LOCTYPE,
+                        InputOption.location, _location),
+                  ),
+                  Expanded(
+                    child: DropDownList("Priority", LIST_PRIORITY,
+                        InputOption.priority, _priority),
+                  ),
+                ]),
                 TextInput(
                     labelText: "Incident Description",
                     controller: incidentController),
@@ -279,8 +300,6 @@ class _EditCallInfo extends State<EditCallInfo>
                     controller: locationController),
                 TextInput(
                     labelText: "Landmark", controller: landmarkController),
-                DropDownList("Location type", LIST_LOCTYPE,
-                    InputOption.location, _location),
                 DropDownList("Distance to scene", LIST_DISTANCES,
                     InputOption.distance, _distance)
               ],
@@ -384,7 +403,7 @@ class _EditCallInfo extends State<EditCallInfo>
     print(selector);
     print(initialData);
     return Container(
-        width: 500,
+        // width: 500,
         child: Padding(
             padding: EdgeInsets.all(16),
             child: StreamBuilder(
@@ -444,7 +463,7 @@ class CardNoTextInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         // width: 500,
-        width: 500,
+        // width: 500,
         child: Padding(
             padding: EdgeInsets.all(16),
             child: TextFormField(
@@ -501,7 +520,7 @@ class TextInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         // width: 500,
-        width: 500,
+        // width: 500,
         child: Padding(
             padding: EdgeInsets.all(16),
             child: TextFormField(

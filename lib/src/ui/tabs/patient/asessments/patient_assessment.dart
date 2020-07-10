@@ -124,11 +124,11 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
   TextEditingController otherController = new TextEditingController();
 
   List<ChipItem> prepareData = [
-    ChipItem(
-        id: "disaster_triage",
-        name: "Disaster Triage",
-        listData: _disasterTriage,
-        value: ""),
+    // ChipItem(
+    //     id: "disaster_triage",
+    //     name: "Disaster Triage",
+    //     listData: _disasterTriage,
+    //     value: ""),
     ChipItem(
         id: "appearance", name: "Appearance", listData: _appearance, value: ""),
     ChipItem(

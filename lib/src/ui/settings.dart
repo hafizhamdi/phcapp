@@ -55,78 +55,108 @@ class _Settings extends State<Settings> {
         },
       );
 
+  showSuccess() => showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Sync Success"),
+            content: Text("Data has been updated"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+            // shape: RoundedRectangleBorder(
+            //   borderRadius: BorderRadius.all(
+            //     Radius.circular(20.0),
+            //   ),
+            // ),
+          );
+        },
+      );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Settings"),
       ),
-      body: BlocListener<AuthBloc, AuthState>(
+      body: BlocConsumer<SettingBloc, SettingState>(
         // )<AuthBloc, AuthState>(
-        bloc: authBloc,
+        // bloc: authBloc,
         listener: (context, state) {
-          showError();
           print("inside listener");
-          if (state is AuthUnitialized) {
-            print(state);
-            print("im authunitialized");
+          // if (state is LoadedSetting) {
+          //   print(state);
+          //   showError();
+          //   print("im authunitialized");
+          // } else
+          if (state is LoadedSetting) {
+            showSuccess();
           }
         },
-        // builder: (context, state) {
-        //   return
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-          child: ListView(
-            children: <Widget>[
-              // Text(settingBloc.state.toggleEnv != null
-              //     ? "DATA:" + settingBloc.state.toggleEnv
-              //     : ""),
-              Text(
-                "Environment setting",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              MyBuildList(
-                  title: "Development",
-                  icon: Icons.android,
-                  child: toggleDev(context)),
-              MyBuildList(
-                  title: "UAT",
-                  icon: Icons.mobile_screen_share,
-                  child: toggleUAT(context)),
-              MyBuildList(
-                  title: "HRPB", icon: Icons.home, child: toggleProd(context)),
-              MyBuildList(
-                title: "Sync data",
-                icon: Icons.sync,
-                child: updateButton(),
-                subtitle: settingBloc.state.lastSynced,
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Text(
-                "General",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              MyBuildList(
-                  title: "Dark mode",
-                  icon: Icons.brightness_4,
-                  child: toggleButton(context)),
-              MyBuildList(
-                title: "App version",
-                icon: Icons.info,
-                child: appChild(),
-              ),
-            ],
-          ),
-        ),
-        //   );
-        // },
+        builder: (context, state) {
+          return
+              // child:
+              Container(
+            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+            child: ListView(
+              children: <Widget>[
+                // Text(settingBloc.state.toggleEnv != null
+                //     ? "DATA:" + settingBloc.state.toggleEnv
+                //     : ""),
+                Text(
+                  "Environment setting",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                MyBuildList(
+                    title: "Development",
+                    icon: Icons.android,
+                    child: toggleDev(context)),
+                MyBuildList(
+                    title: "UAT",
+                    icon: Icons.mobile_screen_share,
+                    child: toggleUAT(context)),
+                MyBuildList(
+                    title: "HRPB",
+                    icon: Icons.home,
+                    child: toggleProd(context)),
+                MyBuildList(
+                  title: "Sync data",
+                  icon: Icons.sync,
+                  child: updateButton(),
+                  subtitle: settingBloc.state.lastSynced,
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                Text(
+                  "General",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                MyBuildList(
+                    title: "Dark mode",
+                    icon: Icons.brightness_4,
+                    child: toggleButton(context)),
+                MyBuildList(
+                  title: "App version",
+                  icon: Icons.info,
+                  child: appChild(),
+                ),
+              ],
+            ),
+          );
+          //   );
+        },
       ),
     );
   }
 
-  appChild() => Text("1.12.07.20");
+  appChild() => Text("1.16.07.20");
 
   toggleButton(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);

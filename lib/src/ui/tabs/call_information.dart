@@ -160,10 +160,13 @@ class _CallInfoState extends State<CallInformationScreen>
 
   _buildBody(CallInformation data) {
     // final editData = data;
-
+    // var callReceived = "";
     if (data == null) {
       data = new CallInformation(
           callReceived: DateFormat("dd/MM/yyyy HH:mm").format(DateTime.now()));
+      // } else {
+      //   callReceived = DateFormat("dd/MM/yyyy HH:mm")
+      //       .format(DateTime.parse(data.call_received));
     }
     return Scaffold(
       // backgroundColor: Colors.grey,
@@ -179,6 +182,7 @@ class _CallInfoState extends State<CallInformationScreen>
             ],
           ),
         ),
+        padding: EdgeInsets.symmetric(vertical: 40),
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Card(
@@ -244,7 +248,12 @@ class _CallInfoState extends State<CallInformationScreen>
                             ),
                         MyTextField(
                             labelText: "Date Received",
-                            initialData: data.callReceived),
+                            initialData:
+                                // data != null
+                                // ? DateFormat("dd/MM/yyyy hh:mm")
+                                //     .format(DateTime.parse(data.callReceived))
+                                // :
+                                data.callReceived),
                       ],
                     ),
                     Row(crossAxisAlignment: CrossAxisAlignment.start,

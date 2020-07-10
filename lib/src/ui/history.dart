@@ -137,9 +137,13 @@ class _History extends State<History> {
                                 )
                               : RichText(
                                   text: TextSpan(
+                                    style: new TextStyle(
+                                      // fontSize: 14.0,
+                                      color: Colors.black,
+                                    ),
                                     children: [
                                       TextSpan(
-                                          text: "Failed sending",
+                                          text: "Failed sending ",
                                           style: TextStyle(
                                               color: Colors.red,
                                               fontWeight: FontWeight.bold)),
@@ -159,8 +163,7 @@ class _History extends State<History> {
                                         ),
                                         onPressed: () {
                                           print("EDIT=HISTORY");
-                                          print(
-                                              jsonEncode(data.historyCallcard));
+                                          print(jsonEncode(data));
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -192,7 +195,9 @@ class _History extends State<History> {
                                                         patients: data
                                                             .historyCallcard
                                                             .patients,
-
+                                                        scene_assessment: data
+                                                            .historyCallcard
+                                                            .sceneAssessment,
                                                         // phcDao: widget.phcDao,
                                                       )));
                                         }),

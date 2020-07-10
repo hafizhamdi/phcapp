@@ -126,7 +126,7 @@ class _IncidentState extends State<IncidentReport> {
                     listTransport.length > 0 ? listTransport[0] : "",
               );
 
-              print(incidentReporting.toJson());
+              // print(incidentReporting.toJson());
 
               BlocProvider.of<ReportingBloc>(context)
                   .add(LoadReporting(incidentReporting: incidentReporting));

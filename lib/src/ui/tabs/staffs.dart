@@ -27,8 +27,8 @@ class _Staffs extends State<Staffs> {
 
     teamBloc = BlocProvider.of<TeamBloc>(context);
     // ;
-    print("staffBloc");
-    print(staffBloc);
+    // print("staffBloc");
+    // print(staffBloc);
     staffBloc.add(FetchStaff());
 
     controller.addListener(() {
@@ -111,55 +111,72 @@ class _Staffs extends State<Staffs> {
                     itemCount: state.available_staffs.length,
                     itemBuilder: (context, index) {
                       return filter == null || filter == ""
-                          ? ListTile(
-                              title: Text(state.available_staffs[index].name),
-                              subtitle:
-                                  Text(state.available_staffs[index].position),
-                              trailing: teamBloc.listSelected.contains(index)
-                                  ? Icon(Icons.check)
+                          ? Container(
+                              color: teamBloc.listSelected.contains(index)
+                                  ? Colors.pink[200]
                                   : null,
-                              onTap: () {
-                                setState(() {
-                                  teamBloc.listSelected.add(index);
-                                });
-                                print("your location:{$index}");
-                                print("you pressed me!! " +
-                                    state.available_staffs[index].name);
+                              child: ListTile(
+                                title: Text(state.available_staffs[index].name),
+                                subtitle: Text(
+                                    state.available_staffs[index].position),
+                                trailing: teamBloc.listSelected.contains(index)
+                                    ? Icon(Icons.check)
+                                    : null,
+                                onTap: () {
+                                  setState(() {
+                                    teamBloc.listSelected.add(index);
+                                  });
+                                  // print("your location:{$index}");
+                                  // print("you pressed me!! " +
+                                  //     state.available_staffs[index].name);
 
-                                BlocProvider.of<TeamBloc>(context).add(
-                                    // staffBloc.add(
-                                    AddTeam(
-                                        staff: state.available_staffs[index]));
-                                // setState(() {
-                                //  _listStaffs.add(state.available_staffs[index]);
-                                // });
-                              },
-                            )
+                                  BlocProvider.of<TeamBloc>(context).add(
+                                      // staffBloc.add(
+                                      AddTeam(
+                                          staff:
+                                              state.available_staffs[index]));
+                                  // setState(() {
+                                  //  _listStaffs.add(state.available_staffs[index]);
+                                  // });
+                                },
+                              ))
                           : state.available_staffs[index].name
                                   .toLowerCase()
                                   .contains(filter.toLowerCase())
-                              ? ListTile(
-                                  title:
-                                      Text(state.available_staffs[index].name),
-                                  subtitle: Text(
-                                      state.available_staffs[index].position),
-                                  trailing: IconButton(
-                                    icon: Icon(Icons.check),
-                                    onPressed: () {},
-                                  ),
-                                  onTap: () {
-                                    print("your location:{$index}");
-                                    print("you pressed me!! " +
-                                        state.available_staffs[index].name);
+                              ? Container(
+                                  color: teamBloc.listSelected.contains(index)
+                                      ? Colors.pink[200]
+                                      : null,
+                                  child: ListTile(
+                                    title: Text(
+                                        state.available_staffs[index].name),
+                                    subtitle: Text(
+                                        state.available_staffs[index].position),
+                                    trailing:
+                                        // IconButton(
+                                        // icon:
+                                        teamBloc.listSelected.contains(index)
+                                            ? Icon(Icons.check)
+                                            : null,
+                                    // onPressed: () {},
+                                    // ),
+                                    onTap: () {
+                                      // print("your location:{$index}");
+                                      // print("you pressed me!! " +
+                                      //     state.available_staffs[index].name);
 
-                                    BlocProvider.of<TeamBloc>(context).add(
-                                        // staffBloc.add(
-                                        AddTeam(
-                                            staff:
-                                                state.available_staffs[index]));
-                                    // mySelectedList.add(index);
-                                  },
-                                )
+                                  setState(() {
+                                    teamBloc.listSelected.add(index);
+                                  });
+
+                                      BlocProvider.of<TeamBloc>(context).add(
+                                          // staffBloc.add(
+                                          AddTeam(
+                                              staff: state
+                                                  .available_staffs[index]));
+                                      // mySelectedList.add(index);
+                                    },
+                                  ))
                               : new Container();
 
                       // return

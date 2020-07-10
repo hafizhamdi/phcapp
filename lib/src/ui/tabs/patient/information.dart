@@ -44,9 +44,10 @@ class _Information extends State<PatientInformationScreen>
   TextEditingController ageController = new TextEditingController();
   TextEditingController genderController = new TextEditingController();
 
-  PatientBloc patientBloc;
   String idType;
   String idHintText;
+
+  PatientBloc patientBloc;
   String docType;
   String gender;
   @override
@@ -78,6 +79,15 @@ class _Information extends State<PatientInformationScreen>
     // patientBloc.close();
 
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    print("I save form");
+    patientBloc = BlocProvider.of<PatientBloc>(context);
+    if (patientBloc.formKey.currentState != null)
+      patientBloc.formKey.currentState.save();
+    super.didChangeDependencies();
   }
 
   var dobFormater = MaskTextInputFormatter(
@@ -116,6 +126,7 @@ class _Information extends State<PatientInformationScreen>
       // backgroundColor: Colors.grey,
 
       body: Container(
+          width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -127,6 +138,7 @@ class _Information extends State<PatientInformationScreen>
               ],
             ),
           ),
+          padding: EdgeInsets.symmetric(vertical: 40),
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Center(
@@ -135,39 +147,65 @@ class _Information extends State<PatientInformationScreen>
                     borderRadius: BorderRadius.all(Radius.circular(20.0))),
                 margin: EdgeInsets.all(12.0),
                 child: Form(
-                  key: patProvider.formKey,
+                  key: patientBloc.formKey,
                   child: Container(
                     padding: EdgeInsets.all(10),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         HeaderSection("Patient Information"),
-                        _textInput("Name", patProvider.nameController,
-                            nameValidator, patProvider.ageController, null),
+                        MyTextInput2(
+                          labelText: "Name",
+                          controller: patProvider.nameController,
+                          validator: nameValidator,
+                          ageController: patProvider.ageController,
+                          // null
+                        ),
 
-                        DropDownList("Document Type", LIST_IDTYPE,
-                            InputSelector.idtype, patProvider.getIdtype == null || patProvider.getIdtype.isEmpty ?
-                            docType : patProvider.getIdtype),
-                        _idInputCalculated(
-                            context,
-                            "ID No.",
-                            patProvider.idController,
-                            idValidator,
-                            patProvider.ageController,
-                            patProvider.dobController,
-                            patProvider.genderController),
+                        Row(children: [
+                          Expanded(
+                            child: DropDownList("Document Type", LIST_IDTYPE,
+                                InputSelector.idtype, patProvider.getIdtype),
+                          ),
+                          Expanded(
+                            child: _idInputCalculated(
+                                context,
+                                "ID No.",
+                                patProvider.idController,
+                                idValidator,
+                                patProvider.ageController,
+                                patProvider.dobController,
+                                patProvider.genderController),
+                          ),
+                        ]),
                         // _textInput("Document Type", idTypeController),
-                        _textInput(
-                            "Date of Birth",
-                            patProvider.dobController,
-                            dobValidator,
-                            patProvider.ageController,
-                            dobFormater),
-                        _textInput("Age", patProvider.ageController,
-                            ageValidator, patProvider.ageController, null),
+                        Row(children: [
+                          Expanded(
+                            child: MyTextInput2(
+                                labelText: "Date of Birth",
+                                controller: patProvider.dobController,
+                                // validator: dobValidator,
+                                ageController: patProvider.ageController,
+                                formater: dobFormater,
+                                keyboardType: TextInputType.number,
+                                hint: "dd/mm/yyyy"),
+                          ),
+                          Expanded(
+                            child: MyTextInput2(
+                              labelText: "Age",
+                              controller: patProvider.ageController,
+                              // validator: ageValidator,
+                              ageController: patProvider.ageController,
+                              keyboardType: TextInputType.number,
+                              // null
+                            ),
+                          )
+                        ]),
                         DropDownList("Gender", LIST_GENDER,
                             InputSelector.gender, patProvider.gender),
-
+                        SizedBox(
+                          height: 40,
+                        ),
                         // _textInput("Gender", patProvider.genderController),
                       ],
                     ),
@@ -238,56 +276,12 @@ class _Information extends State<PatientInformationScreen>
     }
   }
 
-  Widget _textInput(labelText, controller, validator, ageController, formater) {
-    return Container(
-        // width: 500,
-        width: 500,
-        child: Padding(
-            padding: EdgeInsets.all(16),
-            child: TextFormField(
-                controller: controller,
-                inputFormatters: formater != null ? [formater] : [],
-                validator: validator,
-                onChanged: (String text) {
-                  print(controller.text);
-
-                  var sliceDate = controller.text.split("/");
-                  print(sliceDate.length);
-                  if (sliceDate.length == 3) {
-                    var day = sliceDate[0];
-                    var month = sliceDate[1];
-                    var year = sliceDate[2];
-
-                    var ndate = DateTime(
-                        int.parse(year), int.parse(month), int.parse(day));
-                    var now = DateTime.now();
-
-                    var diff = now.difference(ndate).inDays;
-                    var totalYear = diff / 365;
-                    print("TOTAL YEARS THIS PERSION: $totalYear");
-
-                    var rounded = totalYear.round();
-                    print(rounded);
-                    ageController.text = rounded.toString();
-                  } else {
-                    ageController.clear();
-                  }
-                },
-                decoration: InputDecoration(
-                    labelText: labelText,
-                    fillColor: Colors.white,
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
-                      borderSide: new BorderSide(),
-                    )))));
-  }
-
   Widget _idInputCalculated(context, labelText, controller, validator,
       ageController, dobController, genderController) {
 
     return Container(
         // width: 500,
-        width: 500,
+        // width: 500,
         child: Padding(
             padding: EdgeInsets.all(16),
             child: TextFormField(
@@ -295,38 +289,38 @@ class _Information extends State<PatientInformationScreen>
                 controller: controller,
                 // inputFormatters: formater != null ? [formater] : [],
                 validator: (value) {
-                    if (idType == "New IC") {
-                      if (value.length != 12) {
-                        return "Enter a valid New IC number";
-                      }
-                    }else if (idType == "Old IC") {
-                      if (value.length > 8) {
-                        return "Enter a valid Old IC number";
-                      }
-                    }else if (idType == "Passport") {
-                      if (value.length > 20) {
-                        return "Enter a valid passport number";
-                      }
-                    }else if (idType == "Birth Certificate") {
-                      if (value.length > 20) {
-                        return "Enter a valid birth certificate number";
-                      }
-                    }else if (idType == "Police ID") {
-                      if (value.length > 20) {
-                        return "Enter a valid Police ID";
-                      }
-                    }else if (idType == "Military ID") {
-                      if (value.length > 20) {
-                        return "Enter a valid Military ID";
-                      }
-                    }else if (idType == "Temporary Id") {
-                      if (value.length >= 15) {
-                        return "Temporary ID cannot more than 15";
-                      }
+                  if (idType == "New IC") {
+                    if (value.length != 12) {
+                      return "Enter a valid New IC number";
                     }
+                  } else if (idType == "Old IC") {
+                    if (value.length > 8) {
+                      return "Enter a valid Old IC number";
+                    }
+                  } else if (idType == "Passport") {
+                    if (value.length > 20) {
+                      return "Enter a valid passport number";
+                    }
+                  } else if (idType == "Birth Certificate") {
+                    if (value.length > 20) {
+                      return "Enter a valid birth certificate number";
+                    }
+                  } else if (idType == "Police ID") {
+                    if (value.length > 20) {
+                      return "Enter a valid Police ID";
+                    }
+                  } else if (idType == "Military ID") {
+                    if (value.length > 20) {
+                      return "Enter a valid Military ID";
+                    }
+                  } else if (idType == "Temporary Id") {
+                    if (value.length >= 15) {
+                      return "Temporary ID cannot more than 15";
+                    }
+                  }
 
-                  if(value == null && value.isEmpty){
-                      return "ID No. is required";
+                  if (value == null && value.isEmpty) {
+                    return "ID No. is required";
                   }
 
                   return null;
@@ -437,7 +431,6 @@ class _Information extends State<PatientInformationScreen>
                 //   // }
                 //   FocusScope.of(context).unfocus();
                 // },
-                
                 decoration: InputDecoration(
                     hintText: idHintText,
                     labelText: labelText,
@@ -469,7 +462,7 @@ class _Information extends State<PatientInformationScreen>
     print(selector);
     print(initialData);
     return Container(
-        width: 500,
+        // width: 500,
         child: Padding(
             padding: EdgeInsets.all(16),
             child: StreamBuilder(
@@ -500,25 +493,18 @@ class _Information extends State<PatientInformationScreen>
                           idType = valueChanged;
                           if (idType == "New IC") {
                             idHintText = "800128016139";
-                          }else if (idType == "Old IC") {
+                          } else if (idType == "Old IC") {
                             idHintText = "43111520";
-                          }else if (idType == "Passport") {
+                          } else if (idType == "Passport") {
                             idHintText = "A00000000";
-                          }else if (idType == "Birth Certificate") {
+                          } else if (idType == "Birth Certificate") {
                             idHintText = "PK031612";
-                          }else if (idType == "Police ID") {
+                          } else if (idType == "Police ID") {
                             idHintText = "RF154190";
-                          }else if (idType == "Military ID") {
+                          } else if (idType == "Military ID") {
                             idHintText = "1149282";
-                          }else if (idType == "Temporary ID") {
+                          } else if (idType == "Temporary ID") {
                             idHintText = "HRPBD060725B21";
-                          }
-
-                          if(labelText == "Document Type"){
-                            widget.patient_information.idType = valueChanged;
-                          }
-                          if(labelText == "Gender"){
-                            widget.patient_information.gender = valueChanged;
                           }
                         });
                       },
@@ -526,7 +512,7 @@ class _Information extends State<PatientInformationScreen>
                       validator: (value) {
                         print("DROPDOWNVALUE");
                         print(value);
-                        if (value == null && snapshot.data == null ) {
+                        if (value == null && snapshot.data == null) {
                           return 'Please choose option';
                         }
                         return null;
@@ -571,6 +557,77 @@ class MyTextInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: labelText,
             fillColor: Colors.white,
+            border: new OutlineInputBorder(
+              borderRadius: new BorderRadius.circular(10.0),
+              borderSide: new BorderSide(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MyTextInput2 extends StatelessWidget {
+  final labelText;
+  final controller;
+  final validator;
+  final ageController;
+  final formater;
+  final keyboardType;
+  final hint;
+
+  MyTextInput2(
+      {this.labelText,
+      this.controller,
+      this.validator,
+      this.ageController,
+      this.formater,
+      this.keyboardType,
+      this.hint});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // width: 500,
+      // width: 500,
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: TextFormField(
+          keyboardType: keyboardType,
+          controller: controller,
+          inputFormatters: formater != null ? [formater] : [],
+          validator: validator,
+          autovalidate: true,
+          onChanged: (String text) {
+            print(controller.text);
+
+            var sliceDate = controller.text.split("/");
+            print(sliceDate.length);
+            if (sliceDate.length == 3) {
+              var day = sliceDate[0];
+              var month = sliceDate[1];
+              var year = sliceDate[2];
+
+              var ndate =
+                  DateTime(int.parse(year), int.parse(month), int.parse(day));
+              var now = DateTime.now();
+
+              var diff = now.difference(ndate).inDays;
+              var totalYear = diff / 365;
+              print("TOTAL YEARS THIS PERSION: $totalYear");
+
+              var rounded = totalYear.round();
+              print(rounded);
+              ageController.text = rounded.toString();
+            } else {
+              ageController.clear();
+            }
+          },
+          decoration: InputDecoration(
+            labelText: labelText,
+            fillColor: Colors.white,
+            hintText: hint,
             border: new OutlineInputBorder(
               borderRadius: new BorderRadius.circular(10.0),
               borderSide: new BorderSide(),

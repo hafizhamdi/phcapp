@@ -88,14 +88,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             staffs["available_staffs"].map((x) => Staff.fromJson(x)));
 
         // print(fetchStaffs);
-        print("phcDao");
-        print(phcDao);
+        // print("phcDao");
+        // print(phcDao);
         if (phcDao == null) {
           phcDao = new PhcDao();
           final insert = await phcDao.updateStaffs(tmpfetchStaffs);
         }
         // print(insert);
-        print("insert ok!");
+        // print("insert ok!");
         yield AuthInitialized(staffs: tmpfetchStaffs);
       } catch (_) {
         yield AuthUnitialized();
@@ -118,13 +118,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           orElse: () => null);
 
       if (foundUser != null) {
-        print("user found not null");
-        print(foundUser.toJson());
-        print(foundUser.userId);
-        print(foundUser.password);
-        final String md5 = generateMd5(event.password);
-        print(md5);
-        if (foundUser.password == md5) {
+        // print("user found not null");
+        // print(foundUser.toJson());
+        // print(foundUser.userId);
+        // print(foundUser.password);
+        var bytes = utf8.encode(event.password);
+        var digest = sha1.convert(bytes);
+        var md5 = "$digest";
+        var secondCheck = generateMd5(event.password);
+        // print(md5);
+        var base64 = decodeBase64(foundUser.password);
+        // print(base64);
+        // sha1.convert(decoded);
+        if (base64.trim() == md5.trim()) {
+          setAuthorizedUser(foundUser);
+          yield AuthAunthenticated();
+        } else if (foundUser.password == secondCheck) {
+          // print(secondCheck);
           setAuthorizedUser(foundUser);
           yield AuthAunthenticated();
         } else {
@@ -140,6 +150,35 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   String generateMd5(String password) {
     return md5.convert(utf8.encode(password)).toString();
+  }
+
+  String decodeBase64(String password) {
+    // print("decodeBase64");
+    var decoded = base64Decode(password);
+    // print(decoded);
+    var str = "";
+    decoded.map((f) {
+      // print(f.toRadixString(16));
+      var tmpstr = "0" + f.toRadixString(16);
+      str += tmpstr.substring(tmpstr.length - 2);
+      // print(str);
+    }).toList();
+
+    // print(str);
+
+    // var result =
+    // var tmpBytes = String.(uInt8List);
+    // print("$result");
+    // uInt8List.map((f) {
+    //   print(f);
+    //   // print(f.toRadixString(2));
+    // });
+    // var encoded = utf8.decode(uInt8List);
+    // print("encoded");
+    // print(encoded);
+    return str;
+    // base64Decode(password).;
+    // base.convert(utf8.encode(password)).toString();
   }
 }
 

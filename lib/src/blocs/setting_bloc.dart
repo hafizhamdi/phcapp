@@ -69,6 +69,8 @@ class ToggledEnvironment extends SettingState {
 
 class EmptySync extends SettingState {}
 
+class LoadingSetting extends SettingState {}
+
 class EmptySetting extends SettingState {}
 
 class LastSynced extends SettingState {
@@ -86,6 +88,17 @@ class LoadedSetting extends SettingState {
   final Environment environment;
 
   LoadedSetting({this.lastSynced, this.toggleEnv, this.environment});
+
+  @override
+  List get props => [lastSynced, toggleEnv, environment];
+}
+
+class ToggledSetting extends SettingState {
+  final lastSynced;
+  final toggleEnv;
+  final Environment environment;
+
+  ToggledSetting({this.lastSynced, this.toggleEnv, this.environment});
 
   @override
   List get props => [lastSynced, toggleEnv, environment];
@@ -122,7 +135,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
     // await prefs.setString('env_use', event.toggleEnv);
 
     // print(selectedEnv.name);
-    yield LoadedSetting(
+    yield ToggledSetting(
         lastSynced: state.lastSynced,
         toggleEnv: event.toggleEnv,
         environment: selectedEnv);
@@ -130,6 +143,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
   }
 
   Stream<SettingState> mapPressSyncButton(PressSyncButton event) async* {
+    yield LoadingSetting();
     // yield LastSynced(lastSynced: event.lastSynced);
     yield LoadedSetting(
         toggleEnv: state.toggleEnv,

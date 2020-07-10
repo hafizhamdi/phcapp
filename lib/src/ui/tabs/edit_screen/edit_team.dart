@@ -94,7 +94,7 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
   @override
   void didChangeDependencies() {
     print("DIDCHANGE START HEERRE");
-    BlocProvider.of<TeamBloc>(context).add(InitTeam());
+    // BlocProvider.of<TeamBloc>(context).add(InitTeam());
     // if (widget.response_team != null) {
     //   regNoController.text = widget.response_team.vehicleRegno;
 
@@ -189,93 +189,67 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
     return Scaffold(
       // appBar: AppBar(),
       backgroundColor: Colors.grey,
-      body: SafeArea(
+      // body: SafeArea(
+      body: Container(
+        // width: 500,
+        padding: EdgeInsets.symmetric(vertical: 40),
+        // height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
           // padding: EdgeInsets.all(20),
           physics: BouncingScrollPhysics(),
           // child:
           child: Center(
-            child: Container(
-              // width: 500,
-              height: MediaQuery.of(context).size.height,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20.0),
-                  ),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20.0),
                 ),
-                margin:
-                    EdgeInsets.only(top: 10.0, bottom: 80, left: 10, right: 10),
-                child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    // mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          IconButton(
-                              icon: Icon(Icons.close),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              }),
-                          HeaderSection("Response Details"),
-                          IconButton(
-                              icon: Icon(Icons.check),
-                              onPressed: () {
-                                final responseBloc =
-                                    BlocProvider.of<ResponseBloc>(context);
-                                responseBloc.add(AddResponse(
-                                    vehicleRegNo: regNoController.text,
-                                    serviceResponse: _serviceSelected));
-
-                                Navigator.pop(context);
-                              }),
-                        ],
-                      ),
-                      DropDownList("Type of service response", LIST_RESPONSES,
-                          InputOption.service, _serviceSelected),
-                      // CustomDropDown(
-                      //     labelText: "Type of service response",
-                      //     items: LIST_RESPONSES,
-                      //     callback: serviceCallback,
-                      //     itemSelected: serviceSelected),
-                      TextInput(
-                          labelText: "Vehicle Registration No",
-                          controller: regNoController),
-                      // initialData:
-                      // state.response_team.vehicleRegno),
-                    ]),
               ),
+              margin:
+                  EdgeInsets.only(top: 10.0, bottom: 80, left: 10, right: 10),
+              child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  // mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            }),
+                        HeaderSection("Response Details"),
+                        IconButton(
+                            icon: Icon(Icons.check),
+                            onPressed: () {
+                              final responseBloc =
+                                  BlocProvider.of<ResponseBloc>(context);
+                              responseBloc.add(AddResponse(
+                                  vehicleRegNo: regNoController.text,
+                                  serviceResponse: _serviceSelected));
+
+                              Navigator.pop(context);
+                            }),
+                      ],
+                    ),
+                    DropDownList("Type of service response", LIST_RESPONSES,
+                        InputOption.service, _serviceSelected),
+                    // CustomDropDown(
+                    //     labelText: "Type of service response",
+                    //     items: LIST_RESPONSES,
+                    //     callback: serviceCallback,
+                    //     itemSelected: serviceSelected),
+                    TextInput(
+                        labelText: "Vehicle Registration No",
+                        controller: regNoController),
+                    // initialData:
+                    // state.response_team.vehicleRegno),
+                  ]),
             ),
           ),
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   heroTag: 102,
-      //   onPressed: () {
-
-      // ResponseTeam responseTeam = new ResponseTeam(
-      //   serviceResponse: _serviceSelected,
-      //   vehicleRegno: regNoController.text,
-      //   staffs: teamBloc.state.response_team.staffs,
-      // );
-
-      // print("bye---bye reponseteam");
-      // print(responseTeam.toJson());
-
-      // teamBloc.add(AddResponseTeam(
-      //     response_team: responseTeam, assign_id: widget.assign_id));
-
-      // final snackBar = SnackBar(
-      //   content: Text("Response team has been saved!"),
-      // );
-      // Scaffold.of(context).showSnackBar(snackBar);
-      // },
-      // child: Icon(Icons.save),
-      // ),
-      //   ),
-      // ],
-      // ),
     );
   }
 

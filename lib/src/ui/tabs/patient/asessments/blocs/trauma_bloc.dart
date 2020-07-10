@@ -69,7 +69,7 @@ class TraumaBloc extends Bloc<TraumaEvent, TraumaState> {
 
   Stream<TraumaState> _mapUpdateTraumaToState(UpdateTrauma event) async* {
     print("INBLOC tRAUMA");
-    print(event.traumaAssessment.toJson());
+    // print(event.traumaAssessment.toJson());
     yield TraumaLoaded(traumaAssessment: event.traumaAssessment);
   }
 }

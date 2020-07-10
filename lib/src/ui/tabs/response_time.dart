@@ -122,9 +122,10 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
     return Scaffold(
       body: Container(
         // color: Colors.grey,
+        padding: EdgeInsets.symmetric(vertical: 40),
 
 // Container(
-        height: MediaQuery.of(context).size.height,
+        // height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topRight,
@@ -167,7 +168,7 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
                   height: 20,
                 ),
                 Container(
-                    width: 500,
+                    // width: 500,
                     child: DropDownList(
                         "Mission abort", MISSION_ABORT, missionSelected)
                     //     child: CustomDropDown(
@@ -428,57 +429,59 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
                 switch (selector) {
                   case Response.dispatch:
                     setState(() {
+                      print("dispatch:" + dateTime.toString());
                       widget.dispatchTime = dateTime;
-                      timeBloc.add(
-                          AddTime(selector: Response.dispatch, time: dateTime));
+
+                      responseTime.dispatchTime = widget.dispatchTime;
+                      timeBloc.add(AddTime(responseTime: responseTime));
                     });
 
                     break;
                   case Response.enroute:
                     setState(() {
                       widget.enrouteTime = dateTime;
-                      timeBloc.add(
-                          AddTime(selector: Response.enroute, time: dateTime));
+
+                      responseTime.enrouteTime = widget.enrouteTime;
+                      timeBloc.add(AddTime(responseTime: responseTime));
                     });
                     break;
                   case Response.atScene:
                     setState(() {
                       widget.atSceneTime = dateTime;
-                      timeBloc.add(AddTime(
-                          selector: Response.atScene,
-                          time: widget.atSceneTime));
+                      responseTime.atSceneTime = widget.atSceneTime;
+                      timeBloc.add(AddTime(responseTime: responseTime));
                     });
                     break;
                   case Response.atPatient:
                     setState(() {
                       widget.atPatientTime = dateTime;
-                      timeBloc.add(AddTime(
-                          selector: Response.atPatient,
-                          time: widget.atPatientTime));
+
+                      responseTime.atPatientTime = widget.atPatientTime;
+                      timeBloc.add(AddTime(responseTime: responseTime));
                     });
                     break;
                   case Response.transport:
                     setState(() {
                       widget.transportingTime = dateTime;
-                      timeBloc.add(AddTime(
-                          selector: Response.transport,
-                          time: widget.transportingTime));
+
+                      responseTime.transportingTime = widget.transportingTime;
+                      timeBloc.add(AddTime(responseTime: responseTime));
                     });
                     break;
                   case Response.reroute:
                     setState(() {
                       widget.rerouteTime = dateTime;
-                      timeBloc.add(AddTime(
-                          selector: Response.reroute,
-                          time: widget.rerouteTime));
+
+                      responseTime.rerouteTime = widget.rerouteTime;
+                      timeBloc.add(AddTime(responseTime: responseTime));
                     });
                     break;
                   case Response.atHospital:
                     setState(() {
                       widget.atHospitalTime = dateTime;
-                      timeBloc.add(AddTime(
-                          selector: Response.atHospital,
-                          time: widget.atHospitalTime));
+
+                      responseTime.atHospitalTime = widget.atHospitalTime;
+                      timeBloc.add(AddTime(responseTime: responseTime));
                     });
                     break;
                   default:

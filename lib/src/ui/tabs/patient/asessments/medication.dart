@@ -27,11 +27,15 @@ const _medication = [
   "neb salbutamol"
 ];
 
+<<<<<<< HEAD
 const _route = [
   "IV",
   "IM",
   "IO"
 ];
+=======
+const _route = ["IV", "IM", "IO"];
+>>>>>>> a76e25d697fc0cdb7a40ff87217bd8f30d474d85
 
 class MedicationScreen extends StatefulWidget {
   List<Medication> medications;
@@ -177,6 +181,15 @@ class _MedicationScreen extends State<MedicationScreen> {
                           ),
                           Container(
                             width: MediaQuery.of(context).size.width * 0.5,
+                            child: MyCardSingleOption(
+                              id: "route",
+                              name: "Add Route",
+                              listData: _route,
+                              mycallback: routeCallback,
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
                             child: TextField(
                               controller: timeController,
                               decoration: InputDecoration(labelText: "Time"),
@@ -212,8 +225,8 @@ class _MedicationScreen extends State<MedicationScreen> {
                                       timestamp: timeController.text,
                                       dose: doseController.text,
                                       route: listRoute.length > 0
-                                           ? listRoute[0]
-                                           : ""),
+                                          ? listRoute[0]
+                                          : ""),
                                 );
                                 _listKey.currentState.insertItem(_index);
                                 _index++;

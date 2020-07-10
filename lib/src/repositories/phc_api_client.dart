@@ -61,13 +61,20 @@ class PhcApiClient {
     // print(jsonEncode(test));
 
     final newlist = List<Patient>.from(callcard.patients.map((f) {
-      return f;
+      // return f;
       // print(jsonEncode(f));
-      // return Patient(
-      //   patientInformation: f.patientInformation,
-      //   vitalSigns: f.vitalSigns,
-      //   medicationAssessment: f.medicationAssessment
-      // // )
+      return Patient(
+          patientInformation: f.patientInformation,
+          vitalSigns: f.vitalSigns,
+          medicationAssessment: f.medicationAssessment,
+          cprLog: f.cprLog,
+          patientAssessment: f.patientAssessment,
+          traumaAssessment: f.traumaAssessment,
+          incidentReporting: f.incidentReporting,
+          intervention: f.intervention,
+          outcome: f.outcome);
+
+      // )
       // );
     })).toList();
     //     List<Patient>.from(callcard.patients).map((f) {

@@ -134,18 +134,18 @@ class _CPRTimeLog extends State<CPRTimeLog>
           );
         }),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: Icon(Icons.play_arrow),
-        label: Text("START CPRLOG"),
-        onPressed: () {
-          Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => CPRItems(),
-            ),
-          );
-        },
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   icon: Icon(Icons.play_arrow),
+      //   label: Text("START CPRLOG"),
+      //   onPressed: () {
+      //     // Navigator.push(
+      //     //   context,
+      //     //   CupertinoPageRoute(
+      //     //     builder: (context) => CPRItems(),
+      //     //   ),
+      //     // );
+      //   },
+      // ),
       // ),
     );
   }
