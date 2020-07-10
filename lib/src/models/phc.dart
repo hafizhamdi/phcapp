@@ -867,7 +867,6 @@ class PatientAssessment {
   String abdomenPalpation;
   String abdomenAbnormalityLocation;
   StrokeScale strokeScale;
-  String taunaAssessment;
 
   PatientAssessment({
     this.timestamp,
@@ -884,7 +883,6 @@ class PatientAssessment {
     this.abdomenPalpation,
     this.abdomenAbnormalityLocation,
     this.strokeScale,
-    this.taunaAssessment,
   });
 
   factory PatientAssessment.fromJson(Map<String, dynamic> json) =>
@@ -905,7 +903,6 @@ class PatientAssessment {
         abdomenPalpation: json["abdomen_palpation"],
         abdomenAbnormalityLocation: json["abdomen_abnormality_location"],
         strokeScale: StrokeScale.fromJson(json["stroke_scale"]),
-        taunaAssessment: json["tauna_assessment"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -923,7 +920,6 @@ class PatientAssessment {
         "abdomen_palpation": abdomenPalpation,
         "abdomen_abnormality_location": abdomenAbnormalityLocation,
         "stroke_scale": strokeScale.toJson(),
-        "tauna_assessment": taunaAssessment,
       };
 }
 
