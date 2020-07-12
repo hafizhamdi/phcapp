@@ -27,15 +27,7 @@ const _medication = [
   "neb salbutamol"
 ];
 
-<<<<<<< HEAD
-const _route = [
-  "IV",
-  "IM",
-  "IO"
-];
-=======
 const _route = ["IV", "IM", "IO"];
->>>>>>> a76e25d697fc0cdb7a40ff87217bd8f30d474d85
 
 class MedicationScreen extends StatefulWidget {
   List<Medication> medications;
