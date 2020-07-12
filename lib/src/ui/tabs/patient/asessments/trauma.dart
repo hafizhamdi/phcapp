@@ -249,7 +249,7 @@ const _pelvic = [
   "Gunshot wound",
   "Swelling",
   "Tenderness",
-  "stability",
+  "Stability",
 ];
 
 const _hip_right = [
@@ -498,6 +498,18 @@ class _TraumaScreen extends State<TraumaScreen> {
         value: List<String>(),
         multiple: true),
     ChipItem(
+        id: "right_elbow",
+        name: "Right Elbow ",
+        listData: _elbow_right,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "left_elbow",
+        name: "Left Elbow ",
+        listData: _elbow_left,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
         id: "limb_right_forearm",
         name: "Limb: Right forearm",
         listData: _limb_forearm,
@@ -510,6 +522,18 @@ class _TraumaScreen extends State<TraumaScreen> {
         value: List<String>(),
         multiple: true),
     ChipItem(
+        id: "right_wrist",
+        name: "Right Wrist",
+        listData: _wrist_right,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "left_wrist",
+        name: "Left Wrist",
+        listData: _wrist_left,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
         id: "limb_right_hand",
         name: "Limb: Right hand",
         listData: _limb_hand,
@@ -519,6 +543,24 @@ class _TraumaScreen extends State<TraumaScreen> {
         id: "limb_left_hand",
         name: "Limb: Left hand",
         listData: _limb_hand,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "pelvic",
+        name: "Pelvic",
+        listData: _pelvic,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "right_hip",
+        name: "Right Hip",
+        listData: _hip_right,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "left_hip",
+        name: "Left Hip",
+        listData: _hip_left,
         value: List<String>(),
         multiple: true),
     ChipItem(
@@ -546,60 +588,6 @@ class _TraumaScreen extends State<TraumaScreen> {
         value: List<String>(),
         multiple: true),
     ChipItem(
-        id: "limb_right_feet",
-        name: "Limb: Right feet",
-        listData: _limb_feet,
-        value: List<String>(),
-        multiple: true),
-    ChipItem(
-        id: "limb_left_feet",
-        name: "Limb: Left feet",
-        listData: _limb_feet,
-        value: List<String>(),
-        multiple: true),
-    ChipItem(
-        id: "right_elbow",
-        name: "Right Elbow ",
-        listData: _elbow_right,
-        value: List<String>(),
-        multiple: true),
-    ChipItem(
-        id: "left_elbow",
-        name: "Left Elbow ",
-        listData: _elbow_left,
-        value: List<String>(),
-        multiple: true),
-    ChipItem(
-        id: "right_wrist",
-        name: "Right Wrist",
-        listData: _wrist_right,
-        value: List<String>(),
-        multiple: true),
-    ChipItem(
-        id: "left_wrist",
-        name: "Left Wrist",
-        listData: _wrist_left,
-        value: List<String>(),
-        multiple: true),
-    ChipItem(
-        id: "pelvic",
-        name: "Pelvic",
-        listData: _pelvic,
-        value: List<String>(),
-        multiple: true),
-    ChipItem(
-        id: "right_hip",
-        name: "Right Hip",
-        listData: _hip_right,
-        value: List<String>(),
-        multiple: true),
-    ChipItem(
-        id: "left_hip",
-        name: "Left Hip",
-        listData: _hip_left,
-        value: List<String>(),
-        multiple: true),
-    ChipItem(
         id: "right_knee",
         name: "Right Knee",
         listData: _knee_right,
@@ -621,6 +609,18 @@ class _TraumaScreen extends State<TraumaScreen> {
         id: "left_ankle",
         name: "Left Ankle",
         listData: _ankle_left,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "limb_right_feet",
+        name: "Limb: Right feet",
+        listData: _limb_feet,
+        value: List<String>(),
+        multiple: true),
+    ChipItem(
+        id: "limb_left_feet",
+        name: "Limb: Left feet",
+        listData: _limb_feet,
         value: List<String>(),
         multiple: true),
   ];

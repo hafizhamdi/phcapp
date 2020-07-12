@@ -49,13 +49,18 @@ class _MySingleOptions extends State<MySingleOptions>
               selectedColor: Colors.pink[200],
               onSelected: (bool selected) {
                 setState(() {
+                  print(selected);
                   if (listSelected.length < 1) {
                     listSelected.contains(widget.listDataset[index])
                         ? listSelected.remove(widget.listDataset[index])
                         : listSelected.add(widget.listDataset[index]);
                   } else {
-                    listSelected.removeLast();
-                    listSelected.add(widget.listDataset[index]);
+                      if(selected){
+                        listSelected.removeLast();
+                        listSelected.add(widget.listDataset[index]);
+                      }else{
+                        listSelected.remove(widget.listDataset[index]);
+                      }
                   }
 
                   widget.callback(widget.id, listSelected);
