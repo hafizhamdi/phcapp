@@ -803,7 +803,8 @@ class _CPRItems extends State<CPRItems>
                       child: Padding(
                         padding: EdgeInsets.all(16),
                         child: DropdownButtonFormField(
-                          isDense: true,
+                          isExpanded: true,
+                          // isDense: true,
                           items: dropdownList.map((String dropDownStringItem) {
                             return DropdownMenuItem<String>(
                                 child: Text(dropDownStringItem),
@@ -863,7 +864,8 @@ class _CPRItems extends State<CPRItems>
                       child: Padding(
                         padding: EdgeInsets.all(16),
                         child: DropdownButtonFormField(
-                          isDense: true,
+                          isExpanded: true,
+                          // isDense: true,
                           items: transported.map((String dropDownStringItem) {
                             return DropdownMenuItem<String>(
                                 child: Text(dropDownStringItem),
@@ -895,7 +897,8 @@ class _CPRItems extends State<CPRItems>
                       child: Padding(
                         padding: EdgeInsets.all(16),
                         child: DropdownButtonFormField(
-                          isDense: true,
+                          // isDense: true,
+                          isExpanded: true,
                           items:
                               not_transported.map((String dropDownStringItem) {
                             return DropdownMenuItem<String>(

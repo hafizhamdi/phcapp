@@ -137,7 +137,8 @@ class _LoginScreen extends State<LoginScreen> {
                   end: Alignment.bottomLeft,
                   colors: [
                     Color(0xFF3383CD),
-                    Color(0xFF11249F),
+                    Colors.green
+                    // Color(0xFF112BBF),
                   ],
                 ),
                 // image: DecorationImage(
@@ -161,15 +162,16 @@ class _LoginScreen extends State<LoginScreen> {
                     ),
                     Positioned(
                         child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         // (
                         // child:
-                        Container(
-                          width: 200,
-                          child: Image(
-                              image: AssetImage('assets/ambulanceMY.png')),
-                          // )
-                        ),
+                        // Container(
+                        //   width: 200,
+                        //   child: Image(
+                        //       image: AssetImage('assets/ambulanceMY.png')),
+                        //   // )
+                        // ),
                         // SizedBox(
                         //   height: 40,
                         // ),
@@ -188,7 +190,7 @@ class _LoginScreen extends State<LoginScreen> {
                           // right: 70,
                           // top: 60,
                           child: Text(
-                            "HRPB Version 1.18",
+                            "HRPB Version 1.19",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,

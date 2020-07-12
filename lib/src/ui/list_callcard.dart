@@ -37,6 +37,9 @@ class _ListCallcards extends State<ListCallcards> {
 
   PhcRepository phcRepository;
   PhcDaoClient phcDaoClient;
+
+  TextEditingController searchController = TextEditingController();
+  String filter;
   // PhcDao phcDao;
 
   @override
@@ -52,6 +55,12 @@ class _ListCallcards extends State<ListCallcards> {
             environment: settingBloc.state.environment));
 
     phcDaoClient = new PhcDaoClient(phcDao: new PhcDao());
+
+    searchController.addListener(() {
+      setState(() {
+        filter = searchController.text;
+      });
+    });
     super.didChangeDependencies();
   }
 
@@ -59,6 +68,13 @@ class _ListCallcards extends State<ListCallcards> {
   void initState() {
     super.initState();
     _refreshCompleter = Completer<void>();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -160,60 +176,88 @@ class _ListCallcards extends State<ListCallcards> {
         ),
         body: Center(
           child: BlocProvider(
-            create: (context) => PhcBloc(
-                phcRepository: phcRepository, phcDao: phcDaoClient.phcDao),
-            child: BlocConsumer<PhcBloc, PhcState>(
-              listener: (context, state) {
-                _refreshCompleter?.complete();
-                _refreshCompleter = Completer();
-              },
-              builder: (context, state) {
-                phcBloc = BlocProvider.of<PhcBloc>(context);
+              create: (context) => PhcBloc(
+                  phcRepository: phcRepository, phcDao: phcDaoClient.phcDao),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                      padding: EdgeInsets.all(10),
+                      child: TextField(
+                        decoration: InputDecoration(
+                            // hintText: hintText,
+                            labelText: "Search Call Card No",
+                            fillColor: Colors.white,
+                            border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(40.0),
+                              borderSide: new BorderSide(),
+                            ),
+                            prefixIcon: Icon(Icons.search),
+                            suffixIcon: IconButton(
+                                onPressed: () => searchController.clear(),
+                                icon: Icon(Icons.cancel))
+                            // )
 
-                if (state is PhcEmpty) {
-                  // state.props.add(FetchPhc());
-
-                  phcBloc.add(FetchPhc());
-                } else if (state is PhcLoaded) {
-                  print("Phc loaded");
-                  final phc = state.phc;
-
-                  return RefreshIndicator(
-                      onRefresh: () {
-                        BlocProvider.of<PhcBloc>(context).add(
-                          RefreshPhc(),
-                        );
-                        return _refreshCompleter.future;
+                            // decoration: new InputDecoration(
+                            //   labelText: "Search staff name",
+                            //   border:,
+                            ),
+                        controller: searchController,
+                      )),
+                  Expanded(
+                    child: BlocConsumer<PhcBloc, PhcState>(
+                      listener: (context, state) {
+                        _refreshCompleter?.complete();
+                        _refreshCompleter = Completer();
                       },
-                      child: _buildList(phc)
-                      // ListView.builder(
-                      //     itemCount: phc.callcards.length,
-                      //     itemBuilder: (context, index) {
-                      //       final callInfo = phc.callcards[index].call_information;
-                      //       return ListTile(
-                      //         title: Text(callInfo.callcard_no),
-                      //         subtitle: Text(callInfo.callReceived != null
-                      //             ? callInfo.callReceived.substring(
-                      //                 0, callInfo.call_received.length - 2)
-                      //             : callInfo.callReceived),
-                      //       );
-                      //     })
+                      builder: (context, state) {
+                        phcBloc = BlocProvider.of<PhcBloc>(context);
 
-                      );
-                }
-                // else if (state is PhcFetched) {
-                //   final phc = state.phc;
-                //   print("Phc fetched");
+                        if (state is PhcEmpty) {
+                          // state.props.add(FetchPhc());
 
-                //   phcBloc.add(AddPhc(phc: phc));
-                //   print("after loadphc");
-                // }
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
-          ),
+                          phcBloc.add(FetchPhc());
+                        } else if (state is PhcLoaded) {
+                          print("Phc loaded");
+                          final phc = state.phc;
+
+                          return RefreshIndicator(
+                              onRefresh: () {
+                                BlocProvider.of<PhcBloc>(context).add(
+                                  RefreshPhc(),
+                                );
+                                return _refreshCompleter.future;
+                              },
+                              child: _buildList(phc)
+                              // ListView.builder(
+                              //     itemCount: phc.callcards.length,
+                              //     itemBuilder: (context, index) {
+                              //       final callInfo = phc.callcards[index].call_information;
+                              //       return ListTile(
+                              //         title: Text(callInfo.callcard_no),
+                              //         subtitle: Text(callInfo.callReceived != null
+                              //             ? callInfo.callReceived.substring(
+                              //                 0, callInfo.call_received.length - 2)
+                              //             : callInfo.callReceived),
+                              //       );
+                              //     })
+
+                              );
+                        }
+                        // else if (state is PhcFetched) {
+                        //   final phc = state.phc;
+                        //   print("Phc fetched");
+
+                        //   phcBloc.add(AddPhc(phc: phc));
+                        //   print("after loadphc");
+                        // }
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                    ),
+                  )
+                ],
+              )),
         ),
       ),
     );
@@ -271,129 +315,324 @@ class _ListCallcards extends State<ListCallcards> {
     // return SliverList(
     //   delegate: SliverChildBuilderDelegate(
     // (_, index) {
-    return ListView.separated(
+    return ListView.builder(
       itemCount: phc.callcards.length,
-      separatorBuilder: (context, index) => Divider(
-        color: Colors.grey,
-      ),
+      // separatorBuilder: (context, index) => Divider(
+      //   color: Colors.grey,
+      // ),
       itemBuilder: (BuildContext context, int index) {
         final callInfo = phc.callcards[index].callInformation;
 
-        return ListTile(
-          contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                  child: Text(
-                callInfo.callcard_no,
-                style: TextStyle(
-                    fontFamily: "OpenSans",
-                    letterSpacing: 1,
-                    fontWeight: FontWeight.bold),
-              )),
-              Text(
-                DateFormat("d MMM yyyy, hh:mm aaa")
-                    .format(DateTime.parse(callInfo.call_received)),
-                style: TextStyle(color: Colors.grey, fontSize: 14),
-              )
-            ],
-          ),
-          subtitle:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
-                  Widget>[
-            Column(children: [
-              Row(children: <Widget>[
-                Padding(
-                    padding: EdgeInsets.only(right: 6),
-                    child: Icon(
-                      Icons.person,
-                      size: 16,
-                      color: Colors.grey,
+        return (filter == null || filter == "")
+            ? ListTile(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                        child: Text(
+                      callInfo.callcard_no,
+                      style: TextStyle(
+                          fontFamily: "OpenSans",
+                          letterSpacing: 1,
+                          fontWeight: FontWeight.bold),
                     )),
-                Text(phc.callcards[index].patients.length.toString() +
-                    ' Patient'),
-                SizedBox(
-                  width: 20,
+                    // Text(
+                    //   DateFormat("d MMM yyyy, hh:mm aaa")
+                    //       .format(DateTime.parse(callInfo.call_received)),
+                    //   style: TextStyle(color: Colors.grey, fontSize: 14),
+                    // )
+                  ],
                 ),
-                Padding(
-                    padding: EdgeInsets.only(right: 6),
-                    child: Icon(
-                      Icons.group,
-                      color: Colors.grey,
-                      size: 16,
-                    )),
-                Text(
-                    phc.callcards[index].responseTeam.staffs.length.toString() +
-                        ' Team')
-              ])
-            ]),
-            Container(
-                width: 100,
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(5),
-                decoration: new BoxDecoration(
-                    // color: Colo,
-                    border: Border.all(width: 1.5, color: Colors.orange),
-                    borderRadius: new BorderRadius.all(Radius.circular(5.0))),
-                child:
-                    Text((callInfo.plate_no != null) ? callInfo.plate_no : ""))
-          ]),
-          leading: Container(
-            // alignment: Alignment.centerLeft,
-            width: 60,
-            height: 60,
-            decoration: new BoxDecoration(
-              color: Colors.grey,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.headset, color: Colors.white),
-          ),
-          // trailing: Icon(Icons.arrow_forward_ios),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  final timeBloc = BlocProvider.of<TimeBloc>(context);
-                  timeBloc.add(ResetTime());
+                subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Expanded(
+                            // child:
+                            // Expanded(
+                            // child:
+                            // Expanded(
+                            //   child:
+                            Row(
+                                // mainAxisAlignment:
+                                // MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  // Expanded(
+                                  // child:
+                                  // Expanded(
+                                  //   child:
+                                  Row(
+                                      // padding: EdgeInsets.only(right: 8),
+                                      // child:
+                                      children: [
+                                        Icon(
+                                          Icons.person,
+                                          size: 16,
+                                          color: Colors.grey,
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Text(phc.callcards[index].patients
+                                                .length
+                                                .toString() +
+                                            ' Patient')
+                                      ]),
+                                  // ),
+                                  // ),
+                                  SizedBox(
+                                    width: 40,
+                                  ),
+                                  // Padding(
+                                  //     padding: EdgeInsets.only(right: 8),
+                                  // child:
+                                  // Expanded(
+                                  //     child:
+                                  Row(children: [
+                                    Icon(
+                                      Icons.group,
+                                      color: Colors.grey,
+                                      size: 16,
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(phc.callcards[index].responseTeam
+                                            .staffs.length
+                                            .toString() +
+                                        ' Team')
+                                  ])
+                                  // ),
+                                ]),
 
-                  final sceneBloc = BlocProvider.of<SceneBloc>(context);
+                            // ),
 
-                  print("OPEN CALLCARD SCENE ASSESMNT");
-                  print(phc
-                      .callcards[index].sceneAssessment.otherServicesAtScene);
-                  sceneBloc.add(
-                    LoadScene(
-                        selectedServices: phc.callcards[index].sceneAssessment
-                            .otherServicesAtScene),
+                            Row(children: [
+                              Icon(Icons.call_received,
+                                  color: Colors.grey, size: 16),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                DateFormat("d MMM yyyy, h:mm aaa").format(
+                                    DateTime.parse(callInfo.call_received)),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 14),
+                              )
+                            ])
+                          ]),
+                      Container(
+                          width: 120,
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.all(5),
+                          decoration: new BoxDecoration(
+                              // color: Colo,
+                              border:
+                                  Border.all(width: 1.5, color: Colors.orange),
+                              borderRadius:
+                                  new BorderRadius.all(Radius.circular(5.0))),
+                          child: Row(children: [
+                            Icon(Icons.label_important, color: Colors.orange),
+                            Expanded(
+                                child: Text((callInfo.plate_no != null)
+                                    ? callInfo.plate_no
+                                    : ""))
+                          ]))
+                    ]),
+
+                leading: Container(
+                  // alignment: Alignment.centerLeft,
+                  width: 60,
+                  height: 60,
+                  decoration: new BoxDecoration(
+                    color: Colors.grey,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.headset_mic, color: Colors.white),
+                ),
+                // trailing: Icon(Icons.arrow_forward_ios),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        final timeBloc = BlocProvider.of<TimeBloc>(context);
+                        timeBloc.add(ResetTime());
+
+                        final sceneBloc = BlocProvider.of<SceneBloc>(context);
+
+                        print("OPEN CALLCARD SCENE ASSESMNT");
+                        print(phc.callcards[index].sceneAssessment
+                            .otherServicesAtScene);
+                        sceneBloc.add(
+                          LoadScene(
+                              selectedServices: phc.callcards[index]
+                                  .sceneAssessment.otherServicesAtScene),
+                        );
+
+                        final patientBloc =
+                            BlocProvider.of<PatientBloc>(context);
+                        patientBloc.add(
+                          LoadPatient(patients: phc.callcards[index].patients),
+                        );
+
+                        final teamBloc = BlocProvider.of<TeamBloc>(context);
+                        teamBloc.add(LoadTeam(
+                            selectedStaffs:
+                                phc.callcards[index].responseTeam.staffs));
+
+                        return CallcardTabs(
+                          callcard_no: callInfo.callcard_no,
+                          call_information:
+                              phc.callcards[index].callInformation,
+                          response_team: phc.callcards[index].responseTeam,
+                          response_time: phc.callcards[index].responseTime,
+                          patients: phc.callcards[index].patients,
+                          scene_assessment:
+                              phc.callcards[index].sceneAssessment,
+                          // phcDao: widget.phcDao,
+                        );
+                      },
+                    ),
                   );
-
-                  final patientBloc = BlocProvider.of<PatientBloc>(context);
-                  patientBloc.add(
-                    LoadPatient(patients: phc.callcards[index].patients),
-                  );
-
-                  final teamBloc = BlocProvider.of<TeamBloc>(context);
-                  teamBloc.add(LoadTeam(
-                      selectedStaffs:
-                          phc.callcards[index].responseTeam.staffs));
-
-                  return CallcardTabs(
-                    callcard_no: callInfo.callcard_no,
-                    call_information: phc.callcards[index].callInformation,
-                    response_team: phc.callcards[index].responseTeam,
-                    response_time: phc.callcards[index].responseTime,
-                    patients: phc.callcards[index].patients,
-                    scene_assessment: phc.callcards[index].sceneAssessment,
-                    // phcDao: widget.phcDao,
-                  );
+                  // Navigator.pushNamed(context, "/callcarddetail");
                 },
-              ),
-            );
-            // Navigator.pushNamed(context, "/callcarddetail");
-          },
-        );
+              )
+            : phc.callcards[index].callInformation.callcard_no
+                    .toLowerCase()
+                    .toString()
+                    .contains(filter.toLowerCase())
+                ? ListTile(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                            child: Text(
+                          callInfo.callcard_no,
+                          style: TextStyle(
+                              fontFamily: "OpenSans",
+                              letterSpacing: 1,
+                              fontWeight: FontWeight.bold),
+                        )),
+                        Text(
+                          DateFormat("d MMM yyyy, hh:mm aaa")
+                              .format(DateTime.parse(callInfo.call_received)),
+                          style: TextStyle(color: Colors.grey, fontSize: 14),
+                        )
+                      ],
+                    ),
+                    subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(children: [
+                            Row(children: <Widget>[
+                              Padding(
+                                  padding: EdgeInsets.only(right: 6),
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 16,
+                                    color: Colors.grey,
+                                  )),
+                              Text(phc.callcards[index].patients.length
+                                      .toString() +
+                                  ' Patient'),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(right: 6),
+                                  child: Icon(
+                                    Icons.group,
+                                    color: Colors.grey,
+                                    size: 16,
+                                  )),
+                              Text(phc.callcards[index].responseTeam.staffs
+                                      .length
+                                      .toString() +
+                                  ' Team')
+                            ])
+                          ]),
+                          Container(
+                              width: 100,
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.all(5),
+                              decoration: new BoxDecoration(
+                                  // color: Colo,
+                                  border: Border.all(
+                                      width: 1.5, color: Colors.orange),
+                                  borderRadius: new BorderRadius.all(
+                                      Radius.circular(5.0))),
+                              child: Text((callInfo.plate_no != null)
+                                  ? callInfo.plate_no
+                                  : ""))
+                        ]),
+                    leading: Container(
+                      // alignment: Alignment.centerLeft,
+                      width: 60,
+                      height: 60,
+                      decoration: new BoxDecoration(
+                        color: Colors.grey,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.headset, color: Colors.white),
+                    ),
+                    // trailing: Icon(Icons.arrow_forward_ios),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            final timeBloc = BlocProvider.of<TimeBloc>(context);
+                            timeBloc.add(ResetTime());
+
+                            final sceneBloc =
+                                BlocProvider.of<SceneBloc>(context);
+
+                            print("OPEN CALLCARD SCENE ASSESMNT");
+                            print(phc.callcards[index].sceneAssessment
+                                .otherServicesAtScene);
+                            sceneBloc.add(
+                              LoadScene(
+                                  selectedServices: phc.callcards[index]
+                                      .sceneAssessment.otherServicesAtScene),
+                            );
+
+                            final patientBloc =
+                                BlocProvider.of<PatientBloc>(context);
+                            patientBloc.add(
+                              LoadPatient(
+                                  patients: phc.callcards[index].patients),
+                            );
+
+                            final teamBloc = BlocProvider.of<TeamBloc>(context);
+                            teamBloc.add(LoadTeam(
+                                selectedStaffs:
+                                    phc.callcards[index].responseTeam.staffs));
+
+                            return CallcardTabs(
+                              callcard_no: callInfo.callcard_no,
+                              call_information:
+                                  phc.callcards[index].callInformation,
+                              response_team: phc.callcards[index].responseTeam,
+                              response_time: phc.callcards[index].responseTime,
+                              patients: phc.callcards[index].patients,
+                              scene_assessment:
+                                  phc.callcards[index].sceneAssessment,
+                              // phcDao: widget.phcDao,
+                            );
+                          },
+                        ),
+                      );
+                      // Navigator.pushNamed(context, "/callcarddetail");
+                    },
+                  )
+                : Container();
       },
     );
     // );
