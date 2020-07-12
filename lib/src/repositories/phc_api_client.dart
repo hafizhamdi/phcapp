@@ -50,6 +50,7 @@ class PhcApiClient {
     // print(jsonEncode(callcard.responseTime));
 
     var internal_callcard = {};
+    internal_callcard["authorized_user"] = callcard.authorizedUser;
     internal_callcard["call_information"] = callcard.callInformation;
     internal_callcard["response_team"] = callcard.responseTeam;
     internal_callcard["response_time"] = callcard.responseTime;
@@ -72,7 +73,9 @@ class PhcApiClient {
           traumaAssessment: f.traumaAssessment,
           incidentReporting: f.incidentReporting,
           intervention: f.intervention,
-          outcome: f.outcome);
+          outcome: f.outcome,
+          samplerAssessment: f.samplerAssessment,
+          otherAssessment: f.otherAssessment);
 
       // )
       // );

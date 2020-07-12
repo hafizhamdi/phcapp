@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:phcapp/src/ui/tabs/patient/asessments/other_information.dart';
+
 Phc phcFromJson(String str) => Phc.fromJson(json.decode(str));
 
 String phcToJson(Phc data) => json.encode(data.toJson());
@@ -35,6 +37,7 @@ class Phc {
 
 class Callcard {
   Callcard({
+    this.authorizedUser,
     this.callInformation,
     this.responseTime,
     this.responseTeam,
@@ -42,6 +45,7 @@ class Callcard {
     this.patients,
   });
 
+  String authorizedUser;
   CallInformation callInformation;
   ResponseTime responseTime;
   ResponseTeam responseTeam;
@@ -49,6 +53,7 @@ class Callcard {
   List<Patient> patients;
 
   factory Callcard.fromJson(Map<String, dynamic> json) => Callcard(
+        authorizedUser: json["authorized_user"],
         callInformation: CallInformation.fromJson(json["call_information"]),
         responseTime: json["response_time"] != null
             ? ResponseTime.fromJson(json["response_time"])
@@ -66,6 +71,7 @@ class Callcard {
       );
 
   Map<String, dynamic> toJson() => {
+        "authorized_user": authorizedUser,
         "call_information": callInformation.toJson(),
         "response_time": responseTime.toJson(),
         "response_team": responseTeam.toJson(),
@@ -158,7 +164,10 @@ class Patient {
       this.medicationAssessment,
       this.intervention,
       this.incidentReporting,
-      this.outcome});
+      this.outcome,
+      this.samplerAssessment,
+      this.otherAssessment});
+
   CprLog cprLog;
   PatientInformation patientInformation;
   List<VitalSign> vitalSigns;
@@ -168,6 +177,9 @@ class Patient {
   InterventionAss intervention;
   IncidentReporting incidentReporting;
   Outcome outcome;
+ SamplerAssessment samplerAssessment;
+ OtherAssessment otherAssessment;
+
 
   factory Patient.fromJson(Map<String, dynamic> json) => Patient(
         patientInformation:
@@ -195,6 +207,10 @@ class Patient {
             : null,
         outcome:
             json["outcome"] != null ? Outcome.fromJson(json["outcome"]) : null,
+        samplerAssessment:
+            json["sampler_assessment"] != null ? SamplerAssessment.fromJson(json["sampler_assessment"]) : null,
+        otherAssessment:
+            json["other_information"] != null ? OtherAssessment.fromJson(json["other_information"]) : null
       );
 
   Map<String, dynamic> toJson() => {
@@ -217,6 +233,8 @@ class Patient {
         "incident_reporting":
             incidentReporting != null ? incidentReporting.toJson() : null,
         "outcome": outcome != null ? outcome.toJson() : null,
+        "sampler_assessment": samplerAssessment != null ? samplerAssessment.toJson(): null,
+        "other_information": otherAssessment != null ? otherAssessment.toJson(): null,
 //
       };
 }
@@ -1318,6 +1336,71 @@ class SceneAssessment {
             ? null
             : List<dynamic>.from(otherServicesAtScene.map((x) => x)),
       };
+}
+
+class SamplerAssessment {
+  DateTime timestamp;
+  String signSymptom;
+  String allergies;
+  String medication;
+  String pastMedical;
+  String lastMeal;
+  String eventLeadingInjuries;
+  String riskFactor;
+
+  SamplerAssessment(
+      {
+      this.timestamp,  
+      this.signSymptom,
+      this.allergies,
+      this.medication,
+      this.pastMedical,
+      this.lastMeal,
+      this.eventLeadingInjuries,
+      this.riskFactor});
+
+  SamplerAssessment.fromJson(Map<String, dynamic> json) {
+    timestamp = parsingDateTime(json['timestamp']);
+    signSymptom = json['sign_symptom']!=null?json['sign_symptom']:null;
+    allergies = json['allergies']!=null?json['allergies']:null;
+    medication = json['medication']!=null?json['medication']:null;
+    pastMedical = json['past_medical']!=null?json['past_medical']:null;
+    lastMeal = json['last_meal']!=null? json['last_meal']:null;
+    eventLeadingInjuries = json['event_leading_injuries']!=null? json['event_leading_injuries']:null;
+    riskFactor = json['risk_factor']!=null? json['risk_factor']:null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['timestamp'] = this.timestamp!=null? timestamp.toString(): null;
+    data['sign_symptom'] = this.signSymptom !=null? signSymptom:null;
+    data['allergies'] = this.allergies !=null? allergies: null;
+    data['medication'] = this.medication!=null? medication:null;
+    data['past_medical'] = this.pastMedical!=null? pastMedical: null;
+    data['last_meal'] = this.lastMeal!=null?lastMeal: null;
+    data['event_leading_injuries'] = this.eventLeadingInjuries!=null?eventLeadingInjuries:null;
+    data['risk_factor'] = this.riskFactor!=null? riskFactor:null;
+    return data;
+  }
+}
+
+class OtherAssessment {
+  DateTime timestamp;
+  String extraNote;
+
+  OtherAssessment({this.timestamp, this.extraNote});
+
+  OtherAssessment.fromJson(Map<String, dynamic> json) {
+    timestamp = parsingDateTime(json['timestamp']);
+    extraNote = json['extra_note']!=null? json['extra_note']:'';
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['timestamp'] = this.timestamp!=null?timestamp.toString():null;
+    data['extra_note'] = this.extraNote !=null? extraNote:null;
+    return data;
+  }
 }
 
 class EnumValues<T> {

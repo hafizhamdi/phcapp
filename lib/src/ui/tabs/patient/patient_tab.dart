@@ -10,9 +10,11 @@ import 'package:phcapp/src/providers/patinfo_provider.dart';
 import 'package:phcapp/src/providers/vital_provider.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/intervention_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/medication_bloc.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/otherinfo_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/outcome_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/pat_ass_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/reporting_bloc.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/sampler_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/trauma_bloc.dart';
 // import 'package:phcapp/src/ui/tabs/patient/cpr/cpr_detail.dart';
 import 'package:phcapp/src/ui/tabs/patient/cpr/cpr_items.dart';
@@ -47,6 +49,8 @@ class _PatientTab extends State<PatientTab> {
   ReportingBloc reportingBloc;
   OutcomeBloc outcomeBloc;
   CprBloc cprBloc;
+  SamplerBloc samplerBloc;
+  OtherBloc otherBloc;
 
   Action getAction(index) {
     if (index == null)
@@ -69,6 +73,9 @@ class _PatientTab extends State<PatientTab> {
     reportingBloc = BlocProvider.of<ReportingBloc>(context);
     outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
     cprBloc = BlocProvider.of<CprBloc>(context);
+    samplerBloc = BlocProvider.of<SamplerBloc>(context);
+    otherBloc = BlocProvider.of<OtherBloc>(context);
+
     vitalBloc = BlocProvider.of<VitalBloc>(context);
 
     vitalBloc.add(ResetVital());
@@ -250,7 +257,11 @@ class _PatientTab extends State<PatientTab> {
                           reportingBloc.state.incidentReporting ??
                               widget.patient.incidentReporting,
                       outcome:
-                          outcomeBloc.state.outcome ?? widget.patient.outcome),
+                          outcomeBloc.state.outcome ?? widget.patient.outcome,
+                      samplerAssessment: samplerBloc.state.samplerAssessment ??
+                          widget.patient.samplerAssessment,
+                      otherAssessment: otherBloc.state.otherAssessment ??
+                          widget.patient.otherAssessment),
                   index: widget.index));
 
               // print(patien)
@@ -276,7 +287,11 @@ class _PatientTab extends State<PatientTab> {
                     incidentReporting: reportingBloc.state.incidentReporting ??
                         widget.patient.incidentReporting,
                     outcome:
-                        outcomeBloc.state.outcome ?? widget.patient.outcome),
+                        outcomeBloc.state.outcome ?? widget.patient.outcome,
+                    samplerAssessment: samplerBloc.state.samplerAssessment ??
+                        widget.patient.samplerAssessment,
+                    otherAssessment: otherBloc.state.otherAssessment ??
+                        widget.patient.otherAssessment),
               ));
             }
             print("patient created");
@@ -300,6 +315,9 @@ class _PatientTab extends State<PatientTab> {
             // final outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
             outcomeBloc.add(ResetOutcome());
 
+            samplerBloc.add(ResetSampler());
+
+            otherBloc.add(ResetOther());
             // cprBloc.add(ResetCprLog());
 
             Navigator.pop(context);
@@ -393,7 +411,8 @@ class _PatientTab extends State<PatientTab> {
                       medicationAssessment: widget.patient.medicationAssessment,
                       reportingAssessment: widget.patient.incidentReporting,
                       outcomeAssessment: widget.patient.outcome,
-
+                      samplerAssessment: widget.patient.samplerAssessment,
+                      otherAssessment: widget.patient.otherAssessment,
                       // context: context
                     ),
                   ],

@@ -238,7 +238,9 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
         traumaAssessment: event.patient.traumaAssessment,
         medicationAssessment: event.patient.medicationAssessment,
         incidentReporting: event.patient.incidentReporting,
-        outcome: event.patient.outcome);
+        outcome: event.patient.outcome,
+        samplerAssessment: event.patient.samplerAssessment,
+        otherAssessment: event.patient.otherAssessment);
 
     final currentState = state;
     // print(blocPatients.length);
@@ -276,6 +278,8 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     foundPatient.medicationAssessment = event.patient.medicationAssessment;
     foundPatient.incidentReporting = event.patient.incidentReporting;
     foundPatient.outcome = event.patient.outcome;
+    foundPatient.samplerAssessment = event.patient.samplerAssessment;
+    foundPatient.otherAssessment = event.patient.otherAssessment;
 
     print("UPDATE PATIENT");
     // print(currentState.patients);

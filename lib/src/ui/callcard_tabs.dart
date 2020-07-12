@@ -68,6 +68,7 @@ class _CallcardTabs extends State<CallcardTabs> {
   HistoryBloc historyBloc;
   ResponseBloc responseBloc;
   SceneBloc sceneBloc;
+  AuthBloc authBloc;
   // CallcardTabs(
   //     {this.callcard_no,
   //     this.call_information,
@@ -88,6 +89,7 @@ class _CallcardTabs extends State<CallcardTabs> {
     callInfoBloc = BlocProvider.of<CallInfoBloc>(context);
     responseBloc = BlocProvider.of<ResponseBloc>(context);
     sceneBloc = BlocProvider.of<SceneBloc>(context);
+    authBloc = BlocProvider.of<AuthBloc>(context);
 
     super.didChangeDependencies();
   }
@@ -526,11 +528,13 @@ class _CallcardTabs extends State<CallcardTabs> {
                         //     print(f.toJson());
                         //   }).toList();
                         // }
+                        Staff user = authBloc.getAuthorizedUser;
 
                         // print(patientList);
                         if (call_information.callcard_no != null &&
                             call_information.callcard_no.isNotEmpty) {
                           tabBloc.add(PublishCallcard(
+                            authorizedUser: user.userId,
                             callInformation: call_information,
                             // ?? widget.call_information,
                             responseTeam: response_team,

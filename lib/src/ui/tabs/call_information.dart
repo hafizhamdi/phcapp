@@ -578,23 +578,24 @@ class EventCodeField extends StatelessWidget {
   TextEditingController myController = new TextEditingController();
 
   var split = ["", "", "", ""];
-  _buildBox(text) {
-    return Container(
-      width: 80,
-      height: 50,
-      decoration: BoxDecoration(
-          color: Colors.yellow[100], borderRadius: BorderRadius.circular(10)),
-      child: Center(
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 16),
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
+    _buildBox(text) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.08,
+        height: 50,
+        decoration: BoxDecoration(
+            color: Colors.yellow[100], borderRadius: BorderRadius.circular(10)),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+      );
+    }
+
     if (initialData != null) {
       if (initialData.contains(',') == true) {
         split = initialData.split(',');

@@ -13,9 +13,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phcapp/src/ui/login.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/intervention_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/medication_bloc.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/otherinfo_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/outcome_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/pat_ass_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/reporting_bloc.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/sampler_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/trauma_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/patient_tab.dart';
 import 'package:phcapp/theme/theme_provider.dart';
@@ -172,6 +174,12 @@ class _App extends State<App> {
         ),
         BlocProvider(
           create: (context) => OutcomeBloc(),
+        ),
+        BlocProvider(
+          create: (context) => SamplerBloc(),
+        ),
+        BlocProvider(
+          create: (context) => OtherBloc(),
         ),
       ],
       child: ChangeNotifierProvider(

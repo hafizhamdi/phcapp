@@ -30,6 +30,7 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
   Stream<TabState> republishCallcardToState(RepublishCallcard event) async* {
     yield CallcardToPublishLoading();
     Callcard callcard = new Callcard(
+      authorizedUser: event.authorizedUser,
         callInformation: event.callInformation,
         responseTeam: event.responseTeam,
         responseTime: event.responseTime,
@@ -88,6 +89,7 @@ class CallCardTabBloc extends Bloc<TabEvent, TabState> {
   Stream<TabState> publishCallcardToState(PublishCallcard event) async* {
     yield CallcardToPublishLoading();
     Callcard callcard = new Callcard(
+      authorizedUser: event.authorizedUser,
         callInformation: event.callInformation,
         responseTeam: event.responseTeam,
         responseTime: event.responseTime,
@@ -157,13 +159,16 @@ abstract class TabEvent {
 }
 
 class PublishCallcard extends TabEvent {
+  final authorizedUser;
   final CallInformation callInformation;
   final ResponseTeam responseTeam;
   final ResponseTime responseTime;
   final SceneAssessment sceneAssessment;
   final List<Patient> patients;
   PublishCallcard(
-      {this.callInformation,
+      {
+        this.authorizedUser,
+        this.callInformation,
       this.responseTeam,
       this.responseTime,
       this.sceneAssessment,
@@ -171,17 +176,20 @@ class PublishCallcard extends TabEvent {
 
   @override
   List<Object> get props =>
-      [callInformation, responseTeam, responseTime, sceneAssessment, patients];
+      [authorizedUser, callInformation, responseTeam, responseTime, sceneAssessment, patients];
 }
 
 class RepublishCallcard extends TabEvent {
+  final authorizedUser;
   final CallInformation callInformation;
   final ResponseTeam responseTeam;
   final ResponseTime responseTime;
   final SceneAssessment sceneAssessment;
   final List<Patient> patients;
   RepublishCallcard(
-      {this.callInformation,
+      {
+        this.authorizedUser,
+        this.callInformation,
       this.responseTeam,
       this.responseTime,
       this.sceneAssessment,
@@ -189,7 +197,7 @@ class RepublishCallcard extends TabEvent {
 
   @override
   List<Object> get props =>
-      [callInformation, responseTeam, responseTime, sceneAssessment, patients];
+      [authorizedUser,callInformation, responseTeam, responseTime, sceneAssessment, patients];
 }
 
 class CallcardToPublishEmpty extends TabState {}

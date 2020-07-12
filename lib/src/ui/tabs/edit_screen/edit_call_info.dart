@@ -365,7 +365,9 @@ class _EditCallInfo extends State<EditCallInfo>
                     labelText: "Incident Location",
                     controller: locationController),
                 TextInput(
-                    labelText: "Complaint", controller: incidentController),
+                    labelText: "Complaint",
+                    controller: incidentController,
+                    maxLines: 3),
                 TextInput(
                     labelText: "Landmark", controller: landmarkController),
                 DropDownList("Distance to scene", LIST_DISTANCES,
@@ -605,35 +607,40 @@ class TextInput extends StatelessWidget {
   final inputType;
   final maskFormater;
   final hintText;
+  final maxLines;
 
-  TextInput({
-    this.labelText,
-    this.controller,
-    this.maskFormater,
-    this.inputType,
-    this.hintText,
-  });
+  TextInput(
+      {this.labelText,
+      this.controller,
+      this.maskFormater,
+      this.inputType,
+      this.hintText,
+      this.maxLines});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        // width: 500,
-        // width: 500,
-        child: Padding(
-            padding: EdgeInsets.all(16),
-            child: TextFormField(
-
-                // validator: validator,
-                inputFormatters: maskFormater != null ? [maskFormater] : [],
-                // keyboardType: inputType,
-                controller: controller,
-                decoration: InputDecoration(
-                    hintText: hintText,
-                    labelText: labelText,
-                    fillColor: Colors.white,
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
-                      borderSide: new BorderSide(),
-                    )))));
+      // width: 500,
+      // width: 500,
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: TextFormField(
+          // validator: validator,
+          inputFormatters: maskFormater != null ? [maskFormater] : [],
+          // keyboardType: inputType,
+          maxLines: maxLines,
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: hintText,
+            labelText: labelText,
+            fillColor: Colors.white,
+            border: new OutlineInputBorder(
+              borderRadius: new BorderRadius.circular(10.0),
+              borderSide: new BorderSide(),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

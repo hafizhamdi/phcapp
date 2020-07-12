@@ -5,11 +5,14 @@ import 'package:intl/intl.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:flutter/material.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
+import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/intervention_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/medication_bloc.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/otherinfo_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/outcome_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/pat_ass_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/reporting_bloc.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/sampler_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/trauma_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/incident_report.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/intervention.dart';
@@ -27,15 +30,18 @@ class MainAssessment extends StatelessWidget {
   final medicationAssessment;
   final reportingAssessment;
   final outcomeAssessment;
+  final samplerAssessment;
+  final otherAssessment;
 
-  MainAssessment({
-    this.patientAssessment,
-    this.traumaAssessment,
-    this.interventionAssessment,
-    this.medicationAssessment,
-    this.reportingAssessment,
-    this.outcomeAssessment,
-  });
+  MainAssessment(
+      {this.patientAssessment,
+      this.traumaAssessment,
+      this.interventionAssessment,
+      this.medicationAssessment,
+      this.reportingAssessment,
+      this.outcomeAssessment,
+      this.samplerAssessment,
+      this.otherAssessment});
   // final BuildContext context;
   // MainAssessment({this.context});
 
@@ -45,6 +51,8 @@ class MainAssessment extends StatelessWidget {
     final reportingBloc = BlocProvider.of<ReportingBloc>(context);
     final outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
     final traumaBloc = BlocProvider.of<TraumaBloc>(context);
+    final samplerBloc = BlocProvider.of<SamplerBloc>(context);
+    final otherBloc = BlocProvider.of<OtherBloc>(context);
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -139,7 +147,17 @@ class MainAssessment extends StatelessWidget {
                     BuildCard(
                       icon: Icons.change_history,
                       title: "SAMPLER",
-                      nextRoute: SampleScreen(),
+                      nextRoute: SampleScreen(
+                        samplerAssessment:
+                            samplerBloc.state.samplerAssessment != null
+                                ? samplerBloc.state.samplerAssessment
+                                : samplerAssessment ?? null,
+                      ),
+                      timestamp: samplerBloc.state.samplerAssessment != null
+                          ? samplerBloc.state.samplerAssessment.timestamp
+                          : samplerAssessment != null
+                              ? samplerAssessment.timestamp
+                              : null,
                     ),
 
                     // BlocBuilder<TraumaBloc, TraumaState>(
@@ -191,10 +209,20 @@ class MainAssessment extends StatelessWidget {
                     ),
 
                     BuildCard(
-                      icon: Icons.chrome_reader_mode,
-                      title: "Other Information",
-                      nextRoute: OtherInformation(),
-                    ),
+                        icon: Icons.chrome_reader_mode,
+                        title: "Other Information",
+                        nextRoute: OtherInformation(
+                            otherAssessment:
+                                otherBloc.state.otherAssessment != null
+                                    ? otherBloc.state.otherAssessment
+                                    : otherAssessment != null
+                                        ? otherAssessment
+                                        : null),
+                        timestamp: otherBloc.state.otherAssessment != null
+                            ? otherBloc.state.otherAssessment.timestamp
+                            : otherAssessment != null
+                                ? otherAssessment.timestamp
+                                : null),
 
                     BuildCard(
                       icon: Icons.report_problem,
