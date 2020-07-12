@@ -28,6 +28,42 @@ const RHYTHMNS = ["Asystole", "PEA"];
 const RHYTHMOT = ["Tachyarythmias", "Bradyarrythmias"];
 const ANALYSIS = ["Shockable", "Non-Shockable", "Other"];
 const _cpr = ["Required", "Not Required"];
+const _cpr_outcome = ["Transported", "Termination of Resusitation (TOR)"];
+const _cpr_not_required = [
+  "Algor mortis",
+  "Livor mortis",
+  "Rigor mortis",
+  "Decomposition",
+  "Injuries incompatible to life - decapitation",
+  "Injuries incompatible to life - transection",
+  "Injuries incompatible to life - incineration (>95%)",
+  "Injuries incompatible to life - infull thickness mortis",
+  "Search and rescue drawning",
+  "Presence of DNAR order"
+];
+
+const transported = [
+  "Victim whom DHRT witness bystander CPR",
+  "Victim identified with shockable or organized rhythm",
+  "Victim with ROSC",
+  "Victim with OHCA mimic",
+  "Pregnant patient",
+  "Paediatric patient",
+  "Lighting injury",
+  "Drawning (not SAR case)",
+  "Hypothermic related injury",
+  "Victim with cardiac device (pace maker, ventilator assisted device)",
+];
+
+const not_transported = [
+  // "Execution of Termination of Resusitation (TOR)",
+  "No transport criteria present",
+  "No bystander CPR",
+  "No prehospital ROSC after 3 cycles of CPR",
+  "Persistent asystole for 3 rhythm analysis",
+  "Discussion with online medical control on TOR",
+  "Obtaining consent from immediate family for TOR"
+];
 
 class _CPRItems extends State<CPRItems>
     with AutomaticKeepAliveClientMixin<CPRItems> {
@@ -42,6 +78,10 @@ class _CPRItems extends State<CPRItems>
   Analysis shockable = new Analysis();
   Analysis nonShockable = new Analysis();
   Analysis other = new Analysis();
+
+  String ddCpr;
+  String ddCprOutcomeTransported;
+  String ddCprOutcomeTOR;
 
   CPRProvider cprProvider;
 
@@ -75,21 +115,68 @@ class _CPRItems extends State<CPRItems>
   TextEditingController cprStopController = new TextEditingController();
   TextEditingController roscController = new TextEditingController();
   TextEditingController rhythmController = new TextEditingController();
+  TextEditingController rhythmNoteController = new TextEditingController();
   TextEditingController rhythmNSController = new TextEditingController();
+  TextEditingController rhythmNSnoteController = new TextEditingController();
   TextEditingController rhythmOController = new TextEditingController();
+  TextEditingController rhythmOnoteController = new TextEditingController();
   TextEditingController intervController = new TextEditingController();
+  TextEditingController intervNoteController = new TextEditingController();
   TextEditingController intervNSController = new TextEditingController();
+  TextEditingController intervNSnoteController = new TextEditingController();
   TextEditingController intervOController = new TextEditingController();
+  TextEditingController intervOnoteController = new TextEditingController();
   TextEditingController drugController = new TextEditingController();
+  TextEditingController drugNoteController = new TextEditingController();
   TextEditingController drugNSController = new TextEditingController();
+  TextEditingController drugNSnoteController = new TextEditingController();
   TextEditingController drugOController = new TextEditingController();
+  TextEditingController drugOnoteController = new TextEditingController();
   TextEditingController airwayController = new TextEditingController();
+  TextEditingController airwayNoteController = new TextEditingController();
   TextEditingController airwayNSController = new TextEditingController();
+  TextEditingController airwayNSnoteController = new TextEditingController();
   TextEditingController airwayOController = new TextEditingController();
+  TextEditingController airwayOnoteController = new TextEditingController();
 
   CprBloc cprBloc;
   getCurrentTime() {
     return DateFormat("dd/MM/yyyy HH:mm:ss").format(DateTime.now());
+  }
+
+  @override
+  void dispose() {
+    witnessController.dispose();
+    bystanderController.dispose();
+    cprStartController.dispose();
+    cprStopController.dispose();
+    roscController.dispose();
+    rhythmController.dispose();
+    rhythmNoteController.dispose();
+    rhythmNSController.dispose();
+    rhythmNSnoteController.dispose();
+    rhythmOController.dispose();
+    rhythmOnoteController.dispose();
+    intervController.dispose();
+    intervNoteController.dispose();
+    intervNSController.dispose();
+    intervNSnoteController.dispose();
+    intervOController.dispose();
+    intervOnoteController.dispose();
+    drugController.dispose();
+    drugNoteController.dispose();
+    drugNSController.dispose();
+    drugNSnoteController.dispose();
+    drugOController.dispose();
+    drugOnoteController.dispose();
+    airwayController.dispose();
+    airwayNoteController.dispose();
+    airwayNSController.dispose();
+    airwayNSnoteController.dispose();
+    airwayOController.dispose();
+    airwayOnoteController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -257,25 +344,22 @@ class _CPRItems extends State<CPRItems>
     }
   }
 
-  List<String> wantedList = new List<String>();
+  List<String> cprList = new List<String>();
+  List<String> cprOutcomeList = new List<String>();
 
   void callback(String item, List<String> selectedItems) {
-    if (item == "Other services at scene") {
+    print("callback");
+    if (item == "CPR") {
       setState(() {
-        wantedList = selectedItems;
+        cprList = selectedItems;
       });
-      // sceneBloc = BlocProvider.of<SceneBloc>(context);
-
-      // sceneBloc.add(LoadScene(selectedServices: wantedList));
-      // print("callback");
-      // print(selectedItems.length.toString());
     }
 
-    // patientBloc.add(LoadPatient(
-    //     assign_id: widget.assign_id,
-    //     patients: patientBloc.state.patients,
-    //     sceneAssessment:
-    //         SceneAssessment(otherServicesAtScene: selectedItems)));
+    if (item == "CPR Outcome") {
+      setState(() {
+        cprOutcomeList = selectedItems;
+      });
+    }
   }
 
   @override
@@ -365,7 +449,8 @@ class _CPRItems extends State<CPRItems>
                     children: <Widget>[
                       HeaderSection("CPR Log"),
 
-                      _defaultChips("CPR", _cpr, callback, wantedList),
+                      _defaultChips(
+                          "CPR", _cpr, _cpr_not_required, callback, cprList),
                       // FlatButton.icon(
                       //   icon: Icon(Icons.remove_red_eye),
                       //   label: Text("VIEW LOG HISTORY"),
@@ -426,6 +511,9 @@ class _CPRItems extends State<CPRItems>
                         txtController: cprStopController,
                         callback: buttonCallback,
                       ),
+
+                      _cprOutcomeChips("CPR Outcome", _cpr_outcome, callback,
+                          cprOutcomeList),
                     ],
                   ),
                 );
@@ -687,29 +775,159 @@ class _CPRItems extends State<CPRItems>
         ]));
   }
 
-  _defaultChips(header, List<String> list, callback, initialData) {
+  _defaultChips(header, List<String> list, List<String> dropdownList, callback,
+      initialData) {
     return Container(
       // width: 500,
       margin: EdgeInsets.all(10),
       child: Card(
         child: ListTile(
-          title: Padding(
-            child: Text(header),
-            padding: EdgeInsets.symmetric(vertical: 10.0),
-          ),
-          subtitle:
-              //  Wrap(
-              //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: <Widget>[
+            title: Padding(
+              child: Text(header),
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+            ),
+            subtitle:
+                //  Wrap(
+                //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: <Widget>[
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SingleOption(
                   header: header,
                   stateList: list,
                   callback: callback,
                   multiple: false,
                   initialData: initialData),
-          // ],
-          // ),
-        ),
+              initialData.contains("Not Required")
+                  ? Container(
+                      // width: 250,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: DropdownButtonFormField(
+                          isExpanded: true,
+                          // isDense: true,
+                          items: dropdownList.map((String dropDownStringItem) {
+                            return DropdownMenuItem<String>(
+                                child: Text(dropDownStringItem),
+                                value: dropDownStringItem);
+                          }).toList(),
+                          onChanged: (valueChanged) {
+                            setState(() {
+                              ddCpr = valueChanged;
+                            });
+                            // print("WHATS IS INDESIDE:$valueChanged");
+                            // controller.sink.add(valueChanged);
+                          },
+                          value: ddCpr,
+                          decoration: InputDecoration(
+                            // labelText: labelText,
+                            fillColor: Colors.white,
+                            border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(10.0),
+                              borderSide: new BorderSide(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
+            ])
+            // ],
+            ),
+      ),
+    );
+  }
+
+  _cprOutcomeChips(header, List<String> list, callback, initialData) {
+    return Container(
+      // width: 500,
+      margin: EdgeInsets.all(10),
+      child: Card(
+        child: ListTile(
+            title: Padding(
+              child: Text(header),
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+            ),
+            subtitle:
+                //  Wrap(
+                //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: <Widget>[
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              SingleOption(
+                  header: header,
+                  stateList: list,
+                  callback: callback,
+                  multiple: false,
+                  initialData: initialData),
+              initialData.contains("Transported")
+                  ? Container(
+                      // width: 250,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: DropdownButtonFormField(
+                          isExpanded: true,
+                          // isDense: true,
+                          items: transported.map((String dropDownStringItem) {
+                            return DropdownMenuItem<String>(
+                                child: Text(dropDownStringItem),
+                                value: dropDownStringItem);
+                          }).toList(),
+                          onChanged: (valueChanged) {
+                            setState(() {
+                              ddCprOutcomeTransported = valueChanged;
+                            });
+                            // print("WHATS IS INDESIDE:$valueChanged");
+                            // controller.sink.add(valueChanged);
+                          },
+                          value: ddCprOutcomeTransported,
+                          decoration: InputDecoration(
+                            // labelText: labelText,
+                            fillColor: Colors.white,
+                            border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(10.0),
+                              borderSide: new BorderSide(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
+              initialData.contains("Termination of Resusitation (TOR)")
+                  ? Container(
+                      // width: 250,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: DropdownButtonFormField(
+                          // isDense: true,
+                          isExpanded: true,
+                          items:
+                              not_transported.map((String dropDownStringItem) {
+                            return DropdownMenuItem<String>(
+                                child: Text(dropDownStringItem),
+                                value: dropDownStringItem);
+                          }).toList(),
+                          onChanged: (valueChanged) {
+                            setState(() {
+                              ddCprOutcomeTOR = valueChanged;
+                            });
+                            // print("WHATS IS INDESIDE:$valueChanged");
+                            // controller.sink.add(valueChanged);
+                          },
+                          value: ddCprOutcomeTOR,
+                          decoration: InputDecoration(
+                            // labelText: labelText,
+                            fillColor: Colors.white,
+                            border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(10.0),
+                              borderSide: new BorderSide(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
+            ])
+            // ],
+            ),
       ),
     );
   }
@@ -890,6 +1108,7 @@ class _CPRItems extends State<CPRItems>
             selectData:
                 myshockable.rhythm != null ? myshockable.rhythm.value : null,
             txtController: rhythmController,
+            noteController: rhythmNoteController,
             callback: buttonCallback,
           ),
           BuildChoiceAnalysis(
@@ -900,6 +1119,7 @@ class _CPRItems extends State<CPRItems>
                 ? myshockable.intervention.value
                 : null,
             txtController: intervController,
+            noteController: intervNoteController,
             callback: buttonCallback,
 
             // setState
@@ -912,6 +1132,7 @@ class _CPRItems extends State<CPRItems>
             selectData:
                 myshockable.drugs != null ? myshockable.drugs.value : null,
             txtController: drugController,
+            noteController: drugNoteController,
             callback: buttonCallback,
             // setState
           ),
@@ -925,6 +1146,7 @@ class _CPRItems extends State<CPRItems>
             selectData:
                 myshockable.airway != null ? myshockable.airway.value : null,
             txtController: airwayController,
+            noteController: airwayNoteController,
             // setState
           ),
         ],
@@ -955,6 +1177,7 @@ class _CPRItems extends State<CPRItems>
               selectData:
                   mynonShock.rhythm != null ? mynonShock.rhythm.value : null,
               txtController: rhythmNSController,
+              noteController: rhythmNSnoteController,
               callback: buttonCallback,
               setState: setState),
           BuildChoiceAnalysis(
@@ -964,6 +1187,7 @@ class _CPRItems extends State<CPRItems>
               selectData:
                   mynonShock.drugs != null ? mynonShock.drugs.value : null,
               txtController: drugNSController,
+              noteController: drugNSnoteController,
               callback: buttonCallback,
               setState: setState
               // setState
@@ -975,6 +1199,7 @@ class _CPRItems extends State<CPRItems>
               selectData:
                   mynonShock.airway != null ? mynonShock.airway.value : null,
               txtController: airwayNSController,
+              noteController: airwayNSnoteController,
               callback: buttonCallback,
               setState: setState
               // setState
@@ -1008,6 +1233,7 @@ class _CPRItems extends State<CPRItems>
               listData: RHYTHMOT,
               selectData: myother.rhythm != null ? myother.rhythm.value : null,
               txtController: rhythmOController,
+              noteController: rhythmOnoteController,
               callback: buttonCallback,
               setState: setState),
           // ),
@@ -1019,6 +1245,7 @@ class _CPRItems extends State<CPRItems>
                   ? myother.intervention.value
                   : null,
               txtController: intervOController,
+              noteController: intervOnoteController,
               callback: buttonCallback,
               setState: setState
 
@@ -1031,6 +1258,7 @@ class _CPRItems extends State<CPRItems>
               listData: DRUG,
               selectData: myother.drugs != null ? myother.drugs.value : null,
               txtController: drugOController,
+              noteController: drugOnoteController,
               callback: buttonCallback,
               setState: setState
 
@@ -1044,6 +1272,7 @@ class _CPRItems extends State<CPRItems>
               listData: AIRWAY,
               selectData: myother.airway != null ? myother.airway.value : null,
               txtController: airwayOController,
+              noteController: airwayOnoteController,
               callback: buttonCallback,
               setState: setState
 
@@ -1098,47 +1327,51 @@ class BuildChoiceChip extends StatelessWidget {
               child: Text(item.name),
               width: 100,
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Wrap(
-                    children: List<Widget>.generate(listData.length, (index) {
-                      return Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: ChoiceChip(
-                          pressElevation: 5.0,
-                          elevation: 2.0,
-                          key: UniqueKey(),
-                          label: Text(listData[index]),
-                          selected: listData[index] == (selectData ?? ''),
-                          onSelected: (bool selected) {
-                            // setState(() {
-                            txtController.text = getCurrentTime();
-                            // });
-                            callback(id, listData[index]);
-                          },
-                          selectedColor: Colors.pink[200],
-                        ),
-                      );
-                    }),
-                  ),
-                  Container(
-                    width: 170,
-                    child: TextField(controller: txtController),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    width: 100,
-                    child: TextField(
-                      controller: noteController,
-                      decoration: InputDecoration(hintText: "Notes"),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Wrap(
+                      children: List<Widget>.generate(listData.length, (index) {
+                        return Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child: ChoiceChip(
+                            pressElevation: 5.0,
+                            elevation: 2.0,
+                            key: UniqueKey(),
+                            label: Text(listData[index]),
+                            selected: listData[index] == (selectData ?? ''),
+                            onSelected: (bool selected) {
+                              print("IN CHOICE CHIPS");
+                              print(selected);
+                              // setState(() {
+                              txtController.text = getCurrentTime();
+                              // });
+                              callback(id, listData[index]);
+                            },
+                            selectedColor: Colors.pink[200],
+                          ),
+                        );
+                      }),
                     ),
-                  )
-                ],
+                    Container(
+                      width: 170,
+                      child: TextField(controller: txtController),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                      width: 170,
+                      child: TextField(
+                        controller: noteController,
+                        decoration: InputDecoration(hintText: "Notes"),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ]),
@@ -1164,6 +1397,7 @@ class BuildChoiceAnalysis extends StatelessWidget {
   final listData;
   final selectData;
   final txtController;
+  final noteController;
   final Function callback;
   final Function setState;
 
@@ -1172,6 +1406,7 @@ class BuildChoiceAnalysis extends StatelessWidget {
       this.listData,
       this.selectData,
       this.txtController,
+      this.noteController,
       this.callback,
       this.setState});
   String selectWitness;
@@ -1227,6 +1462,19 @@ class BuildChoiceAnalysis extends StatelessWidget {
                       width: 170,
                       child: TextField(
                         controller: txtController,
+                        // inputFormatters: [timestampFormater],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                      width: 170,
+                      child: TextField(
+                        controller: noteController,
+                        decoration: InputDecoration(hintText: "Notes"),
+
+                        // controller: noteController
                         // inputFormatters: [timestampFormater],
                       ),
                     )

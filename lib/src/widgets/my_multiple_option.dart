@@ -43,11 +43,11 @@ class _MyMultipleOptions extends State<MyMultipleOptions> {
               child: _buildChoiceChipWidget(index),
             );
           } else {
-            if(listSelected.contains("Normal")){
+            if (listSelected.contains("Normal")) {
               opac = .4;
               bgColor = Colors.grey[100];
               normalIsSelected = true;
-            }else{
+            } else {
               opac = 1.0;
             }
             return Container(
@@ -77,7 +77,7 @@ class _MyMultipleOptions extends State<MyMultipleOptions> {
         selectedColor: Colors.pink[200],
         selectedShadowColor: Colors.grey,
         pressElevation: 10,
-        elevation: 10,
+        elevation: 4,
         onSelected: (bool selected) {
           setState(() {
             if (widget.listDataset[index].contains("Normal")) {

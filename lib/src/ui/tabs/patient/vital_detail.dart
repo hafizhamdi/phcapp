@@ -622,12 +622,24 @@ vPicker.setValue(5);
                           onPressed: () {
                             setState((){
                               picker.setValue(initialData);
+                              // picker.setDecimal(0);
                             });
+
+                            if (title == "Blood Ketone" || title == "Blood Glucose" ||
+                                      title == "Temperature") {
+
+                                        setState(() {
+                                         picker.setDecimal(0); 
+                                        });}
                             showCupertinoModalPopup(
                                 context: context,
                                 builder: (context) {
                                   if (title == "Blood Ketone" || title == "Blood Glucose" ||
                                       title == "Temperature") {
+
+                                        // setState(() {
+                                        //  picker.setDecimal(0); 
+                                        // });
                                     return cupertinoDoublePicker(
                                         picker, title, itemCount, initialData);
                                   }
@@ -670,12 +682,26 @@ vPicker.setValue(5);
                                 
                             setState((){
                               picker.setValue(initialData);
+                              // picker.setDecimal(0);
                             });
+
+                                      if (title == "Blood Ketone" || title == "Blood Glucose" ||
+                                          title == "Temperature") {
+
+                                            setState((){
+                                              picker.setDecimal(0);
+                                            });
+                                          }
+
                                 showCupertinoModalPopup(
                                     context: context,
                                     builder: (context) {
                                       if (title == "Blood Ketone" || title == "Blood Glucose" ||
                                           title == "Temperature") {
+
+                                            // setState((){
+                                            //   picker.setDecimal(0);
+                                            // });
                                         return cupertinoDoublePicker(picker,
                                             title, itemCount, initialData);
                                       }

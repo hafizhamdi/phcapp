@@ -12,6 +12,7 @@ import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/medication_bloc.dart
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/outcome_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/pat_ass_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/reporting_bloc.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/sampler_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/trauma_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/patient_tab.dart';
 import 'package:provider/provider.dart';
@@ -477,6 +478,8 @@ class BuildPatientList extends StatelessWidget {
     final cprBloc = BlocProvider.of<CprBloc>(context);
     _buildPatient(data, route) {
       var callInfo = data.patientInformation;
+      var vital_length =
+          data.vitalSigns != null ? data.vitalSigns.length : null;
 
       return Container(
         margin: EdgeInsets.all(5),
@@ -510,6 +513,9 @@ class BuildPatientList extends StatelessWidget {
                             color: Colors.purple,
                             size: 20,
                           ),
+                          SizedBox(
+                            width: 8,
+                          ),
                           Text(
                             (callInfo.age != null ? callInfo.age : "0") +
                                 " yrs (" +
@@ -517,6 +523,26 @@ class BuildPatientList extends StatelessWidget {
                                     ? callInfo.gender.substring(0, 1)
                                     : 'N') +
                                 ")",
+                            style: TextStyle(fontFamily: "Arial"),
+                          )
+                        ])),
+                        Expanded(
+                            child: Row(children: <Widget>[
+                          Icon(
+                            Icons.favorite,
+                            color: vital_length != null
+                                ? Colors.purple
+                                : Colors.grey,
+                            size: 20,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            (vital_length != null
+                                    ? vital_length.toString()
+                                    : "0") +
+                                " vitals",
                             style: TextStyle(fontFamily: "Arial"),
                           )
                         ])),
@@ -729,6 +755,9 @@ class BuildPatientList extends StatelessWidget {
                   reportingBloc.add(ResetReporting());
                   final outcomeBloc = BlocProvider.of<OutcomeBloc>(context);
                   outcomeBloc.add(ResetOutcome());
+
+                  final samplerBloc = BlocProvider.of<SamplerBloc>(context);
+                  samplerBloc.add(ResetSampler());
 
                   final cprBloc = BlocProvider.of<CprBloc>(context);
 

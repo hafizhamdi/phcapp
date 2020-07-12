@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phcapp/src/models/phc.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/sampler_bloc.dart';
 
 class SampleScreen extends StatefulWidget {
+  final SamplerAssessment samplerAssessment;
+
+  SampleScreen({this.samplerAssessment});
   _SampleScreen createState() => _SampleScreen();
 }
 
@@ -12,6 +18,21 @@ class _SampleScreen extends State<SampleScreen> {
   TextEditingController lastMealController = new TextEditingController();
   TextEditingController injuryController = new TextEditingController();
   TextEditingController riskController = new TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.samplerAssessment != null) {
+      signSymptomController.text = widget.samplerAssessment.signSymptom;
+      allergyController.text = widget.samplerAssessment.allergies;
+      medicationController.text = widget.samplerAssessment.medication;
+      pMedicalController.text = widget.samplerAssessment.pastMedical;
+      lastMealController.text = widget.samplerAssessment.lastMeal;
+      injuryController.text = widget.samplerAssessment.eventLeadingInjuries;
+      riskController.text = widget.samplerAssessment.riskFactor;
+    }
+
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -28,22 +49,38 @@ class _SampleScreen extends State<SampleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final samplerBloc = BlocProvider.of<SamplerBloc>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text("SAMPLER"),
-        actions: <Widget>[
-          FlatButton.icon(
-            icon: Icon(
-              Icons.save,
-              color: Colors.white,
-            ),
-            label: Text("SAVE", style: TextStyle(color: Colors.white)),
-            onPressed: () {},
-          )
-        ],
-      ),
-      body: _buildBody(),
-    );
+        appBar: AppBar(
+          title: Text("SAMPLER"),
+          actions: <Widget>[
+            FlatButton.icon(
+              icon: Icon(
+                Icons.save,
+                color: Colors.white,
+              ),
+              label: Text("SAVE", style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                samplerBloc.add(
+                  UpdateSampler(
+                    samplerAssessment: new SamplerAssessment(
+                        timestamp: DateTime.now(),
+                        signSymptom: signSymptomController.text,
+                        allergies: allergyController.text,
+                        medication: medicationController.text,
+                        pastMedical: pMedicalController.text,
+                        lastMeal: lastMealController.text,
+                        eventLeadingInjuries: injuryController.text,
+                        riskFactor: riskController.text),
+                  ),
+                );
+
+                Navigator.pop(context);
+              },
+            )
+          ],
+        ),
+        body: _buildBody());
   }
 
   _buildBody() {
@@ -84,19 +121,25 @@ class _SampleScreen extends State<SampleScreen> {
             // ),
           ),
           Expanded(
-            child: TextFormField(
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              // expands: true,
-              controller: controller,
-              decoration: InputDecoration(
-                // counterText: true,
-                hintText: "Enter " + labelText,
-                // labelText: labelText,
-                fillColor: Colors.white,
-                border: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(10.0),
-                  borderSide: new BorderSide(),
+            child: Container(
+              // padding: EdgeInsets.all(40),
+              // width: MediaQuery.of(context).size.width,
+              // height: 200,
+              child: TextFormField(
+                keyboardType: TextInputType.multiline,
+                maxLines: 5,
+                // expands: true,
+                controller: controller,
+                decoration: InputDecoration(
+                  // contentPadding: EdgeInsets.symmetric(vertical: 30),
+                  // counterText: true,
+                  hintText: "Enter " + labelText,
+                  // labelText: labelText,
+                  fillColor: Colors.white,
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.circular(10.0),
+                    borderSide: new BorderSide(),
+                  ),
                 ),
               ),
             ),

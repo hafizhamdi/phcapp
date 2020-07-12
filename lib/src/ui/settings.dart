@@ -156,7 +156,7 @@ class _Settings extends State<Settings> {
     );
   }
 
-  appChild() => Text("1.16.07.20");
+  appChild() => Text("1.19.07.20");
 
   toggleButton(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);

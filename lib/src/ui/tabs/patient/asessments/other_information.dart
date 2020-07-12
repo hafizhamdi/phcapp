@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phcapp/src/models/phc.dart';
+import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/otherinfo_bloc.dart';
 
 class OtherInformation extends StatefulWidget {
+  final OtherAssessment otherAssessment;
+
+  OtherInformation({this.otherAssessment});
   _OtherInformation createState() => _OtherInformation();
 }
 
 class _OtherInformation extends State<OtherInformation> {
   TextEditingController extraController = new TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.otherAssessment != null) {
+      extraController.text = widget.otherAssessment.extraNote;
+    }
+
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -15,6 +30,7 @@ class _OtherInformation extends State<OtherInformation> {
 
   @override
   Widget build(BuildContext context) {
+    final otherBloc = BlocProvider.of<OtherBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Other Information"),
@@ -25,7 +41,14 @@ class _OtherInformation extends State<OtherInformation> {
               color: Colors.white,
             ),
             label: Text("SAVE", style: TextStyle(color: Colors.white)),
-            onPressed: () {},
+            onPressed: () {
+              otherBloc.add(UpdateOther(
+                  otherAssessment: OtherAssessment(
+                      timestamp: DateTime.now(),
+                      extraNote: extraController.text)));
+
+              Navigator.pop(context);
+            },
           )
         ],
       ),
@@ -41,7 +64,7 @@ class _OtherInformation extends State<OtherInformation> {
           // crossAxisAlignment: CrossAxisAlignment.start,
           // mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            _buildItem("Extra remark", extraController),
+            _buildItem("Extra note", extraController),
           ],
         ),
       ),
@@ -67,7 +90,7 @@ class _OtherInformation extends State<OtherInformation> {
           Expanded(
             child: TextFormField(
               keyboardType: TextInputType.multiline,
-              maxLines: null,
+              maxLines: 15,
               textCapitalization: TextCapitalization.characters,
               // expands: true,
               controller: controller,
