@@ -207,6 +207,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
     if (id == "appearance") {
       setState(() {
         listAppearance = dataReturn;
+        otherController.clear();
       });
     }
 
@@ -249,6 +250,12 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
     if (id == "breath_right") {
       setState(() {
         listBreathSoundR = dataReturn;
+      });
+    }
+
+    if (id == "heart_sound") {
+      setState(() {
+        listHeartSound = dataReturn;
       });
     }
 
@@ -406,7 +413,10 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
       abnormalTextController.text =
           widget.patientAssessment.abdomenAbnormalityLocation;
 
-      otherController.text = widget.patientAssessment.appearance;
+      // clear textfield others 
+      !_appearance.contains(widget.patientAssessment.appearance)
+            ? otherController.text = widget.patientAssessment.appearance
+            : otherController.clear();
     }
 
     super.didChangeDependencies();
@@ -495,10 +505,11 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                         timestamp: new DateTime.now(),
                         disasterTriage:
                             listTriage.length > 0 ? listTriage[0] : "",
-                        appearance: listAppearance.length > 0 &&
-                                listAppearance[0] == "Other"
-                            ? otherController.text
-                            : listAppearance[0],
+                        appearance: listAppearance.length > 0 
+                                    ? listAppearance[0] == "Other"
+                                    ? otherController.text
+                                    : listAppearance[0] 
+                                    : "",
                         levelResponsive: listLevelResponsiveness.length > 0
                             ? listLevelResponsiveness[0]
                             : "",
@@ -523,7 +534,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                                 : ""),
                         heartSound:
                             listHeartSound.length > 0 ? listHeartSound[0] : "",
-                        skin: listSkin.length > 0 ? listSkin : null,
+                        skin: listSkin,
                         ecg: listECG.length > 0 ? listECG[0] : "",
                         abdomenPalpation: listAbdomenPalpation.length > 0
                             ? listAbdomenPalpation[0]
@@ -563,6 +574,10 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
             if (prepareData[index].multiple == true) {
               return _buildCardMultiple(prepareData[index]);
             }
+            String initialData;
+            !_appearance.contains(prepareData[index].value)
+            ? initialData = "Other"
+            : initialData = prepareData[index].value;
             return prepareData[index].id != "appearance"
                 ? MyCardSingleOption(
                     id: prepareData[index].id,
@@ -576,7 +591,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                     name: prepareData[index].name,
                     listData: prepareData[index].listData,
                     mycallback: mycallback,
-                    value: prepareData[index].value,
+                    value: initialData,
                     controller: otherController,
                   );
 
