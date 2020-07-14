@@ -486,36 +486,36 @@ class _CallcardTabs extends State<CallcardTabs> {
 
                         final scene_assessment = new SceneAssessment(
                             ppe:
-                                sceneBloc.state.selectedServices != null
-                                    ? sceneBloc.state.selectedServices
+                                sceneBloc.state.selectedPPE != null
+                                    ? sceneBloc.state.selectedPPE
                                     : widget.scene_assessment != null
                                         ? widget.scene_assessment
                                             .ppe
                                         : [],
                             environment:
-                                sceneBloc.state.selectedServices != null
-                                    ? sceneBloc.state.selectedServices
+                                sceneBloc.state.selectedEnvironment != null
+                                    ? sceneBloc.state.selectedEnvironment
                                     : widget.scene_assessment != null
                                         ? widget.scene_assessment
                                             .environment
                                         : [],
                             caseType:
-                                sceneBloc.state.selectedServices != null
-                                    ? sceneBloc.state.selectedServices
+                                sceneBloc.state.selectedCaseType != null
+                                    ? sceneBloc.state.selectedCaseType
                                     : widget.scene_assessment != null
                                         ? widget.scene_assessment
                                             .caseType
                                         : [],
                             patient:
-                                sceneBloc.state.selectedServices != null
-                                    ? sceneBloc.state.selectedServices
+                                sceneBloc.state.selectedPatient != null
+                                    ? sceneBloc.state.selectedPatient
                                     : widget.scene_assessment != null
                                         ? widget.scene_assessment
                                             .patient
                                         : [],
                             backup:
-                                sceneBloc.state.selectedServices != null
-                                    ? sceneBloc.state.selectedServices
+                                sceneBloc.state.selectedBackup != null
+                                    ? sceneBloc.state.selectedBackup
                                     : widget.scene_assessment != null
                                         ? widget.scene_assessment
                                             .backup
@@ -528,7 +528,7 @@ class _CallcardTabs extends State<CallcardTabs> {
                                             .otherServicesAtScene
                                         : []);
                         // print(patientState);
-
+                        
                         final patientList = patientBloc.state.patients != null
                             ? patientBloc.state.patients
                             : widget.patients != null

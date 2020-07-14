@@ -1358,21 +1358,21 @@ class SceneAssessment {
       );
 
   Map<String, dynamic> toJson() => {
-       "ppe": otherServicesAtScene == null
+       "ppe": ppe == null
             ? null
-        : List<dynamic>.from(otherServicesAtScene.map((x) => x)),
-        "environment": otherServicesAtScene == null
+        : List<dynamic>.from(ppe.map((x) => x)),
+        "environment": environment == null
             ? null
-            : List<dynamic>.from(otherServicesAtScene.map((x) => x)),
-        "case_type": otherServicesAtScene == null
+            : List<dynamic>.from(environment.map((x) => x)),
+        "case_type": caseType == null
             ? null
-            : List<dynamic>.from(otherServicesAtScene.map((x) => x)),
-        "patient": otherServicesAtScene == null
+            : List<dynamic>.from(caseType.map((x) => x)),
+        "patient": patient == null
             ? null
-            : List<dynamic>.from(otherServicesAtScene.map((x) => x)),
-        "backup": otherServicesAtScene == null
+            : List<dynamic>.from(patient.map((x) => x)),
+        "backup": backup == null
             ? null
-            : List<dynamic>.from(otherServicesAtScene.map((x) => x)),
+            : List<dynamic>.from(backup.map((x) => x)),
         "other_services_atScene": otherServicesAtScene == null
             ? null
             : List<dynamic>.from(otherServicesAtScene.map((x) => x)),
