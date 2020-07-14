@@ -962,6 +962,7 @@ class AirEntry {
       };
 }
 
+
 class BreathSound {
   String rightLung;
   String leftLung;
@@ -1319,19 +1320,59 @@ class ResponseTime {
 
 class SceneAssessment {
   SceneAssessment({
+    this.ppe,
+    this.environment,
+    this.caseType,
+    this.patient,
+    this.backup,
     this.otherServicesAtScene,
   });
-
+  List<String> ppe;
+  List<String> environment;
+  List<String> caseType;
+  List<String> patient;
+  List<String> backup;
   List<String> otherServicesAtScene;
 
   factory SceneAssessment.fromJson(Map<String, dynamic> json) =>
       SceneAssessment(
+        ppe: json["ppe"] == null
+            ? null
+            : List<String>.from(json["ppe"].map((x) => x)),
+        environment: json["environment"] == null
+            ? null
+            : List<String>.from(json["environment"].map((x) => x)),
+        caseType: json["case_type"] == null
+            ? null
+            : List<String>.from(json["case_type"].map((x) => x)),
+        patient: json["patient"] == null
+            ? null
+            : List<String>.from(json["patient"].map((x) => x)),
+        backup: json["backup"] == null
+            ? null
+            : List<String>.from(json["backup"].map((x) => x)),
         otherServicesAtScene: json["other_services_atScene"] == null
             ? null
             : List<String>.from(json["other_services_atScene"].map((x) => x)),
+        
       );
 
   Map<String, dynamic> toJson() => {
+       "ppe": otherServicesAtScene == null
+            ? null
+        : List<dynamic>.from(otherServicesAtScene.map((x) => x)),
+        "environment": otherServicesAtScene == null
+            ? null
+            : List<dynamic>.from(otherServicesAtScene.map((x) => x)),
+        "case_type": otherServicesAtScene == null
+            ? null
+            : List<dynamic>.from(otherServicesAtScene.map((x) => x)),
+        "patient": otherServicesAtScene == null
+            ? null
+            : List<dynamic>.from(otherServicesAtScene.map((x) => x)),
+        "backup": otherServicesAtScene == null
+            ? null
+            : List<dynamic>.from(otherServicesAtScene.map((x) => x)),
         "other_services_atScene": otherServicesAtScene == null
             ? null
             : List<dynamic>.from(otherServicesAtScene.map((x) => x)),

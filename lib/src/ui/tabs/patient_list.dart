@@ -101,6 +101,8 @@ class _Patients extends State<PatientListScreen>
     //       patients: List<Patient>(),
     //       sceneAssessment: widget.sceneAssessment));
     // }
+    // ppeOtherController.text = widget.sceneAssessment.ppe[0];
+    // otherServicesController.text = widget.sceneAssessment.otherServicesAtScene[0];
 
     super.didChangeDependencies();
   }

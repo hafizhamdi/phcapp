@@ -485,6 +485,41 @@ class _CallcardTabs extends State<CallcardTabs> {
                         // print(timeState);
 
                         final scene_assessment = new SceneAssessment(
+                            ppe:
+                                sceneBloc.state.selectedServices != null
+                                    ? sceneBloc.state.selectedServices
+                                    : widget.scene_assessment != null
+                                        ? widget.scene_assessment
+                                            .ppe
+                                        : [],
+                            environment:
+                                sceneBloc.state.selectedServices != null
+                                    ? sceneBloc.state.selectedServices
+                                    : widget.scene_assessment != null
+                                        ? widget.scene_assessment
+                                            .environment
+                                        : [],
+                            caseType:
+                                sceneBloc.state.selectedServices != null
+                                    ? sceneBloc.state.selectedServices
+                                    : widget.scene_assessment != null
+                                        ? widget.scene_assessment
+                                            .caseType
+                                        : [],
+                            patient:
+                                sceneBloc.state.selectedServices != null
+                                    ? sceneBloc.state.selectedServices
+                                    : widget.scene_assessment != null
+                                        ? widget.scene_assessment
+                                            .patient
+                                        : [],
+                            backup:
+                                sceneBloc.state.selectedServices != null
+                                    ? sceneBloc.state.selectedServices
+                                    : widget.scene_assessment != null
+                                        ? widget.scene_assessment
+                                            .backup
+                                        : [],
                             otherServicesAtScene:
                                 sceneBloc.state.selectedServices != null
                                     ? sceneBloc.state.selectedServices
