@@ -131,6 +131,7 @@ class SceneBloc extends Bloc<SceneEvent, SceneState> {
     yield LoadedScene(
       selectedPPE:  event.selectedPPE,
       selectedEnvironment:  event.selectedEnvironment, 
+      selectedCaseType: event.selectedCaseType,
       selectedPatient: event.selectedPatient,
       selectedBackup: event.selectedBackup,
       selectedServices: event.selectedServices);
