@@ -38,7 +38,7 @@ const _cpr_not_required = [
   "Injuries incompatible to life - transection",
   "Injuries incompatible to life - incineration (>95%)",
   "Injuries incompatible to life - infull thickness mortis",
-  "Search and rescue drawning",
+  "Search and rescue drowning",
   "Presence of DNAR order"
 ];
 
@@ -50,7 +50,7 @@ const transported = [
   "Pregnant patient",
   "Paediatric patient",
   "Lighting injury",
-  "Drawning (not SAR case)",
+  "Drowning (not SAR case)",
   "Hypothermic related injury",
   "Victim with cardiac device (pace maker, ventilator assisted device)",
 ];
