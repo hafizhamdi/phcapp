@@ -44,7 +44,7 @@ class _ListCallcards extends State<ListCallcards> {
 
   @override
   void didChangeDependencies() {
-    // phcBloc = BlocProvider.of<PhcBloc>(context);
+    phcBloc = BlocProvider.of<PhcBloc>(context);
     loginBloc = BlocProvider.of<LoginBloc>(context);
     authBloc = BlocProvider.of<AuthBloc>(context);
     settingBloc = BlocProvider.of<SettingBloc>(context);
@@ -203,6 +203,7 @@ class _ListCallcards extends State<ListCallcards> {
                             ),
                         controller: searchController,
                       )),
+                      // Text(phcBloc.statephc.callcards.length. "Results"),
                   Expanded(
                     child: BlocConsumer<PhcBloc, PhcState>(
                       listener: (context, state) {

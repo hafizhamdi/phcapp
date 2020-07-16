@@ -10,6 +10,7 @@ import 'package:phcapp/src/ui/history.dart';
 import 'package:phcapp/src/ui/tabs/patient_list.dart';
 import 'package:phcapp/src/ui/tabs/response_team.dart';
 import 'package:phcapp/src/ui/tabs/response_time.dart';
+import 'package:phcapp/src/widgets/loading_dialog.dart';
 import 'package:provider/provider.dart';
 // import '../blocs/info_bloc.dart';
 import 'package:phcapp/src/ui/tabs/call_information.dart';
@@ -52,6 +53,8 @@ class CallcardTabs extends StatefulWidget {
 class _CallcardTabs extends State<CallcardTabs> {
   CallInfoBloc callInfoBloc;
   bool isLoading = false;
+
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   final PhcRepository phcRepository =
       PhcRepository(phcApiClient: PhcApiClient(httpClient: http.Client()));
@@ -300,6 +303,167 @@ class _CallcardTabs extends State<CallcardTabs> {
         false;
   }
 
+  Future<void> _handleSubmit(BuildContext context) async {
+    try {
+      print("handlesubmit pressed!");
+      // Dialogs.showLoadingDialog(context, _keyLoader);
+
+      // Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+      //     .pop(); //close the dialoge
+      // Navigator.pushReplacementNamed(context, "/listCallcards");
+      // print("callInfoBloc state push toserver");
+
+      final call_information = callInfoBloc.state.callInformation ??
+          widget.call_information ??
+          new CallInformation();
+      // if (call_information != null) {
+      call_information.callReceived = call_information != null
+          ? convertDateToStandard(call_information.call_received)
+          : DateTime.now().toString();
+      // }
+
+      call_information.assignId = widget.call_information != null
+          ? widget.call_information.assign_id
+          : null;
+      call_information.plateNo = responseBloc.state.vehicleRegNo != null
+          ? responseBloc.state.vehicleRegNo
+          : widget.response_team != null
+              ? widget.response_team.vehicleRegno
+              : null;
+      // print(call_information.callcard_no);
+      // call_information.plateNo =
+      //     widget.call_information.plate_no;
+      // : convertDateToStandard(
+      //     widget.call_information.call_received);
+
+      // print(currentState.toJson());
+      print("INSIDE CALL INFO");
+      // print(call_information.toJson());
+      // print("+=======+");
+      // print(responseBloc.state.serviceResponse);
+      // print(responseBloc.state.vehicleRegNo);
+      // print(widget.call_information.toJson());
+      final response_team = new ResponseTeam(
+          serviceResponse: responseBloc.state.serviceResponse != null
+              ? responseBloc.state.serviceResponse
+              : widget.response_team != null
+                  ? widget.response_team.serviceResponse
+                  : '',
+          vehicleRegno: responseBloc.state.vehicleRegNo != null
+              ? responseBloc.state.vehicleRegNo
+              : widget.call_information != null
+                  ? widget.call_information.plate_no
+                  : '',
+          staffs: teamBloc.state.selectedStaffs != null
+              ? teamBloc.state.selectedStaffs
+              : widget.response_team != null
+                  ? widget.response_team.staffs
+                  : []);
+      // print(teamState);
+
+      final response_time = timeBloc.state.responseTime;
+      // ??
+      //     new ResponseTime();
+      // print(timeState);
+
+      final scene_assessment = new SceneAssessment(
+          ppe: sceneBloc.state.selectedPPE != null
+              ? sceneBloc.state.selectedPPE
+              : widget.scene_assessment != null
+                  ? widget.scene_assessment.ppe
+                  : [],
+          environment: sceneBloc.state.selectedEnvironment != null
+              ? sceneBloc.state.selectedEnvironment
+              : widget.scene_assessment != null
+                  ? widget.scene_assessment.environment
+                  : [],
+          caseType: sceneBloc.state.selectedCaseType != null
+              ? sceneBloc.state.selectedCaseType
+              : widget.scene_assessment != null
+                  ? widget.scene_assessment.caseType
+                  : [],
+          patient: sceneBloc.state.selectedPatient != null
+              ? sceneBloc.state.selectedPatient
+              : widget.scene_assessment != null
+                  ? widget.scene_assessment.patient
+                  : [],
+          backup: sceneBloc.state.selectedBackup != null
+              ? sceneBloc.state.selectedBackup
+              : widget.scene_assessment != null
+                  ? widget.scene_assessment.backup
+                  : [],
+          otherServicesAtScene: sceneBloc.state.selectedServices != null
+              ? sceneBloc.state.selectedServices
+              : widget.scene_assessment != null
+                  ? widget.scene_assessment.otherServicesAtScene
+                  : []);
+      // print(patientState);
+
+      final patientList = patientBloc.state.patients != null
+          ? patientBloc.state.patients
+          : widget.patients != null
+              ? List<dynamic>.from(widget.patients).toList()
+              : [];
+
+      // print(patientList.length);
+      // print(scene_assessment.toJson());
+      // print(patientList.elementAt(0).patientInformation.idNo);
+
+      // print(patientBloc.sceneAssessment.toJson());
+      // historyBloc.add(AddHistory(
+      //     callcard: new Callcard(
+      //         callInformation: call_information,
+      //         responseTeam: response_team,
+      //         responseTime: response_time,
+      //         patients: List<Patient>(),
+      //         sceneAssessment: new SceneAssessment())));
+
+      // print("DONE");
+      // print(call_information);
+      // print(scene_assessment);
+      // print(response_team);
+
+      // print(response_time);
+      // print(patientList);
+      // if (patientList.length > 0) {
+      //   print("PATIENT LIST MORE THAN ONE");
+      //   patientList.map((f) {
+      //     print("what inside patientlist");
+      //     // print((f));
+      //     print(f.toJson());
+      //   }).toList();
+      // }
+      Staff user = authBloc.getAuthorizedUser;
+
+      // print(patientList);
+      if (call_information.callcard_no != null &&
+          call_information.callcard_no.isNotEmpty) {
+        tabBloc.add(PublishCallcard(
+          authorizedUser: user.userId,
+          callInformation: call_information,
+          // ?? widget.call_information,
+          responseTeam: response_team,
+          // responseTime: response_time,
+          sceneAssessment: scene_assessment,
+          patients: patientList != null
+              ? List<Patient>.from(patientList).toList()
+              : [],
+          // responseTeam: response_team,
+          responseTime:
+              response_time ?? widget.response_time ?? new ResponseTime(),
+          // patients: patientList,
+          // sceneAssessment:
+          //     SceneAssessment(otherServicesAtScene: []
+          //     )
+        ));
+      } else {
+        mandatoryNotFilledError();
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // var callcard = Provider.of<Callcard>(context);
@@ -324,12 +488,17 @@ class _CallcardTabs extends State<CallcardTabs> {
         child: BlocConsumer<CallCardTabBloc, TabState>(
           listener: (context, state) {
             if (state is CallcardToPublishLoading) {
+              Dialogs.showLoadingDialog(context, _keyLoader);
+
+              // Navigator.pushReplacementNamed(context, "/listCallcards");
               // setState(() {
               //   isLoading = true;
               // });
               //circular progress alert dialog
               // showLoading();
             } else if (state is CallcardToPublishSuccess) {
+              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                  .pop(); //close the dialoge
               //Callcard success publish dialog with ok
               // if (isLoading == true) {
               //   Navigator.pop(context);
@@ -422,176 +591,7 @@ class _CallcardTabs extends State<CallcardTabs> {
                         borderRadius: BorderRadius.circular(40.0)),
                     // padding: EdgeInsets.only(right: 10),
                     child: InkWell(
-                      onTap: () {
-                        print("callInfoBloc state push toserver");
-
-                        final call_information =
-                            callInfoBloc.state.callInformation ??
-                                widget.call_information ??
-                                new CallInformation();
-                        // if (call_information != null) {
-                        call_information.callReceived = call_information != null
-                            ? convertDateToStandard(
-                                call_information.call_received)
-                            : DateTime.now().toString();
-                        // }
-
-                        call_information.assignId =
-                            widget.call_information != null
-                                ? widget.call_information.assign_id
-                                : null;
-                        call_information.plateNo =
-                            responseBloc.state.vehicleRegNo != null
-                                ? responseBloc.state.vehicleRegNo
-                                : widget.response_team != null
-                                    ? widget.response_team.vehicleRegno
-                                    : null;
-                        // print(call_information.callcard_no);
-                        // call_information.plateNo =
-                        //     widget.call_information.plate_no;
-                        // : convertDateToStandard(
-                        //     widget.call_information.call_received);
-
-                        // print(currentState.toJson());
-                        print("INSIDE CALL INFO");
-                        // print(call_information.toJson());
-                        // print("+=======+");
-                        // print(responseBloc.state.serviceResponse);
-                        // print(responseBloc.state.vehicleRegNo);
-                        // print(widget.call_information.toJson());
-                        final response_team = new ResponseTeam(
-                            serviceResponse:
-                                responseBloc.state.serviceResponse != null
-                                    ? responseBloc.state.serviceResponse
-                                    : widget.response_team != null
-                                        ? widget.response_team.serviceResponse
-                                        : '',
-                            vehicleRegno:
-                                responseBloc.state.vehicleRegNo != null
-                                    ? responseBloc.state.vehicleRegNo
-                                    : widget.call_information != null
-                                        ? widget.call_information.plate_no
-                                        : '',
-                            staffs: teamBloc.state.selectedStaffs != null
-                                ? teamBloc.state.selectedStaffs
-                                : widget.response_team != null
-                                    ? widget.response_team.staffs
-                                    : []);
-                        // print(teamState);
-
-                        final response_time = timeBloc.state.responseTime;
-                        // ??
-                        //     new ResponseTime();
-                        // print(timeState);
-
-                        final scene_assessment = new SceneAssessment(
-                            ppe:
-                                sceneBloc.state.selectedPPE != null
-                                    ? sceneBloc.state.selectedPPE
-                                    : widget.scene_assessment != null
-                                        ? widget.scene_assessment
-                                            .ppe
-                                        : [],
-                            environment:
-                                sceneBloc.state.selectedEnvironment != null
-                                    ? sceneBloc.state.selectedEnvironment
-                                    : widget.scene_assessment != null
-                                        ? widget.scene_assessment
-                                            .environment
-                                        : [],
-                            caseType:
-                                sceneBloc.state.selectedCaseType != null
-                                    ? sceneBloc.state.selectedCaseType
-                                    : widget.scene_assessment != null
-                                        ? widget.scene_assessment
-                                            .caseType
-                                        : [],
-                            patient:
-                                sceneBloc.state.selectedPatient != null
-                                    ? sceneBloc.state.selectedPatient
-                                    : widget.scene_assessment != null
-                                        ? widget.scene_assessment
-                                            .patient
-                                        : [],
-                            backup:
-                                sceneBloc.state.selectedBackup != null
-                                    ? sceneBloc.state.selectedBackup
-                                    : widget.scene_assessment != null
-                                        ? widget.scene_assessment
-                                            .backup
-                                        : [],
-                            otherServicesAtScene:
-                                sceneBloc.state.selectedServices != null
-                                    ? sceneBloc.state.selectedServices
-                                    : widget.scene_assessment != null
-                                        ? widget.scene_assessment
-                                            .otherServicesAtScene
-                                        : []);
-                        // print(patientState);
-                        
-                        final patientList = patientBloc.state.patients != null
-                            ? patientBloc.state.patients
-                            : widget.patients != null
-                                ? List<dynamic>.from(widget.patients).toList()
-                                : [];
-
-                        // print(patientList.length);
-                        // print(scene_assessment.toJson());
-                        // print(patientList.elementAt(0).patientInformation.idNo);
-
-                        // print(patientBloc.sceneAssessment.toJson());
-                        // historyBloc.add(AddHistory(
-                        //     callcard: new Callcard(
-                        //         callInformation: call_information,
-                        //         responseTeam: response_team,
-                        //         responseTime: response_time,
-                        //         patients: List<Patient>(),
-                        //         sceneAssessment: new SceneAssessment())));
-
-                        // print("DONE");
-                        // print(call_information);
-                        // print(scene_assessment);
-                        // print(response_team);
-
-                        // print(response_time);
-                        // print(patientList);
-                        // if (patientList.length > 0) {
-                        //   print("PATIENT LIST MORE THAN ONE");
-                        //   patientList.map((f) {
-                        //     print("what inside patientlist");
-                        //     // print((f));
-                        //     print(f.toJson());
-                        //   }).toList();
-                        // }
-                        Staff user = authBloc.getAuthorizedUser;
-
-                        // print(patientList);
-                        if (call_information.callcard_no != null &&
-                            call_information.callcard_no.isNotEmpty) {
-                          tabBloc.add(PublishCallcard(
-                            authorizedUser: user.userId,
-                            callInformation: call_information,
-                            // ?? widget.call_information,
-                            responseTeam: response_team,
-                            // responseTime: response_time,
-                            sceneAssessment: scene_assessment,
-                            patients: patientList != null
-                                ? List<Patient>.from(patientList).toList()
-                                : [],
-                            // responseTeam: response_team,
-                            responseTime: response_time ??
-                                widget.response_time ??
-                                new ResponseTime(),
-                            // patients: patientList,
-                            // sceneAssessment:
-                            //     SceneAssessment(otherServicesAtScene: []
-                            //     )
-                          ));
-                        } else {
-                          mandatoryNotFilledError();
-                        }
-                        // Navigator.pop(context);
-                      },
+                      onTap: () => _handleSubmit(context),
                       child:
                           // )
                           // FlatButton.icon(
