@@ -44,7 +44,7 @@ class _ListCallcards extends State<ListCallcards> {
 
   @override
   void didChangeDependencies() {
-    // phcBloc = BlocProvider.of<PhcBloc>(context);
+    phcBloc = BlocProvider.of<PhcBloc>(context);
     loginBloc = BlocProvider.of<LoginBloc>(context);
     authBloc = BlocProvider.of<AuthBloc>(context);
     settingBloc = BlocProvider.of<SettingBloc>(context);
@@ -203,6 +203,7 @@ class _ListCallcards extends State<ListCallcards> {
                             ),
                         controller: searchController,
                       )),
+                      // Text(phcBloc.statephc.callcards.length. "Results"),
                   Expanded(
                     child: BlocConsumer<PhcBloc, PhcState>(
                       listener: (context, state) {
@@ -470,6 +471,16 @@ class _ListCallcards extends State<ListCallcards> {
                             .otherServicesAtScene);
                         sceneBloc.add(
                           LoadScene(
+                              selectedPPE: phc.callcards[index]
+                                  .sceneAssessment.ppe,
+                              selectedEnvironment: phc.callcards[index]
+                                  .sceneAssessment.environment,
+                              selectedCaseType: phc.callcards[index]
+                                  .sceneAssessment.caseType,
+                              selectedPatient: phc.callcards[index]
+                                  .sceneAssessment.patient,
+                              selectedBackup: phc.callcards[index]
+                                  .sceneAssessment.backup,
                               selectedServices: phc.callcards[index]
                                   .sceneAssessment.otherServicesAtScene),
                         );
@@ -599,7 +610,17 @@ class _ListCallcards extends State<ListCallcards> {
                                 .otherServicesAtScene);
                             sceneBloc.add(
                               LoadScene(
-                                  selectedServices: phc.callcards[index]
+                                selectedPPE: phc.callcards[index]
+                                  .sceneAssessment.ppe,
+                                selectedEnvironment: phc.callcards[index]
+                                  .sceneAssessment.environment,
+                                selectedCaseType: phc.callcards[index]
+                                  .sceneAssessment.caseType,
+                                selectedPatient: phc.callcards[index]
+                                  .sceneAssessment.patient,
+                                selectedBackup: phc.callcards[index]
+                                  .sceneAssessment.backup,
+                                selectedServices: phc.callcards[index]
                                       .sceneAssessment.otherServicesAtScene),
                             );
 
@@ -731,7 +752,8 @@ class _ListCallcards extends State<ListCallcards> {
           timeBloc.add(ResetTime());
 
           final sceneBloc = BlocProvider.of<SceneBloc>(context);
-          sceneBloc.add(LoadScene(selectedServices: []));
+          sceneBloc.add(LoadScene(selectedPPE: [], selectedEnvironment: [], selectedCaseType: [],
+                                  selectedPatient: [], selectedBackup: [],selectedServices: []));
 
           final patientBloc = BlocProvider.of<PatientBloc>(context);
           patientBloc.add(InitPatient());

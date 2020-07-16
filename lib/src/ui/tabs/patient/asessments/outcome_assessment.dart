@@ -7,34 +7,34 @@ import 'package:phcapp/src/widgets/mycard_freetext.dart';
 import 'package:phcapp/src/widgets/mycard_single_option.dart';
 
 const _etdTriage = [
-  "red",
-  "yellow",
-  "green",
+  "Red",
+  "Yellow",
+  "Green",
   "BID",
 ];
 const _transport = [
-  "transported (resus)",
-  "transported (not resus)",
-  "treat and release",
-  "transport refusal (at own risk)",
-  "death at scene"
+  "Transported (resus)",
+  "Transported (not resus)",
+  "Treat and release",
+  "Transport refusal (at own risk)",
+  "Death at scene"
 ];
 const _facilityType = [
   "Government hospital",
-  "government clinic",
-  "private hospital"
+  "Government clinic",
+  "Private hospital"
 ];
 const _justification = [
-  "nearest facility",
-  "bypass protocol (stroke/trauma/cardiac)",
-  "patient preferred facility (follow up)",
-  "patient preferred facility (family reason)"
+  "Nearest facility",
+  "Bypass protocol (stroke/trauma/cardiac)",
+  "Patient preferred facility (follow up)",
+  "Patient preferred facility (family reason)"
 ];
 
 const _deterioration = [
-  "none",
-  "respiratory arrest",
-  "cardiorespiratory arrest"
+  "None",
+  "Respiratory arrest",
+  "Cardiorespiratory arrest"
 ];
 
 class OutcomeAssessment extends StatefulWidget {

@@ -24,7 +24,6 @@ import '../../models/phc.dart';
 const _otherServices = [
   "APM",
   "EMRS",
-  "Police",
   "Red cresent",
   "St. John ambulance",
   "Private",
@@ -71,6 +70,11 @@ class _Patients extends State<PatientListScreen>
   // ];
 
   PatientBloc patientBloc;
+  List<String> ppeList;
+  List<String> environmentList;
+  List<String> caseTypeList;
+  List<String> patientList;
+  List<String> backupList;
   List<String> wantedList;
 
   TextEditingController ppeOtherController = TextEditingController();
@@ -102,6 +106,8 @@ class _Patients extends State<PatientListScreen>
     //       patients: List<Patient>(),
     //       sceneAssessment: widget.sceneAssessment));
     // }
+    // ppeOtherController.text = widget.sceneAssessment.ppe[0];
+    // otherServicesController.text = widget.sceneAssessment.otherServicesAtScene[0];
 
     super.didChangeDependencies();
   }
@@ -189,16 +195,51 @@ class _Patients extends State<PatientListScreen>
 
     void nothingCallback(String item, List<String> selectedItems) {}
     void callback(String item, List<String> selectedItems) {
+
+      if(item == "PPE"){
+        setState(() {
+          ppeList = selectedItems;
+        });
+      }
+      if(item == "Environment"){
+        setState(() {
+          environmentList = selectedItems;
+        });
+      }
+      if(item == "Case Type"){
+        setState(() {
+          caseTypeList = selectedItems;
+        });
+      }
+      if(item == "Patient"){
+        setState(() {
+          patientList = selectedItems;
+        });
+      }
+      if(item == "Backup"){
+        setState(() {
+          print("masuk sini pantat");
+          backupList = selectedItems;
+        });
+      }
       if (item == "Other services at scene") {
         setState(() {
           wantedList = selectedItems;
         });
-        sceneBloc = BlocProvider.of<SceneBloc>(context);
-
-        sceneBloc.add(LoadScene(selectedServices: wantedList));
         print("callback");
         print(selectedItems.length.toString());
       }
+
+        sceneBloc = BlocProvider.of<SceneBloc>(context);
+
+        sceneBloc.add(LoadScene(
+          selectedPPE: ppeList,
+          selectedEnvironment: environmentList,
+          selectedCaseType: caseTypeList,
+          selectedPatient: patientList,
+          selectedBackup: backupList,
+          selectedServices: wantedList));
+        print("bloc kat sini: ");
 
       // patientBloc.add(LoadPatient(
       //     assign_id: widget.assign_id,
@@ -251,16 +292,16 @@ class _Patients extends State<PatientListScreen>
                             height: 10,
                           ),
 
-                          _buildSceneChips("PPE", _ppe, nothingCallback,
-                              state.selectedServices, ppeOtherController),
+                          _buildSceneChips("PPE", _ppe, callback,
+                              state.selectedPPE, ppeOtherController),
                           _defaultChips("Environment", _environment,
-                              nothingCallback, state.selectedServices),
-                          _defaultChips("Case Type", _trauma, nothingCallback,
-                              state.selectedServices),
-                          _defaultChips("Patient", _patient, nothingCallback,
-                              state.selectedServices),
-                          _defaultChips("Backup", _backup, nothingCallback,
-                              state.selectedServices),
+                              callback, state.selectedEnvironment),
+                          _defaultChips("Case Type", _trauma, callback,
+                              state.selectedCaseType),
+                          _defaultChips("Patient", _patient, callback,
+                              state.selectedPatient),
+                          _defaultChips("Backup", _backup, callback,
+                              state.selectedBackup),
                           _buildSceneChips(
                               "Other services at scene",
                               _otherServices,
@@ -278,16 +319,16 @@ class _Patients extends State<PatientListScreen>
                         SizedBox(
                           height: 10,
                         ),
-                        _buildSceneChips("PPE", _ppe, nothingCallback,
-                            state.selectedServices, ppeOtherController),
+                        _buildSceneChips("PPE", _ppe, callback,
+                            state.selectedPPE, ppeOtherController),
                         _defaultChips("Environment", _environment,
-                            nothingCallback, state.selectedServices),
-                        _defaultChips("Case Type", _trauma, nothingCallback,
-                            state.selectedServices),
-                        _defaultChips("Patient", _patient, nothingCallback,
-                            state.selectedServices),
-                        _defaultChips("Backup", _backup, nothingCallback,
-                            state.selectedServices),
+                            callback, state.selectedEnvironment),
+                        _defaultChips("Case Type", _trauma, callback,
+                            state.selectedCaseType),
+                        _defaultChips("Patient", _patient, callback,
+                            state.selectedPatient),
+                        _defaultChips("Backup", _backup, callback,
+                            state.selectedBackup),
                         _buildSceneChips(
                             "Other services at scene",
                             _otherServices,

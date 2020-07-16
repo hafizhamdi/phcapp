@@ -26,6 +26,7 @@ const LIST_IDTYPE = [
   "Temporary ID"
 ];
 
+
 class PatientInformationScreen extends StatefulWidget {
   PatientInformation patient_information;
   PatientInformationScreen({this.patient_information});
@@ -47,17 +48,20 @@ class _Information extends State<PatientInformationScreen>
   String idHintText;
 
   PatientBloc patientBloc;
+  String docType;
+  String gender;
+  @override
+  initState() {
 
-  // @override
-  // initState() {
-
+    docType = widget.patient_information.idType;
+    gender = widget.patient_information.gender;
   // nameController.text = widget.patient_information.nama;
   // idNoController.text = widget.patient_information.id_no;
   // idTypeController.text = widget.patient_information.id_type;
   // ageController.text = widget.patient_information.age;
   // genderController.text = widget.patient_information.jantina;
   // dobController.text = widget.patient_information.dateOfBirth;
-  // }
+  }
 
   @override
   void dispose() {
@@ -103,6 +107,7 @@ class _Information extends State<PatientInformationScreen>
     print("$dd/$MM/$yyyy");
     return "$dd/$MM/$yyyy";
   }
+  
 
   @override
   build(BuildContext context) {
@@ -116,7 +121,7 @@ class _Information extends State<PatientInformationScreen>
     patProvider.setAge = widget.patient_information.age;
     patProvider.setDob = convertDOBtoStandard(widget.patient_information.dob);
     patProvider.setGender = widget.patient_information.gender;
-
+    print("id type: $docType");
     return Scaffold(
       // backgroundColor: Colors.grey,
 
@@ -274,6 +279,7 @@ class _Information extends State<PatientInformationScreen>
 
   Widget _idInputCalculated(context, labelText, controller, validator,
       ageController, dobController, genderController) {
+
     return Container(
         // width: 500,
         // width: 500,
@@ -361,9 +367,15 @@ class _Information extends State<PatientInformationScreen>
                     //to set Gender
                     print(controller.text.substring(11));
                     if (int.parse(controller.text.substring(11)) % 2 == 0) {
-                      genderController.sink.add("Female");
+                        genderController.sink.add("Female");
+                        setState(() {
+                            widget.patient_information.gender = "Female";
+                        });
                     } else {
-                      genderController.sink.add("Male");
+                        genderController.sink.add("Male");
+                        setState(() {
+                            widget.patient_information.gender = "Male";
+                        });
                     }
                   } else {
                     dobController.clear();
@@ -420,7 +432,6 @@ class _Information extends State<PatientInformationScreen>
                 //   // }
                 //   FocusScope.of(context).unfocus();
                 // },
-
                 decoration: InputDecoration(
                     hintText: idHintText,
                     labelText: labelText,

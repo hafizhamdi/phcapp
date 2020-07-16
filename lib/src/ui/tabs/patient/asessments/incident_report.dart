@@ -7,25 +7,25 @@ import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/reporting_bloc.dart'
 import 'package:phcapp/src/widgets/mycard_single_option.dart';
 
 const _responseDelay = [
-  "direction/ unable to locate",
-  "traffic",
-  "route obstruction",
-  "vehicle failure",
-  "vehicle crash",
-  "staff delay"
+  "Direction/ unable to locate",
+  "Traffic",
+  "Route obstruction",
+  "Vehicle failure",
+  "Vehicle crash",
+  "Staff delay"
 ];
 
 const _sceneDelay = [
-  "awaiting secondary responder",
-  "awaiting specialized vehicle",
-  "awaiting specialized equipment",
-  "awaiting PDRM officer (personal officer)",
-  "awaiting PDRM (left before arrive)"
-  "vehicle crash",
-  "vehicle failure"
+  "Awaiting secondary responder",
+  "Awaiting specialized vehicle",
+  "Awaiting specialized equipment",
+  "Awaiting PDRM officer (personal officer)",
+  "Awaiting PDRM (left before arrive)"
+  "Vehicle crash",
+  "Vehicle failure"
 ];
 
-const _transportDelay = ["traffic", "vehicle crash", "vehicle failure"];
+const _transportDelay = ["Traffic", "Vehicle crash", "Vehicle failure"];
 
 class IncidentReport extends StatefulWidget {
   final IncidentReporting incidentReporting;
