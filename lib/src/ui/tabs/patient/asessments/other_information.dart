@@ -91,7 +91,7 @@ class _OtherInformation extends State<OtherInformation> {
             child: TextFormField(
               keyboardType: TextInputType.multiline,
               maxLines: 15,
-              textCapitalization: TextCapitalization.characters,
+              // textCapitalization: TextCapitalization.characters,
               // expands: true,
               controller: controller,
               decoration: InputDecoration(

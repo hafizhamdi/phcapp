@@ -21,4 +21,10 @@ class PhcRepository {
     print("getavailablestaffs");
     return phcApiClient.fetchAvailableStaffs();
   }
+
+  Future getAvailablePlateNo() async {
+    print("getAvailablePlateNo");
+    
+    return phcApiClient.fetchAvailablePlateNo();
+  }
 }

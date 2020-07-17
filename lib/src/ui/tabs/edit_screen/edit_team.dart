@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
+import 'package:phcapp/src/blocs/plate_bloc.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phcapp/src/models/plateno.dart';
 
 // constants
 
-enum InputOption { service }
+enum InputOption { service, plateNo }
 const LIST_RESPONSES = [
   "",
   "999 Primary",
@@ -59,9 +61,13 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
   @override
   bool get wantKeepAlive => true;
   String _serviceSelected;
+  String _plateNoSelected = "";
   TextEditingController regNoController = new TextEditingController();
 
   StreamController<String> _serviceController =
+      new StreamController.broadcast();
+
+  StreamController<String> _plateNoController =
       new StreamController.broadcast();
 
   // void serviceCallback(String selected) {
@@ -84,6 +90,7 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
     //   teamBloc.add(LoadTeam(assign_id: widget.assign_id));
     regNoController.text = widget.vehicleRegNo;
     _serviceSelected = widget.serviceResponse;
+    _plateNoSelected = widget.vehicleRegNo;
   }
 
   // @override
@@ -130,6 +137,7 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
 
     regNoController.dispose();
     _serviceController.close();
+    _plateNoController.close();
     super.dispose();
   }
 
@@ -138,7 +146,9 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
   @override
   Widget build(BuildContext context) {
     final teamBloc = BlocProvider.of<TeamBloc>(context);
+    final plateBloc = BlocProvider.of<PlateBloc>(context);
 
+    plateBloc.add(LoadPlate());
     print("BUILD RESPONSE TEAM======");
 
     // teamBloc.add(LoadTeam(
@@ -226,7 +236,7 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
                               final responseBloc =
                                   BlocProvider.of<ResponseBloc>(context);
                               responseBloc.add(AddResponse(
-                                  vehicleRegNo: regNoController.text,
+                                  vehicleRegNo: _plateNoSelected,
                                   serviceResponse: _serviceSelected));
 
                               Navigator.pop(context);
@@ -240,9 +250,24 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
                     //     items: LIST_RESPONSES,
                     //     callback: serviceCallback,
                     //     itemSelected: serviceSelected),
-                    TextInput(
-                        labelText: "Vehicle Registration No",
-                        controller: regNoController),
+
+                    BlocBuilder<PlateBloc, PlateState>(
+                        builder: (context, state) {
+                      List<String> plateList = [""];
+                      List<PlateNo>.from(state.available_plateno).map((f) {
+                        plateList.add(f.plateNo);
+                        // return f.plateNo.trim();
+                      }).toList();
+
+                      // : []
+
+                      return DropDownList("Vehicle Registration No", plateList,
+                          InputOption.plateNo, _plateNoSelected);
+                    })
+
+                    // TextInput(
+                    //   labelText: "Vehicle Registration No",
+                    //   controller: regNoController),
                     // initialData:
                     // state.response_team.vehicleRegno),
                   ]),
@@ -257,6 +282,9 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
     switch (selector) {
       case InputOption.service:
         _serviceSelected = value;
+        break;
+      case InputOption.plateNo:
+        _plateNoSelected = value;
         break;
       default:
         break;
@@ -274,6 +302,9 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
       case InputOption.service:
         return _serviceController;
         break;
+      case InputOption.plateNo:
+        return _plateNoController;
+        break;
       // case InputOption.distance:
       //   return _distanceController;
       //   break;
@@ -286,6 +317,7 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
   }
 
   Widget DropDownList(labelText, List<String> list, selector, initialData) {
+    print(list);
     final controller = getStreamController(selector);
 
     // if (!list.contains(initialData)) initialData = "";
@@ -305,11 +337,15 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
 
                   setInputOption(selector, snapshot.data);
                   // child:
-
+                  var counter = 0;
                   return DropdownButtonFormField(
                       isDense: true,
                       items: list.map((String dropDownStringItem) {
+                        // var tmpString = dropDownStringItem.replaceAll(" ", "");
+                        // print(tmpString);
+                        // counter++;
                         return DropdownMenuItem<String>(
+                            // key: Key(dropDownStringItem.replaceAll(" ", "")),
                             child: Text(dropDownStringItem),
                             value: dropDownStringItem);
                       }).toList(),

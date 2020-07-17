@@ -281,8 +281,40 @@ class _LoginScreen extends State<LoginScreen> {
                   context, MaterialPageRoute(builder: (context) => Settings()));
             },
             // ,
-          )
+          ),
+          SizedBox(
+            height: 40,
+          ),
+          // Stack(
+          //   children: <Widget>[
+          //     Positioned(
+          //       child:
+          Container(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              margin: EdgeInsets.only(bottom: 50),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      width: 70,
+                      child: Image(image: AssetImage('assets/heart_kkm.png')),
+                      // SvgPicture.asset("assets/town.svg"),
+                    ),
+                    Container(
+                      width: 100,
+                      child: Image(image: AssetImage('assets/kkm.png')),
+                      // SvgPicture.asset("assets/town.svg"),
+                    ),
+                    Container(
+                      width: 70,
+                      child: Image(image: AssetImage('assets/mers999.png')),
+                      // SvgPicture.asset("assets/town.svg"),
+                    ),
+                  ]))
+          // )
           // Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          // ],
+          // )
           //   IconButton(
           //   ),
           //   Text("Settings")

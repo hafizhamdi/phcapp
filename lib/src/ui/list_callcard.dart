@@ -176,89 +176,125 @@ class _ListCallcards extends State<ListCallcards> {
         ),
         body: Center(
           child: BlocProvider(
-              create: (context) => PhcBloc(
-                  phcRepository: phcRepository, phcDao: phcDaoClient.phcDao),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                      padding: EdgeInsets.all(10),
-                      child: TextField(
-                        decoration: InputDecoration(
-                            // hintText: hintText,
-                            labelText: "Search Call Card No",
-                            fillColor: Colors.white,
-                            border: new OutlineInputBorder(
-                              borderRadius: new BorderRadius.circular(40.0),
-                              borderSide: new BorderSide(),
-                            ),
-                            prefixIcon: Icon(Icons.search),
-                            suffixIcon: IconButton(
-                                onPressed: () => searchController.clear(),
-                                icon: Icon(Icons.cancel))
-                            // )
+            create: (context) => PhcBloc(
+                phcRepository: phcRepository, phcDao: phcDaoClient.phcDao),
+            child: BlocConsumer<PhcBloc, PhcState>(
+              listener: (context, state) {
+                _refreshCompleter?.complete();
+                _refreshCompleter = Completer();
+              },
+              builder: (context, state) {
+                phcBloc = BlocProvider.of<PhcBloc>(context);
 
-                            // decoration: new InputDecoration(
-                            //   labelText: "Search staff name",
-                            //   border:,
-                            ),
-                        controller: searchController,
-                      )),
-                      // Text(phcBloc.statephc.callcards.length. "Results"),
-                  Expanded(
-                    child: BlocConsumer<PhcBloc, PhcState>(
-                      listener: (context, state) {
-                        _refreshCompleter?.complete();
-                        _refreshCompleter = Completer();
-                      },
-                      builder: (context, state) {
-                        phcBloc = BlocProvider.of<PhcBloc>(context);
+                if (state is PhcEmpty) {
+                  // state.props.add(FetchPhc());
 
-                        if (state is PhcEmpty) {
-                          // state.props.add(FetchPhc());
+                  phcBloc.add(FetchPhc());
+                } else if (state is PhcLoaded) {
+                  print("Phc loaded");
+                  final phc = state.phc;
 
-                          phcBloc.add(FetchPhc());
-                        } else if (state is PhcLoaded) {
-                          print("Phc loaded");
-                          final phc = state.phc;
-
-                          return RefreshIndicator(
-                              onRefresh: () {
-                                BlocProvider.of<PhcBloc>(context).add(
-                                  RefreshPhc(),
-                                );
-                                return _refreshCompleter.future;
-                              },
-                              child: _buildList(phc)
-                              // ListView.builder(
-                              //     itemCount: phc.callcards.length,
-                              //     itemBuilder: (context, index) {
-                              //       final callInfo = phc.callcards[index].call_information;
-                              //       return ListTile(
-                              //         title: Text(callInfo.callcard_no),
-                              //         subtitle: Text(callInfo.callReceived != null
-                              //             ? callInfo.callReceived.substring(
-                              //                 0, callInfo.call_received.length - 2)
-                              //             : callInfo.callReceived),
-                              //       );
-                              //     })
-
-                              );
-                        }
-                        // else if (state is PhcFetched) {
-                        //   final phc = state.phc;
-                        //   print("Phc fetched");
-
-                        //   phcBloc.add(AddPhc(phc: phc));
-                        //   print("after loadphc");
-                        // }
-                        return Center(
-                          child: CircularProgressIndicator(),
+                  return RefreshIndicator(
+                      onRefresh: () {
+                        BlocProvider.of<PhcBloc>(context).add(
+                          RefreshPhc(),
                         );
+                        return _refreshCompleter.future;
                       },
-                    ),
-                  )
-                ],
-              )),
+                      child: Column(
+                        children: <Widget>[
+                          // Row(children: [
+
+                          Row(children: [
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                      // hintText: hintText,
+                                      hasFloatingPlaceholder: false,
+                                      labelText: "Search Call Card No",
+                                      fillColor: Colors.white,
+                                      border: new OutlineInputBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(40.0),
+                                        borderSide: new BorderSide(),
+                                      ),
+                                      prefixIcon: Icon(Icons.search),
+                                      suffixIcon: IconButton(
+                                          onPressed: () =>
+                                              searchController.clear(),
+                                          icon: Icon(Icons.cancel))
+                                      // )
+
+                                      // decoration: new InputDecoration(
+                                      //   labelText: "Search staff name",
+                                      //   border:,
+                                      ),
+                                  controller: searchController,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 100,
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    "Last sync",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  Text(
+                                      DateFormat("h:mm aa").format(
+                                          DateTime.parse(phc.lastUpdated)),
+                                      style: TextStyle(color: Colors.blue)),
+                                  RichText(
+                                    text: TextSpan(children: [
+                                      TextSpan(
+                                          text: phc.callcards.length.toString(),
+                                          style: TextStyle(color: Colors.blue)),
+                                      TextSpan(
+                                        text: " Results",
+                                        style: TextStyle(color: Colors.grey),
+                                      )
+                                    ]),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ]
+                              // ]),
+                              ),
+                          Container(
+                            color: Colors.black45,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Icons.arrow_downward,
+                                    color: Colors.white60),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Pull downward to refresh list",
+                                  style: TextStyle(color: Colors.white60),
+                                )
+                              ],
+                            ),
+                          ),
+                          // ]),
+                          // Text(phcBloc.statephc.callcards.length. "Results"),
+                          Expanded(child: _buildList(phc))
+                        ],
+                      ));
+                }
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -471,16 +507,16 @@ class _ListCallcards extends State<ListCallcards> {
                             .otherServicesAtScene);
                         sceneBloc.add(
                           LoadScene(
-                              selectedPPE: phc.callcards[index]
-                                  .sceneAssessment.ppe,
-                              selectedEnvironment: phc.callcards[index]
-                                  .sceneAssessment.environment,
-                              selectedCaseType: phc.callcards[index]
-                                  .sceneAssessment.caseType,
-                              selectedPatient: phc.callcards[index]
-                                  .sceneAssessment.patient,
-                              selectedBackup: phc.callcards[index]
-                                  .sceneAssessment.backup,
+                              selectedPPE:
+                                  phc.callcards[index].sceneAssessment.ppe,
+                              selectedEnvironment: phc
+                                  .callcards[index].sceneAssessment.environment,
+                              selectedCaseType:
+                                  phc.callcards[index].sceneAssessment.caseType,
+                              selectedPatient:
+                                  phc.callcards[index].sceneAssessment.patient,
+                              selectedBackup:
+                                  phc.callcards[index].sceneAssessment.backup,
                               selectedServices: phc.callcards[index]
                                   .sceneAssessment.otherServicesAtScene),
                         );
@@ -610,17 +646,17 @@ class _ListCallcards extends State<ListCallcards> {
                                 .otherServicesAtScene);
                             sceneBloc.add(
                               LoadScene(
-                                selectedPPE: phc.callcards[index]
-                                  .sceneAssessment.ppe,
-                                selectedEnvironment: phc.callcards[index]
-                                  .sceneAssessment.environment,
-                                selectedCaseType: phc.callcards[index]
-                                  .sceneAssessment.caseType,
-                                selectedPatient: phc.callcards[index]
-                                  .sceneAssessment.patient,
-                                selectedBackup: phc.callcards[index]
-                                  .sceneAssessment.backup,
-                                selectedServices: phc.callcards[index]
+                                  selectedPPE:
+                                      phc.callcards[index].sceneAssessment.ppe,
+                                  selectedEnvironment: phc.callcards[index]
+                                      .sceneAssessment.environment,
+                                  selectedCaseType: phc.callcards[index]
+                                      .sceneAssessment.caseType,
+                                  selectedPatient: phc
+                                      .callcards[index].sceneAssessment.patient,
+                                  selectedBackup: phc
+                                      .callcards[index].sceneAssessment.backup,
+                                  selectedServices: phc.callcards[index]
                                       .sceneAssessment.otherServicesAtScene),
                             );
 
@@ -752,8 +788,13 @@ class _ListCallcards extends State<ListCallcards> {
           timeBloc.add(ResetTime());
 
           final sceneBloc = BlocProvider.of<SceneBloc>(context);
-          sceneBloc.add(LoadScene(selectedPPE: [], selectedEnvironment: [], selectedCaseType: [],
-                                  selectedPatient: [], selectedBackup: [],selectedServices: []));
+          sceneBloc.add(LoadScene(
+              selectedPPE: [],
+              selectedEnvironment: [],
+              selectedCaseType: [],
+              selectedPatient: [],
+              selectedBackup: [],
+              selectedServices: []));
 
           final patientBloc = BlocProvider.of<PatientBloc>(context);
           patientBloc.add(InitPatient());

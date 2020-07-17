@@ -146,4 +146,18 @@ class PhcApiClient {
     final phcJson = jsonDecode(phcResponse.body);
     return phcJson;
   }
+
+  Future fetchAvailablePlateNo() async {
+    var ip = environment.ip;
+    baseUrl = "http://$ip/phc-mobile/api/v1";
+
+    final phcUrl = '$baseUrl/available_plate_no';
+    final phcResponse = await this.httpClient.get(phcUrl);
+
+    if (phcResponse.statusCode != 200) {
+      throw Exception("Error getting phc dataset from server");
+    }
+    final phcJson = jsonDecode(phcResponse.body);
+    return phcJson;
+  }
 }
