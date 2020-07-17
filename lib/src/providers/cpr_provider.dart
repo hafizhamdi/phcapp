@@ -54,6 +54,7 @@ class CPRProvider extends ChangeNotifier {
   Analysis other = new Analysis();
 
   List<ItemModel> itemModels = <ItemModel>[
+    ItemModel(id: "log_in_cpr", name: "CPR"),
     ItemModel(id: "witness_cpr", name: "Witness CPR"),
     ItemModel(id: "bystander_cpr", name: "Bystander CPR"),
     ItemModel(id: "cpr_start", name: "CPR Start"),
@@ -127,6 +128,10 @@ class CPRProvider extends ChangeNotifier {
       else if (f.id == "rosc")
         f.value = f.value;
       else if (f.id == "cpr_stop")
+        f.value = f.value;
+      else if (f.id == "log_in_cpr")
+        f.value = f.value;
+      else if (f.id == "cpr_outcome")
         f.value = f.value;
       else
         f.value = null;

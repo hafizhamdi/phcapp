@@ -177,8 +177,8 @@ class Patient {
   InterventionAss intervention;
   IncidentReporting incidentReporting;
   Outcome outcome;
- SamplerAssessment samplerAssessment;
- OtherAssessment otherAssessment;
+  SamplerAssessment samplerAssessment;
+  OtherAssessment otherAssessment;
 
 
   factory Patient.fromJson(Map<String, dynamic> json) => Patient(
@@ -600,15 +600,18 @@ class CprLog {
     this.cprStop,
     this.rhythmAnalysis,
     this.log,
+    this.cprOutcome,
   });
 
+  Log log;
   Cpr witnessCpr;
   Cpr bystanderCpr;
   Cpr cprStart;
   Cpr rosc;
   Cpr cprStop;
   List<RhythmAnalysis> rhythmAnalysis;
-  List<String> log;
+  CPROutcome cprOutcome;
+
 
   factory CprLog.fromJson(Map<String, dynamic> json) => CprLog(
         witnessCpr: json["witness_cpr"] != null
@@ -626,9 +629,12 @@ class CprLog {
             ? List<RhythmAnalysis>.from(
                 json["rhythm_analysis"].map((x) => RhythmAnalysis.fromJson(x)))
             : null,
-        log: json["log"] != null
-            ? List<String>.from(json["log"].map((x) => x))
-            : null,
+        log: json["log_in_cpr"] != null
+              ? Log.fromJson(json["log_in_cpr"])
+              : null,
+        cprOutcome: json["cpr_outcome"] != null 
+                    ? CPROutcome.fromJson(json["cpr_outcome"])
+                    : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -639,8 +645,9 @@ class CprLog {
         "cpr_stop": cprStop != null ? cprStop.toJson() : null,
         "rhythm_analysis": rhythmAnalysis != null
             ? List<dynamic>.from(rhythmAnalysis.map((x) => x.toJson()))
-            : [],
-        "log": log != null ? List<dynamic>.from(log.map((x) => x)) : [],
+            : [],    
+        "log_in_cpr": log != null ? log.toJson() : null,
+        "cpr_outcome": cprOutcome != null ? cprOutcome.toJson() : null,
       };
 }
 
@@ -661,6 +668,61 @@ class Cpr {
   Map<String, dynamic> toJson() => {
         "value": value,
         "timestamp": timestamp,
+      };
+}
+
+class CPROutcome{
+  CPROutcome({
+    this.value,
+    this.transported,
+    this.tor
+  });
+
+  List<String> value = new List<String>();
+  String transported;
+  String tor;
+
+  factory CPROutcome.fromJson(Map<String, dynamic> json) =>
+      CPROutcome(
+        value: json["value"] != null
+            ? List<String>.from(json["value"].map((x) => x))
+            : null,
+        transported: json["transported"],
+        tor: json["tor"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "value": value != null
+            ? List<dynamic>.from(value.map((x) => x))
+            : null,
+        "transported": transported != null ? transported : "",
+        "tor": tor != null ? tor : "",
+  };
+}
+
+class Log{
+
+  String reason;
+  List<String> value;
+
+  Log({
+    this.reason,
+    this.value,
+  });
+
+  factory Log.fromJson(Map<String, dynamic> json) =>
+      Log(
+        value: json["value"] != null
+            ? List<String>.from(json["value"].map((x) => x))
+            : null,
+        reason: json["reason"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "value": value != null
+            ? List<dynamic>.from(value.map((x) => x))
+            : null,
+        "reason": reason != null ? reason : "",
       };
 }
 

@@ -9,6 +9,7 @@ import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/providers/cpr_provider.dart';
 import 'package:phcapp/src/ui/tabs/patient/cpr/bloc_cpr.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 
 class CPRItems extends StatefulWidget {
   final CprLog cprLog;
@@ -86,11 +87,13 @@ class _CPRItems extends State<CPRItems>
   CPRProvider cprProvider;
 
   CprLog cprLog = new CprLog(
+      log: new Log(),
       witnessCpr: new Cpr(),
       bystanderCpr: new Cpr(),
       cprStart: new Cpr(),
       rosc: new Cpr(),
-      cprStop: new Cpr());
+      cprStop: new Cpr(),
+      cprOutcome: new CPROutcome());
   String selectWitness;
   String selectBystander;
   String selectCprStart;
@@ -349,15 +352,23 @@ class _CPRItems extends State<CPRItems>
 
   void callback(String item, List<String> selectedItems) {
     print("callback");
+    final tempLog = Log(value: selectedItems,
+    reason: widget.cprLog.log != null ? widget.cprLog.log.reason : '');
+    final tempCPROutcome = CPROutcome(value: selectedItems, 
+    transported: widget.cprLog.cprOutcome != null ? widget.cprLog.cprOutcome.transported : '',
+    tor: widget.cprLog.cprOutcome != null ? widget.cprLog.cprOutcome.tor : '');
+
     if (item == "CPR") {
       setState(() {
-        cprList = selectedItems;
+        cprBloc.add(AddCpr(log: tempLog, id: "log_in_cpr"));
+        cprLog.log = tempLog;
       });
     }
 
     if (item == "CPR Outcome") {
       setState(() {
-        cprOutcomeList = selectedItems;
+        cprBloc.add(AddCpr(cprOutcome: tempCPROutcome, id: "cpr_outcome"));
+        cprLog.cprOutcome = tempCPROutcome;
       });
     }
   }
@@ -450,7 +461,10 @@ class _CPRItems extends State<CPRItems>
                       HeaderSection("CPR Log"),
 
                       _defaultChips(
-                          "CPR", _cpr, _cpr_not_required, callback, cprList),
+                          "CPR", _cpr, _cpr_not_required, callback, state.cprLog.log != null
+                          ? state.cprLog.log.value : cprList,
+                          state.cprLog.log != null
+                          ? state.cprLog.log.reason : ''),
                       // FlatButton.icon(
                       //   icon: Icon(Icons.remove_red_eye),
                       //   label: Text("VIEW LOG HISTORY"),
@@ -513,7 +527,11 @@ class _CPRItems extends State<CPRItems>
                       ),
 
                       _cprOutcomeChips("CPR Outcome", _cpr_outcome, callback,
-                          cprOutcomeList),
+                          state.cprLog.cprOutcome != null
+                          ? state.cprLog.cprOutcome.value : cprList, state.cprLog.cprOutcome != null
+                          ? state.cprLog.cprOutcome.transported : null, 
+                          state.cprLog.cprOutcome != null
+                          ? state.cprLog.cprOutcome.tor : null),
                     ],
                   ),
                 );
@@ -776,7 +794,9 @@ class _CPRItems extends State<CPRItems>
   }
 
   _defaultChips(header, List<String> list, List<String> dropdownList, callback,
-      initialData) {
+      initialData, String dropDownInitialData) {
+    StreamController<String> dropDownController = new StreamController.broadcast();
+
     return Container(
       // width: 500,
       margin: EdgeInsets.all(10),
@@ -797,39 +817,52 @@ class _CPRItems extends State<CPRItems>
                   callback: callback,
                   multiple: false,
                   initialData: initialData),
-              initialData.contains("Not Required")
+                  initialData != null ?
+                  initialData.contains("Not Required")
                   ? Container(
                       // width: 250,
                       child: Padding(
                         padding: EdgeInsets.all(16),
-                        child: DropdownButtonFormField(
-                          isExpanded: true,
-                          // isDense: true,
-                          items: dropdownList.map((String dropDownStringItem) {
-                            return DropdownMenuItem<String>(
-                                child: Text(dropDownStringItem),
-                                value: dropDownStringItem);
-                          }).toList(),
-                          onChanged: (valueChanged) {
-                            setState(() {
-                              ddCpr = valueChanged;
-                            });
-                            // print("WHATS IS INDESIDE:$valueChanged");
-                            // controller.sink.add(valueChanged);
-                          },
-                          value: ddCpr,
-                          decoration: InputDecoration(
-                            // labelText: labelText,
-                            fillColor: Colors.white,
-                            border: new OutlineInputBorder(
-                              borderRadius: new BorderRadius.circular(10.0),
-                              borderSide: new BorderSide(),
-                            ),
-                          ),
+                        child: StreamBuilder<Object>(
+                          stream: dropDownController.stream.asBroadcastStream(),
+                          initialData: dropDownInitialData,
+                          builder: (context, snapshot) {
+                            return DropdownButtonFormField(
+                              isExpanded: true,
+                              // isDense: true,
+                              items: dropdownList.map((String dropDownStringItem) {
+                                return DropdownMenuItem<String>(
+                                    child: Text(dropDownStringItem),
+                                    value: dropDownStringItem);
+                              }).toList(),
+                              onChanged: (valueChanged) {
+                                   final tempLog = Log(value: initialData, reason: valueChanged);
+
+                                      setState(() {
+                                        cprBloc.add(AddCpr(log: tempLog, id: "log_in_cpr"));
+                                        cprLog.log = tempLog;
+                                        dropDownController.sink.add(valueChanged);
+                                      });
+
+                                print("WHATS IS INDESIDE:$valueChanged");
+                              },
+                              value: _cpr_not_required.contains(snapshot.data) ? snapshot.data : null,
+                              decoration: InputDecoration(
+                                // labelText: labelText,
+                                fillColor: Colors.white,
+                                border: new OutlineInputBorder(
+                                  borderRadius: new BorderRadius.circular(10.0),
+                                  borderSide: new BorderSide(),
+                                ),
+                              ),
+                            );
+                          }
                         ),
                       ),
                     )
+                  : Container()
                   : Container(),
+
             ])
             // ],
             ),
@@ -837,7 +870,10 @@ class _CPRItems extends State<CPRItems>
     );
   }
 
-  _cprOutcomeChips(header, List<String> list, callback, initialData) {
+  _cprOutcomeChips(header, List<String> list, callback, initialData, transportInitial, torInitial) {
+      StreamController<String> transportedController = new StreamController.broadcast();
+      StreamController<String> torController = new StreamController.broadcast();
+
     return Container(
       // width: 500,
       margin: EdgeInsets.all(10),
@@ -858,72 +894,98 @@ class _CPRItems extends State<CPRItems>
                   callback: callback,
                   multiple: false,
                   initialData: initialData),
+              initialData != null ?
               initialData.contains("Transported")
-                  ? Container(
-                      // width: 250,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: DropdownButtonFormField(
-                          isExpanded: true,
-                          // isDense: true,
-                          items: transported.map((String dropDownStringItem) {
-                            return DropdownMenuItem<String>(
-                                child: Text(dropDownStringItem),
-                                value: dropDownStringItem);
-                          }).toList(),
-                          onChanged: (valueChanged) {
-                            setState(() {
-                              ddCprOutcomeTransported = valueChanged;
-                            });
-                            // print("WHATS IS INDESIDE:$valueChanged");
-                            // controller.sink.add(valueChanged);
-                          },
-                          value: ddCprOutcomeTransported,
-                          decoration: InputDecoration(
-                            // labelText: labelText,
-                            fillColor: Colors.white,
-                            border: new OutlineInputBorder(
-                              borderRadius: new BorderRadius.circular(10.0),
-                              borderSide: new BorderSide(),
+                  ? StreamBuilder<Object>(
+                    stream: transportedController.stream.asBroadcastStream(),
+                    initialData: transportInitial,
+
+                    builder: (context, snapshot) {
+                      return Container(
+                          // width: 250,
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: DropdownButtonFormField(
+                              isExpanded: true,
+                              // isDense: true,
+                              items: transported.map((String dropDownStringItem) {
+                                return DropdownMenuItem<String>(
+                                    child: Text(dropDownStringItem),
+                                    value: dropDownStringItem);
+                              }).toList(),
+                              onChanged: (valueChanged) {
+                                 final tempCprOutcome = CPROutcome(value: initialData, 
+                                 transported: valueChanged, tor: torInitial);
+
+                                  setState(() {
+                                        cprBloc.add(AddCpr(cprOutcome: tempCprOutcome, id: "cpr_outcome"));
+                                        cprLog.cprOutcome = tempCprOutcome;
+                                        transportedController.sink.add(valueChanged);
+                                      });
+                                // print("WHATS IS INDESIDE:$valueChanged");
+                                // controller.sink.add(valueChanged);
+                              },
+                              value: transported.contains(snapshot.data) ? snapshot.data : null,
+                              decoration: InputDecoration(
+                                // labelText: labelText,
+                                fillColor: Colors.white,
+                                border: new OutlineInputBorder(
+                                  borderRadius: new BorderRadius.circular(10.0),
+                                  borderSide: new BorderSide(),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    )
+                        );
+                    }
+                  )
+                  : Container()
                   : Container(),
+              initialData != null ?
               initialData.contains("Termination of Resusitation (TOR)")
-                  ? Container(
-                      // width: 250,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: DropdownButtonFormField(
-                          // isDense: true,
-                          isExpanded: true,
-                          items:
-                              not_transported.map((String dropDownStringItem) {
-                            return DropdownMenuItem<String>(
-                                child: Text(dropDownStringItem),
-                                value: dropDownStringItem);
-                          }).toList(),
-                          onChanged: (valueChanged) {
-                            setState(() {
-                              ddCprOutcomeTOR = valueChanged;
-                            });
-                            // print("WHATS IS INDESIDE:$valueChanged");
-                            // controller.sink.add(valueChanged);
-                          },
-                          value: ddCprOutcomeTOR,
-                          decoration: InputDecoration(
-                            // labelText: labelText,
-                            fillColor: Colors.white,
-                            border: new OutlineInputBorder(
-                              borderRadius: new BorderRadius.circular(10.0),
-                              borderSide: new BorderSide(),
+                  ? StreamBuilder<Object>(
+                    stream: torController.stream.asBroadcastStream(),
+                    initialData: torInitial,
+                    builder: (context, snapshot) {
+                      return Container(
+                          // width: 250,
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: DropdownButtonFormField(
+                              // isDense: true,
+                              isExpanded: true,
+                              items:
+                                  not_transported.map((String dropDownStringItem) {
+                                return DropdownMenuItem<String>(
+                                    child: Text(dropDownStringItem),
+                                    value: dropDownStringItem);
+                              }).toList(),
+                              onChanged: (valueChanged) {
+                                 final tempCprOutcome = CPROutcome(value: initialData, transported: transportInitial, 
+                                 tor: valueChanged);
+                                setState(() {
+                                    cprBloc.add(AddCpr(cprOutcome: tempCprOutcome, id: "cpr_outcome"));
+                                    cprLog.cprOutcome = tempCprOutcome;
+                                    torController.sink.add(valueChanged);
+                                });
+                                // print("WHATS IS INDESIDE:$valueChanged");
+                                // controller.sink.add(valueChanged);
+                              },
+                              value: not_transported.contains(snapshot.data) ? snapshot.data : null,
+                              decoration: InputDecoration(
+                                // labelText: labelText,
+                                fillColor: Colors.white,
+                                border: new OutlineInputBorder(
+                                  borderRadius: new BorderRadius.circular(10.0),
+                                  borderSide: new BorderSide(),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    )
+                        );
+                    }
+                  )
+                  : Container()
                   : Container(),
             ])
             // ],

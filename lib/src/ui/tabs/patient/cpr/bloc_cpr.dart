@@ -8,11 +8,13 @@ abstract class CprEvent extends Equatable {
   final CprLog cprLog;
 
   final id;
+  final Log log;
   final Cpr cpr;
+  final CPROutcome cprOutcome;
   final rhythm_type;
-  CprEvent({this.cprLog, this.id, this.cpr, this.rhythm_type});
+  CprEvent({this.log, this.cprLog, this.id, this.cpr, this.rhythm_type, this.cprOutcome});
   @override
-  List get props => [cprLog, id, cpr, rhythm_type];
+  List get props => [log, cprLog, id, cpr, rhythm_type, cprOutcome];
 }
 
 abstract class CprState extends Equatable {
@@ -49,11 +51,13 @@ class RemoveRhythmAnalysis extends CprEvent {
 
 class AddCpr extends CprEvent {
   final id;
+  final Log log;
   final Cpr cpr;
+  final CPROutcome cprOutcome;
   final rhythm_type;
-  AddCpr({this.cpr, this.id, this.rhythm_type});
+  AddCpr({this.log, this.cpr, this.id, this.rhythm_type, this.cprOutcome});
   @override
-  List get props => [cpr, id, rhythm_type];
+  List get props => [log, cpr, id, rhythm_type, cprOutcome];
 }
 
 class AddRhythmAnalysis extends CprEvent {
@@ -187,14 +191,19 @@ class CprBloc extends Bloc<CprEvent, CprState> {
   Stream<CprState> mapAddCpr(AddCpr event) async* {
     yield CprLoading();
     final currentState = state;
-    print("mapAddCpr");
-    print(currentState);
+
+    print(event.cprOutcome);
+    currentState.cprLog.log = state.cprLog.log;
     currentState.cprLog.witnessCpr = state.cprLog.witnessCpr;
     currentState.cprLog.cprStart = state.cprLog.cprStart;
     currentState.cprLog.bystanderCpr = state.cprLog.bystanderCpr;
     currentState.cprLog.rosc = state.cprLog.rosc;
     currentState.cprLog.cprStop = state.cprLog.cprStop;
+    // currentState.cprLog.cprOutcome = state.cprLog.cprOutcome;
 
+    if (event.id == "log_in_cpr") {
+      currentState.cprLog.log = event.log;
+    }
     if (event.id == "witness_cpr") {
       currentState.cprLog.witnessCpr = event.cpr;
     }
@@ -209,6 +218,9 @@ class CprBloc extends Bloc<CprEvent, CprState> {
     }
     if (event.id == "cpr_stop") {
       currentState.cprLog.cprStop = event.cpr;
+    }
+    if (event.id == "cpr_outcome") {
+      currentState.cprLog.cprOutcome = event.cprOutcome;
     }
 
     currentState.cprLog.rhythmAnalysis = state.cprLog.rhythmAnalysis;
