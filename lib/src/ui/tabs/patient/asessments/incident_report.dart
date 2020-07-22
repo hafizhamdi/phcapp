@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:phcapp/custom/drop_downlist.dart';
 import 'package:phcapp/src/models/chip_item.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/reporting_bloc.dart';
@@ -12,7 +11,8 @@ const _responseDelay = [
   "Route obstruction",
   "Vehicle failure",
   "Vehicle crash",
-  "Staff delay"
+  "Staff delay",
+  "Other"
 ];
 
 const _sceneDelay = [
@@ -22,10 +22,15 @@ const _sceneDelay = [
   "Awaiting PDRM officer (personal officer)",
   "Awaiting PDRM (left before arrive)"
   "Vehicle crash",
-  "Vehicle failure"
+  "Vehicle failure",
+  "Other"
 ];
 
-const _transportDelay = ["Traffic", "Vehicle crash", "Vehicle failure"];
+const _transportDelay = ["Traffic", "Vehicle crash", "Vehicle failure","Other"];
+
+  TextEditingController rdOtherController = new TextEditingController();
+  TextEditingController sdOtherController = new TextEditingController();
+  TextEditingController tdOtherController = new TextEditingController();
 
 class IncidentReport extends StatefulWidget {
   final IncidentReporting incidentReporting;
@@ -38,6 +43,8 @@ class _IncidentState extends State<IncidentReport> {
   List<String> listResponse = new List<String>();
   List<String> listScene = new List<String>();
   List<String> listTransport = new List<String>();
+
+  List<TextEditingController> otherController = [rdOtherController, sdOtherController, tdOtherController];
 
   List<ChipItem> prepareData = [
     ChipItem(
@@ -61,16 +68,19 @@ class _IncidentState extends State<IncidentReport> {
     if (id == "response_delay") {
       setState(() {
         listResponse = dataReturn;
+        rdOtherController.clear();
       });
     }
     if (id == "scene_delay") {
       setState(() {
         listScene = dataReturn;
+        sdOtherController.clear();
       });
     }
     if (id == "transport_delay") {
       setState(() {
         listTransport = dataReturn;
+        tdOtherController.clear();
       });
     }
   }
@@ -103,6 +113,19 @@ class _IncidentState extends State<IncidentReport> {
 
         return f;
       }).toList();
+
+      !_responseDelay.contains(widget.incidentReporting.responseDelay)
+            ? rdOtherController.text = widget.incidentReporting.responseDelay
+            : rdOtherController.clear();
+      
+      !_sceneDelay.contains(widget.incidentReporting.sceneDelay)
+            ? sdOtherController.text = widget.incidentReporting.sceneDelay
+            : sdOtherController.clear();
+
+      !_transportDelay.contains(widget.incidentReporting.transportDelay)
+            ? tdOtherController.text = widget.incidentReporting.transportDelay
+            : tdOtherController.clear();
+
     }
     super.didChangeDependencies();
   }
@@ -120,10 +143,21 @@ class _IncidentState extends State<IncidentReport> {
             onPressed: () {
               IncidentReporting incidentReporting = new IncidentReporting(
                 timestamp: new DateTime.now(),
-                responseDelay: listResponse.length > 0 ? listResponse[0] : "",
-                sceneDelay: listScene.length > 0 ? listScene[0] : "",
-                transportDelay:
-                    listTransport.length > 0 ? listTransport[0] : "",
+                responseDelay: listResponse.length > 0 
+                                    ? listResponse[0] == "Other" || !_responseDelay.contains(listResponse[0])
+                                    ? rdOtherController.text
+                                    : listResponse[0] 
+                                    : "",
+                sceneDelay: listScene.length > 0 
+                                    ? listScene[0] == "Other" || !_sceneDelay.contains(listScene[0])
+                                    ? sdOtherController.text
+                                    : listScene[0] 
+                                    : "",
+                transportDelay: listTransport.length > 0 
+                                    ? listTransport[0] == "Other" || !_transportDelay.contains(listTransport[0])
+                                    ? tdOtherController.text
+                                    : listTransport[0] 
+                                    : "",
               );
 
               // print(incidentReporting.toJson());
@@ -144,13 +178,34 @@ class _IncidentState extends State<IncidentReport> {
       child: ListView.builder(
           itemCount: prepareData.length,
           itemBuilder: (context, index) {
+            String initialData;
+
+            if(prepareData[index].name.contains("Response Delay"))
+              if(!_responseDelay.contains(prepareData[index].value) && prepareData[index].value != "")
+                initialData = "Other";
+              else
+                initialData = prepareData[index].value;
+            else if(prepareData[index].name.contains("Scene Delay"))
+              if(!_sceneDelay.contains(prepareData[index].value) && prepareData[index].value != "")
+                initialData = "Other";
+              else
+                initialData = prepareData[index].value;
+            else if(prepareData[index].name.contains("Transport Delay"))
+              if(!_transportDelay.contains(prepareData[index].value) && prepareData[index].value != "")
+                initialData = "Other";
+              else
+                initialData = prepareData[index].value;
+    
+
             return MyCardSingleOption(
               id: prepareData[index].id,
               name: prepareData[index].name,
               listData: prepareData[index].listData,
               mycallback: mycallback,
-              value: prepareData[index].value,
+              value: initialData,
+              controller: otherController[index],
             );
+            
           }),
     );
   }

@@ -67,7 +67,8 @@ class _InterventionScreen extends State<InterventionScreen> {
       id: "airway_device",
       name: "Airway Device Intervention",
       listData: _airwayDevice,
-      value: "",
+      value: List<String>(),
+      multiple: true,
     ),
     ChipItem(id: "oxygen", name: "Oxygen", listData: _oxygen, value: ""),
     ChipItem(
@@ -138,10 +139,7 @@ class _InterventionScreen extends State<InterventionScreen> {
       prepareData.map((f) {
         if (f.id == "airway_device") {
           f.value = widget.interAssessment.airwayDevice;
-          listAirwayDevice.add(widget.interAssessment.airwayDevice);
-          if (listAirwayDevice.length > 1) {
-            listAirwayDevice.removeLast();
-          }
+          listAirwayDevice = widget.interAssessment.airwayDevice;
         }
         if (f.id == "oxygen") {
           f.value = widget.interAssessment.oxygen;
@@ -190,10 +188,10 @@ class _InterventionScreen extends State<InterventionScreen> {
               style: TextStyle(color: Colors.white),
             ),
             onPressed: () {
+              print("onpressed: $listAirwayDevice");
               InterventionAss inter = new InterventionAss(
                   timestamp: new DateTime.now(),
-                  airwayDevice:
-                      listAirwayDevice.length > 0 ? listAirwayDevice[0] : "",
+                  airwayDevice: listAirwayDevice,
                   oxygen: listOxygen.length > 0 ? listOxygen[0] : "",
                   vascularAccessLocation: vascularTextController.text,
                   extHaemorrhage: listExtHaemo,

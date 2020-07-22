@@ -86,6 +86,7 @@ class _CPRItems extends State<CPRItems>
 
   CPRProvider cprProvider;
 
+  List<RhythmAnalysis> lsRhythm = new List<RhythmAnalysis>();
   CprLog cprLog = new CprLog(
       log: new Log(),
       witnessCpr: new Cpr(),
@@ -352,11 +353,12 @@ class _CPRItems extends State<CPRItems>
 
   void callback(String item, List<String> selectedItems) {
     print("callback");
+
     final tempLog = Log(value: selectedItems,
-    reason: widget.cprLog.log != null ? widget.cprLog.log.reason : '');
+    reason: widget.cprLog != null ? widget.cprLog.log.reason : '');
     final tempCPROutcome = CPROutcome(value: selectedItems, 
-    transported: widget.cprLog.cprOutcome != null ? widget.cprLog.cprOutcome.transported : '',
-    tor: widget.cprLog.cprOutcome != null ? widget.cprLog.cprOutcome.tor : '');
+    transported: widget.cprLog != null ? widget.cprLog.cprOutcome.transported : '',
+    tor: widget.cprLog != null ? widget.cprLog.cprOutcome.tor : '');
 
     if (item == "CPR") {
       setState(() {
@@ -717,6 +719,7 @@ class _CPRItems extends State<CPRItems>
                     addRhythmDialog(
                         new RhythmAnalysis(
                             id: index.toString(),
+                            rhythm: state.cprLog.rhythmAnalysis[index].rhythm,
                             shockable:
                                 state.cprLog.rhythmAnalysis[index].shockable,
                             nonShockable:
@@ -997,6 +1000,10 @@ class _CPRItems extends State<CPRItems>
   _buildAnalysis(RhythmAnalysis rhythmAnalysis, Function setState, index) {
     final provider = Provider.of<CPRProvider>(context);
     final timeCreated = DateTime.now();
+    print("rhythm");
+    print(rhythmAnalysis.rhythm);
+    selectAnalysis != null ? selectAnalysis = selectAnalysis : selectAnalysis = rhythmAnalysis.rhythm;
+
     return Container(
       // padding: EdgeInsets.all(10),
       child: Column(
@@ -1093,6 +1100,7 @@ class _CPRItems extends State<CPRItems>
                               rhythmAnalysis: RhythmAnalysis(
                                   id: index.toString(),
                                   timestamp: timeCreated,
+                                  rhythm: selectAnalysis,
                                   shockable: shockable,
                                   nonShockable: nonShockable,
                                   other: other),
@@ -1121,6 +1129,7 @@ class _CPRItems extends State<CPRItems>
                                 rhythmAnalysis: RhythmAnalysis(
                                     id: index.toString(),
                                     timestamp: timeCreated,
+                                    rhythm: selectAnalysis,
                                     shockable: shockable,
                                     nonShockable: nonShockable,
                                     other: other),

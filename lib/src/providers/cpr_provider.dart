@@ -60,6 +60,7 @@ class CPRProvider extends ChangeNotifier {
     ItemModel(id: "cpr_start", name: "CPR Start"),
     ItemModel(id: "rosc", name: "ROSC"),
     ItemModel(id: "cpr_stop", name: "CPR Stop"),
+    ItemModel(id: "rhythm", name: "Rhythm Analysis"),
     ItemModel(id: "srhythm", name: "Rhythm"),
     ItemModel(id: "sinterv", name: "Intervention"),
     ItemModel(id: "sdrugs", name: "Drugs"),
