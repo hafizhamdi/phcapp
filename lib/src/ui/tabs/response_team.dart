@@ -101,7 +101,10 @@ class _TeamState extends State<ResponseTeamScreen> //{
 
     return Scaffold(
       backgroundColor: Colors.grey,
-      body: Container(
+      body:
+          // Center(
+          //   child:
+          Container(
         // constraints: BoxConstraints(maxWidth: 700),
         // padding: EdgeInsets.symmetric(vertical: 40),
         height: MediaQuery.of(context).size.height,
@@ -119,10 +122,13 @@ class _TeamState extends State<ResponseTeamScreen> //{
         child: Center(
           child: Container(
             constraints: BoxConstraints(maxWidth: 700),
+
+            height: MediaQuery.of(context).size.height,
             child: SingleChildScrollView(
               // padding: EdgeInsets.all(20),
               physics: BouncingScrollPhysics(),
               child: Column(
+                // mainAxisAlignment: MainAxisAlignment.start,
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   BlocBuilder<ResponseBloc, ResponseState>(
@@ -470,7 +476,7 @@ class ResponseDetail extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(10.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          // mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

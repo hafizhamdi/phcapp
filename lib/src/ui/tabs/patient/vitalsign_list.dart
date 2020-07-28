@@ -232,7 +232,7 @@ class _VitalSignList extends State<VitalSignList>
       // backgroundColor: Colors.grey[200],
       body: Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        // height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topRight,
@@ -260,6 +260,8 @@ class _VitalSignList extends State<VitalSignList>
         child: Center(
           child: Container(
             constraints: BoxConstraints(maxWidth: 700),
+
+            height: MediaQuery.of(context).size.height,
             child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               // child: Center(

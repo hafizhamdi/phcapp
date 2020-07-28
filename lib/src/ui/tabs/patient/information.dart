@@ -160,6 +160,7 @@ class _Information extends State<PatientInformationScreen>
         child: Center(
             child: Container(
           constraints: BoxConstraints(maxWidth: 700),
+          height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             // child: Center(
