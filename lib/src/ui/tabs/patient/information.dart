@@ -360,7 +360,7 @@ class _Information extends State<PatientInformationScreen>
                     var totalYear = diff / 365;
                     print("TOTAL YEARS THIS PERSION: $totalYear");
 
-                    var rounded = totalYear.round();
+                    var rounded = totalYear.toInt();
                     print(rounded);
                     ageController.text = rounded.toString();
 
@@ -493,19 +493,19 @@ class _Information extends State<PatientInformationScreen>
                         setState(() {
                           idType = valueChanged;
                           if (idType == "New IC") {
-                            idHintText = "800128016139";
+                            idHintText = "e.g.,800128016139";
                           } else if (idType == "Old IC") {
-                            idHintText = "43111520";
+                            idHintText = "e.g.,43111520";
                           } else if (idType == "Passport") {
-                            idHintText = "A00000000";
+                            idHintText = "e.g.,A00000000";
                           } else if (idType == "Birth Certificate") {
-                            idHintText = "PK031612";
+                            idHintText = "e.g.,PK031612";
                           } else if (idType == "Police ID") {
-                            idHintText = "RF154190";
+                            idHintText = "e.g.,RF154190";
                           } else if (idType == "Military ID") {
-                            idHintText = "1149282";
+                            idHintText = "e.g.,1149282";
                           } else if (idType == "Temporary ID") {
-                            idHintText = "HRPBD060725B21";
+                            idHintText = "e.g.,HRPBD060725B21";
                           }
                         });
                       },
@@ -619,7 +619,7 @@ class MyTextInput2 extends StatelessWidget {
               var totalYear = diff / 365;
               print("TOTAL YEARS THIS PERSION: $totalYear");
 
-              var rounded = totalYear.round();
+              var rounded = totalYear.toInt();
               print(rounded);
               ageController.text = rounded.toString();
             } else {
