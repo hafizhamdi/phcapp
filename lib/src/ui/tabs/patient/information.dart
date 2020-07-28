@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,12 +37,12 @@ class _Information extends State<PatientInformationScreen>
     with AutomaticKeepAliveClientMixin<PatientInformationScreen> {
   @override
   bool get wantKeepAlive => true;
-  TextEditingController nameController = new TextEditingController();
-  TextEditingController idNoController = new TextEditingController();
-  TextEditingController idTypeController = new TextEditingController();
-  TextEditingController dobController = new TextEditingController();
-  TextEditingController ageController = new TextEditingController();
-  TextEditingController genderController = new TextEditingController();
+  // TextEditingController nameController = new TextEditingController();
+  // TextEditingController idNoController = new TextEditingController();
+  // TextEditingController idTypeController = new TextEditingController();
+  // TextEditingController dobController = new TextEditingController();
+  // TextEditingController ageController = new TextEditingController();
+  // TextEditingController genderController = new TextEditingController();
 
   String idType;
   String idHintText;
@@ -49,35 +50,35 @@ class _Information extends State<PatientInformationScreen>
   PatientBloc patientBloc;
   String docType;
   String gender;
-  @override
-  initState() {
-    docType = widget.patient_information.idType;
-    gender = widget.patient_information.gender;
-    // nameController.text = widget.patient_information.nama;
-    // idNoController.text = widget.patient_information.id_no;
-    // idTypeController.text = widget.patient_information.id_type;
-    // ageController.text = widget.patient_information.age;
-    // genderController.text = widget.patient_information.jantina;
-    // dobController.text = widget.patient_information.dateOfBirth;
-  }
+  // @override
+  // initState() {
+  //   docType = widget.patient_information.idType;
+  //   gender = widget.patient_information.gender;
+  // nameController.text = widget.patient_information.nama;
+  // idNoController.text = widget.patient_information.id_no;
+  // idTypeController.text = widget.patient_information.id_type;
+  // ageController.text = widget.patient_information.age;
+  // genderController.text = widget.patient_information.jantina;
+  // dobController.text = widget.patient_information.dateOfBirth;
+  // }
 
-  @override
-  void dispose() {
-    // patProvider.idTypeController.close();
-    // patProvider.idController.close();
-    // patientBloc.patientController.sink.add(new PatientInformation(
-    //     name: nameController.text,
-    //     age: ageController.text,
-    //     idNo: idNoController.text,
-    //     idType: idTypeController.text,
-    //     gender: genderController.text,
-    //     dob: dobController.text));
+  // @override
+  // void dispose() {
+  // patProvider.idTypeController.close();
+  // patProvider.idController.close();
+  // patientBloc.patientController.sink.add(new PatientInformation(
+  //     name: nameController.text,
+  //     age: ageController.text,
+  //     idNo: idNoController.text,
+  //     idType: idTypeController.text,
+  //     gender: genderController.text,
+  //     dob: dobController.text));
 
-    // patientBloc.patientController.close();
-    // patientBloc.close();
+  // patientBloc.patientController.close();
+  // patientBloc.close();
 
-    super.dispose();
-  }
+  //   super.dispose();
+  // }
 
   @override
   void didChangeDependencies() {
@@ -111,14 +112,34 @@ class _Information extends State<PatientInformationScreen>
     final patProvider = Provider.of<PatInfoProvider>(context);
 
     patientBloc = BlocProvider.of<PatientBloc>(context);
-
-    patProvider.setName = widget.patient_information.name;
-    patProvider.setId = widget.patient_information.idNo;
-    patProvider.setIdType = widget.patient_information.idType;
-    patProvider.setAge = widget.patient_information.age;
-    patProvider.setDob = convertDOBtoStandard(widget.patient_information.dob);
-    patProvider.setGender = widget.patient_information.gender;
+    // if (widget.patient_information != null) {
+    print(jsonEncode(widget.patient_information));
+    patProvider.setName = patProvider.getName != ""
+        ? patProvider.getName
+        : widget.patient_information.name;
+    patProvider.setId =
+        // patProvider.getId != ""
+        // ?
+        widget.patient_information.idNo;
+    // : patProvider.getId;
+    patProvider.setIdType = patProvider.getIdtype != ""
+        ? patProvider.getIdtype
+        : widget.patient_information.idType;
+    patProvider.setAge =
+        // patProvider.getAge != ""
+        // ?
+        widget.patient_information.age;
+    // : patProvider.getAge;
+    patProvider.setDob =
+        // patProvider.getDob != ""
+        // ?
+        convertDOBtoStandard(widget.patient_information.dob);
+    // : patProvider.getDob;
+    patProvider.setGender = patProvider.getGender != ""
+        ? patProvider.getGender
+        : widget.patient_information.gender;
     print("id type: $docType");
+    // }
     return Scaffold(
       // backgroundColor: Colors.grey,
 
@@ -170,13 +191,15 @@ class _Information extends State<PatientInformationScreen>
                         ),
                         Expanded(
                           child: _idInputCalculated(
-                              context,
-                              "ID No.",
-                              patProvider.idController,
-                              idValidator,
-                              patProvider.ageController,
-                              patProvider.dobController,
-                              patProvider.genderController),
+                            context,
+                            "ID No.",
+                            patProvider.idController,
+                            idValidator,
+                            patProvider.ageController,
+                            patProvider.dobController,
+                            patProvider.genderController,
+                            // patProvider.getIdtype
+                          ),
                         ),
                       ]),
                       // _textInput("Document Type", idTypeController),
@@ -281,165 +304,170 @@ class _Information extends State<PatientInformationScreen>
   Widget _idInputCalculated(context, labelText, controller, validator,
       ageController, dobController, genderController) {
     return Container(
-        // width: 500,
-        // width: 500,
-        child: Padding(
-            padding: EdgeInsets.all(16),
-            child: TextFormField(
-                autovalidate: true,
-                controller: controller,
-                // inputFormatters: formater != null ? [formater] : [],
-                validator: (value) {
-                  if (idType == "New IC") {
-                    if (value.length != 12) {
-                      return "Enter a valid New IC number";
-                    }
-                  } else if (idType == "Old IC") {
-                    if (value.length > 8) {
-                      return "Enter a valid Old IC number";
-                    }
-                  } else if (idType == "Passport") {
-                    if (value.length > 20) {
-                      return "Enter a valid passport number";
-                    }
-                  } else if (idType == "Birth Certificate") {
-                    if (value.length > 20) {
-                      return "Enter a valid birth certificate number";
-                    }
-                  } else if (idType == "Police ID") {
-                    if (value.length > 20) {
-                      return "Enter a valid Police ID";
-                    }
-                  } else if (idType == "Military ID") {
-                    if (value.length > 20) {
-                      return "Enter a valid Military ID";
-                    }
-                  } else if (idType == "Temporary Id") {
-                    if (value.length >= 15) {
-                      return "Temporary ID cannot more than 15";
-                    }
-                  }
+      // width: 500,
+      // width: 500,
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: TextFormField(
+          autovalidate: true,
+          controller: controller,
+          // inputFormatters: formater != null ? [formater] : [],
+          validator: (value) {
+            if (idType == "New IC") {
+              if (value.length != 12) {
+                return "Enter a valid New IC number";
+              }
+            } else if (idType == "Old IC") {
+              if (value.length > 8) {
+                return "Enter a valid Old IC number";
+              }
+            } else if (idType == "Passport") {
+              if (value.length > 20) {
+                return "Enter a valid passport number";
+              }
+            } else if (idType == "Birth Certificate") {
+              if (value.length > 20) {
+                return "Enter a valid birth certificate number";
+              }
+            } else if (idType == "Police ID") {
+              if (value.length > 20) {
+                return "Enter a valid Police ID";
+              }
+            } else if (idType == "Military ID") {
+              if (value.length > 20) {
+                return "Enter a valid Military ID";
+              }
+            } else if (idType == "Temporary Id") {
+              if (value.length >= 15) {
+                return "Temporary ID cannot more than 15";
+              }
+            }
 
-                  if (value == null && value.isEmpty) {
-                    return "ID No. is required";
-                  }
+            if (value == null && value.isEmpty) {
+              return "ID No. is required";
+            }
 
-                  return null;
-                },
-                onChanged: (String text) {
-                  print("idtype: $idType");
-                  print(controller.text);
-                  if (controller.text.length == 12) {
-                    print("inside controller lenght");
-                    String idNo = controller.text.substring(0, 6);
-                    // idNo = idNo;
-                    String year = idNo.substring(0, 2);
-                    String month = idNo.substring(2, 4);
-                    String day = idNo.substring(4, 6);
+            return null;
+          },
+          onChanged: (String text) {
+            // print("idtype: $idType");
+            // print(controller.text);
+            if (controller.text.length == 12) {
+              //   print("inside controller lenght");
+              String idNo = controller.text.substring(0, 6);
+              // idNo = idNo;
+              String year = idNo.substring(0, 2);
+              String month = idNo.substring(2, 4);
+              String day = idNo.substring(4, 6);
 
-                    print(idNo);
-                    print(year);
-                    print(month);
-                    print(day);
-                    var nyear;
-                    if (int.parse(year) > 20) {
-                      nyear = "19" + year;
-                    } else {
-                      nyear = "20" + year;
-                    }
+              print(idNo);
+              print(year);
+              print(month);
+              print(day);
+              var nyear;
+              if (int.parse(year) > 20) {
+                nyear = "19" + year;
+              } else {
+                nyear = "20" + year;
+              }
 
-                    String dob = "$day/$month/$nyear";
+              String dob = "$day/$month/$nyear";
 
-                    dobController.text = dob;
+              dobController.text = dob;
 
-                    var ndate = DateTime(
-                        int.parse(nyear), int.parse(month), int.parse(day));
-                    var now = DateTime.now();
+              var ndate =
+                  DateTime(int.parse(nyear), int.parse(month), int.parse(day));
+              var now = DateTime.now();
 
-                    var diff = now.difference(ndate).inDays;
-                    var totalYear = diff / 365;
-                    print("TOTAL YEARS THIS PERSION: $totalYear");
+              var diff = now.difference(ndate).inDays;
+              var totalYear = diff / 365;
+              print("TOTAL YEARS THIS PERSION: $totalYear");
 
-                    var rounded = totalYear.toInt();
-                    print(rounded);
-                    ageController.text = rounded.toString();
+              var rounded = totalYear.toInt();
+              print(rounded);
+              ageController.text = rounded.toString();
 
-                    //to set Gender
-                    print(controller.text.substring(11));
-                    if (int.parse(controller.text.substring(11)) % 2 == 0) {
-                      genderController.sink.add("Female");
-                      setState(() {
-                        widget.patient_information.gender = "Female";
-                      });
-                    } else {
-                      genderController.sink.add("Male");
-                      setState(() {
-                        widget.patient_information.gender = "Male";
-                      });
-                    }
-                  } else {
-                    dobController.clear();
-                    ageController.clear();
-                  }
-                },
-                // onEditingComplete: () {
-                //   print(controller.text);
-                // print(value);
-                // print(idType);
+              //to set Gender
+              print(controller.text.substring(11));
+              if (int.parse(controller.text.substring(11)) % 2 == 0) {
+                // setState(() {
+                genderController.sink.add("Female");
+                // widget.patient_information.gender = "Female";
+                // });
+              } else {
+                // setState(() {
+                genderController.sink.add("Male");
+                // widget.patient_information.gender = "Male";
+                // });
+              }
+            } else {
+              dobController.clear();
+              ageController.clear();
+              // genderController.clear();
+            }
+          },
+          // onEditingComplete: () {
+          //   print(controller.text);
+          // print(value);
+          // print(idType);
 
-                // final patProvider = Provider.of<PatInfoProvider>(context);
-                // final idType = patProvider.getIdtype;
-                // // final stream = getStreamController(idType);
-                // print(idType);
-                // print("HELLO");
-                // if (idType == "NRIC") {
-                //   print(controller.text.length);
-                //   if (controller.text.length > 6) {
-                //     print("inside controller lenght");
-                //     String idNo = controller.text.substring(0, 6);
-                //     // idNo = idNo;
-                //     String year = idNo.substring(0, 2);
-                //     String month = idNo.substring(2, 4);
-                //     String day = idNo.substring(4, 6);
+          // final patProvider = Provider.of<PatInfoProvider>(context);
+          // final idType = patProvider.getIdtype;
+          // // final stream = getStreamController(idType);
+          // print(idType);
+          // print("HELLO");
+          // if (idType == "NRIC") {
+          //   print(controller.text.length);
+          //   if (controller.text.length > 6) {
+          //     print("inside controller lenght");
+          //     String idNo = controller.text.substring(0, 6);
+          //     // idNo = idNo;
+          //     String year = idNo.substring(0, 2);
+          //     String month = idNo.substring(2, 4);
+          //     String day = idNo.substring(4, 6);
 
-                //     print(idNo);
-                //     print(year);
-                //     print(month);
-                //     print(day);
-                //     var nyear;
-                //     if (int.parse(year) > 20) {
-                //       nyear = "19" + year;
-                //     } else {
-                //       nyear = "20" + year;
-                //     }
+          //     print(idNo);
+          //     print(year);
+          //     print(month);
+          //     print(day);
+          //     var nyear;
+          //     if (int.parse(year) > 20) {
+          //       nyear = "19" + year;
+          //     } else {
+          //       nyear = "20" + year;
+          //     }
 
-                //     String dob = "$day/$month/$nyear";
+          //     String dob = "$day/$month/$nyear";
 
-                //     dobController.text = dob;
+          //     dobController.text = dob;
 
-                //     var ndate = DateTime(
-                //         int.parse(nyear), int.parse(month), int.parse(day));
-                //     var now = DateTime.now();
+          //     var ndate = DateTime(
+          //         int.parse(nyear), int.parse(month), int.parse(day));
+          //     var now = DateTime.now();
 
-                //     var diff = now.difference(ndate).inDays;
-                //     var totalYear = diff / 365;
-                //     print("TOTAL YEARS THIS PERSION: $totalYear");
+          //     var diff = now.difference(ndate).inDays;
+          //     var totalYear = diff / 365;
+          //     print("TOTAL YEARS THIS PERSION: $totalYear");
 
-                //     var rounded = totalYear.round();
-                //     print(rounded);
-                //     ageController.text = rounded.toString();
-                //   }
-                //   // }
-                //   FocusScope.of(context).unfocus();
-                // },
-                decoration: InputDecoration(
-                    hintText: idHintText,
-                    labelText: labelText,
-                    fillColor: Colors.white,
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
-                      borderSide: new BorderSide(),
-                    )))));
+          //     var rounded = totalYear.round();
+          //     print(rounded);
+          //     ageController.text = rounded.toString();
+          //   }
+          //   // }
+          //   FocusScope.of(context).unfocus();
+          // },
+          decoration: InputDecoration(
+            hintText: idHintText,
+            labelText: labelText,
+            fillColor: Colors.white,
+            border: new OutlineInputBorder(
+              borderRadius: new BorderRadius.circular(10.0),
+              borderSide: new BorderSide(),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   void setterField(selector, value) {
