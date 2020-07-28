@@ -231,7 +231,8 @@ class _ListCallcards extends State<ListCallcards> {
   }
 
   Widget _buildList(phc) {
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (ctx, idx) => Divider(),
       itemCount: phc.callcards.length,
       itemBuilder: (BuildContext context, int index) {
         final callInfo = phc.callcards[index].callInformation;
