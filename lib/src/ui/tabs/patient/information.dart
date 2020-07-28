@@ -599,6 +599,7 @@ class MyTextInput2 extends StatelessWidget {
           controller: controller,
           inputFormatters: formater != null ? [formater] : [],
           validator: validator,
+          textCapitalization: TextCapitalization.characters,
           autovalidate: true,
           onChanged: (String text) {
             print(controller.text);

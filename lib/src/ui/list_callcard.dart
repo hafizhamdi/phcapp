@@ -145,44 +145,47 @@ class _ListCallcards extends State<ListCallcards> {
                                 Container(
                                   padding: EdgeInsets.only(
                                     left: 30,
+                                    right: 20,
                                     bottom: 10,
                                   ),
                                   child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Text(
-                                        "Last updates at ",
-                                        // style: TextStyle(color: Colors.grey),
-                                      ),
-                                      Text(
-                                          DateFormat("dd MMM yyyy, h:mm aa")
-                                              .format(DateTime.parse(
-                                                  phc.lastUpdated)),
-                                          style: TextStyle(color: Colors.blue)),
-                                      RichText(
-                                        text: TextSpan(
-                                            style: TextStyle(
-                                                color: Colors.black87),
-                                            // style:gle(color: Colors.black),
-                                            children: [
-                                              TextSpan(
-                                                text: " with ",
-                                                // style:
-                                                //     TextStyle(color: Colors.grey),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "Last updates at ",
+                                            // style: TextStyle(color: Colors.grey),
+                                          ),
+                                          Text(
+                                              DateFormat(
+                                                      "dd MMM yyyy, h:mm aa ")
+                                                  .format(DateTime.parse(
+                                                      phc.lastUpdated)),
+                                              style: TextStyle(
+                                                  color: Colors.blue)),
+                                          Text(" with "
+                                              // style:
+                                              //     TextStyle(color: Colors.grey),
                                               ),
-                                              TextSpan(
-                                                  text: phc.callcards.length
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.blue)),
-                                              TextSpan(
-                                                text: " Results",
-                                                // style:
-                                                //     TextStyle(color: Colors.grey),
+                                          Text(phc.callcards.length.toString(),
+                                              style: TextStyle(
+                                                  color: Colors.blue)),
+                                          Text(" Results"
+                                              // style:
+                                              //     TextStyle(color: Colors.grey),
                                               )
-                                            ]),
+                                        ],
                                       ),
+                                      IconButton(
+                                        icon: Icon(Icons.info),
+                                        tooltip:
+                                            "Pull downward to get latest call cards",
+                                        onPressed: () {},
+                                      )
                                     ],
                                   ),
                                 ),
@@ -575,7 +578,7 @@ class _ListCallcards extends State<ListCallcards> {
             context: context,
             builder: (context) => new AlertDialog(
               title: new Text('Are you sure?'),
-              content: new Text('Do you want to logout'),
+              content: new Text('Do you want to logout?'),
               actions: <Widget>[
                 new FlatButton(
                   onPressed: () => Navigator.of(context).pop(false),
