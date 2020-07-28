@@ -82,72 +82,74 @@ class _VitalSignList extends State<VitalSignList>
   _buildCard(VitalSign vital, index) {
     final reading = counterStartingWord(index);
 
-    return Container(
-      margin: EdgeInsets.all(5),
-      padding: EdgeInsets.only(left: 8, top: 8),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          shape: BoxShape.rectangle,
-          border: Border.all(color: Colors.grey, width: 0.5)),
+    return InkWell(
+      child: Container(
+        margin: EdgeInsets.all(5),
+        padding: EdgeInsets.only(left: 8, top: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            shape: BoxShape.rectangle,
+            border: Border.all(color: Colors.grey, width: 0.5)),
 
-      //  return   Container(
-      // color: Colors.grey[200],
-      child: ListTile(
-        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        leading: Icon(Icons.favorite
-            // size: 30,
+        //  return   Container(
+        // color: Colors.grey[200],
+
+        child: ListTile(
+          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          leading: Icon(Icons.favorite
+              // size: 30,
+              ),
+          title: Text(
+            "$reading reading",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
             ),
-        title: Text(
-          "$reading reading",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
           ),
+          subtitle: Container(
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Row(children: <Widget>[
+                      Padding(
+                          padding: EdgeInsets.only(right: 5),
+                          child: Icon(
+                            Icons.access_time,
+                            color: Colors.purple,
+                            // size: 18,
+                          )),
+                      vital.created != null
+                          ? Text(
+                              generateTime(vital.created),
+                            )
+                          : Text(
+                              "No data",
+                              // style: TextStyle(fontSize: 16),
+                            ),
+                    ]),
+                  ),
+                ],
+              ),
+              padding: EdgeInsets.only(right: 20)),
+          trailing: Icon(Icons.arrow_forward_ios),
         ),
-        subtitle: Container(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Row(children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.only(right: 5),
-                        child: Icon(
-                          Icons.access_time,
-                          color: Colors.purple,
-                          // size: 18,
-                        )),
-                    vital.created != null
-                        ? Text(
-                            generateTime(vital.created),
-                          )
-                        : Text(
-                            "No data",
-                            // style: TextStyle(fontSize: 16),
-                          ),
-                  ]),
-                ),
-              ],
-            ),
-            padding: EdgeInsets.only(right: 20)),
-        trailing: Icon(Icons.arrow_forward_ios),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return VitalDetail(
-                  vitalSign: vital,
-                  index: index,
-                );
-              },
-            ),
-          );
-          // Navigator.push(
-          //   context,
-          //   CupertinoPageRoute(builder: (context) => nextRoute),
-          // );
-        },
       ),
-      // ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return VitalDetail(
+                vitalSign: vital,
+                index: index,
+              );
+            },
+          ),
+        );
+        // Navigator.push(
+        //   context,
+        //   CupertinoPageRoute(builder: (context) => nextRoute),
+        // );
+      },
     );
 
     // return Card(
@@ -255,164 +257,172 @@ class _VitalSignList extends State<VitalSignList>
         //   print("VitalLoaded");
         //   print(currentState);
         // return
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          // child: Center(
-          child: Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: Center(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 700),
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              // child: Center(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
 
-            margin: EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom: 12),
-            // margin: EdgeInsets.all(12.0),
+                margin:
+                    EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom: 12),
+                // margin: EdgeInsets.all(12.0),
 
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.7,
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                // mainAxisSize: MainAxisSize.min,
-                // backgroundColor: Colors.grey[200],
-                // body: ListView(
-                children: <Widget>[
-                  SizedBox(
-                    height: 20,
-                  ),
-                  HeaderSection("Vital Signs"),
-                  BlocBuilder<VitalBloc, VitalState>(
-                      // bloc: vitalBloc,
-                      builder: (context, state) {
-                    final currentState = state;
-                    if (state is VitalEmpty) {
-                      print("vital emptry");
-                      print(widget.listVitals);
-                      vitalBloc
-                          .add(LoadVital(listVitals: widget.listVitals ?? []));
-                    } else if (state is VitalLoaded) {
-                      return (currentState.listVitals != null)
-                          ?
-                          // return
-                          Container(
-                              // width: 500,
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 10, bottom: 10),
-                              child: ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                // addRepaintBoundaries: false,
-                                shrinkWrap: true,
-                                // ke: ,
-                                // padding: EdgeInsets.all(30),
-                                itemCount: currentState.listVitals.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return _buildCard(
-                                      currentState.listVitals[index], index);
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    // mainAxisSize: MainAxisSize.min,
+                    // backgroundColor: Colors.grey[200],
+                    // body: ListView(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20,
+                      ),
+                      HeaderSection("Vital Signs"),
+                      BlocBuilder<VitalBloc, VitalState>(
+                          // bloc: vitalBloc,
+                          builder: (context, state) {
+                        final currentState = state;
+                        if (state is VitalEmpty) {
+                          print("vital emptry");
+                          print(widget.listVitals);
+                          vitalBloc.add(
+                              LoadVital(listVitals: widget.listVitals ?? []));
+                        } else if (state is VitalLoaded) {
+                          return (currentState.listVitals != null)
+                              ?
+                              // return
+                              Container(
+                                  // width: 500,
+                                  padding: EdgeInsets.only(
+                                      left: 10, right: 10, bottom: 10),
+                                  child: ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    // addRepaintBoundaries: false,
+                                    shrinkWrap: true,
+                                    // ke: ,
+                                    // padding: EdgeInsets.all(30),
+                                    itemCount: currentState.listVitals.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return _buildCard(
+                                          currentState.listVitals[index],
+                                          index);
 
-                                  // MycardSection()
-                                },
-                              ),
-                            )
-                          : Container();
-                    }
+                                      // MycardSection()
+                                    },
+                                  ),
+                                )
+                              : Container();
+                        }
 
-                    // return (widget.listVitals != null)
-                    //     ? Container(
-                    //         width: 500,
-                    //         padding: EdgeInsets.only(bottom: 10),
-                    //         child: ListView.builder(
-                    //           physics: NeverScrollableScrollPhysics(),
-                    //           // addRepaintBoundaries: false,
-                    //           shrinkWrap: true,
-                    //           // ke: ,
-                    //           // padding: EdgeInsets.all(30),
-                    //           itemCount: widget.listVitals.length,
-                    //           itemBuilder: (BuildContext context, int index) {
-                    //             return _buildCard(
-                    //                 widget.listVitals[index], index);
-                    //           },
-                    //         ),
-                    //       )
-                    // :
-                    return Container();
-                    // return Container(
-                    //   width: 500,
-                    //   padding: EdgeInsets.only(bottom: 10),
-                    //   child: ListView.builder(
-                    //     physics: NeverScrollableScrollPhysics(),
-                    //     // addRepaintBoundaries: false,
-                    //     shrinkWrap: true,
-                    //     // ke: ,
-                    //     // padding: EdgeInsets.all(30),
-                    //     itemCount: widget.listVitals.length,
-                    //     itemBuilder: (BuildContext context, int index) {
-                    //       return _buildCard(widget.listVitals[index], index);
-                    //     },
-                    //   ),
-                    // );
-                    // : Container();
-                    // return Center(
-                    //     child: Container(
-                    //   child: Text("No Vital signs recorded. Add VITALSIGN"),
-                    // ));
-                    //   width: 500,
-                    //   padding: EdgeInsets.only(bottom: 10),
-                    //   child: ListView.builder(
-                    //     physics: NeverScrollableScrollPhysics(),
-                    //     // addRepaintBoundaries: false,
-                    //     shrinkWrap: true,
-                    //     // ke: ,
-                    //     // padding: EdgeInsets.all(30),
-                    //     itemCount: widget.listVitals.length,
-                    //     itemBuilder: (BuildContext context, int index) {
-                    //       return _buildCard(widget.listVitals[index], index);
-                    //     },
-                    //   ),
-                    // );
-                    // }
-                    // ),),
-                    // }
+                        // return (widget.listVitals != null)
+                        //     ? Container(
+                        //         width: 500,
+                        //         padding: EdgeInsets.only(bottom: 10),
+                        //         child: ListView.builder(
+                        //           physics: NeverScrollableScrollPhysics(),
+                        //           // addRepaintBoundaries: false,
+                        //           shrinkWrap: true,
+                        //           // ke: ,
+                        //           // padding: EdgeInsets.all(30),
+                        //           itemCount: widget.listVitals.length,
+                        //           itemBuilder: (BuildContext context, int index) {
+                        //             return _buildCard(
+                        //                 widget.listVitals[index], index);
+                        //           },
+                        //         ),
+                        //       )
+                        // :
+                        return Container();
+                        // return Container(
+                        //   width: 500,
+                        //   padding: EdgeInsets.only(bottom: 10),
+                        //   child: ListView.builder(
+                        //     physics: NeverScrollableScrollPhysics(),
+                        //     // addRepaintBoundaries: false,
+                        //     shrinkWrap: true,
+                        //     // ke: ,
+                        //     // padding: EdgeInsets.all(30),
+                        //     itemCount: widget.listVitals.length,
+                        //     itemBuilder: (BuildContext context, int index) {
+                        //       return _buildCard(widget.listVitals[index], index);
+                        //     },
+                        //   ),
+                        // );
+                        // : Container();
+                        // return Center(
+                        //     child: Container(
+                        //   child: Text("No Vital signs recorded. Add VITALSIGN"),
+                        // ));
+                        //   width: 500,
+                        //   padding: EdgeInsets.only(bottom: 10),
+                        //   child: ListView.builder(
+                        //     physics: NeverScrollableScrollPhysics(),
+                        //     // addRepaintBoundaries: false,
+                        //     shrinkWrap: true,
+                        //     // ke: ,
+                        //     // padding: EdgeInsets.all(30),
+                        //     itemCount: widget.listVitals.length,
+                        //     itemBuilder: (BuildContext context, int index) {
+                        //       return _buildCard(widget.listVitals[index], index);
+                        //     },
+                        //   ),
+                        // );
+                        // }
+                        // ),),
+                        // }
 // },
 
-                    // ) // )));
-                  }),
-                  RaisedButton.icon(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(20.0),
-                        ),
-                      ),
-                      icon: Icon(Icons.add, color: Colors.blueAccent),
-                      label: Text(
-                        "ADD VITAL SIGN",
-                        style: TextStyle(color: Colors.blueAccent),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => VitalDetail()));
-                      })
-                ],
+                        // ) // )));
+                      }),
+                      RaisedButton.icon(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20.0),
+                            ),
+                          ),
+                          icon: Icon(Icons.add, color: Colors.blueAccent),
+                          label: Text(
+                            "ADD VITAL SIGN",
+                            style: TextStyle(color: Colors.blueAccent),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => VitalDetail()));
+                          })
+                    ],
+                  ),
+                ),
               ),
+              //               ))));
+              // // }
+              // return Container();
+              // }
             ),
+            // ),
           ),
-          //               ))));
-          // // }
-          // return Container();
-          // }
+          // floatingActionButton: FloatingActionButton.extended(
+          //   heroTag: 200,
+          //   onPressed: () {
+          //     //  onTap: () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (context) => VitalDetail()));
+          //     // }
+          //     // Add your onPressed code here!
+          //   },
+          //   label: Text('ADD VITALSIGN'),
+          //   icon: Icon(Icons.add),
+          //   // backgroundColor: Colors.purple,
+          // ));
         ),
-        // ),
       ),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   heroTag: 200,
-      //   onPressed: () {
-      //     //  onTap: () {
-      //     Navigator.push(context,
-      //         MaterialPageRoute(builder: (context) => VitalDetail()));
-      //     // }
-      //     // Add your onPressed code here!
-      //   },
-      //   label: Text('ADD VITALSIGN'),
-      //   icon: Icon(Icons.add),
-      //   // backgroundColor: Colors.purple,
-      // ));
     );
   }
 }

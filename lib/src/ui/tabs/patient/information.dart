@@ -26,7 +26,6 @@ const LIST_IDTYPE = [
   "Temporary ID"
 ];
 
-
 class PatientInformationScreen extends StatefulWidget {
   PatientInformation patient_information;
   PatientInformationScreen({this.patient_information});
@@ -52,15 +51,14 @@ class _Information extends State<PatientInformationScreen>
   String gender;
   @override
   initState() {
-
     docType = widget.patient_information.idType;
     gender = widget.patient_information.gender;
-  // nameController.text = widget.patient_information.nama;
-  // idNoController.text = widget.patient_information.id_no;
-  // idTypeController.text = widget.patient_information.id_type;
-  // ageController.text = widget.patient_information.age;
-  // genderController.text = widget.patient_information.jantina;
-  // dobController.text = widget.patient_information.dateOfBirth;
+    // nameController.text = widget.patient_information.nama;
+    // idNoController.text = widget.patient_information.id_no;
+    // idTypeController.text = widget.patient_information.id_type;
+    // ageController.text = widget.patient_information.age;
+    // genderController.text = widget.patient_information.jantina;
+    // dobController.text = widget.patient_information.dateOfBirth;
   }
 
   @override
@@ -107,7 +105,6 @@ class _Information extends State<PatientInformationScreen>
     print("$dd/$MM/$yyyy");
     return "$dd/$MM/$yyyy";
   }
-  
 
   @override
   build(BuildContext context) {
@@ -126,104 +123,108 @@ class _Information extends State<PatientInformationScreen>
       // backgroundColor: Colors.grey,
 
       body: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                Color(0xFF3383CD),
-                Color(0xFF11249F),
-              ],
-            ),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Color(0xFF3383CD),
+              Color(0xFF11249F),
+            ],
           ),
-          // padding: EdgeInsets.symmetric(vertical: 40),
+        ),
+        // padding: EdgeInsets.symmetric(vertical: 40),
+        child: Center(
+            child: Container(
+          constraints: BoxConstraints(maxWidth: 700),
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
-            child: Center(
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                margin:
-                    EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom: 12),
-                child: Form(
-                  key: patientBloc.formKey,
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      // mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        HeaderSection("Patient Information"),
-                        MyTextInput2(
-                          labelText: "Name",
-                          controller: patProvider.nameController,
-                          validator: nameValidator,
-                          ageController: patProvider.ageController,
-                          // null
-                        ),
+            // child: Center(
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              margin:
+                  EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom: 12),
+              child: Form(
+                key: patientBloc.formKey,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    // mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      HeaderSection("Patient Information"),
+                      MyTextInput2(
+                        labelText: "Name",
+                        controller: patProvider.nameController,
+                        validator: nameValidator,
+                        ageController: patProvider.ageController,
+                        // null
+                      ),
 
-                        Row(children: [
-                          Expanded(
-                            child: DropDownList("Document Type", LIST_IDTYPE,
-                                InputSelector.idtype, patProvider.getIdtype),
-                          ),
-                          Expanded(
-                            child: _idInputCalculated(
-                                context,
-                                "ID No.",
-                                patProvider.idController,
-                                idValidator,
-                                patProvider.ageController,
-                                patProvider.dobController,
-                                patProvider.genderController),
-                          ),
-                        ]),
-                        // _textInput("Document Type", idTypeController),
-                        Row(children: [
-                          Expanded(
-                            child: MyTextInput2(
-                                labelText: "Date of Birth",
-                                controller: patProvider.dobController,
-                                // validator: dobValidator,
-                                ageController: patProvider.ageController,
-                                formater: dobFormater,
-                                keyboardType: TextInputType.number,
-                                hint: "dd/mm/yyyy"),
-                          ),
-                          Expanded(
-                            child: MyTextInput2(
-                              labelText: "Age",
-                              controller: patProvider.ageController,
-                              // validator: ageValidator,
-                              ageController: patProvider.ageController,
-                              keyboardType: TextInputType.number,
-                              // null
-                            ),
-                          )
-                        ]),
-                        DropDownList("Gender", LIST_GENDER,
-                            InputSelector.gender, patProvider.gender),
-                        SizedBox(
-                          height: 40,
+                      Row(children: [
+                        Expanded(
+                          child: DropDownList("Document Type", LIST_IDTYPE,
+                              InputSelector.idtype, patProvider.getIdtype),
                         ),
-                        // _textInput("Gender", patProvider.genderController),
-                      ],
-                    ),
+                        Expanded(
+                          child: _idInputCalculated(
+                              context,
+                              "ID No.",
+                              patProvider.idController,
+                              idValidator,
+                              patProvider.ageController,
+                              patProvider.dobController,
+                              patProvider.genderController),
+                        ),
+                      ]),
+                      // _textInput("Document Type", idTypeController),
+                      Row(children: [
+                        Expanded(
+                          child: MyTextInput2(
+                              labelText: "Date of Birth",
+                              controller: patProvider.dobController,
+                              // validator: dobValidator,
+                              ageController: patProvider.ageController,
+                              formater: dobFormater,
+                              keyboardType: TextInputType.number,
+                              hint: "dd/mm/yyyy"),
+                        ),
+                        Expanded(
+                          child: MyTextInput2(
+                            labelText: "Age",
+                            controller: patProvider.ageController,
+                            // validator: ageValidator,
+                            ageController: patProvider.ageController,
+                            keyboardType: TextInputType.number,
+                            // null
+                          ),
+                        )
+                      ]),
+                      DropDownList("Gender", LIST_GENDER, InputSelector.gender,
+                          patProvider.gender),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      // _textInput("Gender", patProvider.genderController),
+                    ],
                   ),
                 ),
               ),
             ),
-          )
-          // floatingActionButton: FloatingActionButton.extended(
-          //   onPressed: () {
-          //     // Add your onPressed code here!
-          //   },
-          //   label: Text('EDIT'),
-          //   icon: Icon(Icons.edit),
-          //   // backgroundColor: Colors.purple,
-          // )
           ),
+        )
+            // floatingActionButton: FloatingActionButton.extended(
+            //   onPressed: () {
+            //     // Add your onPressed code here!
+            //   },
+            //   label: Text('EDIT'),
+            //   icon: Icon(Icons.edit),
+            //   // backgroundColor: Colors.purple,
+            // ),
+            ),
+      ),
     );
   }
 
@@ -279,7 +280,6 @@ class _Information extends State<PatientInformationScreen>
 
   Widget _idInputCalculated(context, labelText, controller, validator,
       ageController, dobController, genderController) {
-
     return Container(
         // width: 500,
         // width: 500,
@@ -367,15 +367,15 @@ class _Information extends State<PatientInformationScreen>
                     //to set Gender
                     print(controller.text.substring(11));
                     if (int.parse(controller.text.substring(11)) % 2 == 0) {
-                        genderController.sink.add("Female");
-                        setState(() {
-                            widget.patient_information.gender = "Female";
-                        });
+                      genderController.sink.add("Female");
+                      setState(() {
+                        widget.patient_information.gender = "Female";
+                      });
                     } else {
-                        genderController.sink.add("Male");
-                        setState(() {
-                            widget.patient_information.gender = "Male";
-                        });
+                      genderController.sink.add("Male");
+                      setState(() {
+                        widget.patient_information.gender = "Male";
+                      });
                     }
                   } else {
                     dobController.clear();

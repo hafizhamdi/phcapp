@@ -1032,8 +1032,7 @@ vPicker.setValue(5);
                             Navigator.pop(context);
                           },
                         ),
-                        widget.index ==null?HeaderSection("Add Vital Sign"):HeaderSection("Edit Vital Sign"),
-
+                       
                         IconButton(
                           icon: Icon(Icons.check),
                           onPressed: () {
@@ -1147,6 +1146,8 @@ vPicker.setValue(5);
                           },
                         ),
                       ]),
+                       widget.index ==null?HeaderSection("Add Vital Sign"):HeaderSection("Edit Vital Sign"),
+
                   Center(
                       child: Padding(
                           padding: EdgeInsets.all(10),

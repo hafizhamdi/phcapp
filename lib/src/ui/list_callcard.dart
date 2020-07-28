@@ -79,221 +79,127 @@ class _ListCallcards extends State<ListCallcards> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    // return SafeArea(
-    //   child: Material(
-    //     child: CustomScrollView(
-    //       slivers: <Widget>[
-    //         SliverPersistentHeader(
-    //           delegate: MySliverAppBar(expandedHeight: 200),
-    //           pinned: true,
-    //         ),
-    //         SliverList(
-    //           delegate: SliverChildBuilderDelegate(
-    //             (_, index) => ListTile(
-    //               title: Text("Index: $index"),
-    //             ),
-    //           ),
-    //         )
-
-    // BlocConsumer<PhcBloc, PhcState>(
-    //   listener: (context, state) {
-    //     _refreshCompleter?.complete();
-    //     _refreshCompleter = Completer();
-    //   },
-    //   builder: (context, state) {
-    //     if (state is PhcEmpty) {
-    //       phcBloc.add(FetchPhc());
-    //     } else if (state is PhcLoaded) {
-    //       print("Phc loaded");
-    //       final phc = state.phc;
-
-    //       return RefreshIndicator(
-    //           onRefresh: () {
-    //             BlocProvider.of<PhcBloc>(context).add(
-    //               RefreshPhc(),
-    //             );
-    //             return _refreshCompleter.future;
-    //           },
-    //           child: _buildList(phc)
-    //           // ListView.builder(
-    //           //     itemCount: phc.callcards.length,
-    //           //     itemBuilder: (context, index) {
-    //           //       final callInfo = phc.callcards[index].call_information;
-    //           //       return ListTile(
-    //           //         title: Text(callInfo.callcard_no),
-    //           //         subtitle: Text(callInfo.callReceived != null
-    //           //             ? callInfo.callReceived.substring(
-    //           //                 0, callInfo.call_received.length - 2)
-    //           //             : callInfo.callReceived),
-    //           //       );
-    //           //     })
-
-    //           );
-    //     }
-
-    //     if (state is PhcFetched) {
-    //       final phc = state.phc;
-    //       print("Phc fetched");
-
-    //       phcBloc.add(AddPhc(phc: phc));
-    //       print("after loadphc");
-    //     }
-    //     return Center(
-    //       child: CircularProgressIndicator(),
-    //     );
-    //   },
-    // ),
-    // )
-
-    // ,)
-    //       ],
-    //     ),
-    //   ),
-    // );
-
-    // return
+    // final themeProvider = Provider.of<ThemeProvider>(context);
 
     return new WillPopScope(
       onWillPop: _onWillPop,
-      child:
-          // MultiBlocProvider(
-          //   providers: [
-          //     BlocProvider(
-          //       create: (context) => CallInfoBloc(),
-          //     )
-          //   ],
-          //   child:
-          Scaffold(
+      child: Scaffold(
         appBar: AppBar(
           leading: TopOtherMenu(),
           title: Text("Call Cards"),
-          // shape: ShapeBorde,
-
           actions: <Widget>[
             Padding(padding: EdgeInsets.only(right: 10), child: TopUserMenu()),
           ],
         ),
         body: Center(
-          child: BlocProvider(
-            create: (context) => PhcBloc(
-                phcRepository: phcRepository, phcDao: phcDaoClient.phcDao),
-            child: BlocConsumer<PhcBloc, PhcState>(
-              listener: (context, state) {
-                _refreshCompleter?.complete();
-                _refreshCompleter = Completer();
-              },
-              builder: (context, state) {
-                phcBloc = BlocProvider.of<PhcBloc>(context);
+          child: Column(
+            children: <Widget>[
+              Container(
+                constraints: BoxConstraints(maxWidth: 700),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: TextField(
+                  decoration: InputDecoration(
+                      hasFloatingPlaceholder: false,
+                      labelText: "Search Call Card No",
+                      fillColor: Colors.white,
+                      border: new OutlineInputBorder(
+                        borderRadius: new BorderRadius.circular(40.0),
+                        borderSide: new BorderSide(),
+                      ),
+                      prefixIcon: Icon(Icons.search),
+                      suffixIcon: IconButton(
+                          onPressed: () => searchController.clear(),
+                          icon: Icon(Icons.cancel))),
+                  controller: searchController,
+                ),
+              ),
+              Expanded(
+                child: BlocProvider(
+                  create: (context) => PhcBloc(
+                      phcRepository: phcRepository,
+                      phcDao: phcDaoClient.phcDao),
+                  child: BlocConsumer<PhcBloc, PhcState>(
+                    listener: (context, state) {
+                      _refreshCompleter?.complete();
+                      _refreshCompleter = Completer();
+                    },
+                    builder: (context, state) {
+                      phcBloc = BlocProvider.of<PhcBloc>(context);
 
-                if (state is PhcEmpty) {
-                  // state.props.add(FetchPhc());
+                      if (state is PhcEmpty) {
+                        phcBloc.add(FetchPhc());
+                      } else if (state is PhcLoaded) {
+                        final phc = state.phc;
 
-                  phcBloc.add(FetchPhc());
-                } else if (state is PhcLoaded) {
-                  print("Phc loaded");
-                  final phc = state.phc;
-
-                  return RefreshIndicator(
-                      onRefresh: () {
-                        BlocProvider.of<PhcBloc>(context).add(
-                          RefreshPhc(),
-                        );
-                        return _refreshCompleter.future;
-                      },
-                      child: Column(
-                        children: <Widget>[
-                          // Row(children: [
-
-                          Row(children: [
-                            Expanded(
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                      // hintText: hintText,
-                                      hasFloatingPlaceholder: false,
-                                      labelText: "Search Call Card No",
-                                      fillColor: Colors.white,
-                                      border: new OutlineInputBorder(
-                                        borderRadius:
-                                            new BorderRadius.circular(40.0),
-                                        borderSide: new BorderSide(),
-                                      ),
-                                      prefixIcon: Icon(Icons.search),
-                                      suffixIcon: IconButton(
-                                          onPressed: () =>
-                                              searchController.clear(),
-                                          icon: Icon(Icons.cancel))
-                                      // )
-
-                                      // decoration: new InputDecoration(
-                                      //   labelText: "Search staff name",
-                                      //   border:,
-                                      ),
-                                  controller: searchController,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 100,
-                              padding: EdgeInsets.all(10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    "Last sync",
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  Text(
-                                      DateFormat("h:mm aa").format(
-                                          DateTime.parse(phc.lastUpdated)),
-                                      style: TextStyle(color: Colors.blue)),
-                                  RichText(
-                                    text: TextSpan(children: [
-                                      TextSpan(
-                                          text: phc.callcards.length.toString(),
-                                          style: TextStyle(color: Colors.blue)),
-                                      TextSpan(
-                                        text: " Results",
-                                        style: TextStyle(color: Colors.grey),
-                                      )
-                                    ]),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ]
-                              // ]),
-                              ),
-                          Container(
-                            color: Colors.black45,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                        return RefreshIndicator(
+                          onRefresh: () {
+                            BlocProvider.of<PhcBloc>(context).add(
+                              RefreshPhc(),
+                            );
+                            return _refreshCompleter.future;
+                          },
+                          child: Container(
+                            constraints: BoxConstraints(maxWidth: 700),
+                            child: Column(
                               children: <Widget>[
-                                Icon(Icons.arrow_downward,
-                                    color: Colors.white60),
-                                SizedBox(
-                                  width: 10,
+                                Container(
+                                  padding: EdgeInsets.only(
+                                    left: 30,
+                                    bottom: 10,
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        "Last updates at ",
+                                        // style: TextStyle(color: Colors.grey),
+                                      ),
+                                      Text(
+                                          DateFormat("dd MMM yyyy, h:mm aa")
+                                              .format(DateTime.parse(
+                                                  phc.lastUpdated)),
+                                          style: TextStyle(color: Colors.blue)),
+                                      RichText(
+                                        text: TextSpan(
+                                            style: TextStyle(
+                                                color: Colors.black87),
+                                            // style:gle(color: Colors.black),
+                                            children: [
+                                              TextSpan(
+                                                text: " with ",
+                                                // style:
+                                                //     TextStyle(color: Colors.grey),
+                                              ),
+                                              TextSpan(
+                                                  text: phc.callcards.length
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.blue)),
+                                              TextSpan(
+                                                text: " Results",
+                                                // style:
+                                                //     TextStyle(color: Colors.grey),
+                                              )
+                                            ]),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Text(
-                                  "Pull downward to refresh list",
-                                  style: TextStyle(color: Colors.white60),
-                                )
+                                Expanded(child: _buildList(phc))
                               ],
                             ),
                           ),
-                          // ]),
-                          // Text(phcBloc.statephc.callcards.length. "Results"),
-                          Expanded(child: _buildList(phc))
-                        ],
-                      ));
-                }
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
+                        );
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -321,42 +227,9 @@ class _ListCallcards extends State<ListCallcards> {
         false;
   }
 
-  // showDialog(
-  //                           context: context,
-  //                           barrierDismissible: false,
-  //                           builder: (BuildContext context) {
-  //                             return WillPopScope(
-  //                               onWillPop: () {},
-  //                               child: new AlertDialog(
-  //                                 title: new Text('Title'),
-  //                                 content: new Text('This is Demo'),
-  //                                 actions: <Widget>[
-  //                                   new FlatButton(
-  //                                     onPressed: () {
-  //                                       //Function called
-  //                                     },
-  //                                     child: new Text('Ok Done!'),
-  //                                   ),
-  //                                   new FlatButton(
-  //                                     onPressed: () {
-  //                                       Navigator.pop(context);
-  //                                     },
-  //                                     child: new Text('Go Back'),
-  //                                   ),
-  //                                 ],
-  //                               ),
-  //                             );
-  //                           });
-
   Widget _buildList(phc) {
-    // return SliverList(
-    //   delegate: SliverChildBuilderDelegate(
-    // (_, index) {
     return ListView.builder(
       itemCount: phc.callcards.length,
-      // separatorBuilder: (context, index) => Divider(
-      //   color: Colors.grey,
-      // ),
       itemBuilder: (BuildContext context, int index) {
         final callInfo = phc.callcards[index].callInformation;
 
@@ -368,18 +241,14 @@ class _ListCallcards extends State<ListCallcards> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Expanded(
-                        child: Text(
-                      callInfo.callcard_no,
-                      style: TextStyle(
-                          fontFamily: "OpenSans",
-                          letterSpacing: 1,
-                          fontWeight: FontWeight.bold),
-                    )),
-                    // Text(
-                    //   DateFormat("d MMM yyyy, hh:mm aaa")
-                    //       .format(DateTime.parse(callInfo.call_received)),
-                    //   style: TextStyle(color: Colors.grey, fontSize: 14),
-                    // )
+                      child: Text(
+                        callInfo.callcard_no,
+                        style: TextStyle(
+                            fontFamily: "OpenSans",
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ],
                 ),
                 subtitle: Row(
@@ -388,66 +257,44 @@ class _ListCallcards extends State<ListCallcards> {
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Expanded(
-                            // child:
-                            // Expanded(
-                            // child:
-                            // Expanded(
-                            //   child:
-                            Row(
-                                // mainAxisAlignment:
-                                // MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  // Expanded(
-                                  // child:
-                                  // Expanded(
-                                  //   child:
-                                  Row(
-                                      // padding: EdgeInsets.only(right: 8),
-                                      // child:
-                                      children: [
-                                        Icon(
-                                          Icons.person,
-                                          size: 16,
-                                          color: Colors.grey,
-                                        ),
-                                        SizedBox(
-                                          width: 8,
-                                        ),
-                                        Text(phc.callcards[index].patients
-                                                .length
-                                                .toString() +
-                                            ' Patient')
-                                      ]),
-                                  // ),
-                                  // ),
-                                  SizedBox(
-                                    width: 40,
-                                  ),
-                                  // Padding(
-                                  //     padding: EdgeInsets.only(right: 8),
-                                  // child:
-                                  // Expanded(
-                                  //     child:
-                                  Row(children: [
-                                    Icon(
-                                      Icons.group,
-                                      color: Colors.grey,
-                                      size: 16,
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Text(phc.callcards[index].responseTeam
-                                            .staffs.length
-                                            .toString() +
-                                        ' Team')
-                                  ])
-                                  // ),
-                                ]),
+                            Row(children: <Widget>[
+                              Row(children: [
+                                Icon(
+                                  Icons.person,
+                                  size: 16,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Text(phc.callcards[index].patients.length
+                                        .toString() +
+                                    ' Patient')
+                              ]),
+                              SizedBox(
+                                width: 40,
+                              ),
+                              Row(children: [
+                                Icon(
+                                  Icons.group,
+                                  color: Colors.grey,
+                                  size: 16,
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Text(phc.callcards[index].responseTeam.staffs
+                                        .length
+                                        .toString() +
+                                    ' Team')
+                              ])
+                              // ),
+                            ]),
 
                             // ),
-
+                            SizedBox(
+                              height: 5,
+                            ),
                             Row(children: [
                               Icon(Icons.call_received,
                                   color: Colors.grey, size: 16),
@@ -474,6 +321,9 @@ class _ListCallcards extends State<ListCallcards> {
                                   new BorderRadius.all(Radius.circular(5.0))),
                           child: Row(children: [
                             Icon(Icons.label_important, color: Colors.orange),
+                            SizedBox(
+                              width: 5,
+                            ),
                             Expanded(
                                 child: Text((callInfo.plate_no != null)
                                     ? callInfo.plate_no

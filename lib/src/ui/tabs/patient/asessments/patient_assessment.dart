@@ -89,6 +89,11 @@ const _arm = [
   "Unable to assess"
 ];
 
+const _normality = [
+  "Normal",
+  "Abnormal"
+];
+
 class PatientAssessmentScreen extends StatefulWidget {
   final PatientAssessment patientAssessment;
 
@@ -119,6 +124,8 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
   List<String> listStrokeFace = new List<String>();
   List<String> listStrokeSpeech = new List<String>();
   List<String> listStrokeArm = new List<String>();
+  List<String> listStrokeBalance = new List<String>();
+  List<String> listStrokeEyeSight = new List<String>();
 
   TextEditingController abnormalTextController = new TextEditingController();
   TextEditingController otherController = new TextEditingController();
@@ -195,6 +202,16 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         value: ""),
     ChipItem(
         id: "stroke_arm", name: "Stroke Scale: Arm", listData: _arm, value: ""),
+    ChipItem(
+        id: "stroke_balance",
+        name: "Stroke Scale: Balance",
+        listData: _normality,
+        value: ""),
+    ChipItem(
+        id: "stroke_eyesight",
+        name: "Stroke Scale: Eye Sight",
+        listData: _normality,
+        value: ""),
   ];
 
   mycallback(id, List<String> dataReturn) {
@@ -289,6 +306,16 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
     if (id == "stroke_arm") {
       setState(() {
         listStrokeArm = dataReturn;
+      });
+    }
+    if (id == "stroke_balance") {
+      setState(() {
+        listStrokeBalance = dataReturn;
+      });
+    }
+    if (id == "stroke_eyesight") {
+      setState(() {
+        listStrokeEyeSight = dataReturn;
       });
     }
   }
@@ -406,6 +433,20 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
             listStrokeArm.removeLast();
           }
         }
+        if (f.id == "stroke_balance") {
+          f.value = widget.patientAssessment.strokeScale.balance;
+          listStrokeBalance.add(widget.patientAssessment.strokeScale.balance);
+          if (listStrokeBalance.length > 1) {
+            listStrokeBalance.removeLast();
+          }
+        }
+        if (f.id == "stroke_eyesight") {
+          f.value = widget.patientAssessment.strokeScale.eyesight;
+          listStrokeEyeSight.add(widget.patientAssessment.strokeScale.eyesight);
+          if (listStrokeEyeSight.length > 1) {
+            listStrokeEyeSight.removeLast();
+          }
+        }
 
         // f.value = widget.patientAssessment.abdomenAbnormalityLocation;
         return f;
@@ -506,7 +547,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                         disasterTriage:
                             listTriage.length > 0 ? listTriage[0] : "",
                         appearance: listAppearance.length > 0 
-                                    ? listAppearance[0] == "Other"
+                                    ? listAppearance[0] == "Other" || !_appearance.contains(listAppearance[0])
                                     ? otherController.text
                                     : listAppearance[0] 
                                     : "",
@@ -547,6 +588,12 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                               : "",
                           speech: listStrokeSpeech.length > 0
                               ? listStrokeSpeech[0]
+                              : "",
+                          balance: listStrokeBalance.length > 0
+                              ? listStrokeBalance[0]
+                              : "",
+                          eyesight: listStrokeEyeSight.length > 0
+                              ? listStrokeEyeSight[0]
                               : "",
                         ));
 

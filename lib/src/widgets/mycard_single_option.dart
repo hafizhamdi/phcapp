@@ -8,9 +8,10 @@ class MyCardSingleOption extends StatelessWidget {
   final listData;
   final value;
   final Function mycallback;
+  final controller;
 
   MyCardSingleOption(
-      {this.id, this.name, this.listData, this.value, this.mycallback});
+      {this.id, this.name, this.listData, this.value, this.mycallback, this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +37,16 @@ class MyCardSingleOption extends StatelessWidget {
               initialData: value,
               callback: mycallback,
             ),
+            name.contains("Response Delay") || name.contains("Scene Delay") || name.contains("Transport Delay")
+            ? Container(
+              width: MediaQuery.of(context).size.width * 0.5,
+              child: TextField(
+                style: TextStyle(fontSize: 18),
+                decoration: InputDecoration(labelText: "Other"),
+                controller: controller,
+              ),
+            )
+            : Container()
           ],
         ),
       ),

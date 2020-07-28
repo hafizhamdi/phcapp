@@ -15,6 +15,8 @@ class _LoginScreen extends State<LoginScreen> {
   TextEditingController passwordController = new TextEditingController();
   LoginBloc loginBloc;
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     loginBloc = BlocProvider.of<LoginBloc>(context);
@@ -29,6 +31,18 @@ class _LoginScreen extends State<LoginScreen> {
         return AlertDialog(
           title: Text("Login Failed"),
           content: Text("Your username and/or password did not match"),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        );
+      });
+
+  showEmpty() => showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Login Failed"),
+          content: Text("Enter your staff userid and password"),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
@@ -190,7 +204,7 @@ class _LoginScreen extends State<LoginScreen> {
                           // right: 70,
                           // top: 60,
                           child: Text(
-                            "HRPB Version 1.20",
+                            "HRPB Version 1.21",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -222,55 +236,67 @@ class _LoginScreen extends State<LoginScreen> {
             padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
             // child: Container(
             // width: 400,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _textInput("Username", Icons.person, usernameController, false),
-                _textInput("Password", Icons.vpn_key, passwordController, true),
-                FlatButton(
-                  child: Container(
-                    height: 60,
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    constraints: BoxConstraints(maxWidth: 300),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF11249F),
-                      borderRadius: BorderRadius.circular(30.0),
+            // child: Form(
+            //   key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _textInput(
+                      "Username", Icons.person, usernameController, false),
+                  _textInput(
+                      "Password", Icons.vpn_key, passwordController, true),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                    child: Container(
+                      height: 60,
+                      // width: double.infinity,
+                      // margin: EdgeInsets.symmetric(vertical: 10),
+                      // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      constraints: BoxConstraints(maxWidth: 300),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF11249F),
+                        borderRadius: BorderRadius.circular(30.0),
 
-                      boxShadow: [
-                        BoxShadow(
-                            offset: Offset(0, 4),
-                            blurRadius: 60,
-                            color: Colors.black.withOpacity(.1)),
-                      ],
-                      // color: Colors.white,
-                      // borderRadius: BorderRadius.circular(30),
-                      border: Border.all(
-                        color: Color(0xFFE5E5E5),
+                        boxShadow: [
+                          BoxShadow(
+                              offset: Offset(0, 4),
+                              blurRadius: 60,
+                              color: Colors.black.withOpacity(.1)),
+                        ],
+                        // color: Colors.white,
+                        // borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: Color(0xFFE5E5E5),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "LOGIN",
+                          style: TextStyle(
+                              color: Colors.white,
+                              letterSpacing: 3.0,
+                              fontSize: 16),
+                        ),
                       ),
                     ),
-                    child: Center(
-                        child: Text(
-                      "LOGIN",
-                      style: TextStyle(
-                          color: Colors.white,
-                          letterSpacing: 3.0,
-                          fontSize: 16),
-                    )),
-                  ),
-                  onPressed: () {
-                    final user = usernameController.text;
-                    final password = passwordController.text;
+                    onTap: () {
+                      final user = usernameController.text;
+                      final password = passwordController.text;
 
-                    loginBloc.add(
-                        LoginButtonPressed(username: user, password: password));
-                  },
-                ),
-                // )
-              ],
-            ),
-            // )
+                      if (user.isEmpty || password.isEmpty) {
+                        showEmpty();
+                      } else {
+                        loginBloc.add(LoginButtonPressed(
+                            username: user, password: password));
+                      }
+                    },
+                  ),
+                  // )
+                ],
+              ),
+            
           ),
 
           FlatButton.icon(
@@ -330,7 +356,7 @@ class _LoginScreen extends State<LoginScreen> {
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       height: 60,
-      width: double.infinity,
+      // width: double.infinity,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(

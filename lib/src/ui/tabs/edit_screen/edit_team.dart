@@ -200,15 +200,21 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
       // appBar: AppBar(),
       backgroundColor: Colors.grey,
       // body: SafeArea(
-      body: Container(
-        // width: 500,
-        padding: EdgeInsets.symmetric(vertical: 40),
-        // height: MediaQuery.of(context).size.height,
-        child: SingleChildScrollView(
-          // padding: EdgeInsets.all(20),
-          physics: BouncingScrollPhysics(),
-          // child:
-          child: Center(
+      body: Center(
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: 700,
+          ),
+
+          //  maxHeight: MediaQuery.of(context).size.height),
+          // width: 500,
+          padding: EdgeInsets.symmetric(vertical: 40),
+          // height: MediaQuery.of(context).size.height,
+          child: SingleChildScrollView(
+            // padding: EdgeInsets.all(20),
+            physics: BouncingScrollPhysics(),
+            // child:
+            // child: Center(
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
@@ -219,7 +225,7 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
                   EdgeInsets.only(top: 10.0, bottom: 80, left: 10, right: 10),
               child: Column(
                   // mainAxisAlignment: MainAxisAlignment.center,
-                  // mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -229,7 +235,6 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
                             onPressed: () {
                               Navigator.pop(context);
                             }),
-                        HeaderSection("Response Details"),
                         IconButton(
                             icon: Icon(Icons.check),
                             onPressed: () {
@@ -242,6 +247,10 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
                               Navigator.pop(context);
                             }),
                       ],
+                    ),
+                    HeaderSection("Edit Response Details"),
+                    SizedBox(
+                      height: 20,
                     ),
                     DropDownList("Type of service response", LIST_RESPONSES,
                         InputOption.service, _serviceSelected),
@@ -263,8 +272,10 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
 
                       return DropDownList("Vehicle Registration No", plateList,
                           InputOption.plateNo, _plateNoSelected);
-                    })
-
+                    }),
+                    SizedBox(
+                      height: 100,
+                    ),
                     // TextInput(
                     //   labelText: "Vehicle Registration No",
                     //   controller: regNoController),
