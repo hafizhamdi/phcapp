@@ -21,5 +21,5 @@ Final version is 1.21
 
 # Screenshots
 
-![alt text](github-img/screenshotv1_21/Screenshot_20200729-093907.jpg?raw=true) ![alt text](github-img/screenshotv1_21/Screenshot_20200729-093929.jpg?raw=true) ![alt text](github-img/screenshotv1_21/Screenshot_20200729-094116.jpg?raw=true)
+<img src='github-img/screenshotv1_21/Screenshot_20200729-093907.jpg' width="200"> <img src='github-img/screenshotv1_21/Screenshot_20200729-093929.jpg' width="200"> <img src='github-img/screenshotv1_21/Screenshot_20200729-094116.jpg' width="200">
 
