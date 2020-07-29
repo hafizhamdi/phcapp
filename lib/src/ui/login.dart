@@ -10,16 +10,40 @@ class LoginScreen extends StatefulWidget {
   _LoginScreen createState() => _LoginScreen();
 }
 
-class _LoginScreen extends State<LoginScreen> {
+class _LoginScreen extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   TextEditingController usernameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   LoginBloc loginBloc;
 
+  final _formKey = GlobalKey<FormState>();
+
+  double _scale;
+  AnimationController _controller;
+
   @override
   void initState() {
+    // login button - bouncing animation
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: 100,
+      ),
+      lowerBound: 0.0,
+      upperBound: 0.1,
+    )..addListener(() {
+        setState(() {});
+      });
+
     loginBloc = BlocProvider.of<LoginBloc>(context);
 
     super.initState();
+  }
+
+  @override
+  dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   showError() => showDialog(
@@ -29,6 +53,18 @@ class _LoginScreen extends State<LoginScreen> {
         return AlertDialog(
           title: Text("Login Failed"),
           content: Text("Your username and/or password did not match"),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        );
+      });
+
+  showEmpty() => showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Login Failed"),
+          content: Text("Enter your staff userid and password"),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
         );
@@ -47,6 +83,7 @@ class _LoginScreen extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _scale = 1 - _controller.value;
     loginBloc = BlocProvider.of<LoginBloc>(context);
     return SafeArea(
       child: Scaffold(
@@ -115,6 +152,57 @@ class _LoginScreen extends State<LoginScreen> {
         // ),
       ),
     );
+  }
+
+  Widget get _animatedButtonUI => Container(
+        height: 60,
+        width: 300,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100.0),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x80000000),
+              blurRadius: 30.0,
+              offset: Offset(0.0, 5.0),
+            ),
+          ],
+          // gradient: LinearGradient(
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.bottomRight,
+          //   colors: [
+          //     Color(0xFF0000FF),
+          //     Color(0xFFFF3500),
+          //   ],
+          // ),
+          color: Color(0xFF11249F),
+        ),
+        child: Center(
+          child: Text(
+            'LOGIN',
+            style: TextStyle(
+                fontSize: 16.0,
+                letterSpacing: 3,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+        ),
+      );
+
+  void _onTapDown(TapDownDetails details) {
+    _controller.forward();
+  }
+
+  void _onTapUp(TapUpDetails details) {
+    _controller.reverse();
+    final user = usernameController.text;
+    final password = passwordController.text;
+    Future.delayed(Duration(milliseconds: 500), () {
+      if (user.isEmpty || password.isEmpty) {
+        showEmpty();
+      } else {
+        loginBloc.add(LoginButtonPressed(username: user, password: password));
+      }
+    });
   }
 
   Widget _loginPage() {
@@ -190,7 +278,7 @@ class _LoginScreen extends State<LoginScreen> {
                           // right: 70,
                           // top: 60,
                           child: Text(
-                            "HRPB Version 1.20",
+                            "HRPB Version 1.21",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -222,55 +310,74 @@ class _LoginScreen extends State<LoginScreen> {
             padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
             // child: Container(
             // width: 400,
+            // child: Form(
+            //   key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _textInput("Username", Icons.person, usernameController, false),
                 _textInput("Password", Icons.vpn_key, passwordController, true),
-                FlatButton(
-                  child: Container(
-                    height: 60,
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    constraints: BoxConstraints(maxWidth: 300),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF11249F),
-                      borderRadius: BorderRadius.circular(30.0),
-
-                      boxShadow: [
-                        BoxShadow(
-                            offset: Offset(0, 4),
-                            blurRadius: 60,
-                            color: Colors.black.withOpacity(.1)),
-                      ],
-                      // color: Colors.white,
-                      // borderRadius: BorderRadius.circular(30),
-                      border: Border.all(
-                        color: Color(0xFFE5E5E5),
-                      ),
-                    ),
-                    child: Center(
-                        child: Text(
-                      "LOGIN",
-                      style: TextStyle(
-                          color: Colors.white,
-                          letterSpacing: 3.0,
-                          fontSize: 16),
-                    )),
-                  ),
-                  onPressed: () {
-                    final user = usernameController.text;
-                    final password = passwordController.text;
-
-                    loginBloc.add(
-                        LoginButtonPressed(username: user, password: password));
-                  },
+                SizedBox(
+                  height: 10,
                 ),
+                // InkWell(
+                //   child: Container(
+                //     height: 60,
+                //     // width: double.infinity,
+                //     // margin: EdgeInsets.symmetric(vertical: 10),
+                //     // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                //     constraints: BoxConstraints(maxWidth: 300),
+                //     decoration: BoxDecoration(
+                //       color: Color(0xFF11249F),
+                //       borderRadius: BorderRadius.circular(30.0),
+
+                //       boxShadow: [
+                //         BoxShadow(
+                //             offset: Offset(0, 4),
+                //             blurRadius: 60,
+                //             color: Colors.black.withOpacity(.1)),
+                //       ],
+                //       // color: Colors.white,
+                //       // borderRadius: BorderRadius.circular(30),
+                //       border: Border.all(
+                //         color: Color(0xFFE5E5E5),
+                //       ),
+                //     ),
+                // child:
+                Center(
+                  child: GestureDetector(
+                    onTapDown: _onTapDown,
+                    onTapUp: _onTapUp,
+                    child: Transform.scale(
+                      scale: _scale,
+                      child: _animatedButtonUI,
+                    ),
+                  ),
+                )
+                //   Text(
+                //     "LOGIN",
+                //     style: TextStyle(
+                //         color: Colors.white,
+                //         letterSpacing: 3.0,
+                //         fontSize: 16),
+                //   ),
+                // ),
+                //   ),
+                //   onTap: () {
+                //     final user = usernameController.text;
+                //     final password = passwordController.text;
+
+                //     if (user.isEmpty || password.isEmpty) {
+                //       showEmpty();
+                //     } else {
+                //       loginBloc.add(LoginButtonPressed(
+                //           username: user, password: password));
+                //     }
+                //   },
+                // ),
                 // )
               ],
             ),
-            // )
           ),
 
           FlatButton.icon(
@@ -281,8 +388,40 @@ class _LoginScreen extends State<LoginScreen> {
                   context, MaterialPageRoute(builder: (context) => Settings()));
             },
             // ,
-          )
+          ),
+          SizedBox(
+            height: 40,
+          ),
+          // Stack(
+          //   children: <Widget>[
+          //     Positioned(
+          //       child:
+          Container(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              margin: EdgeInsets.only(bottom: 50),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      width: 70,
+                      child: Image(image: AssetImage('assets/heart_kkm.png')),
+                      // SvgPicture.asset("assets/town.svg"),
+                    ),
+                    Container(
+                      width: 100,
+                      child: Image(image: AssetImage('assets/kkm.png')),
+                      // SvgPicture.asset("assets/town.svg"),
+                    ),
+                    Container(
+                      width: 70,
+                      child: Image(image: AssetImage('assets/mers999.png')),
+                      // SvgPicture.asset("assets/town.svg"),
+                    ),
+                  ]))
+          // )
           // Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          // ],
+          // )
           //   IconButton(
           //   ),
           //   Text("Settings")
@@ -298,15 +437,26 @@ class _LoginScreen extends State<LoginScreen> {
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       height: 60,
-      width: double.infinity,
+      // width: double.infinity,
       decoration: BoxDecoration(
+        color: Colors.white,
+        // borderRadius: BorderRadius.circular(100.0),
         boxShadow: [
           BoxShadow(
-              offset: Offset(0, 4),
-              blurRadius: 50,
-              color: Colors.black.withOpacity(.1)),
+            color: Color(0x80000000),
+            blurRadius: 30.0,
+            offset: Offset(0.0, 5.0),
+          ),
         ],
-        // color: Colors.lightBlue.withOpacity(.20),
+
+        // decoration: BoxDecoration(
+        //   boxShadow: [
+        //     BoxShadow(
+        //         offset: Offset(0, 4),
+        //         blurRadius: 50,
+        //         color: Colors.black.withOpacity(.1)),
+        //   ],
+        //   // color: Colors.lightBlue.withOpacity(.20),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
           // color: Color(0xFFE5E5E5)

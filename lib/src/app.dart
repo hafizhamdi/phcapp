@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
+import 'package:phcapp/src/blocs/plate_bloc.dart';
 import 'package:phcapp/src/blocs/setting_bloc.dart';
 // import 'package:phcapp/src/blocs/cpr_bloc.dart';
 import 'package:phcapp/src/database/phc_dao.dart';
@@ -180,6 +181,11 @@ class _App extends State<App> {
         ),
         BlocProvider(
           create: (context) => OtherBloc(),
+        ),
+        BlocProvider(
+          create: (context) => PlateBloc(
+            phcDao: phcDaoClient.phcDao,
+          ),
         ),
       ],
       child: ChangeNotifierProvider(

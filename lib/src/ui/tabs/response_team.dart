@@ -101,7 +101,11 @@ class _TeamState extends State<ResponseTeamScreen> //{
 
     return Scaffold(
       backgroundColor: Colors.grey,
-      body: Container(
+      body:
+          // Center(
+          //   child:
+          Container(
+        // constraints: BoxConstraints(maxWidth: 700),
         // padding: EdgeInsets.symmetric(vertical: 40),
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
@@ -114,54 +118,61 @@ class _TeamState extends State<ResponseTeamScreen> //{
             ],
           ),
         ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            // padding: EdgeInsets.all(20),
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                BlocBuilder<ResponseBloc, ResponseState>(
-                  builder: (context, state) {
-                    if (state is LoadedResponse) {
-                      return ResponseDetail(
-                        typeResponse: state.serviceResponse,
-                        vehicleRegno: state.vehicleRegNo,
-                      );
-                    }
+        // child: SafeArea(
+        child: Center(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 700),
 
-                    return ResponseDetail(
-                        typeResponse: (widget.response_team != null)
-                            ? widget.response_team.serviceResponse
-                            : '',
-                        vehicleRegno: (widget.response_team != null)
-                            ? widget.response_team.vehicleRegno
-                            : '');
-                  },
-                ),
-                BlocBuilder<TeamBloc, TeamState>(builder: (context, state) {
-                  if (state is TeamLoaded) {
-                    return TeamList(selectedStaffs: state.selectedStaffs);
-                  }
-                  return TeamList(
-                    selectedStaffs: (widget.response_team != null)
-                        ? widget.response_team.staffs
-                        : null,
-                  );
-                })
-              ],
+            height: MediaQuery.of(context).size.height,
+            child: SingleChildScrollView(
+              // padding: EdgeInsets.all(20),
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  BlocBuilder<ResponseBloc, ResponseState>(
+                    builder: (context, state) {
+                      if (state is LoadedResponse) {
+                        return ResponseDetail(
+                          typeResponse: state.serviceResponse,
+                          vehicleRegno: state.vehicleRegNo,
+                        );
+                      }
+
+                      return ResponseDetail(
+                          typeResponse: (widget.response_team != null)
+                              ? widget.response_team.serviceResponse
+                              : '',
+                          vehicleRegno: (widget.response_team != null)
+                              ? widget.response_team.vehicleRegno
+                              : '');
+                    },
+                  ),
+                  BlocBuilder<TeamBloc, TeamState>(builder: (context, state) {
+                    if (state is TeamLoaded) {
+                      return TeamList(selectedStaffs: state.selectedStaffs);
+                    }
+                    return TeamList(
+                      selectedStaffs: (widget.response_team != null)
+                          ? widget.response_team.staffs
+                          : null,
+                    );
+                  })
+                ],
+              ),
             ),
+            // floatingActionButton: FloatingActionButton.extended(
+            //   heroTag: 200,
+            //   onPressed: () {
+            //     Navigator.push(
+            //         context, MaterialPageRoute(builder: (context) => Staffs()));
+            //     // Add your onPressed code here!
+            //   },
+            //   label: Text('ADD STAFF'),
+            //   icon: Icon(Icons.add),
+            //   // backgroundColor: Colors.purple,
           ),
-          // floatingActionButton: FloatingActionButton.extended(
-          //   heroTag: 200,
-          //   onPressed: () {
-          //     Navigator.push(
-          //         context, MaterialPageRoute(builder: (context) => Staffs()));
-          //     // Add your onPressed code here!
-          //   },
-          //   label: Text('ADD STAFF'),
-          //   icon: Icon(Icons.add),
-          //   // backgroundColor: Colors.purple,
         ),
       ),
     );
@@ -457,7 +468,6 @@ class ResponseDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
       margin: EdgeInsets.only(left: 12.0, right: 12, top: 40),
@@ -466,7 +476,7 @@ class ResponseDetail extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(10.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          // mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

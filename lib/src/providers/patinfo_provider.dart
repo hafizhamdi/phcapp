@@ -8,11 +8,10 @@ class PatInfoProvider extends ChangeNotifier {
   TextEditingController dobController = new TextEditingController();
   TextEditingController ageController = new TextEditingController();
 
-  
   final formKey = GlobalKey<FormState>();
 
-  String idType;
-  String gender;
+  String idType = "";
+  String gender = "";
 
   StreamController<String> genderController = new StreamController.broadcast();
   StreamController<String> idTypeController = new StreamController.broadcast();
