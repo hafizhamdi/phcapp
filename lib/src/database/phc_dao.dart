@@ -3,6 +3,7 @@ import 'package:phcapp/src/database/app_database.dart';
 import 'package:phcapp/src/models/environment_model.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/models/history.dart';
+import 'package:phcapp/src/models/plateno.dart';
 import 'package:sembast/sembast.dart';
 import 'dart:convert';
 import 'package:sembast/utils/value_utils.dart';
@@ -16,6 +17,7 @@ class PhcDao {
   final _historyStore = intMapStoreFactory.store(HISTORY_STORE_NAME);
   final _settingStore = stringMapStoreFactory.store(SETTING_STORE_NAME);
   final _staffStore = stringMapStoreFactory.store("staffsStore");
+  final _plateStore = stringMapStoreFactory.store("plateStore");
   var store = StoreRef.main();
   int key;
 
@@ -29,6 +31,13 @@ class PhcDao {
         .put(await _db, {"staffs": jsonEncode(staffs)});
     print("update done..");
     // return null;
+  }
+
+  Future updatePlateNo(plateNo) async {
+    await _plateStore
+        .record("plateNo")
+        .put(await _db, {"plateNo": jsonEncode(plateNo)});
+    print("update plate no list done.");
   }
 
   Future getStaffs() async {
@@ -45,12 +54,22 @@ class PhcDao {
     }).toList();
 
     return newStaffs;
+  }
 
-    // return staffs;
-    // return List<Staff>.from(staffs).map((f) {
-    //   print(staffs);
-    //   return Staff.fromJson(f.toJson());
-    // }).toList();
+  Future getPlateNo() async {
+    final result = await _plateStore.record('plateNo').getSnapshot(await _db);
+    print("IN GET PLATE NO LIST");
+    final plateNo = jsonDecode(result.value["plateNo"]);
+    // print(staffs);
+    print(plateNo.length);
+    final newPlateNo = List<dynamic>.from(plateNo).map((f) {
+      // print('inmapped');
+      // print(f);
+      return PlateNo.fromJson(f);
+      // Staff.fromJson(f.toJson());
+    }).toList();
+
+    return newPlateNo;
   }
 
   Future updateSettings(Environment env) async {

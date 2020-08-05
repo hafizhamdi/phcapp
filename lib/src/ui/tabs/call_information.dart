@@ -183,145 +183,155 @@ class _CallInfoState extends State<CallInformationScreen>
           ),
         ),
         // padding: EdgeInsets.symmetric(vertical: 40),
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            margin: EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom: 12),
+        child: Center(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 700),
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                margin:
+                    EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom: 12),
 
-            child: Form(
-              autovalidate: true,
-              key: _formKey,
-              // child:
+                child: Form(
+                  autovalidate: true,
+                  key: _formKey,
+                  // child:
 
-              // Column(
-              //   // crossAxisAlignment: CrossAxisAlignment.start,
-              //   // mainAxisAlignment: MainAxisAlignment.start,
-              //   children: <Widget>[
-              //     Expanded(
-              // child:
-              child: Container(
-                padding: EdgeInsets.all(10),
-                // width: 500,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  // physics:
-                  // physics: BouncingScrollPhysics(),
-                  // crossAxisCount: 2,
+                  // Column(
+                  //   // crossAxisAlignment: CrossAxisAlignment.start,
+                  //   // mainAxisAlignment: MainAxisAlignment.start,
+                  //   children: <Widget>[
+                  //     Expanded(
+                  // child:
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    // width: 500,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      // physics:
+                      // physics: BouncingScrollPhysics(),
+                      // crossAxisCount: 2,
 
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    // SizedBox(
-                    //   height: 40,
-                    // ),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      HeaderSection("Call Information"),
-                      IconButton(
-                          icon: Icon(Icons.edit, color: Colors.blueAccent),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) => EditCallInfo(
-                                          call_information: data,
-                                        )));
-                          }),
-                    ]),
-                    // Container(
-                    //   height: 1,
-                    //   color: Colors.grey,
-                    // ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    // Expanded(
-                    //     flex: 2,
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       // mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        MyTextField(
-                            labelText: "Call Card No",
-                            // controller: callInfoBloc.cardNoController,
-                            initialData: data.callcardNo
-                            // controller: cardNoController,
-                            // stream: infoBloc.callcarNoStream,
-                            // updateText: infoBloc.setCallcardNo,
-                            ),
-                        MyTextField(
-                            labelText: "Date Received",
-                            initialData:
-                                // data != null
-                                // ? DateFormat("dd/MM/yyyy hh:mm")
-                                //     .format(DateTime.parse(data.callReceived))
-                                // :
-                                data.callReceived),
+                        // SizedBox(
+                        //   height: 40,
+                        // ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              HeaderSection("Call Information"),
+                              IconButton(
+                                  icon: Icon(Icons.edit,
+                                      color: Colors.blueAccent),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) => EditCallInfo(
+                                                  call_information: data,
+                                                )));
+                                  }),
+                            ]),
+                        // Container(
+                        //   height: 1,
+                        //   color: Colors.grey,
+                        // ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        // Expanded(
+                        //     flex: 2,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            MyTextField(
+                                labelText: "Call Card No",
+                                // controller: callInfoBloc.cardNoController,
+                                initialData: data.callcardNo
+                                // controller: cardNoController,
+                                // stream: infoBloc.callcarNoStream,
+                                // updateText: infoBloc.setCallcardNo,
+                                ),
+                            MyTextField(
+                                labelText: "Date Received",
+                                initialData:
+                                    // data != null
+                                    // ? DateFormat("dd/MM/yyyy hh:mm")
+                                    //     .format(DateTime.parse(data.callReceived))
+                                    // :
+                                    data.callReceived),
+                          ],
+                        ),
+                        Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            // mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              // ),
+                              MyTextField(
+                                labelText: "Caller Contact No",
+                                initialData: data.callerContactno,
+                              ),
+                              EventCodeField(
+                                labelText: "Event Code",
+                                initialData: data.eventCode,
+                              ),
+                            ]),
+                        Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            // mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              MyTextField(
+                                  labelText: "Location type",
+                                  // LIST_LOCTYPE,
+                                  //     InputOption.location,
+                                  initialData: data.locationType),
+                              MyTextField(
+                                  labelText: "Priority",
+                                  // LIST_PRIORITY, InputOption.priority,
+                                  initialData: data.priority),
+                            ]),
+
+                        Row(children: [
+                          MyTextField(
+                              labelText: "Complaint",
+                              initialData: data.incident_desc),
+                        ]),
+                        Row(children: <Widget>[
+                          MyTextField(
+                              labelText: "Incident Location",
+                              initialData: data.incidentLocation),
+                        ]),
+
+                        Row(
+                          children: <Widget>[
+                            MyTextField(
+                                labelText: "Landmark",
+                                initialData: data.landmark),
+                          ],
+                        ),
+
+                        Row(
+                          children: <Widget>[
+                            MyTextField(
+                                labelText: "Distance to scene",
+                                // LIST_DISTANCES,
+                                //     InputOption.distance,
+                                initialData: data.distanceToScene),
+                          ],
+                        )
                       ],
                     ),
-                    Row(crossAxisAlignment: CrossAxisAlignment.start,
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          // ),
-                          MyTextField(
-                            labelText: "Caller Contact No",
-                            initialData: data.callerContactno,
-                          ),
-                          EventCodeField(
-                            labelText: "Event Code",
-                            initialData: data.eventCode,
-                          ),
-                        ]),
-                    Row(crossAxisAlignment: CrossAxisAlignment.start,
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          MyTextField(
-                              labelText: "Location type",
-                              // LIST_LOCTYPE,
-                              //     InputOption.location,
-                              initialData: data.locationType),
-                          MyTextField(
-                              labelText: "Priority",
-                              // LIST_PRIORITY, InputOption.priority,
-                              initialData: data.priority),
-                        ]),
-
-                    Row(children: [
-                      MyTextField(
-                          labelText: "Complaint",
-                          initialData: data.incident_desc),
-                    ]),
-                    Row(children: <Widget>[
-                      MyTextField(
-                          labelText: "Incident Location",
-                          initialData: data.incidentLocation),
-                    ]),
-
-                    Row(
-                      children: <Widget>[
-                        MyTextField(
-                            labelText: "Landmark", initialData: data.landmark),
-                      ],
-                    ),
-
-                    Row(
-                      children: <Widget>[
-                        MyTextField(
-                            labelText: "Distance to scene",
-                            // LIST_DISTANCES,
-                            //     InputOption.distance,
-                            initialData: data.distanceToScene),
-                      ],
-                    )
-                  ],
+                  ),
                 ),
+                // ],
+                // ),
+                // ),
+                // ),
+                // ),
               ),
             ),
-            // ],
-            // ),
-            // ),
-            // ),
-            // ),
           ),
         ),
       ),
@@ -583,14 +593,15 @@ class EventCodeField extends StatelessWidget {
   Widget build(BuildContext context) {
     _buildBox(text) {
       return Container(
-        width: MediaQuery.of(context).size.width * 0.08,
+        margin: EdgeInsets.symmetric(horizontal: 5),
+        width: 50,
         height: 50,
         decoration: BoxDecoration(
             color: Colors.yellow[100], borderRadius: BorderRadius.circular(10)),
         child: Center(
           child: Text(
             text,
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16, color: Colors.grey[900]),
           ),
         ),
       );
@@ -606,71 +617,73 @@ class EventCodeField extends StatelessWidget {
         // height: 50,
         // width: 500,
         // width: 170,
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                labelText,
-                style: TextStyle(
-                    fontFamily: "OpenSans",
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.grey),
-              ),
-              Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        _buildBox(split[0]),
-                        _buildBox(split[1]),
-                        _buildBox(split[2]),
-                        _buildBox(split[3]),
-                      ],
-                    ),
-                  )
-                  // Text(
-                  //   (initialData != null) ? initialData : "",
-                  //   style: TextStyle(fontSize: 16),
-                  // )
-                  )
-              // TextFormField(
-              //   enabled: false,
-              //   initialValue: initialData,
-              //   validator: (value) {
-              //     if (value.length > 20) {
-              //       return "Call Card No cannot be more than 20 characters";
-              //     }
+        child: Container(
+          child: Padding(
+            padding: EdgeInsets.only(left: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  labelText,
+                  style: TextStyle(
+                      fontFamily: "OpenSans",
+                      // fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.grey),
+                ),
+                Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Container(
+                      child: Row(
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          _buildBox(split[0]),
+                          _buildBox(split[1]),
+                          _buildBox(split[2]),
+                          _buildBox(split[3]),
+                        ],
+                      ),
+                    )
+                    // Text(
+                    //   (initialData != null) ? initialData : "",
+                    //   style: TextStyle(fontSize: 16),
 
-              //     if (value.isEmpty) {
-              //       return 'This field is required';
-              //     }
-              //     return null;
-              //   },
-              //   inputFormatters: maskFormater != null ? [maskFormater] : [],
-              //   onChanged: (value) {
-              //     controller.sink.add(value.toUpperCase());
-              //   },
+                    )
+                // TextFormField(
+                //   enabled: false,
+                //   initialValue: initialData,
+                //   validator: (value) {
+                //     if (value.length > 20) {
+                //       return "Call Card No cannot be more than 20 characters";
+                //     }
 
-              //   // onEditingComplete: (){
+                //     if (value.isEmpty) {
+                //       return 'This field is required';
+                //     }
+                //     return null;
+                //   },
+                //   inputFormatters: maskFormater != null ? [maskFormater] : [],
+                //   onChanged: (value) {
+                //     controller.sink.add(value.toUpperCase());
+                //   },
 
-              //   // },
-              //   // keyboardType: inputType,
-              //   // controller: myController,
-              //   decoration: InputDecoration(border: InputBorder.none
-              //       //   // hintText: hintText,
-              //       //   labelText: labelText,
-              //       //   fillColor: Colors.white,
-              //       //   border: new OutlineInputBorder(
-              //       //     borderRadius: new BorderRadius.circular(10.0),
-              //       //     borderSide: new BorderSide(),
-              //       //   ),
-              //       ),
-              // ),
-            ],
+                //   // onEditingComplete: (){
+
+                //   // },
+                //   // keyboardType: inputType,
+                //   // controller: myController,
+                //   decoration: InputDecoration(border: InputBorder.none
+                //       //   // hintText: hintText,
+                //       //   labelText: labelText,
+                //       //   fillColor: Colors.white,
+                //       //   border: new OutlineInputBorder(
+                //       //     borderRadius: new BorderRadius.circular(10.0),
+                //       //     borderSide: new BorderSide(),
+                //       //   ),
+                //       ),
+                // ),
+              ],
+            ),
           ),
         ),
       ),

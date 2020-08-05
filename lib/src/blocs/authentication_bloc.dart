@@ -8,6 +8,7 @@ import 'package:http/http.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/database/phc_dao.dart';
 import 'package:phcapp/src/models/phc.dart';
+import 'package:phcapp/src/models/plateno.dart';
 
 abstract class AuthEvent extends Equatable {
   AuthEvent();
@@ -87,12 +88,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final tmpfetchStaffs = List<Staff>.from(
             staffs["available_staffs"].map((x) => Staff.fromJson(x)));
 
+        final plateNo = await phcRepository.getAvailablePlateNo();
+
+        final tmpFetchPlateNo = List<PlateNo>.from(
+          plateNo["available_plate_no"].map((x)=> PlateNo.fromJson(x)));
+        
+
         // print(fetchStaffs);
         // print("phcDao");
         // print(phcDao);
         if (phcDao == null) {
           phcDao = new PhcDao();
           final insert = await phcDao.updateStaffs(tmpfetchStaffs);
+          final updatePlateNo = await phcDao.updatePlateNo(tmpFetchPlateNo);
         }
         // print(insert);
         // print("insert ok!");

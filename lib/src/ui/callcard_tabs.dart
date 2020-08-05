@@ -553,8 +553,10 @@ class _CallcardTabs extends State<CallcardTabs> {
                   indicator: BoxDecoration(
                       // border: Border.,
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10)),
+                        // topLeft: Radius.circular(10),
+                        // topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(50),
+                      ),
                       color: Colors.white),
 
                   // unselectedLabelColor: Colors.red,

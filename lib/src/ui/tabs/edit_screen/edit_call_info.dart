@@ -233,7 +233,9 @@ class _EditCallInfo extends State<EditCallInfo>
     // String initialValue;
 
     return Center(
-      child: Card(
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 700),
+        child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(20.0),
@@ -252,9 +254,6 @@ class _EditCallInfo extends State<EditCallInfo>
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                    ),
-                    Center(
-                      child: HeaderSection("Edit Call Information"),
                     ),
                     IconButton(
                       icon: Icon(Icons.check),
@@ -295,6 +294,64 @@ class _EditCallInfo extends State<EditCallInfo>
                     ),
                   ],
                 ),
+
+                // SizedBox(
+                //   height: 40,
+                // ),
+                // Row(
+                //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: <Widget>[
+                // IconButton(
+                //   icon: Icon(Icons.close),
+                //   onPressed: () {
+                //     Navigator.pop(context);
+                //   },
+                // ),
+                Center(
+                  child: HeaderSection("Edit Call Information"),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                // IconButton(
+                //   icon: Icon(Icons.check),
+                //   onPressed: () {
+                //     // {
+                //     // if (_formKey.currentState.validate()) {
+                //     // print("widget.call_information.assign_id");
+                //     // print(widget.call_information.assign_id);
+                //     callInfoBloc.add(SaveCallInfo(
+                //         callInformation: new CallInformation(
+                //       callcardNo: cardNoValue,
+                //       callReceived: receivedController.text,
+                //       callerContactno: contactNoController.text,
+                //       eventCode: mergingEventCode(
+                //           eventCol1Controller,
+                //           eventCol2Controller,
+                //           eventCol3Controller,
+                //           eventCol4Controller),
+                //       priority: _priority,
+                //       incidentDesc: incidentController.text,
+                //       incidentLocation: locationController.text,
+                //       landmark: landmarkController.text,
+                //       locationType: _location,
+                //       distanceToScene: _distance,
+                //       assignId: widget.call_information.assign_id,
+                //       plateNo: widget.call_information.plate_no,
+                //     )));
+
+                //     // final snackBar = SnackBar(
+                //     //   content: Text("Call information has been saved!"),
+                //     // );
+                //     // Scaffold.of(context).showSnackBar(snackBar);
+
+                //     //   Navigator.pop(context);
+                //     // }
+                //     Navigator.pop(context);
+                //   },
+                // ),
+                //   ],
+                // ),
                 // // TextEditLabel(
                 // //     labelText: "Call Card No",
                 // //     controller: cardNoController),
@@ -321,6 +378,7 @@ class _EditCallInfo extends State<EditCallInfo>
                       child: TextInput(
                         labelText: "Event Code",
                         controller: eventCol1Controller,
+
                         // hintText: "37/XC/02/XW",
                         // maskFormater: eventCodeFormater,
                       ),
@@ -385,7 +443,7 @@ class _EditCallInfo extends State<EditCallInfo>
                           inputFormatters: [contactNoFormater],
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            hintText: "ex: 012-3456789",
+                            hintText: "e.g., 012-3456789",
                             labelText: "Caller Contact No",
                             fillColor: Colors.white,
                             border: new OutlineInputBorder(
@@ -404,7 +462,9 @@ class _EditCallInfo extends State<EditCallInfo>
                 ),
               ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
     // });
   }
@@ -628,7 +688,8 @@ class TextInput extends StatelessWidget {
           // validator: validator,
           inputFormatters: maskFormater != null ? [maskFormater] : [],
           // keyboardType: inputType,
-          maxLines: maxLines,
+          // maxLines: maxLines,
+          textCapitalization: TextCapitalization.characters,
           controller: controller,
           decoration: InputDecoration(
             hintText: hintText,

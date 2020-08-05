@@ -356,6 +356,22 @@ class _PatientTab extends State<PatientTab> {
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
                   bottom: TabBar(
+                    labelColor: Colors.pinkAccent,
+                    unselectedLabelColor: Colors.white,
+
+                    // indicatorPadding: EdgeInsets.symmetric(vertical: 40),
+                    // indicatorWeight: 4.0,
+                    // indicatorSize: TabBarIndicatorSize.tab,
+                    indicator: BoxDecoration(
+                        // border: Border.,
+                        borderRadius: BorderRadius.only(
+                          // topLeft: Radius.circular(10),
+                          // topRight: Radius.circular(10),
+                          bottomLeft: Radius.circular(50),
+                        ),
+                        color: Colors.white),
+                    // )
+                    // bottom: TabBar(
                     tabs: [
                       Tab(icon: Icon(Icons.account_box), text: "PATIENT INFO"),
                       Tab(icon: Icon(Icons.airline_seat_flat), text: "CPRLOG"),
