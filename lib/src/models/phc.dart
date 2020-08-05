@@ -1409,18 +1409,20 @@ class SceneAssessment {
     this.backup,
     this.otherServicesAtScene,
   });
-  List<String> ppe;
+  PPE ppe;
   List<String> environment;
   List<String> caseType;
   List<String> patient;
   List<String> backup;
-  List<String> otherServicesAtScene;
+  OtherServices otherServicesAtScene;
 
-  factory SceneAssessment.fromJson(Map<String, dynamic> json) =>
+  factory SceneAssessment.fromJson(Map<String, dynamic> json){
+
+      return
       SceneAssessment(
-        ppe: json["ppe"] == null
-            ? null
-            : List<String>.from(json["ppe"].map((x) => x)),
+        ppe: json["ppe"] is List 
+             ? PPE.fromJson(json)
+             : PPE.fromJson(json["ppe"]),
         environment: json["environment"] == null
             ? null
             : List<String>.from(json["environment"].map((x) => x)),
@@ -1433,16 +1435,16 @@ class SceneAssessment {
         backup: json["backup"] == null
             ? null
             : List<String>.from(json["backup"].map((x) => x)),
-        otherServicesAtScene: json["other_services_atScene"] == null
-            ? null
-            : List<String>.from(json["other_services_atScene"].map((x) => x)),
-        
+        otherServicesAtScene: json["other_services_atScene"] is List 
+             ? OtherServices.fromJson(json)
+             : OtherServices.fromJson(json["other_services_atScene"]),       
       );
+  }
 
   Map<String, dynamic> toJson() => {
        "ppe": ppe == null
             ? null
-        : List<dynamic>.from(ppe.map((x) => x)),
+            : ppe.toJson(),
         "environment": environment == null
             ? null
             : List<dynamic>.from(environment.map((x) => x)),
@@ -1457,7 +1459,79 @@ class SceneAssessment {
             : List<dynamic>.from(backup.map((x) => x)),
         "other_services_atScene": otherServicesAtScene == null
             ? null
-            : List<dynamic>.from(otherServicesAtScene.map((x) => x)),
+            : otherServicesAtScene.toJson(),
+      };
+}
+
+class PPE{
+    List<String> ppe;
+    String otherspecify;
+
+  PPE({
+    this.ppe,
+    this.otherspecify
+  });
+  
+    factory PPE.fromJson(Map<String, dynamic> json){
+
+      return
+      PPE(
+        ppe: json != null 
+             ? json["ppe"] is List 
+             ? List<String>.from(json["ppe"].map((x) => x))
+             : json != null 
+             ? json["ppe_list"] != null
+             ? List<String>.from(json["ppe_list"].map((x) => x))
+             : null
+             : null
+             : null,
+        otherspecify: json.toString().contains("others_specify")
+                      ? json["others_specify"]
+                      : ""     
+      );
+    }
+
+        Map<String, dynamic> toJson() => {
+       "ppe_list": ppe == null
+            ? null
+        : List<dynamic>.from(ppe.map((x) => x)),
+        "others_specify": otherspecify != null ? otherspecify : null
+      };
+}
+
+class OtherServices{
+    List<String> otherServices;
+    String otherspecify;
+
+  OtherServices({
+    this.otherServices,
+    this.otherspecify
+  });
+  
+    factory OtherServices.fromJson(Map<String, dynamic> json){
+
+      return
+      OtherServices(
+        otherServices: json != null 
+             ? json["other_services_atScene"] is List 
+             ? List<String>.from(json["other_services_atScene"].map((x) => x))
+             : json != null 
+             ? json["other_services"] != null
+             ? List<String>.from(json["other_services"].map((x) => x))
+             : null
+             : null
+             : null,
+        otherspecify: json.toString().contains("others_specify")
+                      ? json["others_specify"]
+                      : ""     
+      );
+    }
+
+        Map<String, dynamic> toJson() => {
+       "other_services": otherServices == null
+            ? null
+        : List<dynamic>.from(otherServices.map((x) => x)),
+        "others_specify": otherspecify != null ? otherspecify : null
       };
 }
 
