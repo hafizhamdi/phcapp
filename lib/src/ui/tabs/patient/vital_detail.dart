@@ -352,6 +352,7 @@ vPicker.setValue(5);
             children: <Widget>[
               Expanded(
                   child: CupertinoPicker(
+                    backgroundColor: Colors.white,
                       scrollController: FixedExtentScrollController(
                           initialItem: selectPicker(
                               title,
@@ -865,6 +866,7 @@ vPicker.setValue(5);
             children: <Widget>[
               Expanded(
                   child: CupertinoPicker(
+                    backgroundColor: Colors.white,
                       scrollController: FixedExtentScrollController(
                           initialItem: controller.firstValue),
                       // magnification: 1.5,
@@ -886,6 +888,7 @@ vPicker.setValue(5);
                           200, (int index) => Text(index.toString())))),
               Expanded(
                   child: CupertinoPicker(
+                    backgroundColor: Colors.white,
                       itemExtent: 50,
                       scrollController: FixedExtentScrollController(
                           initialItem: controller.secondValue),
@@ -1224,6 +1227,7 @@ vPicker.setValue(5);
                         children: [titleButton, doneButton]))),
             Expanded(
               child: CupertinoPicker(
+                backgroundColor: Colors.white,
                   itemExtent: 50,
                   scrollController: FixedExtentScrollController(
                     initialItem:
@@ -1353,6 +1357,7 @@ vPicker.setValue(5);
                         children: [titleButton, doneButton]))),
             Expanded(
                 child: CupertinoPicker(
+                  backgroundColor: Colors.white,
                     scrollController:
                         FixedExtentScrollController(initialItem:picker.getValue??initialData),
                     itemExtent: 50,
@@ -1429,6 +1434,7 @@ vPicker.setValue(5);
               children: [
                 Expanded(
                   child: CupertinoPicker(
+                    backgroundColor: Colors.white,
                     scrollController: FixedExtentScrollController(
                         initialItem: picker.getValue ?? initialData),
                     itemExtent: 50,
@@ -1451,6 +1457,7 @@ vPicker.setValue(5);
                 ),
                 Expanded(
                   child: CupertinoPicker(
+                    backgroundColor: Colors.white,
                     scrollController: FixedExtentScrollController(
                         initialItem: picker.getDecimal ?? 0),
                     itemExtent: 50,

@@ -356,20 +356,23 @@ class _PatientTab extends State<PatientTab> {
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
                   bottom: TabBar(
-                    labelColor: Colors.pinkAccent,
-                    unselectedLabelColor: Colors.white,
+                    // labelColor: Colors.pinkAccent,
+                    // unselectedLabelColor: Colors.white,
+                    indicatorWeight: 4.0,
+
+                    // indicatorColor: Colors.white,
 
                     // indicatorPadding: EdgeInsets.symmetric(vertical: 40),
                     // indicatorWeight: 4.0,
                     // indicatorSize: TabBarIndicatorSize.tab,
-                    indicator: BoxDecoration(
-                        // border: Border.,
-                        borderRadius: BorderRadius.only(
-                          // topLeft: Radius.circular(10),
-                          // topRight: Radius.circular(10),
-                          bottomLeft: Radius.circular(50),
-                        ),
-                        color: Colors.white),
+                    // indicator: BoxDecoration(
+                    //     // border: Border.,
+                    //     borderRadius: BorderRadius.only(
+                    //       // topLeft: Radius.circular(10),
+                    //       // topRight: Radius.circular(10),
+                    //       bottomLeft: Radius.circular(50),
+                    //     ),
+                    //     color: Colors.white),
                     // )
                     // bottom: TabBar(
                     tabs: [
@@ -405,7 +408,7 @@ class _PatientTab extends State<PatientTab> {
                     deleteButton(context, action),
                     createButton(context, action, widget.index)
                   ],
-                  backgroundColor: Color(0xFF11249F),
+                  // backgroundColor: Color(0xFF11249F),
                 ),
                 body: TabBarView(
                   children: <Widget>[

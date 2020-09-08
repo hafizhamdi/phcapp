@@ -214,16 +214,16 @@ class _LoginScreen extends State<LoginScreen>
       child: Container(
         width: MediaQuery.of(context).size.width,
         // height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              Color(0xFF3383CD),
-              Color(0xFF11249F),
-            ],
-          ),
-        ),
+        // decoration: BoxDecoration(
+        //   gradient: LinearGradient(
+        //     begin: Alignment.topRight,
+        //     end: Alignment.bottomLeft,
+        //     colors: [
+        //       Color(0xFF3383CD),
+        //       Color(0xFF11249F),
+        //     ],
+        //   ),
+        // ),
         child: Column(
           children: <Widget>[
             ClipPath(
@@ -404,11 +404,11 @@ class _LoginScreen extends State<LoginScreen>
             FlatButton.icon(
               icon: Icon(
                 Icons.settings,
-                color: Colors.white,
+                // color: Colors.white,
               ),
               label: Text(
                 "Settings",
-                style: TextStyle(color: Colors.white),
+                // style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
                 Navigator.push(context,
@@ -476,21 +476,27 @@ class _LoginScreen extends State<LoginScreen>
       padding: EdgeInsets.symmetric(horizontal: 20),
       height: 60,
       decoration: BoxDecoration(
-        color: isActive ? Colors.yellow[100] : Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x80000000),
-            blurRadius: 5.0,
-            offset: Offset(0.0, 0.0),
-          ),
-        ],
+        // color:
+        // isActive ? Colors.yellow[100] :
+        // Colors.white,
+        border: Border.all(color: Colors.grey),
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Color(0x80000000),
+        //     blurRadius: 5.0,
+        //     offset: Offset(0.0, 0.0),
+        //   ),
+        // ],
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
         children: <Widget>[
           Icon(
             icon,
-            color: isActive ? primaryColor : Colors.grey,
+            color:
+                // isActive ? primaryColor :
+
+                Colors.grey[600],
           ),
           SizedBox(width: 20),
           Expanded(
@@ -498,6 +504,7 @@ class _LoginScreen extends State<LoginScreen>
               style: TextStyle(
                   fontFamily: "Poppins",
                   fontWeight: FontWeight.w700,
+                  // color: Colors.,
                   fontSize: 18,
                   letterSpacing: 1.0),
               cursorColor: primaryColor,

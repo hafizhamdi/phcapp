@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:phcapp/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class CardList extends StatelessWidget {
   final callcardNo;
@@ -25,8 +27,19 @@ class CardList extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: 100,
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(10)),
+          color: Provider.of<ThemeProvider>(context).isDarkTheme
+              ? Colors.grey[900]
+              : Colors.white,
+          // border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x80000000).withOpacity(0.2),
+              blurRadius: 10.0,
+              offset: Offset(0.0, 0.0),
+            ),
+          ],
+        ),
         child: Row(
           children: <Widget>[
             Container(
@@ -37,8 +50,11 @@ class CardList extends StatelessWidget {
                 color: Colors.white,
               ),
               // color: Colors.indigo,
-              decoration:
-                  BoxDecoration(color: Colors.indigo, shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                  color: Provider.of<ThemeProvider>(context).isDarkTheme
+                      ? Colors.purple
+                      : Colors.indigo,
+                  shape: BoxShape.circle),
             ),
             Expanded(
               child: Container(
@@ -55,7 +71,8 @@ class CardList extends StatelessWidget {
                               style: TextStyle(
                                   // fontFamily: "Poppins",
                                   fontSize: 18,
-                                  fontWeight: FontWeight.w900),
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 1.0),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

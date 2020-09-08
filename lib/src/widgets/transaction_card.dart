@@ -24,7 +24,7 @@ class TransactionCard extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(10),
       child: Container(
-        // margin: EdgeInsets.only(bottom: 10),
+        margin: EdgeInsets.only(bottom: 10),
         padding: EdgeInsets.all(10),
         width: MediaQuery.of(context).size.width,
         height: 100,

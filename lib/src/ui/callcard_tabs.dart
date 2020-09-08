@@ -546,7 +546,7 @@ class _CallcardTabs extends State<CallcardTabs> {
                 bottom: TabBar(
                   // labelColor: Colors.grey,
                   // unselectedLabelColor: Colors.white,
-                  unselectedLabelStyle: TextStyle(fontFamily: "Poppins"),
+                  // unselectedLabelStyle: TextStyle(fontFamily: "Poppins"),
 
                   // indicatorPadding: EdgeInsets.symmetric(vertical: 40),
                   indicatorWeight: 4.0,
@@ -563,7 +563,7 @@ class _CallcardTabs extends State<CallcardTabs> {
 
                   // unselectedLabelColor: Colors.red,
                   // labelColor: Colors.blue,
-                  indicatorColor: Colors.white,
+                  // indicatorColor: Colors.white,
                   tabs: [
                     Tab(icon: Icon(Icons.info), text: "CALL INFO"),
                     Tab(icon: Icon(Icons.directions_car), text: "RESPONDER"),
@@ -678,7 +678,7 @@ class _CallcardTabs extends State<CallcardTabs> {
                     width: MediaQuery.of(context).size.width,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Colors.indigo,
+                      color: Colors.pinkAccent,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: InkWell(

@@ -948,10 +948,10 @@ class Outcome {
 class PatientAssessment {
   DateTime timestamp;
   String disasterTriage;
-  String appearance;
+  List<String> appearance;
   String levelResponsive;
-  String airwayPatency;
-  String respiratoryEffort;
+  List<String> airwayPatency;
+  List<String> respiratoryEffort;
   AirEntry airEntry;
   BreathSound breathSound;
   String heartSound;
@@ -982,10 +982,16 @@ class PatientAssessment {
       PatientAssessment(
         timestamp: parsingDateTime(json["timestamp"]),
         disasterTriage: json["disaster_triage"],
-        appearance: json["appearance"],
+        appearance: json["appearance"] is List
+                      ? List<String>.from(json["appearance"].map((x) => x))
+                      : [json["appearance"]],
         levelResponsive: json["level_responsive"],
-        airwayPatency: json["airway_patency"],
-        respiratoryEffort: json["respiratory_effort"],
+        airwayPatency: json["airway_patency"] is List
+                      ? List<String>.from(json["airway_patency"].map((x) => x))
+                      : [json["airway_patency"]],
+        respiratoryEffort: json["respiratory_effort"] is List
+                      ? List<String>.from(json["respiratory_effort"].map((x) => x))
+                      : [json["respiratory_effort"]],
         airEntry: AirEntry.fromJson(json["air_entry"]),
         breathSound: BreathSound.fromJson(json["breath_sound"]),
         heartSound: json["heart_sound"],
@@ -1001,10 +1007,16 @@ class PatientAssessment {
   Map<String, dynamic> toJson() => {
         "timestamp": timestamp.toString(),
         "disaster_triage": disasterTriage,
-        "appearance": appearance,
+        "appearance": appearance != null
+            ? List<dynamic>.from(appearance.map((x) => x))
+            : null,
         "level_responsive": levelResponsive,
-        "airway_patency": airwayPatency,
-        "respiratory_effort": respiratoryEffort,
+        "airway_patency": airwayPatency != null
+            ? List<dynamic>.from(airwayPatency.map((x) => x))
+            : null,
+        "respiratory_effort": respiratoryEffort != null
+            ? List<dynamic>.from(respiratoryEffort.map((x) => x))
+            : null,
         "air_entry": airEntry.toJson(),
         "breath_sound": breathSound.toJson(),
         "heart_sound": heartSound,
@@ -1058,11 +1070,11 @@ class BreathSound {
 }
 
 class StrokeScale {
-  String face;
-  String speech;
-  String arm;
-  String balance;
-  String eyesight;
+  List<String> face;
+  List<String> speech;
+  List<String> arm;
+  List<String> balance;
+  List<String> eyesight;
 
   StrokeScale({
     this.face,
@@ -1073,19 +1085,39 @@ class StrokeScale {
   });
 
   factory StrokeScale.fromJson(Map<String, dynamic> json) => StrokeScale(
-        face: json["face"],
-        speech: json["speech"],
-        arm: json["arm"],
-        balance: json["balance"],
-        eyesight: json["eyesight"]
+        face: json["face"] is List
+                      ? List<String>.from(json["face"].map((x) => x))
+                      : [json["face"]],
+        speech: json["speech"] is List
+                      ? List<String>.from(json["speech"].map((x) => x))
+                      : [json["speech"]],
+        arm: json["arm"] is List
+                      ? List<String>.from(json["arm"].map((x) => x))
+                      : [json["arm"]],
+        balance: json["balance"] is List
+                      ? List<String>.from(json["balance"].map((x) => x))
+                      : [json["balance"]],
+        eyesight: json["eyesight"] is List
+                      ? List<String>.from(json["eyesight"].map((x) => x))
+                      : [json["eyesight"]]
       );
 
   Map<String, dynamic> toJson() => {
-        "face": face,
-        "speech": speech,
-        "arm": arm,
-        "balance": balance,
-        "eyesight": eyesight
+        "face": face != null
+            ? List<dynamic>.from(face.map((x) => x))
+            : null,
+        "speech": speech != null
+            ? List<dynamic>.from(speech.map((x) => x))
+            : null,
+        "arm": arm != null
+            ? List<dynamic>.from(arm.map((x) => x))
+            : null,
+        "balance": balance != null
+            ? List<dynamic>.from(balance.map((x) => x))
+            : null,
+        "eyesight": eyesight != null
+            ? List<dynamic>.from(eyesight.map((x) => x))
+            : null
       };
 }
 

@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/blocs/setting_bloc.dart';
@@ -93,86 +92,119 @@ class _ListCallcards extends State<ListCallcards> {
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
-          // textTheme: themeProvider.getThemeData.textTheme,
           leading: TopOtherMenu(),
           title: Text(
             "PH Care",
-            style: TextStyle(fontFamily: "Poppins", fontSize: 24),
+            style: TextStyle(fontFamily: "Poppins", fontSize: 30),
           ),
           actions: <Widget>[
             Padding(padding: EdgeInsets.only(right: 10), child: TopUserMenu()),
           ],
         ),
-        body: SingleChildScrollView(
-          // physics: BouncingScrollPhysics(),
-          child: Container(
-            padding: EdgeInsets.all(20),
-            child:
-                // Column(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: <Widget>[
-                // SizedBox(
-                //   height: 20,
-                // ),
+        body: RefreshIndicator(
+          // displacement: 20,
+          onRefresh: () {
+            BlocProvider.of<PhcBloc>(context).add(
+              RefreshPhc(),
+            );
 
-                // Expanded(
-                //   child:
+            Timer timer = new Timer(new Duration(seconds: 3), () {
+              _refreshCompleter.complete();
+            });
+            print("REfreshIndicator===========");
+            print("what is state now:");
+            print(phcBloc.state);
+            // if (phcBloc.state is PhcLoaded) {
+            //   _refreshCompleter?.complete();
+            //   _refreshCompleter = Completer();
+            // }
+            return _refreshCompleter.future;
+          },
+          child: SingleChildScrollView(
+            // physics: AlwaysScrollableScrollPhysics(),
+            // physics: BouncingScrollPhysics(),
+            child: Container(
+              padding: EdgeInsets.all(20),
+              // child: Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: <Widget>[
+              //     SizedBox(
+              //       height: 20,
+              //     ),
 
-                BlocProvider(
-              create: (context) => PhcBloc(
-                  phcRepository: phcRepository, phcDao: phcDaoClient.phcDao),
-              child: BlocConsumer<PhcBloc, PhcState>(
-                listener: (context, state) {
-                  _refreshCompleter?.complete();
-                  _refreshCompleter = Completer();
-                },
-                builder: (context, state) {
-                  phcBloc = BlocProvider.of<PhcBloc>(context);
+              // Expanded(
+              child: BlocProvider(
+                create: (context) => PhcBloc(
+                    phcRepository: phcRepository, phcDao: phcDaoClient.phcDao),
+                child: BlocConsumer<PhcBloc, PhcState>(
+                  listener: (context, state) {
+                    // if (state is PhcLoaded) {
+                    // //   print("Phcloaded----in listener");
+                    // _refreshCompleter.complete();
+                    // _refreshCompleter = Completer();
+                    // }
+                  },
+                  builder: (context, state) {
+                    phcBloc = BlocProvider.of<PhcBloc>(context);
 
-                  if (state is PhcEmpty) {
-                    phcBloc.add(FetchPhc());
-                  } else if (state is PhcLoaded) {
-                    final phc = state.phc;
+                    print(state);
 
-                    return RefreshIndicator(
-                        onRefresh: () {
-                          BlocProvider.of<PhcBloc>(context).add(
-                            RefreshPhc(),
-                          );
-                          return _refreshCompleter.future;
-                        },
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Dashboard(
-                                username: user.name,
-                                lastUpdated: phc.lastUpdated,
-                                totalCount: phc.callcards.length,
-                                successCount: historyBloc.state.listHistory
-                                    .where((f) => f.statusSend == 1)
-                                    .toList()
-                                    .length,
-                                failedCount: historyBloc.state.listHistory
-                                    .where((f) => f.statusSend == 0)
-                                    .toList()
-                                    .length,
+                    if (state is PhcEmpty) {
+                      phcBloc.add(FetchPhc());
+                    } else if (state is PhcLoaded) {
+                      // _refreshCompleter.isCompleted
+                      //     ? _refreshCompleter = Completer()
+                      //     : _refreshCompleter.complete();
+                      // _refreshCompleter.complete();
+                      // _refreshCompleter = Completer();
+                      final phc = state.phc;
+
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Dashboard(
+                              username: user.name,
+                              lastUpdated: phc.lastUpdated,
+                              totalCount: phc.callcards.length,
+                              successCount: historyBloc.state.listHistory
+                                  .where((f) => f.statusSend == 1)
+                                  .toList()
+                                  .length,
+                              failedCount: historyBloc.state.listHistory
+                                  .where((f) => f.statusSend == 0)
+                                  .toList()
+                                  .length,
+                            ),
+
+                            SizedBox(
+                              height: 10,
+                            ),
+
+                            Container(
+                              // margin: EdgeInsets.symmetric(
+                              //     //     //     horizontal: 20,
+                              //     vertical: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40),
+                                color: Provider.of<ThemeProvider>(context)
+                                        .isDarkTheme
+                                    ? Colors.grey[900]
+                                    : Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x80000000).withOpacity(0.2),
+                                    blurRadius: 10.0,
+                                    offset: Offset(0.0, 0.0),
+                                  ),
+                                ],
                               ),
-
-                              // SizedBox(
-                              //   height: 20,
-                              // ),
-
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    //     horizontal: 20,
-                                    vertical: 20),
-                                child: TextFormField(
-                                  style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18,
-                                      letterSpacing: 1.0),
-                                  decoration: InputDecoration(
+                              child: TextFormField(
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 18,
+                                    letterSpacing: 1.0),
+                                decoration: InputDecoration(
                                     prefixIcon: Padding(
                                       padding:
                                           EdgeInsets.only(left: 18, right: 10),
@@ -198,70 +230,25 @@ class _ListCallcards extends State<ListCallcards> {
                                     labelStyle: TextStyle(
                                       fontWeight: FontWeight.w500,
                                     ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(40),
-                                      borderSide: new BorderSide(),
-                                    ),
-                                  ),
-                                  controller: searchController,
-                                ),
+                                    border: InputBorder.none),
+                                controller: searchController,
                               ),
-                              // SizedBox(
-                              //   height: 20,
-                              // ),
+                            ),
 
-                              // Expanded(
-                              //   child:
-                              _buildList(phc),
-                              // )
-                            ])
-                        //   Expanded(
-                        // child: ListView.builder(
-                        //   itemCount: 5,
-                        //   itemBuilder: (ctx, idx) {
-                        //     return Expanded(
-                        //       child: Container(
-                        //         width: 10,
-                        //         height: 20,
-                        //         color: Colors.red,
-                        //       ),
-                        //     );
-                        // },
-                        // ),
-                        // ),
-                        // ),
-                        // ),
-                        // ]),
-                        // Container(
-                        //   // constraints: BoxConstraints(maxWidth: 700),
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: <Widget>[
-                        //       // Expanded(child: _buildList(phc))
-                        //     ],
-                        //   ),
-                        // ),
-                        // ),
-                        );
-                  }
-                  return Dashboard();
-                  // return Center(
-                  //   child: SizedBox(
-                  //     width: 50,
-                  //     height: 50,
-                  //     child: CircularProgressIndicator(
-                  //       // strokeWidth: .0,
-                  //       backgroundColor: Provider.of<ThemeProvider>(context)
-                  //           .getThemeData
-                  //           .primaryColor,
-                  //     ),
-                  //   ),
-                  // );
-                },
+                            SizedBox(
+                              height: 10,
+                            ),
+
+                            // Expanded(
+                            //   child:
+                            _buildList(phc),
+                            // )
+                          ]);
+                    }
+                    return Dashboard();
+                  },
+                ),
               ),
-              // ),
-              // ),
-              // ],
             ),
           ),
         ),
@@ -294,7 +281,6 @@ class _ListCallcards extends State<ListCallcards> {
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      // separatorBuilder: (ctx, idx) => Divider(),
       itemCount: phc.callcards.length,
       itemBuilder: (BuildContext context, int index) {
         final callInfo = phc.callcards[index].callInformation;
@@ -354,131 +340,12 @@ class _ListCallcards extends State<ListCallcards> {
                           patients: phc.callcards[index].patients,
                           scene_assessment:
                               phc.callcards[index].sceneAssessment,
-                          // phcDao: widget.phcDao,
                         );
                       },
                     ),
                   );
                 },
               )
-
-            // ListTile(
-            //     contentPadding:
-            //         EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-            //     title: Row(
-            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //       children: <Widget>[
-            //         Expanded(
-            //           // child:
-            //           // Hero(
-            //           //   tag: callInfo.callcard_no,
-            //           child: Text(
-            //             callInfo.callcard_no,
-            //             style: TextStyle(
-            //                 fontFamily: "OpenSans",
-            //                 letterSpacing: 1,
-            //                 fontWeight: FontWeight.bold),
-            //           ),
-            //           // ),
-            //         ),
-            //       ],
-            //     ),
-            //     subtitle: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: <Widget>[
-            //           Column(
-            //               crossAxisAlignment: CrossAxisAlignment.start,
-            //               children: [
-            //                 Row(children: <Widget>[
-            //                   Row(children: [
-            //                     Icon(
-            //                       Icons.person,
-            //                       size: 16,
-            //                       color: Colors.grey,
-            //                     ),
-            //                     SizedBox(
-            //                       width: 8,
-            //                     ),
-            //                     Text(phc.callcards[index].patients.length
-            //                             .toString() +
-            //                         ' Patient')
-            //                   ]),
-            //                   SizedBox(
-            //                     width: 40,
-            //                   ),
-            //                   Row(children: [
-            //                     Icon(
-            //                       Icons.group,
-            //                       color: Colors.grey,
-            //                       size: 16,
-            //                     ),
-            //                     SizedBox(
-            //                       width: 8,
-            //                     ),
-            //                     Text(phc.callcards[index].responseTeam.staffs
-            //                             .length
-            //                             .toString() +
-            //                         ' Team')
-            //                   ])
-            //                   // ),
-            //                 ]),
-
-            //                 // ),
-            //                 SizedBox(
-            //                   height: 5,
-            //                 ),
-            //                 Row(children: [
-            //                   Icon(Icons.call_received,
-            //                       color: Colors.grey, size: 16),
-            //                   SizedBox(
-            //                     width: 8,
-            //                   ),
-            //                   Text(
-            //                     DateFormat("d MMM yyyy, h:mm aaa").format(
-            //                         DateTime.parse(callInfo.call_received)),
-            //                     style:
-            //                         TextStyle(color: Colors.grey, fontSize: 14),
-            //                   )
-            //                 ])
-            //               ]),
-            //           Container(
-            //               width: 120,
-            //               alignment: Alignment.center,
-            //               padding: EdgeInsets.all(5),
-            //               decoration: new BoxDecoration(
-            //                   // color: Colo,
-            //                   border:
-            //                       Border.all(width: 1.5, color: Colors.orange),
-            //                   borderRadius:
-            //                       new BorderRadius.all(Radius.circular(5.0))),
-            //               child: Row(children: [
-            //                 Icon(Icons.label_important, color: Colors.orange),
-            //                 SizedBox(
-            //                   width: 5,
-            //                 ),
-            //                 Expanded(
-            //                     child: Text((callInfo.plate_no != null)
-            //                         ? callInfo.plate_no
-            //                         : ""))
-            //               ]))
-            //         ]),
-
-            //     leading: Container(
-            //       // alignment: Alignment.centerLeft,
-            //       width: 60,
-            //       height: 60,
-            //       decoration: new BoxDecoration(
-            //         color: Colors.grey,
-            //         shape: BoxShape.circle,
-            //       ),
-            //       child: Icon(Icons.headset_mic, color: Colors.white),
-            //     ),
-            //     // trailing: Icon(Icons.arrow_forward_ios),
-            //     onTap: () {
-
-            // Navigator.pushNamed(context, "/callcarddetail");
-            //   },
-            // )
             : phc.callcards[index].callInformation.callcard_no
                     .toLowerCase()
                     .toString()
@@ -546,192 +413,12 @@ class _ListCallcards extends State<ListCallcards> {
                       );
                     },
                   )
-                // ListTile(
-                //     contentPadding:
-                //         EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                //     title: Row(
-                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //       children: <Widget>[
-                //         Expanded(
-                //           child: Hero(
-                //             tag: callInfo.callcard_no,
-                //             child: Text(
-                //               callInfo.callcard_no,
-                //               style: TextStyle(
-                //                   fontFamily: "OpenSans",
-                //                   letterSpacing: 1,
-                //                   fontWeight: FontWeight.bold),
-                //             ),
-                //           ),
-                //         ),
-                //         // Text(
-                //         //   DateFormat("d MMM yyyy, hh:mm aaa")
-                //         //       .format(DateTime.parse(callInfo.call_received)),
-                //         //   style: TextStyle(color: Colors.grey, fontSize: 14),
-                //         // )
-                //       ],
-                //     ),
-                //     subtitle: Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //         children: <Widget>[
-                //           Column(
-                //               crossAxisAlignment: CrossAxisAlignment.start,
-                //               children: [
-                //                 Row(children: <Widget>[
-                //                   Row(children: [
-                //                     Icon(
-                //                       Icons.person,
-                //                       size: 16,
-                //                       color: Colors.grey,
-                //                     ),
-                //                     SizedBox(
-                //                       width: 8,
-                //                     ),
-                //                     Text(phc.callcards[index].patients.length
-                //                             .toString() +
-                //                         ' Patient')
-                //                   ]),
-                //                   SizedBox(
-                //                     width: 40,
-                //                   ),
-                //                   Row(children: [
-                //                     Icon(
-                //                       Icons.group,
-                //                       color: Colors.grey,
-                //                       size: 16,
-                //                     ),
-                //                     SizedBox(
-                //                       width: 8,
-                //                     ),
-                //                     Text(phc.callcards[index].responseTeam
-                //                             .staffs.length
-                //                             .toString() +
-                //                         ' Team')
-                //                   ])
-                //                   // ),
-                //                 ]),
-
-                //                 // ),
-                //                 SizedBox(
-                //                   height: 5,
-                //                 ),
-                //                 Row(children: [
-                //                   Icon(Icons.call_received,
-                //                       color: Colors.grey, size: 16),
-                //                   SizedBox(
-                //                     width: 8,
-                //                   ),
-                //                   Text(
-                //                     DateFormat("d MMM yyyy, h:mm aaa").format(
-                //                         DateTime.parse(callInfo.call_received)),
-                //                     style: TextStyle(
-                //                         color: Colors.grey, fontSize: 14),
-                //                   )
-                //                 ])
-                //               ]),
-                //           Container(
-                //               width: 120,
-                //               alignment: Alignment.center,
-                //               padding: EdgeInsets.all(5),
-                //               decoration: new BoxDecoration(
-                //                   // color: Colo,
-                //                   border: Border.all(
-                //                       width: 1.5, color: Colors.orange),
-                //                   borderRadius: new BorderRadius.all(
-                //                       Radius.circular(5.0))),
-                //               child: Row(children: [
-                //                 Icon(Icons.label_important,
-                //                     color: Colors.orange),
-                //                 SizedBox(
-                //                   width: 5,
-                //                 ),
-                //                 Expanded(
-                //                     child: Text((callInfo.plate_no != null)
-                //                         ? callInfo.plate_no
-                //                         : ""))
-                //               ]))
-                //         ]),
-                //     leading: Container(
-                //       // alignment: Alignment.centerLeft,
-                //       width: 60,
-                //       height: 60,
-                //       decoration: new BoxDecoration(
-                //         color: Colors.grey,
-                //         shape: BoxShape.circle,
-                //       ),
-                //       child: Icon(Icons.headset, color: Colors.white),
-                //     ),
-                //     // trailing: Icon(Icons.arrow_forward_ios),
-                //     onTap: () {
-                //       Navigator.push(
-                //         context,
-                //         CupertinoPageRoute(
-                //           builder: (context) {
-                //             final timeBloc = BlocProvider.of<TimeBloc>(context);
-                //             timeBloc.add(ResetTime());
-
-                //             final sceneBloc =
-                //                 BlocProvider.of<SceneBloc>(context);
-
-                //             print("OPEN CALLCARD SCENE ASSESMNT");
-                //             print(phc.callcards[index].sceneAssessment
-                //                 .otherServicesAtScene);
-                //             sceneBloc.add(
-                //               LoadScene(
-                //                   selectedPPE:
-                //                       phc.callcards[index].sceneAssessment.ppe,
-                //                   selectedEnvironment: phc.callcards[index]
-                //                       .sceneAssessment.environment,
-                //                   selectedCaseType: phc.callcards[index]
-                //                       .sceneAssessment.caseType,
-                //                   selectedPatient: phc
-                //                       .callcards[index].sceneAssessment.patient,
-                //                   selectedBackup: phc
-                //                       .callcards[index].sceneAssessment.backup,
-                //                   selectedServices: phc.callcards[index]
-                //                       .sceneAssessment.otherServicesAtScene),
-                //             );
-
-                //             final patientBloc =
-                //                 BlocProvider.of<PatientBloc>(context);
-                //             patientBloc.add(
-                //               LoadPatient(
-                //                   patients: phc.callcards[index].patients),
-                //             );
-
-                //             final teamBloc = BlocProvider.of<TeamBloc>(context);
-                //             teamBloc.add(LoadTeam(
-                //                 selectedStaffs:
-                //                     phc.callcards[index].responseTeam.staffs));
-
-                //             return CallcardTabs(
-                //               callcard_no: callInfo.callcard_no,
-                //               call_information:
-                //                   phc.callcards[index].callInformation,
-                //               response_team: phc.callcards[index].responseTeam,
-                //               response_time: phc.callcards[index].responseTime,
-                //               patients: phc.callcards[index].patients,
-                //               scene_assessment:
-                //                   phc.callcards[index].sceneAssessment,
-                //               // phcDao: widget.phcDao,
-                //             );
-                //           },
-                //         ),
-                //       );
-                //       // Navigator.pushNamed(context, "/callcarddetail");
-                //     },
-                //   )
                 : Container();
       },
     );
-    // );
   }
 
   Widget TopUserMenu() {
-    // Staff user = authBloc.getAuthorizedUser;
-    // return PopupMenuButton<WhatTodo>(
-    //   child:
-
     return FlatButton.icon(
       icon: Icon(
         Icons.exit_to_app,
@@ -765,77 +452,10 @@ class _ListCallcards extends State<ListCallcards> {
         );
       },
     );
-    // Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-    // Padding(
-    //     padding: EdgeInsets.only(right: 20),
-    //     child: Text(
-    //       "Welcome, " + user.userId,
-    //       style: TextStyle(fontFamily: "Raleway"),
-    //     )),
-    // Container(
-    //     // alignment: Alignment.centerLeft,
-    //     width: 30,
-    //     height: 30,
-    //     decoration: new BoxDecoration(
-    //       color: Colors.pinkAccent,
-    //       shape: BoxShape.circle,
-    //     ),
-    //     child: Icon(Icons.person)),
-    // SizedBox(
-    //   width: 10,
-    // )
-    // ]),
-    // onSelected: (WhatTodo result) {
-    //   if (result == WhatTodo.logout) {
-    //  authBloc.add (LogoutButtonPressed());
-    // showDialog(
-    //   context: context,
-    //   builder: (context) => new AlertDialog(
-    //     title: new Text('Are you sure?'),
-    //     content: new Text('Do you want to logout?'),
-    //     actions: <Widget>[
-    //       new FlatButton(
-    //         onPressed: () => Navigator.of(context).pop(false),
-    //         child: new Text('NO'),
-    //       ),
-    //       new FlatButton(
-    //         onPressed: () {
-    //           loginBloc.add(LogoutButtonPressed());
-
-    //           // Navigator.of(context).pop(true);
-    //         },
-    //         child: new Text('YES'),
-    //       ),
-    //     ],
-    //   ),
-    // );
-    //     }
-    //   },
-    //   itemBuilder: (BuildContext context) => <PopupMenuEntry<WhatTodo>>[
-    //     const PopupMenuItem<WhatTodo>(
-    //       value: WhatTodo.logout,
-    //       child: Text("LOGOUT      "),
-    //     ),
-    //   ],
-    // );
-    // ]);
   }
 
   Widget TopOtherMenu() {
-    // Staff user = loginBloc.getAuthorizedUser;
     return PopupMenuButton<WhatTodo>(
-      // child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      //   Padding(padding: EdgeInsets.only(right: 10), child: Text(user.userid)),
-      //   Container(
-      //       // alignment: Alignment.centerLeft,
-      //       width: 30,
-      //       height: 30,
-      //       decoration: new BoxDecoration(
-      //         color: Colors.orange,
-      //         shape: BoxShape.circle,
-      //       ),
-      //       child: Icon(Icons.person))
-      // ]),
       onSelected: (WhatTodo result) {
         if (result == WhatTodo.history) {
           Navigator.push(
@@ -867,15 +487,11 @@ class _ListCallcards extends State<ListCallcards> {
           patientBloc.add(InitPatient());
 
           Navigator.push(
-              context,
-              CupertinoPageRoute(
-                  builder: (context) => CallcardTabs(
-                      // callcard_no: "",
-                      // call_information: new CallInformation(),
-                      // response_time: new ResponseTime(),
-                      // response_team: new ResponseTeam(),
-                      // patients: List(),
-                      )));
+            context,
+            CupertinoPageRoute(
+              builder: (context) => CallcardTabs(),
+            ),
+          );
         }
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<WhatTodo>>[
@@ -903,67 +519,6 @@ class _ListCallcards extends State<ListCallcards> {
   }
 }
 
-// class MySliverAppBar extends SliverPersistentHeaderDelegate {
-//   final double expandedHeight;
-
-//   MySliverAppBar({@required this.expandedHeight});
-
-//   @override
-//   Widget build(
-//       BuildContext context, double shrinkOffset, bool overlapsContent) {
-//     return Stack(
-//       fit: StackFit.expand,
-//       overflow: Overflow.visible,
-//       children: [
-//         Container(
-//           width: double.infinity,
-//           child: SvgPicture.asset("assets/town.svg"),
-//         ),
-//         Container(
-//           width: double.infinity,
-//           child: Center(
-//             child: Opacity(
-//               opacity: shrinkOffset / expandedHeight,
-//               child: Text(
-//                 "MySliverAppBar",
-//                 style: TextStyle(
-//                   // color: Colors.white,
-//                   fontWeight: FontWeight.w700,
-//                   fontSize: 23,
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//         // Positioned(
-//         //   top: expandedHeight / 2 - shrinkOffset,
-//         //   left: MediaQuery.of(context).size.width / 4,
-//         //   child: Opacity(
-//         //     opacity: (1 - shrinkOffset / expandedHeight),
-//         //     child: Card(
-//         //       elevation: 10,
-//         //       child: SizedBox(
-//         //         height: expandedHeight,
-//         //         width: MediaQuery.of(context).size.width / 2,
-//         //         child: FlutterLogo(),
-//         //       ),
-//         //     ),
-//         //   ),
-//         // ),
-//       ],
-//     );
-//   }
-
-//   @override
-//   double get maxExtent => expandedHeight;
-
-//   @override
-//   double get minExtent => 100;
-
-//   @override
-//   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
-// }
-
 class Dashboard extends StatelessWidget {
   final username;
   final lastUpdated;
@@ -982,146 +537,87 @@ class Dashboard extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    return Column(
-        // mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      username != null
+          ? Text(
+              "Welcome, $username",
+              style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700),
+            )
+          : GreyBox(),
+      SizedBox(
+        height: 10,
+      ),
+      Text(
+        "Dashboard",
+        style: TextStyle(
+            fontFamily: "Poppins", fontSize: 24, fontWeight: FontWeight.w900),
+      ),
+      SizedBox(
+        height: 5,
+      ),
+      lastUpdated != null
+          ? Text(
+              DateFormat("dd MMM yyyy, h:mm aa ").format(
+                DateTime.parse(lastUpdated),
+              ),
+              style: TextStyle(
+                color: Colors.grey,
+              ),
+            )
+          : GreyBox(),
+      SizedBox(
+        height: 10,
+      ),
+      Row(
         children: [
-          username != null
-              ? Text(
-                  "Welcome, $username",
-                  style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700),
-                )
-              : GreyBox(),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            "Dashboard",
-            style: TextStyle(
-                fontFamily: "Poppins",
-                fontSize: 24,
-                fontWeight: FontWeight.w900),
+          Flexible(
+            flex: 1,
+            child: StatsCard(
+              labelText: "Total",
+              count: totalCount,
+              color: Colors.blue,
+            ),
           ),
           SizedBox(
-            height: 5,
+            width: 10,
           ),
-          lastUpdated != null
-              ? Text(
-                  DateFormat("dd MMM yyyy, h:mm aa ").format(
-                    DateTime.parse(lastUpdated),
-                  ),
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                )
-              : GreyBox(),
+          Flexible(
+            flex: 1,
+            child: StatsCard(
+              labelText: "Success",
+              count: successCount,
+              color: Colors.green,
+            ),
+          ),
           SizedBox(
-            height: 20,
+            width: 10,
           ),
-          // SingleChildScrollView(
-          // scrollDirection: Axis.horizontal,
-          // child:
-          Row(
-            children: [
-              Flexible(
-                flex: 1,
-                child: StatsCard(
-                  labelText: "Total",
-                  count: totalCount,
-                  color: Colors.blue[200],
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Flexible(
-                flex: 1,
-                child: StatsCard(
-                  labelText: "Success",
-                  count: successCount,
-                  color: Colors.green[200],
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Flexible(
-                flex: 1,
-                child: StatsCard(
-                  labelText: "Failed",
-                  count: failedCount,
-                  color: Color(0xffFF5B5B),
-                ),
-              ),
-            ],
+          Flexible(
+            flex: 1,
+            child: StatsCard(
+              labelText: "Failed",
+              count: failedCount,
+              color: Color(0xffED3B47),
+            ),
           ),
-          // ),
-
-          // Expanded(
-          //   // height: MediaQuery.of(context).size.height / 2,
-          //   child:
-          // ListView.builder(
-          //   // scrollDirection: Axis.horizontal,
-          //   shrinkWrap: true,
-          //   physics: NeverScrollableScrollPhysics(),
-          //   itemCount: 100,
-          //   itemBuilder: (ctx, idx) {
-          //     return Container(
-          //       width: 100,
-          //       height: 20,
-          //       child: Text("Hello"),
-          //     );
-          //   },
-          // ),
-          // )
-          // Container(
-          //   padding: EdgeInsets.symmetric(
-          //       //     horizontal: 20,
-          //       vertical: 20),
-          //   child: TextFormField(
-          //     style: TextStyle(
-          //         fontFamily: "Poppins",
-          //         fontWeight: FontWeight.w700,
-          //         fontSize: 18,
-          //         letterSpacing: 1.0),
-          //     decoration: InputDecoration(
-          //       prefixIcon: Icon(Icons.search),
-          //       suffixIcon: IconButton(
-          //         onPressed: () => searchController.clear(),
-          //         icon: Icon(Icons.cancel),
-          //       ),
-          //       floatingLabelBehavior: FloatingLabelBehavior.never,
-          //       labelText: "Search Call Card No",
-          //       labelStyle: TextStyle(
-          //         fontWeight: FontWeight.w500,
-          //       ),
-          //       border: OutlineInputBorder(
-          //         borderRadius: BorderRadius.circular(40),
-          //         borderSide: new BorderSide(),
-          //       ),
-          //     ),
-          //     controller: searchController,
-          //   ),
-          // )
-
-          // phc!=null? _buildList(phc)
-        ]);
-    // );
+        ],
+      ),
+      // ),
+    ]);
   }
 }
 
 class GreyBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
-      width: 100,
-      height: 50,
-      // padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(color: Colors.grey, shape: BoxShape.rectangle),
+      width: 300,
+      height: 30,
+      decoration:
+          BoxDecoration(color: Colors.grey[300], shape: BoxShape.rectangle),
     );
   }
 }

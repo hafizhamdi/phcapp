@@ -9,7 +9,6 @@ import 'package:phcapp/custom/drop_downlist.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/models/phc.dart';
-import 'package:phcapp/src/widgets/time_card.dart';
 
 enum Response {
   dispatch,
@@ -93,9 +92,6 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
   TimeBloc timeBloc;
   ResponseTime responseTime;
 
-  TextEditingController dispatchDateCtl;
-  TextEditingController dispatchTimeCtl;
-  TextEditingController dispatchController;
   StreamController<String> abortMissionController =
       new StreamController.broadcast();
   String missionSelected = " ";
@@ -120,159 +116,67 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
     missionSelected = widget.reasonAbort;
   }
 
-  int dynamicScreen(size) {
-    if (size > 900) {
-      return 3;
-    } else if (size > 600) {
-      return 2;
-    }
-
-    return 1;
-  }
-
-  void _onDateDispatch() {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2018),
-      lastDate: DateTime(2030),
-      builder: (BuildContext context, Widget child) {
-        return Theme(
-          data: ThemeData.dark(),
-          child: child,
-        );
-      },
-    );
-  }
-
-  void _onTimeDispatch() {
-    var tod = showTimePicker(
-      initialTime: TimeOfDay.now(),
-      context: context,
-    );
-
-    // setState(() {
-
-    //   var curDate = DateTime.now();
-    //   widget.dispatchTime = DateTime(curDate.year, curDate.month, curDate.day, tod.hour );
-    //   responseTime.dispatchTime = widget.dispatchTime;
-    //   timeBloc.add(AddTime(responseTime: responseTime));
-    // });
-  }
-
   @override
   Widget build(BuildContext context) {
     print("1 $missionSelected");
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          // width: double.infinity,
-          // color: Colors.grey,
-          // padding: EdgeInsets.symmetric(vertical: 40),
+      body: Container(
+        // width: double.infinity,
+        // color: Colors.grey,
+        // padding: EdgeInsets.symmetric(vertical: 40),
 
 // Container(
-          // height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                Color(0xFF3383CD),
-                Color(0xFF11249F),
-              ],
-            ),
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Color(0xFF3383CD),
+              Color(0xFF11249F),
+            ],
           ),
-          // child:
+        ),
+        // child:
 
-          // child: Center(
-          //   child: Container(
-          // constraints: BoxConstraints(maxWidth: 700),
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(20.0),
-              ),
-            ),
-            margin: EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom: 12),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(10.0),
-              child: Column(
-                  // mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
+        child: Center(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 700),
+            child: SingleChildScrollView(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                margin:
+                    EdgeInsets.only(left: 12.0, right: 12, top: 40, bottom: 12),
+                child: Container(
+                  padding: EdgeInsets.all(10.0),
+                  child:
+                      Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                    Center(child: HeaderSection("Response Time")),
                     SizedBox(
                       height: 10,
                     ),
-                    Center(child: HeaderSection("Response Time")),
-                    // Expanded(
-                    // child:
-                    CustomScrollView(
-                      physics: BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      primary: false,
-                      slivers: <Widget>[
-                        SliverPadding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          sliver:
-                              // SliverChildListDelegate()
-                              SliverGrid.count(crossAxisCount: 3,
-                                  // crossAxisCount: dynamicScreen(
-                                  //     MediaQuery.of(context).size.width),
-                                  // mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                TimeCard(
-                                  labelText: "Dispatch Time",
-                                  datetime: widget.dispatchTime,
-                                  onTime: _onTimeDispatch,
-                                  onDate: _onDateDispatch,
-                                  timeController: dispatchTimeCtl,
-                                  dateController: dispatchDateCtl,
-                                ),
-                                // TimeCard(
-                                //   labelText: "Enroute Time",
-                                //   datetime: widget.enrouteTime,
-                                //   onTime: _onTimeDispatch,
-                                //   onDate: _onDateDispatch,
-                                // ),
-                                // TimeCard(
-                                //   labelText: "At Scene Time",
-                                //   datetime: widget.atSceneTime,
-                                //   onTime: _onTimeDispatch,
-                                //   onDate: _onDateDispatch,
-                                // ),
-                                // TimeCard(
-                                //   labelText: "At Patient Time",
-                                //   datetime: widget.atPatientTime,
-                                //   onTime: _onTimeDispatch,
-                                //   onDate: _onDateDispatch,
-                                // ),
-                                // TimeCard(
-                                //   labelText: "Transporting Time",
-                                //   datetime: widget.transportingTime,
-                                //   onTime: _onTimeDispatch,
-                                //   onDate: _onDateDispatch,
-                                // ),
-                                // TimeCard(
-                                //   labelText: "Reroute Time",
-                                //   datetime: widget.rerouteTime,
-                                //   onTime: _onTimeDispatch,
-                                //   onDate: _onDateDispatch,
-                                // ),
-                                // TimeCard(
-                                //   labelText: "At Hospital Time",
-                                //   datetime: widget.atHospitalTime,
-                                //   onTime: _onTimeDispatch,
-                                //   onDate: _onDateDispatch,
-                                // ),
-                              ]),
-                        ),
-                        // SizedBox(
-                        //   height: 20,
-                        // ),
-                        // Container(
-                        //     // width: 500,
-                        //     child: DropDownList(
-                        //         "Mission abort", MISSION_ABORT, missionSelected)
+                    _buildCardTime(Response.dispatch, widget.dispatchTime,
+                        _onPressedDispatch),
+                    _buildCardTime(Response.enroute, widget.enrouteTime,
+                        _onPressedEnroute),
+                    _buildCardTime(Response.atScene, widget.atSceneTime,
+                        _onPressedAtScene),
+                    _buildCardTime(Response.atPatient, widget.atPatientTime,
+                        _onPressedAtPatient),
+                    _buildCardTime(Response.transport, widget.transportingTime,
+                        _onPressedTransporting),
+                    _buildCardTime(Response.atHospital, widget.atHospitalTime,
+                        _onPressedAtHospital),
+                    _buildCardTime(Response.reroute, widget.rerouteTime,
+                        _onPressedReroute),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                        // width: 500,
+                        child: DropDownList(
+                            "Mission abort", MISSION_ABORT, missionSelected)
                         //     child: CustomDropDown(
                         //       labelText: "Mission abort",
                         //       items: [
@@ -285,30 +189,13 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
                         //       controller: _abortMissionController,
                         //       initialData: "stand down",
                         // ),
-                        // )
-                      ],
-                    ),
-                    // _buildCardTime(Response.dispatch, widget.dispatchTime,
-                    //     _onPressedDispatch),
-                    // _buildCardTime(Response.enroute, widget.enrouteTime,
-                    //     _onPressedEnroute),
-                    // _buildCardTime(Response.atScene, widget.atSceneTime,
-                    //     _onPressedAtScene),
-                    // _buildCardTime(Response.atPatient, widget.atPatientTime,
-                    //     _onPressedAtPatient),
-                    // _buildCardTime(Response.transport, widget.transportingTime,
-                    //     _onPressedTransporting),
-                    // _buildCardTime(Response.atHospital, widget.atHospitalTime,
-                    //     _onPressedAtHospital),
-                    // _buildCardTime(Response.reroute, widget.rerouteTime,
-                    //     _onPressedReroute),
-                    // ),
+                        )
                   ]),
+                ),
+              ),
             ),
           ),
         ),
-        // ),
-        // ),
       ),
     );
   }
@@ -345,13 +232,13 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
     }
   }
 
-  // void _onPressedDispatch() {
-  //   setState(() {
-  //     widget.dispatchTime = DateTime.now();
-  //     responseTime.dispatchTime = widget.dispatchTime;
-  //     timeBloc.add(AddTime(responseTime: responseTime));
-  //   });
-  // }
+  _onPressedDispatch() {
+    setState(() {
+      widget.dispatchTime = DateTime.now();
+      responseTime.dispatchTime = widget.dispatchTime;
+      timeBloc.add(AddTime(responseTime: responseTime));
+    });
+  }
 
   _onPressedEnroute() {
     setState(() {
@@ -439,17 +326,11 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
                 color: Colors.blueAccent,
               ),
               onPressed: () {
-                print("initialdata $initialData");
-                final result = showTimePicker(
-                  initialTime: TimeOfDay.now(),
+                showCupertinoModalPopup(
                   context: context,
+                  builder: (context) =>
+                      _timerPopup(labelText, initialData, selector),
                 );
-
-                // showCupertinoModalPopup(
-                //   context: context,
-                //   builder: (context) =>
-                //       _timerPopup(labelText, initialData, selector),
-                // );
               },
             ),
             SizedBox(
@@ -480,44 +361,40 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
 
     print("initialData: $initialData");
     return Container(
-      // width: 500,
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: StreamBuilder(
-          stream: controller.stream,
-          initialData: initialData,
-          builder: (context, snapshot) {
-            print("Streambuilder value");
-            print(snapshot.data);
-            // child:
+        // width: 500,
+        child: Padding(
+            padding: EdgeInsets.all(16),
+            child: StreamBuilder(
+                stream: controller.stream,
+                initialData: initialData,
+                builder: (context, snapshot) {
+                  print("Streambuilder value");
+                  print(snapshot.data);
+                  // child:
 
-            return DropdownButtonFormField(
-              isDense: true,
-              items: list.map((String dropDownStringItem) {
-                return DropdownMenuItem<String>(
-                    child: Text(dropDownStringItem), value: dropDownStringItem);
-              }).toList(),
-              onChanged: (valueChanged) {
-                print("WHATS IS INDESIDE:$valueChanged");
-                controller.sink.add(valueChanged);
-                widget.reasonAbort = valueChanged;
-                responseTime.reasonAbort = widget.reasonAbort;
-                timeBloc.add(AddTime(responseTime: responseTime));
-              },
-              value: snapshot.data,
-              decoration: InputDecoration(
-                labelText: labelText,
-                fillColor: Colors.white,
-                border: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(10.0),
-                  borderSide: new BorderSide(),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
+                  return DropdownButtonFormField(
+                      isDense: true,
+                      items: list.map((String dropDownStringItem) {
+                        return DropdownMenuItem<String>(
+                            child: Text(dropDownStringItem),
+                            value: dropDownStringItem);
+                      }).toList(),
+                      onChanged: (valueChanged) {
+                        print("WHATS IS INDESIDE:$valueChanged");
+                        controller.sink.add(valueChanged);
+                        widget.reasonAbort = valueChanged;
+                        responseTime.reasonAbort = widget.reasonAbort;
+                        timeBloc.add(AddTime(responseTime: responseTime));
+                      },
+                      value: snapshot.data,
+                      decoration: InputDecoration(
+                          labelText: labelText,
+                          fillColor: Colors.white,
+                          border: new OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(10.0),
+                            borderSide: new BorderSide(),
+                          )));
+                })));
   }
 
   _timerPopup(labelText, initialData, selector) {
@@ -554,6 +431,7 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
                         children: [titleButton, doneButton]))),
             Expanded(
                 child: CupertinoDatePicker(
+              backgroundColor: Colors.white,
               mode: CupertinoDatePickerMode.dateAndTime,
               initialDateTime: initialData,
               onDateTimeChanged: (dateTime) {

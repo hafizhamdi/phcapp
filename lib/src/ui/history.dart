@@ -73,7 +73,13 @@ class _History extends State<History> {
       itemBuilder: (BuildContext context) => <PopupMenuEntry<WhatTodo>>[
         const PopupMenuItem<WhatTodo>(
           value: WhatTodo.clearAllHistory,
-          child: Text("CLEAR ALL HISTORY"),
+          child: ListTile(
+            title: Text(
+              "CLEAR ALL HISTORY",
+              style: TextStyle(fontFamily: "Poppins"),
+            ),
+            leading: Icon(Icons.delete),
+          ),
         ),
         // const PopupMenuItem<WhatTodo>(
         //   value: WhatTodo.history,
@@ -158,8 +164,8 @@ class _History extends State<History> {
                   print(state);
                   print("historystate");
                   if (state is HistoryLoaded) {
-                    return ListView.separated(
-                      separatorBuilder: (context, index) => Divider(),
+                    return ListView.builder(
+                      // separatorBuilder: (context, index) => Divider(),
                       // color: Colors.grey,
                       // ),
                       itemCount: state.listHistory.length,
