@@ -169,7 +169,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
   }
 
   Stream<PatientState> _addSceneToState(AddSceneAssessment event) async* {
-    List<String> otherServices = List();
+    OtherServices otherServices = OtherServices();
     if (event.sceneAssessment.otherServicesAtScene == null) {
       otherServices = event.sceneAssessment.otherServicesAtScene;
     }

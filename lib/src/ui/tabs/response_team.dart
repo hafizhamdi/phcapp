@@ -395,7 +395,7 @@ class _TeamList extends State<TeamList> {
 
                                       setState(() {
                                         teamBloc.add(
-                                            RemoveTeam(removeIndex: index));
+                                            RemoveTeam(staff: widget.selectedStaffs[index]));
                                       });
                                     },
                                   ),

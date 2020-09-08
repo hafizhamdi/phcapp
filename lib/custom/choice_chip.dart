@@ -86,22 +86,24 @@ class SingleChoiceChip extends State<SingleOption> {
                 selectedColor: Colors.pink[200],
                 onSelected: (selected) {
                   setState(() {
-                    // if (widget.multiple == true) {
-                    selectedItems.contains(widget.stateList[index])
-                        ? selectedItems.remove(item)
-                        : selectedItems.add(widget.stateList[index]);
-                    // } else {
-                    //   print("multiple false this single");
-                    //   if (selectedItems.length < 1) {
-                    //     selectedItems.contains(widget.stateList[index])
-                    //         ? selectedItems.remove(item)
-                    //         : selectedItems.add(widget.stateList[index]);
-                    //   } else {
-                    //     selectedItems.remove(item);
-                    //   }
-                    // }
-                    // _value = selected ? index : null;
-
+                    if (widget.multiple == true) {
+                      selectedItems.contains(widget.stateList[index])
+                          ? selectedItems.remove(item)
+                          : selectedItems.add(widget.stateList[index]);
+                    } else {
+                      if (selectedItems.length < 1) {
+                        selectedItems.contains(widget.stateList[index])
+                            ? selectedItems.remove(widget.stateList[index])
+                            : selectedItems.add(widget.stateList[index]);
+                      } else {
+                        if (selected) {
+                          selectedItems.removeLast();
+                          selectedItems.add(widget.stateList[index]);
+                        } else {
+                          selectedItems.remove(widget.stateList[index]);
+                        }
+                      }
+                    }
                     // print("multiple");
                     // print(multiple);
                     // if (multiple == true) {
