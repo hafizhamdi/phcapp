@@ -45,12 +45,21 @@ class _Settings extends State<Settings> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Unable to sync"),
-            content: Text("Server is down"),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(20.0),
-              ),
-            ),
+            content: Text(
+                "Server is down or you have limited internet connectivity."),
+            // shape: RoundedRectangleBorder(
+            //   borderRadius: BorderRadius.all(
+            //     Radius.circular(20.0),
+            // ),
+            // ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
           );
         },
       );
@@ -85,20 +94,20 @@ class _Settings extends State<Settings> {
       appBar: AppBar(
         title: Text("Settings"),
       ),
-      body: BlocConsumer<SettingBloc, SettingState>(
+      body: BlocBuilder<SettingBloc, SettingState>(
         // )<AuthBloc, AuthState>(
         // bloc: authBloc,
-        listener: (context, state) {
-          print("inside listener");
-          // if (state is LoadedSetting) {
-          //   print(state);
-          //   showError();
-          //   print("im authunitialized");
-          // } else
-          if (state is LoadedSetting) {
-            showSuccess();
-          }
-        },
+        // listener: (context, state) {
+        //   print("inside listener");
+        //   // if (state is LoadedSetting) {
+        //   //   print(state);
+        //   //   showError();
+        //   //   print("im authunitialized");
+        //   // } else
+        //   if (state is LoadedSetting) {
+        //     showSuccess();
+        //   }
+        // },
         builder: (context, state) {
           return
               // child:
@@ -156,7 +165,7 @@ class _Settings extends State<Settings> {
     );
   }
 
-  appChild() => Text("1.22.08.20");
+  appChild() => Text("2.1.09.20");
 
   toggleButton(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -237,31 +246,43 @@ class _Settings extends State<Settings> {
 
   updateButton() {
     // showError();
-    return FlatButton(
-      color: Colors.blue,
-      child: Text("Sync Now"),
-      onPressed: () {
-        var date = DateFormat("dd/MM/yyyy h:mm aaa").format(DateTime.now());
-
-        // PhcRepository phcRepository = PhcRepository(
-        //     phcApiClient: PhcApiClient(
-        //         httpClient: http.Client(),
-        //         environment: settingBloc.state.environment ?? myEnv)
-        //     // settingBloc.state.environment != null
-        new AuthBloc(
+    return BlocConsumer<AuthBloc, AuthState>(
+        bloc: AuthBloc(
           phcRepository: PhcRepository(
             phcApiClient: PhcApiClient(
                 httpClient: http.Client(),
                 environment: settingBloc.state.environment),
           ),
-        )..add(AppStarted());
+        )..add(AppStarted()),
+        listener: (context, state) {
+          if (state is AuthUnitialized) {
+            showError();
+          } else if (state is AuthInitialized) {
+            showSuccess();
+          }
+        },
+        builder: (context, state) {
+          return FlatButton(
+            color: Colors.blue,
+            child: Text("Sync Now"),
+            onPressed: () {
+              var date =
+                  DateFormat("dd/MM/yyyy h:mm aaa").format(DateTime.now());
 
-        // authBloc.add(AppStarted());
-        setState(() {
-          settingBloc.add(PressSyncButton(lastSynced: "Last sync at $date"));
+              // PhcRepository phcRepository = PhcRepository(
+              //     phcApiClient: PhcApiClient(
+              //         httpClient: http.Client(),
+              //         environment: settingBloc.state.environment ?? myEnv)
+              //     // settingBloc.state.environment != null
+
+              // authBloc.add(AppStarted());
+              setState(() {
+                settingBloc
+                    .add(PressSyncButton(lastSynced: "Last sync at $date"));
+              });
+            },
+          );
         });
-      },
-    );
   }
 }
 

@@ -67,7 +67,7 @@ class CardList extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              callcardNo,
+                              callcardNo != null ? callcardNo : '',
                               style: TextStyle(
                                   // fontFamily: "Poppins",
                                   fontSize: 18,
@@ -77,9 +77,11 @@ class CardList extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            DateFormat("dd/MM/yyyy, h:mm a").format(
-                              DateTime.parse(receivedCall),
-                            ),
+                            receivedCall != null
+                                ? DateFormat("dd/MM/yyyy, h:mm a").format(
+                                    DateTime.parse(receivedCall),
+                                  )
+                                : '',
                           )
                         ]),
                     SizedBox(
@@ -93,7 +95,7 @@ class CardList extends StatelessWidget {
                       SizedBox(width: 10),
                       Expanded(
                           child: Text(
-                        address != "" ? address : "No location",
+                        address != null ? address : "No location",
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.grey[700],
@@ -110,7 +112,7 @@ class CardList extends StatelessWidget {
                       SizedBox(width: 10),
                       Expanded(
                           child: Text(
-                        plateNo,
+                        plateNo != null ? plateNo : '',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.grey[700],

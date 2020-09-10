@@ -162,19 +162,29 @@ class _VitalDetailState extends State<VitalDetail> {
       context, NumberPicker ePicker, vPicker, mPicker, totalPicker, title) {
     return Container(
         margin: EdgeInsets.all(5),
-        padding: EdgeInsets.only(left: 8, top: 8),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
+          color: Colors.white,
+            boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x80000000).withOpacity(0.2),
+                                    blurRadius: 10.0,
+                                    offset: Offset(0.0, 0.0),
+                                  ),
+                                ],
             borderRadius: BorderRadius.circular(10),
             shape: BoxShape.rectangle,
-            border: Border.all(color: Colors.grey, width: 0.5)),
+            // border: Border.all(color: Colors.grey, width: 0.5)
+            
+            ),
         width: 230,
-        height: 220,
+        // height: 220,
         child: Column(
           children: <Widget>[
             Row(
               children: <Widget>[
                 Text(title,
-                    textAlign: TextAlign.left, style: TextStyle(fontSize: 18)
+                    textAlign: TextAlign.left, style: TextStyle(fontSize: 18, fontFamily: "Poppins", fontWeight: FontWeight.w600)
                     // style: TextStyle(color: Colors.white),
                     ),
               ],
@@ -195,6 +205,7 @@ class _VitalDetailState extends State<VitalDetail> {
                     style: TextStyle(
                       fontSize: 30,
 
+                      fontWeight: FontWeight.w900
                       // color: Colors.purple[200]
                     ),
                   ),
@@ -234,6 +245,7 @@ class _VitalDetailState extends State<VitalDetail> {
                     vPicker.getValue != null ? vPicker.getValue.toString() : '',
                     style: TextStyle(
                       fontSize: 30,
+                      fontWeight: FontWeight.w900
                       // color: Colors.purple[200]
                     ),
                   ),
@@ -275,6 +287,8 @@ vPicker.setValue(5);
                     mPicker.getValue != null ? mPicker.getValue.toString() : '',
                     style: TextStyle(
                       fontSize: 30,
+                      
+                      fontWeight: FontWeight.w900
                       // color: Colors.purple[200]
                     ),
                   ),
@@ -305,7 +319,7 @@ vPicker.setValue(5);
                       child: Text(
                         "Total",
                         textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 16, fontFamily: "Poppins"),
 
                         // style: TextStyle(color: Colors.white),
                       )),
@@ -316,6 +330,7 @@ vPicker.setValue(5);
 
                     style: TextStyle(
                       fontSize: 30,
+                      fontWeight: FontWeight.w900
                       // color: Colors.purple[200]
                     ),
                     // )
@@ -379,22 +394,31 @@ vPicker.setValue(5);
                         // });
                       },
                       children: List<Widget>.generate(
-                          range, (int index) => Text(index.toString())))),
-            ]));
+                          range, (int index) => Text(index.toString(),),),),),
+            ],),);
   }
 
   Widget _buildItemPupil(
       context, NumberPicker picker, title, itemCount, initialData, list) {
     return Container(
         margin: EdgeInsets.all(5),
-        padding: EdgeInsets.only(left: 8, top: 8),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
+          color: Colors.white,
           borderRadius: BorderRadius.circular(10),
           shape: BoxShape.rectangle,
-          border: Border.all(color: Colors.grey, width: 0.5),
+          
+            boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x80000000).withOpacity(0.2),
+                                    blurRadius: 10.0,
+                                    offset: Offset(0.0, 0.0),
+                                  ),
+                                ],
+          // border: Border.all(color: Colors.grey, width: 0.5),
         ),
         width: 230,
-        height: 200,
+        // height: 200,
         child: Column(
           children: <Widget>[
             Row(
@@ -402,7 +426,7 @@ vPicker.setValue(5);
                 Padding(
                   padding: EdgeInsets.only(bottom: 10),
                   child: Text(title,
-                      textAlign: TextAlign.left, style: TextStyle(fontSize: 18)
+                      textAlign: TextAlign.left, style: TextStyle(fontSize: 18, fontFamily: "Poppins", fontWeight: FontWeight.w600)
                       // style: TextStyle(color: Colors.white),
                       ),
                 ),
@@ -415,6 +439,7 @@ vPicker.setValue(5);
                     picker.getValue != null ? picker.getValue.toString() : '',
                     style: TextStyle(
                       fontSize: 40,
+                      fontWeight: FontWeight.w900
                       // color: Colors.purple[200]
                     ),
                   ),
@@ -441,7 +466,7 @@ vPicker.setValue(5);
                     Text(
                       "Response to light",
                       textAlign: TextAlign.left,
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(color: Colors.grey, fontFamily: "Poppins"),
                     ),
                   ],
                 )),
@@ -475,13 +500,23 @@ vPicker.setValue(5);
   Widget _buildItemOption(context, NumberPicker picker, title, list) {
     return Container(
       margin: EdgeInsets.all(5),
-      padding: EdgeInsets.only(left: 8, top: 8),
+      padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
+        color: Colors.white,
           borderRadius: BorderRadius.circular(10),
           shape: BoxShape.rectangle,
-          border: Border.all(color: Colors.grey, width: 0.5)),
+          
+            boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x80000000).withOpacity(0.2),
+                                    blurRadius: 10.0,
+                                    offset: Offset(0.0, 0.0),
+                                  ),
+                                ],
+          // border: Border.all(color: Colors.grey, width: 0.5)
+          ),
       width: 230,
-      height: 200,
+      // height: 200,
       child: Column(
         children: <Widget>[
           Row(
@@ -489,7 +524,7 @@ vPicker.setValue(5);
               Padding(
                   padding: EdgeInsets.only(bottom: 10),
                   child: Text(title,
-                      textAlign: TextAlign.left, style: TextStyle(fontSize: 18)
+                      textAlign: TextAlign.left, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: "Poppins")
                       // style: TextStyle(color: Colors.white),
                       )),
             ],
@@ -501,6 +536,8 @@ vPicker.setValue(5);
                   picker.getOption != null ? picker.getOption : '',
                   style: TextStyle(
                     fontSize: 25,
+                    color: picker.getOption == "Good"? Colors.green: Colors.orange,
+                    fontWeight: FontWeight.w900
                     // color: Colors.purple[200]
                   ),
                 ),
@@ -533,13 +570,23 @@ vPicker.setValue(5);
     if (title == "MAP" || title == "Shock Index" || title == "Pulse Pressure") {
       return Container(
           margin: EdgeInsets.all(5),
-          padding: EdgeInsets.only(left: 8, top: 8),
+          padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x80000000).withOpacity(0.2),
+                                    blurRadius: 10.0,
+                                    offset: Offset(0.0, 0.0),
+                                  ),
+                                ],
               borderRadius: BorderRadius.circular(10),
               shape: BoxShape.rectangle,
-              border: Border.all(color: Colors.grey, width: 0.5)),
+              // border: Border.all(color: Colors.grey, width: 0.5)
+              
+              ),
           width: 230,
-          height: 200,
+          // height: 200,
           child: Column(children: <Widget>[
             Row(
               children: <Widget>[
@@ -547,9 +594,9 @@ vPicker.setValue(5);
                     padding: EdgeInsets.only(bottom: 10),
                     child: Text(title,
                         textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 18)
+                        style: TextStyle(fontSize: 18, fontFamily: "Poppins", fontWeight: FontWeight.w600),
                         // style: TextStyle(color: Colors.white),
-                        )),
+                        ),),
               ],
             ),
             
@@ -562,10 +609,11 @@ vPicker.setValue(5);
                     //     controller.firstValue, controller.secondValue),
                     style: TextStyle(
                       fontSize: 40,
+                      fontWeight: FontWeight.w900
                     ),
                   ),
                 ]):Container()
-          ])); //);
+          ],),); //);
     }
 
     //use attribute option to store decimal value
@@ -575,13 +623,23 @@ vPicker.setValue(5);
         : picker.value != null ? picker.value.toString() : '';
     return Container(
       margin: EdgeInsets.all(5),
-      padding: EdgeInsets.only(left: 8, top: 8),
+      padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
+        
+            color: Colors.white,
+            boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x80000000).withOpacity(0.2),
+                                    blurRadius: 10.0,
+                                    offset: Offset(0.0, 0.0),
+                                  ),
+                                ],
           borderRadius: BorderRadius.circular(10),
           shape: BoxShape.rectangle,
-          border: Border.all(color: Colors.grey, width: 0.5)),
+          // border: Border.all(color: Colors.grey, width: 0.5),
+          ),
       width: 230,
-      height: 200,
+      // height: 200,
       child: Column(
         children: <Widget>[
           Row(
@@ -589,13 +647,13 @@ vPicker.setValue(5);
             // crossAxisAlignment: CrossAxisAlignment.,
             children: <Widget>[
               Text(title,
-                      textAlign: TextAlign.left, style: TextStyle(fontSize: 18),
+                      textAlign: TextAlign.left, style: TextStyle(fontSize: 18, fontFamily: "Poppins", fontWeight: FontWeight.w600),
                       
                       // style: TextStyle(color: Colors.white),
                       // ),
                       ),
             
-            Padding(padding:EdgeInsets.only(right: 10),child:Text(unit, style: TextStyle(color: Colors.grey,),),)],
+            Padding(padding:EdgeInsets.only(right: 10),child:Text(unit, style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w600),),)],
           ),
           SizedBox(height: 10,),
           ((title == "Blood Ketone" && picker.hi == false) ||
@@ -612,6 +670,7 @@ vPicker.setValue(5);
                         //     controller.firstValue, controller.secondValue),
                         style: TextStyle(
                             fontSize: 40,
+                            fontWeight: FontWeight.w900,
                             color: picker.getAbnormal == true
                                 ? Colors.redAccent
                                 : null),
@@ -671,6 +730,7 @@ vPicker.setValue(5);
                             //     controller.firstValue, controller.secondValue),
                             style: TextStyle(
                                 fontSize: 40,
+                                fontWeight: FontWeight.w900,
                                 color: picker.getAbnormal == true
                                     ? Colors.redAccent
                                     : null),
@@ -885,7 +945,7 @@ vPicker.setValue(5);
                         // });
                       },
                       children: List<Widget>.generate(
-                          200, (int index) => Text(index.toString())))),
+                          200, (int index) => Text(index.toString(),),),),),
               Expanded(
                   child: CupertinoPicker(
                     backgroundColor: Colors.white,
@@ -1021,9 +1081,11 @@ vPicker.setValue(5);
             margin: EdgeInsets.all(12.0),
             child: Container(
               // child: Container(
-              //     alignment: Alignment.center,
-              //     padding: EdgeInsets.all(10),
+                  // alignment: Alignment.center,
+                  // padding: EdgeInsets.all(10),
               child: Wrap(
+                spacing: 10,
+                runSpacing: 10,
                 alignment: WrapAlignment.center,
                 children: <Widget>[
                   Row(
@@ -1160,11 +1222,11 @@ vPicker.setValue(5);
                                   DateFormat("h:mm aa")
                                       .format(widget.vitalSign.created)))),
                   _buildItem(context, bpSysPicker, "BP Systolic", 300, 120, "mmHg"),
+                  _buildItem(context, prPicker, "PR", 200, 70, "bpm"),
                   _buildItem(context, bpDiasPicker, "BP Diastolic", 200, 80,"mmHg"),
                   // _buildItem(
                   //     context, "BP Diastolic", bpDiasController, 200),
                   _buildItem(context, mapPicker, "MAP", 200, 100, "bpm"),
-                  _buildItem(context, prPicker, "PR", 200, 70, "bpm"),
                   _buildItem(context, ppPicker, "Pulse Pressure", 200, 40,"bpm"),
                   _buildItemOption(context, pvPicker, "Pulse Volume", pvList),
                   _buildItemOption(context, crtPicker, "CRT", crtList),

@@ -105,7 +105,7 @@ class _History extends State<History> {
       ),
       body: Center(
         child: Container(
-          color: Colors.white,
+          // color: Colors.white,
           padding: EdgeInsets.all(20),
           constraints: BoxConstraints(maxWidth: 700),
           child:

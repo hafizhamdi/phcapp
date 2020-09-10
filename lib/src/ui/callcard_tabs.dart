@@ -689,7 +689,7 @@ class _CallcardTabs extends State<CallcardTabs> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Finally, Send",
+                                "Send",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 24),
                               ),

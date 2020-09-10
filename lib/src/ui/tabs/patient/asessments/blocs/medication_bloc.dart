@@ -46,6 +46,8 @@ class LoadedMedication extends MedicationState {
 
 class EmptyMedication extends MedicationState {}
 
+class LoadingMedication extends MedicationState {}
+
 class MedicationBloc extends Bloc<MedicationEvent, MedicationState> {
   @override
   MedicationState get initialState => EmptyMedication();
@@ -68,6 +70,8 @@ class MedicationBloc extends Bloc<MedicationEvent, MedicationState> {
 
   Stream<MedicationState> mapUpdateMedicationToState(
       UpdateMedication event) async* {
+    yield LoadingMedication();
+
     yield LoadedMedication(medicationAssessment: event.medicationAssessment);
   }
 }

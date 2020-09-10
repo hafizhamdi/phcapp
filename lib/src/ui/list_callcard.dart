@@ -182,8 +182,8 @@ class _ListCallcards extends State<ListCallcards> {
 
                             Container(
                               // margin: EdgeInsets.symmetric(
-                              //     //     //     horizontal: 20,
-                              //     vertical: 10),
+                              //     // horizontal: 20,
+                              //     vertical: 20),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(40),
                                 color: Provider.of<ThemeProvider>(context)
@@ -205,6 +205,7 @@ class _ListCallcards extends State<ListCallcards> {
                                     fontSize: 18,
                                     letterSpacing: 1.0),
                                 decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.only(bottom: 20),
                                     prefixIcon: Padding(
                                       padding:
                                           EdgeInsets.only(left: 18, right: 10),

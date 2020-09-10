@@ -356,12 +356,21 @@ class _CPRItems extends State<CPRItems>
 
     final tempLog = Log(
         value: selectedItems,
-        reason: widget.cprLog != null ? widget.cprLog.log.reason : '');
+        reason: widget.cprLog != null
+            ? widget.cprLog.log != null ? widget.cprLog.log.reason : ''
+            : '');
     final tempCPROutcome = CPROutcome(
         value: selectedItems,
-        transported:
-            widget.cprLog != null ? widget.cprLog.cprOutcome.transported : '',
-        tor: widget.cprLog != null ? widget.cprLog.cprOutcome.tor : '');
+        transported: widget.cprLog != null
+            ? widget.cprLog.cprOutcome != null
+                ? widget.cprLog.cprOutcome.transported
+                : ''
+            : '',
+        tor: widget.cprLog != null
+            ? widget.cprLog.cprOutcome != null
+                ? widget.cprLog.cprOutcome.tor
+                : ''
+            : '');
 
     if (item == "CPR") {
       setState(() {

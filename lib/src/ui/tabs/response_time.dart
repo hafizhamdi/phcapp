@@ -299,9 +299,7 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
             child: Text(
               labelText,
               style: TextStyle(
-                  color: Colors.grey,
-                  // fontSize: 18,
-                  fontFamily: "OpenSans"),
+                  color: Colors.grey, fontSize: 18, fontFamily: "Poppins"),
             ),
           ),
           subtitle: Text(
@@ -309,8 +307,11 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
                 ? DateFormat("HH:mm").format(initialData)
                 : "No data",
             style: TextStyle(
+              color: Colors.black,
               // fontFamily: "OpenSans",
-              fontSize: initialData != null ? 30 : 16,
+              fontSize: initialData != null ? 50 : 16,
+              // fontSize: 18,
+              // fontFamily: "Poppins"
               // fontWeight: FontWeight.bold,
               // color:
               //     // initialData != null ?
