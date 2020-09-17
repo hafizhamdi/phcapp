@@ -27,7 +27,7 @@ const DRUOT = ["Atropine"];
 const AIRWAY = ["BVM", "LMA", "ETT"];
 const RHYTHMNS = ["Asystole", "PEA"];
 const RHYTHMOT = ["Tachyarythmias", "Bradyarrythmias"];
-const ANALYSIS = ["Shockable", "Non-Shockable", "Other"];
+const ANALYSIS = ["Non-Shockable", "Shockable", "Other"];
 const _cpr = ["Required", "Not Required"];
 const _cpr_outcome = ["Transported", "Termination of Resusitation (TOR)"];
 const _cpr_not_required = [
@@ -100,7 +100,7 @@ class _CPRItems extends State<CPRItems>
   String selectCprStart;
   String selectCprStop;
   String selectRosc;
-  String selectAnalysis;
+  String selectAnalysis = "Non-Shockable";
   String selectRhythm;
   String selectRhythmNS;
   String selectRhythmO;
@@ -349,40 +349,44 @@ class _CPRItems extends State<CPRItems>
   }
 
   List<String> cprList = new List<String>();
+
   List<String> cprOutcomeList = new List<String>();
 
   void callback(String item, List<String> selectedItems) {
     print("callback");
 
-    final tempLog = Log(
-        value: selectedItems,
-        reason: widget.cprLog != null
-            ? widget.cprLog.log != null ? widget.cprLog.log.reason : ''
-            : '');
-    final tempCPROutcome = CPROutcome(
-        value: selectedItems,
-        transported: widget.cprLog != null
-            ? widget.cprLog.cprOutcome != null
-                ? widget.cprLog.cprOutcome.transported
-                : ''
-            : '',
-        tor: widget.cprLog != null
-            ? widget.cprLog.cprOutcome != null
-                ? widget.cprLog.cprOutcome.tor
-                : ''
-            : '');
-
     if (item == "CPR") {
+      final tempLog = Log(
+          value: selectedItems,
+          reason: widget.cprLog != null
+              ? widget.cprLog.log != null ? widget.cprLog.log.reason : ''
+              : '');
       setState(() {
         cprBloc.add(AddCpr(log: tempLog, id: "log_in_cpr"));
         cprLog.log = tempLog;
+
+        cprList = selectedItems;
       });
     }
 
     if (item == "CPR Outcome") {
+      final tempCPROutcome = CPROutcome(
+          value: selectedItems,
+          transported: widget.cprLog != null
+              ? widget.cprLog.cprOutcome != null
+                  ? widget.cprLog.cprOutcome.transported
+                  : ''
+              : '',
+          tor: widget.cprLog != null
+              ? widget.cprLog.cprOutcome != null
+                  ? widget.cprLog.cprOutcome.tor
+                  : ''
+              : '');
       setState(() {
         cprBloc.add(AddCpr(cprOutcome: tempCPROutcome, id: "cpr_outcome"));
         cprLog.cprOutcome = tempCPROutcome;
+
+        cprOutcomeList = selectedItems;
       });
     }
   }
@@ -558,7 +562,7 @@ class _CPRItems extends State<CPRItems>
                               callback,
                               state.cprLog.cprOutcome != null
                                   ? state.cprLog.cprOutcome.value
-                                  : cprList,
+                                  : cprOutcomeList,
                               state.cprLog.cprOutcome != null
                                   ? state.cprLog.cprOutcome.transported
                                   : null,
@@ -673,6 +677,9 @@ class _CPRItems extends State<CPRItems>
   // }
 
   addRhythmDialog(RhythmAnalysis rhythmAnalysis, index) {
+    setState(() {
+      selectAnalysis = "Non-Shockable";
+    });
     showDialog(
       context: context,
       // builder: (context, <LogModel> logs, child) {
@@ -817,14 +824,15 @@ class _CPRItems extends State<CPRItems>
               airwayOController.clear();
               addRhythmDialog(
                   new RhythmAnalysis(
+                      // rhythm: ,
                       shockable: shockable,
                       nonShockable: nonShockable,
                       other: other),
                   null);
 
-              setState(() {
-                selectAnalysis = "";
-              });
+              // setState(() {
+              //   selectAnalysis = "";
+              // });
             },
             color: Theme.of(context).accentColor,
             textColor: Colors.white,
@@ -1064,13 +1072,16 @@ class _CPRItems extends State<CPRItems>
   }
 
   _buildAnalysis(RhythmAnalysis rhythmAnalysis, Function setState, index) {
-    final provider = Provider.of<CPRProvider>(context);
+    // final provider = Provider.of<CPRProvider>(context);
     final timeCreated = DateTime.now();
-    print("rhythm");
-    print(rhythmAnalysis.rhythm);
-    selectAnalysis != null
-        ? selectAnalysis = selectAnalysis
-        : selectAnalysis = rhythmAnalysis.rhythm;
+    // print("rhythm");
+    // print(rhythmAnalysis.rhythm);
+
+    // setState(() {
+    //   selectAnalysis != null
+    //       ? selectAnalysis = selectAnalysis
+    //       : selectAnalysis = rhythmAnalysis.rhythm;
+    // });
 
     return Container(
       // padding: EdgeInsets.all(10),
@@ -1086,19 +1097,39 @@ class _CPRItems extends State<CPRItems>
           Wrap(
             children: List<Widget>.generate(ANALYSIS.length, (index) {
               return Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: ChoiceChip(
-                  pressElevation: 5.0,
-                  elevation: 2.0,
-                  key: UniqueKey(),
-                  label: Text(ANALYSIS[index]),
-                  selected: ANALYSIS[index] == selectAnalysis,
-                  onSelected: (bool selected) {
+                padding: EdgeInsets.only(right: 20),
+                child: InkWell(
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(ANALYSIS[index]),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: ANALYSIS[index] == selectAnalysis
+                                ? Colors.pinkAccent
+                                : Colors.transparent,
+                            width: 3),
+                      ),
+                    ),
+                  )
+                  // ChoiceChip(
+                  //   pressElevation: 5.0,
+                  //   elevation: 2.0,
+                  //   key: UniqueKey(),
+                  //   label: Text(ANALYSIS[index]),
+                  //   selected: ANALYSIS[index] == selectAnalysis,
+                  //   onSelected: (bool selected) {
+                  //     setState(() {
+                  //       selectAnalysis = ANALYSIS[index];
+                  //     });
+                  //   },
+                  //   selectedColor: Colors.pink[200],
+                  ,
+                  onTap: () {
                     setState(() {
                       selectAnalysis = ANALYSIS[index];
                     });
                   },
-                  selectedColor: Colors.pink[200],
                 ),
               );
             }),
@@ -1161,6 +1192,7 @@ class _CPRItems extends State<CPRItems>
                         // print(shockable.toJson());
                         // print(nonShockable.toJson());
                         // print(other.toJson());
+                        print(selectAnalysis);
 
                         setState(() {
                           cprBloc.add(
@@ -1180,7 +1212,10 @@ class _CPRItems extends State<CPRItems>
                         });
 
                         //restate
-                        // setState(() {});
+                        //     // setState(() {});
+                        //     setState(() {
+                        //   selectAnalysis = "Non-Shockable";
+                        // });
 
                         Navigator.pop(context);
                       },
@@ -1209,7 +1244,9 @@ class _CPRItems extends State<CPRItems>
                         });
 
                         //restate
-                        // setState(() {});
+                        // setState(() {
+                        //   selectAnalysis = "Shockable";
+                        // });
 
                         Navigator.pop(context);
                       },

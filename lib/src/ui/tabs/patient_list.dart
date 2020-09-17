@@ -386,8 +386,9 @@ class BuildPatientList extends StatelessWidget {
           data.vitalSigns != null ? data.vitalSigns.length : null;
 
       return InkWell(
+          borderRadius: BorderRadius.circular(10),
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            margin: EdgeInsets.only(bottom: 5),
             padding: EdgeInsets.only(left: 8, top: 8),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
