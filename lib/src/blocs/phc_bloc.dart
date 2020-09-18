@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
@@ -57,10 +55,16 @@ class PostPhc extends PhcEvent {
 }
 
 abstract class PhcState extends Equatable {
-  PhcState();
+  final Phc phc;
+
+  PhcState({this.phc}) ;//: assert(phc != null);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [phc];
+  // PhcState();
+
+  // @override
+  // List<Object> get props => [];
 }
 
 class PhcEmpty extends PhcState {}

@@ -137,7 +137,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
     //     listData: _disasterTriage,
     //     value: ""),
     ChipItem(
-        id: "appearance", name: "Appearance", listData: _appearance, value: ""),
+        id: "appearance", name: "Appearance", listData: _appearance, value: List<String>(), multiple: true),
     ChipItem(
         id: "level_responsive",
         name: "Level of Responsiveness",
@@ -147,12 +147,14 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         id: "airway_patency",
         name: "Airway Patency",
         listData: _airway,
-        value: ""),
+        value: List<String>(), 
+        multiple: true),
     ChipItem(
         id: "respiratory_effort",
         name: "Respiratory Effort",
         listData: _respiratory,
-        value: ""),
+        value: List<String>(),
+        multiple: true),
     ChipItem(
         id: "airentry_left",
         name: "Air Entry: Left Lung",
@@ -194,24 +196,28 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         id: "stroke_face",
         name: "Stroke Scale: Face",
         listData: _face,
-        value: ""),
+        value: List<String>(),
+        multiple: true),
     ChipItem(
         id: "stroke_speech",
         name: "Stroke Scale: Speech",
         listData: _speech,
-        value: ""),
+        value: List<String>(), 
+        multiple: true),
     ChipItem(
-        id: "stroke_arm", name: "Stroke Scale: Arm", listData: _arm, value: ""),
+        id: "stroke_arm", name: "Stroke Scale: Arm", listData: _arm, value: List<String>(), multiple: true),
     ChipItem(
         id: "stroke_balance",
         name: "Stroke Scale: Balance",
         listData: _normality,
-        value: ""),
+        value: List<String>(), 
+        multiple: true),
     ChipItem(
         id: "stroke_eyesight",
         name: "Stroke Scale: Eye Sight",
         listData: _normality,
-        value: ""),
+        value: List<String>(), 
+        multiple: true),
   ];
 
   mycallback(id, List<String> dataReturn) {
@@ -333,10 +339,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         }
         if (f.id == "appearance") {
           f.value = widget.patientAssessment.appearance;
-          listAppearance.add(widget.patientAssessment.appearance);
-          if (listAppearance.length > 1) {
-            listAppearance.removeLast();
-          }
+          listAppearance = widget.patientAssessment.appearance;
         }
         if (f.id == "level_responsive") {
           f.value = widget.patientAssessment.levelResponsive;
@@ -347,17 +350,11 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         }
         if (f.id == "airway_patency") {
           f.value = widget.patientAssessment.airwayPatency;
-          listAirway.add(widget.patientAssessment.airwayPatency);
-          if (listAirway.length > 1) {
-            listAirway.removeLast();
-          }
+          listAirway = widget.patientAssessment.airwayPatency;
         }
         if (f.id == "respiratory_effort") {
           f.value = widget.patientAssessment.respiratoryEffort;
-          listRespiratory.add(widget.patientAssessment.respiratoryEffort);
-          if (listRespiratory.length > 1) {
-            listRespiratory.removeLast();
-          }
+          listRespiratory = widget.patientAssessment.respiratoryEffort;
         }
         if (f.id == "airentry_left") {
           f.value = widget.patientAssessment.airEntry.leftLung;
@@ -414,38 +411,26 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         }
         if (f.id == "stroke_face") {
           f.value = widget.patientAssessment.strokeScale.face;
-          listStrokeFace.add(widget.patientAssessment.strokeScale.face);
-          if (listStrokeFace.length > 1) {
-            listStrokeFace.removeLast();
-          }
+          listStrokeFace = widget.patientAssessment.strokeScale.face;
         }
         if (f.id == "stroke_speech") {
           f.value = widget.patientAssessment.strokeScale.speech;
-          listStrokeSpeech.add(widget.patientAssessment.strokeScale.speech);
+          listStrokeSpeech = widget.patientAssessment.strokeScale.speech;
           if (listStrokeSpeech.length > 1) {
             listStrokeSpeech.removeLast();
           }
         }
         if (f.id == "stroke_arm") {
           f.value = widget.patientAssessment.strokeScale.arm;
-          listStrokeArm.add(widget.patientAssessment.strokeScale.arm);
-          if (listStrokeArm.length > 1) {
-            listStrokeArm.removeLast();
-          }
+          listStrokeArm = widget.patientAssessment.strokeScale.arm;
         }
         if (f.id == "stroke_balance") {
           f.value = widget.patientAssessment.strokeScale.balance;
-          listStrokeBalance.add(widget.patientAssessment.strokeScale.balance);
-          if (listStrokeBalance.length > 1) {
-            listStrokeBalance.removeLast();
-          }
+          listStrokeBalance = widget.patientAssessment.strokeScale.balance;
         }
         if (f.id == "stroke_eyesight") {
           f.value = widget.patientAssessment.strokeScale.eyesight;
-          listStrokeEyeSight.add(widget.patientAssessment.strokeScale.eyesight);
-          if (listStrokeEyeSight.length > 1) {
-            listStrokeEyeSight.removeLast();
-          }
+          listStrokeEyeSight = widget.patientAssessment.strokeScale.eyesight;
         }
 
         // f.value = widget.patientAssessment.abdomenAbnormalityLocation;
@@ -456,7 +441,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
 
       // clear textfield others 
       !_appearance.contains(widget.patientAssessment.appearance)
-            ? otherController.text = widget.patientAssessment.appearance
+            ? otherController.text = widget.patientAssessment.appearance.last
             : otherController.clear();
     }
 
@@ -547,18 +532,18 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                         disasterTriage:
                             listTriage.length > 0 ? listTriage[0] : "",
                         appearance: listAppearance.length > 0 
-                                    ? listAppearance[0] == "Other" || !_appearance.contains(listAppearance[0])
+                                    ? listAppearance.contains("Other")
                                     ? otherController.text
-                                    : listAppearance[0] 
-                                    : "",
+                                    : listAppearance
+                                    : List<String>(),
                         levelResponsive: listLevelResponsiveness.length > 0
                             ? listLevelResponsiveness[0]
                             : "",
                         airwayPatency:
-                            listAirway.length > 0 ? listAirway[0] : "",
+                            listAirway.length > 0 ? listAirway : List<String>(),
                         respiratoryEffort: listRespiratory.length > 0
-                            ? listRespiratory[0]
-                            : "",
+                            ? listRespiratory
+                            : List<String>(),
                         airEntry: AirEntry(
                             leftLung: listAirEntryL.length > 0
                                 ? listAirEntryL[0]
@@ -582,19 +567,19 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                             : "",
                         abdomenAbnormalityLocation: abnormalTextController.text,
                         strokeScale: StrokeScale(
-                          arm: listStrokeArm.length > 0 ? listStrokeArm[0] : "",
+                          arm: listStrokeArm.length > 0 ? listStrokeArm : List<String>(),
                           face: listStrokeFace.length > 0
-                              ? listStrokeFace[0]
-                              : "",
+                              ? listStrokeFace
+                              : List<String>(),
                           speech: listStrokeSpeech.length > 0
-                              ? listStrokeSpeech[0]
-                              : "",
+                              ? listStrokeSpeech
+                              : List<String>(),
                           balance: listStrokeBalance.length > 0
-                              ? listStrokeBalance[0]
-                              : "",
+                              ? listStrokeBalance
+                              : List<String>(),
                           eyesight: listStrokeEyeSight.length > 0
-                              ? listStrokeEyeSight[0]
-                              : "",
+                              ? listStrokeEyeSight
+                              : List<String>(),
                         ));
 
                     BlocProvider.of<AssPatientBloc>(context).add(
@@ -652,7 +637,6 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
     var name = mystate.name;
     var listData = mystate.listData;
     List<String> value = mystate.value;
-
     return Card(
       child: Container(
         // margin: EdgeInsets.all(10),

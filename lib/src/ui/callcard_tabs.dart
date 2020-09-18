@@ -544,24 +544,26 @@ class _CallcardTabs extends State<CallcardTabs> {
                 // shape: ShapeBorder(BorderRadius.only(topLeft:Radius.circular(2.0))),
                 // backgroundColor: Colors.white,
                 bottom: TabBar(
-                  labelColor: Colors.pinkAccent,
-                  unselectedLabelColor: Colors.white,
+                  // labelColor: Colors.grey,
+                  // unselectedLabelColor: Colors.white,
+                  // unselectedLabelStyle: TextStyle(fontFamily: "Poppins"),
 
                   // indicatorPadding: EdgeInsets.symmetric(vertical: 40),
-                  // indicatorWeight: 4.0,
+                  indicatorWeight: 4.0,
+
                   // indicatorSize: TabBarIndicatorSize.tab,
-                  indicator: BoxDecoration(
-                      // border: Border.,
-                      borderRadius: BorderRadius.only(
-                        // topLeft: Radius.circular(10),
-                        // topRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(50),
-                      ),
-                      color: Colors.white),
+                  // indicator: BoxDecoration(
+                  //     // border: Border.,
+                  //     borderRadius: BorderRadius.only(
+                  //       // topLeft: Radius.circular(10),
+                  //       // topRight: Radius.circular(10),
+                  //       bottomLeft: Radius.circular(50),
+                  //     ),
+                  //     color: Colors.white),
 
                   // unselectedLabelColor: Colors.red,
                   // labelColor: Colors.blue,
-                  // indicatorColor: Color(0x880E4F00),
+                  // indicatorColor: Colors.white,
                   tabs: [
                     Tab(icon: Icon(Icons.info), text: "CALL INFO"),
                     Tab(icon: Icon(Icons.directions_car), text: "RESPONDER"),
@@ -570,63 +572,64 @@ class _CallcardTabs extends State<CallcardTabs> {
                   ],
                 ),
                 title: Center(
-                    child: StreamBuilder(
-                        initialData: widget.callcard_no != null
-                            ? widget.callcard_no
-                            : '',
-                        stream: callInfoBloc.cardNoController.stream,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return Text(snapshot.data,
-                                style: TextStyle(
-                                    fontFamily: "OpenSans", fontSize: 20));
-                          }
-                          return Container();
-                        })),
-
-                actions: <Widget>[
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(40.0)),
-                    // padding: EdgeInsets.only(right: 10),
-                    child: InkWell(
-                      onTap: () => _handleSubmit(context),
-                      child:
-                          // )
-                          // FlatButton.icon(
-
-                          // )
-                          Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.all(10),
-                        child:
-
-                            // ,)
-                            Row(
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          // crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(Icons.cloud_upload),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            // ,)
-                            // tooltip: "Push to Server",
-                            // onPressed: () {
-                            // Navigator.push(context,
-                            //     MaterialPageRoute(builder: (context) => History()));
-                            // },
-                            // ),
-                            Text("Sync HISKKM")
-                          ],
-                        ),
-                      ),
-                    ),
+                  child: StreamBuilder(
+                    initialData:
+                        widget.callcard_no != null ? widget.callcard_no : '',
+                    stream: callInfoBloc.cardNoController.stream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Text(snapshot.data,
+                            style: TextStyle(
+                                fontFamily: "OpenSans", fontSize: 20));
+                      }
+                      return Container();
+                    },
                   ),
-                ],
+                ),
+
+                // actions: <Widget>[
+                //   Container(
+                //     alignment: Alignment.center,
+                //     margin: EdgeInsets.all(5),
+                //     decoration: BoxDecoration(
+                //         color: Colors.blue,
+                //         borderRadius: BorderRadius.circular(40.0)),
+                //     // padding: EdgeInsets.only(right: 10),
+                //     child: InkWell(
+                //       onTap: () => _handleSubmit(context),
+                //       child:
+                //           // )
+                //           // FlatButton.icon(
+
+                //           // )
+                //           Container(
+                //         alignment: Alignment.center,
+                //         padding: EdgeInsets.all(10),
+                //         child:
+
+                //             // ,)
+                //             Row(
+                //           // mainAxisAlignment: MainAxisAlignment.center,
+                //           // crossAxisAlignment: CrossAxisAlignment.center,
+                //           children: <Widget>[
+                //             Icon(Icons.cloud_upload),
+                //             SizedBox(
+                //               width: 10,
+                //             ),
+                //             // ,)
+                //             // tooltip: "Push to Server",
+                //             // onPressed: () {
+                //             // Navigator.push(context,
+                //             //     MaterialPageRoute(builder: (context) => History()));
+                //             // },
+                //             // ),
+                //             Text("Sync HISKKM")
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ],
               ),
               // backgroundColor: Colors.purple),
               body:
@@ -668,6 +671,39 @@ class _CallcardTabs extends State<CallcardTabs> {
                 // );
                 // }
               ),
+
+              persistentFooterButtons: [
+                Material(
+                  child: Ink(
+                    width: MediaQuery.of(context).size.width,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.pinkAccent,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Center(
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Send",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 24),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(Icons.send, color: Colors.white),
+                            ]),
+                      ),
+                      onTap: () => _handleSubmit(context),
+                    ),
+                  ),
+                )
+              ],
             );
           },
           // child:

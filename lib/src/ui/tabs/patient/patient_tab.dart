@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/providers/cpr_provider.dart';
@@ -356,20 +358,23 @@ class _PatientTab extends State<PatientTab> {
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
                   bottom: TabBar(
-                    labelColor: Colors.pinkAccent,
-                    unselectedLabelColor: Colors.white,
+                    // labelColor: Colors.pinkAccent,
+                    // unselectedLabelColor: Colors.white,
+                    indicatorWeight: 4.0,
+
+                    // indicatorColor: Colors.white,
 
                     // indicatorPadding: EdgeInsets.symmetric(vertical: 40),
                     // indicatorWeight: 4.0,
                     // indicatorSize: TabBarIndicatorSize.tab,
-                    indicator: BoxDecoration(
-                        // border: Border.,
-                        borderRadius: BorderRadius.only(
-                          // topLeft: Radius.circular(10),
-                          // topRight: Radius.circular(10),
-                          bottomLeft: Radius.circular(50),
-                        ),
-                        color: Colors.white),
+                    // indicator: BoxDecoration(
+                    //     // border: Border.,
+                    //     borderRadius: BorderRadius.only(
+                    //       // topLeft: Radius.circular(10),
+                    //       // topRight: Radius.circular(10),
+                    //       bottomLeft: Radius.circular(50),
+                    //     ),
+                    //     color: Colors.white),
                     // )
                     // bottom: TabBar(
                     tabs: [
@@ -405,16 +410,18 @@ class _PatientTab extends State<PatientTab> {
                     deleteButton(context, action),
                     createButton(context, action, widget.index)
                   ],
-                  backgroundColor: Color(0xFF11249F),
+                  // backgroundColor: Color(0xFF11249F),
                 ),
                 body: TabBarView(
                   children: <Widget>[
                     PatientInformationScreen(
                         patient_information: widget.patient.patientInformation),
                     // ),
+
                     CPRItems(cprLog: widget.patient.cprLog),
                     // CPRTimeLog(),
                     // ),
+                    // CPRPage(),
 
                     // CPRDetail(),
                     VitalSignList(
@@ -452,4 +459,427 @@ class _PatientTab extends State<PatientTab> {
       },
       child: Text((action == Action.delete) ? "DELETE" : "CANCEL",
           style: TextStyle(color: Colors.white)));
+}
+
+class CPRPage extends StatefulWidget {
+  _CPRPage createState() => _CPRPage();
+}
+
+class _CPRPage extends State<CPRPage> {
+  String _selected = "";
+  String _cprNote,
+      _witnessNote,
+      _bystanderNote,
+      _startNote,
+      _roscNote,
+      _stopNote,
+      _outcomeNote;
+  String _time;
+
+  List<String> _listCPR = new List<String>();
+  List<String> _listWitness = new List<String>();
+  List<String> _listBystander = new List<String>();
+  List<String> _listStart = new List<String>();
+  List<String> _listRosc = new List<String>();
+  List<String> _listStop = new List<String>();
+  List<String> _listOutcome = new List<String>();
+
+  @override
+  void initState() {
+    // _listSelected.add("YES");
+    super.initState();
+  }
+
+  _btnCallback(data, id) {
+    print(data);
+    if (id == "cprrequired") {
+      setState(() {
+        _listCPR = List<String>.from(data).toList();
+      });
+    }
+  }
+
+  _onNote(data, id) {
+    if (id == "cprrequired") {
+      setState(() {
+        _cprNote = data;
+      });
+    }
+    if (id == "witnesscpr") {
+      setState(() {
+        _witnessNote = data;
+      });
+    }
+    if (id == "bystandercpr") {
+      setState(() {
+        _bystanderNote = data;
+      });
+    }
+    if (id == "cprstart") {
+      setState(() {
+        _startNote = data;
+      });
+    }
+    if (id == "rosc") {
+      setState(() {
+        _roscNote = data;
+      });
+    }
+    if (id == "cprstop") {
+      setState(() {
+        _stopNote = data;
+      });
+    }
+    if (id == "cproutcome") {
+      setState(() {
+        _outcomeNote = data;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      color: Colors.blue[100],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.only(bottom: 10),
+            height: 50,
+            child: SelectableRow(
+                title: "CPR Required",
+                listButton: ["YES", "NO"],
+                listSelected: _listCPR,
+                timeSetted: "15/9/2020 12:34",
+                noteSetted: _cprNote,
+                callback: _btnCallback,
+                onNote: _onNote),
+          ),
+          _listCPR.contains("NO")
+              ? Row(
+                  children: [
+                    Container(width: 100, child: Text("Reason")),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 10),
+                      width: 300,
+                      child: DropdownButtonFormField(
+                        value: _selected,
+                        onChanged: (selected) {
+                          setState(() {
+                            _selected = selected;
+                          });
+                        },
+                        items: [
+                          DropdownMenuItem(
+                            value: "",
+                            child: Text(""),
+                          ),
+                          DropdownMenuItem(
+                            value: "Hello",
+                            child: Text("Hello"),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              : Container(),
+          Container(
+            margin: EdgeInsets.only(bottom: 10),
+            height: 50,
+            child: SelectableRow(
+              title: "Witness CPR",
+              listButton: ["YES", "NO"],
+              listSelected: _listWitness,
+              noteSetted: _witnessNote,
+              timeSetted: "15/9/2020 12:34",
+              onNote: _onNote,
+              callback: _btnCallback,
+              // noteSetted: "Add patient sick",
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 10),
+            height: 50,
+            child: SelectableRow(
+              title: "Bystander CPR",
+              listButton: ["YES", "NO"],
+              listSelected: _listBystander,
+              noteSetted: _bystanderNote,
+              timeSetted: "15/9/2020 12:34",
+              onNote: _onNote,
+              callback: _btnCallback,
+              // noteSetted: "Add patient sick",
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 10),
+            height: 50,
+            child: SelectableRow(
+              title: "CPR Start",
+              listButton: ["YES", "NO"],
+              listSelected: _listStart,
+              noteSetted: _startNote,
+              timeSetted: "15/9/2020 12:34",
+              onNote: _onNote,
+              callback: _btnCallback,
+              // noteSetted: "Add patient sick",
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 10),
+            height: 50,
+            child: SelectableRow(
+              title: "ROSC",
+              listButton: ["YES", "NO"],
+              listSelected: _listRosc,
+              noteSetted: _roscNote,
+              timeSetted: "15/9/2020 12:34",
+              onNote: _onNote,
+              callback: _btnCallback,
+              // noteSetted: "Add patient sick",
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 10),
+            height: 50,
+            child: SelectableRow(
+              title: "CPR Stop",
+              listButton: ["YES", "NO"],
+              listSelected: _listStop,
+              noteSetted: _stopNote,
+              timeSetted: "15/9/2020 12:34",
+              onNote: _onNote,
+              callback: _btnCallback,
+              // noteSetted: "Add patient sick",
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 10),
+            height: 50,
+            child: SelectableRow(
+              title: "Transported",
+              listButton: ["YES", "NO"],
+              listSelected: _listOutcome,
+              noteSetted: _outcomeNote,
+              timeSetted: "15/9/2020 12:34",
+              onNote: _onNote,
+              callback: _btnCallback,
+              // noteSetted: "Add patient sick",
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          _listOutcome.contains("NO")
+              ? Row(
+                  children: [
+                    Container(width: 100, child: Text("Reason")),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 10),
+                      width: 300,
+                      child: DropdownButtonFormField(
+                        value: _selected,
+                        onChanged: (selected) {
+                          setState(() {
+                            _selected = selected;
+                          });
+                        },
+                        items: [
+                          DropdownMenuItem(
+                            value: "",
+                            child: Text(""),
+                          ),
+                          DropdownMenuItem(
+                            value: "Hello",
+                            child: Text("Hello"),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              : Container(),
+        ],
+      ),
+    );
+  }
+}
+
+class SelectableRow extends StatefulWidget {
+  final title;
+  final List<String> listSelected;
+  final listButton;
+  final timeSetted;
+  final noteSetted;
+  final Function callback;
+  final Function onNote;
+
+  SelectableRow(
+      {this.title,
+      this.listSelected,
+      this.listButton,
+      this.timeSetted,
+      this.noteSetted,
+      this.callback,
+      this.onNote});
+
+  _SelectableRow createState() => _SelectableRow();
+}
+
+class _SelectableRow extends State<SelectableRow> {
+  TextEditingController timeController;
+  TextEditingController noteController;
+  var timeFormater = MaskTextInputFormatter(
+      mask: "##/##/#### ##:##", filter: {"#": RegExp(r'[0-9]')});
+
+  @override
+  void initState() {
+    timeController = TextEditingController(text: widget.timeSetted);
+    noteController = TextEditingController(text: widget.noteSetted);
+    // timeController.addListener(_timeCallback);
+    super.initState();
+  }
+
+  // _timeCallback() {
+
+  // }
+
+  @override
+  void dispose() {
+    timeController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Container(width: 100, child: Text(widget.title)),
+      // SizedBox(
+      //   width: 100,
+      // ),
+      Container(
+        width: 200,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: widget.listButton.length,
+          itemBuilder: (context, idx) {
+            return InkWell(
+              child: Container(
+                margin: EdgeInsets.only(right: 10),
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                decoration: BoxDecoration(
+                    color: widget.listSelected.contains(widget.listButton[idx])
+                        ? Colors.blue[500]
+                        : Colors.blue[200],
+                    borderRadius: BorderRadius.circular(10)),
+                child: Text(
+                  widget.listButton[idx],
+                  style: TextStyle(
+                      color:
+                          widget.listSelected.contains(widget.listButton[idx])
+                              ? Colors.white
+                              : Colors.black),
+                ),
+              ),
+              onTap: () {
+                setState(() {
+                  // isPressed = !isPressed;
+                  if (widget.listSelected.contains(widget.listButton[idx])) {
+                    widget.listSelected.remove(widget.listButton[idx]);
+
+                    timeController.text = "";
+                  } else {
+                    timeController.text =
+                        DateFormat("dd/MM/yyyy HH:mm").format(DateTime.now());
+                    widget.listSelected.add(widget.listButton[idx]);
+                    if (widget.listSelected.length > 1)
+                      widget.listSelected.removeLast();
+                  }
+                });
+
+                print("try to pass back widgetlistselected to parent");
+                widget.callback(widget.listSelected,
+                    widget.title.replaceAll(' ', '').toLowerCase());
+              },
+            );
+          },
+        ),
+      ),
+
+      Container(
+        width: 150,
+        child:
+            // ),
+            TextField(
+          controller: timeController,
+          // keyboardType: TextInputType.number,
+          decoration: InputDecoration(hintText: "dd/MM/yyyy HH:mm"),
+        ),
+      ),
+      Container(
+        child: IconButton(
+          icon: Icon(
+            widget.noteSetted != null ? Icons.receipt : Icons.note_add,
+            color: widget.noteSetted != null ? Colors.green : Colors.blue,
+          ),
+          onPressed: () {
+            var id = widget.title.replaceAll(" ", "").toLowerCase();
+
+            showDialog(
+                context: context,
+                builder: (_) => new AlertDialog(
+                      title: new Text(
+                        widget.noteSetted != null ? "View note" : "Enter note",
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      content: new TextFormField(
+                          controller: noteController,
+                          // initialValue: widget.noteSetted,
+                          style: TextStyle(
+                              // fontFamily: "Poppins",
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25,
+                              letterSpacing: 1.0),
+                          // keyboardType:
+                          //     TextInputType.numberWithOptions(decimal: true),
+                          decoration: InputDecoration(hintText: "...")),
+                      actions: <Widget>[
+                        widget.noteSetted == null
+                            ? FlatButton(
+                                child: Text('ADD'),
+                                onPressed: () {
+                                  widget.onNote(noteController.text, id);
+                                  Navigator.of(context).pop();
+                                },
+                              )
+                            : FlatButton(
+                                child: Text('DELETE'),
+                                onPressed: () {
+                                  noteController.clear();
+                                  widget.onNote(null, id);
+                                  Navigator.of(context).pop();
+                                },
+                              )
+                      ],
+                    ));
+          },
+          tooltip: widget.noteSetted != null ? "View note" : "Add note",
+        ),
+      )
+    ]);
+    // );
+  }
 }

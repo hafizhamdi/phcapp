@@ -32,8 +32,12 @@ final lightTheme = ThemeData(
   primarySwatch: Colors.grey,
   // primaryColor: Colors.purple,
   primaryColor: Color(0xFF11249F),
+  // primaryColor:
+  // Colors.
+  // Color(0xFF3383CD),
   brightness: Brightness.light,
   backgroundColor: Color(0xFFE5E5E5),
+  // backgroundColor: Colors.indigo,
   accentColor: Colors.blueAccent,
 
   // cardColor: Colors.purple[200],

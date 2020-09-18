@@ -21,9 +21,7 @@ class VitalSignList extends StatefulWidget {
 }
 
 class _VitalSignList extends State<VitalSignList>
-//  {
-    with
-        AutomaticKeepAliveClientMixin<VitalSignList> {
+    with AutomaticKeepAliveClientMixin<VitalSignList> {
   @override
   bool get wantKeepAlive => true;
   VitalBloc vitalBloc;
@@ -83,8 +81,9 @@ class _VitalSignList extends State<VitalSignList>
     final reading = counterStartingWord(index);
 
     return InkWell(
+      borderRadius: BorderRadius.circular(10),
       child: Container(
-        margin: EdgeInsets.all(5),
+        margin: EdgeInsets.only(bottom: 5),
         padding: EdgeInsets.only(left: 8, top: 8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),

@@ -121,11 +121,12 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
     print("1 $missionSelected");
     return Scaffold(
       body: Container(
+        // width: double.infinity,
         // color: Colors.grey,
         // padding: EdgeInsets.symmetric(vertical: 40),
 
 // Container(
-        // height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topRight,
@@ -298,9 +299,7 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
             child: Text(
               labelText,
               style: TextStyle(
-                  color: Colors.grey,
-                  // fontSize: 18,
-                  fontFamily: "OpenSans"),
+                  color: Colors.grey, fontSize: 18, fontFamily: "Poppins"),
             ),
           ),
           subtitle: Text(
@@ -308,8 +307,11 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
                 ? DateFormat("HH:mm").format(initialData)
                 : "No data",
             style: TextStyle(
+              color: Colors.black,
               // fontFamily: "OpenSans",
-              fontSize: initialData != null ? 30 : 16,
+              fontSize: initialData != null ? 50 : 16,
+              // fontSize: 18,
+              // fontFamily: "Poppins"
               // fontWeight: FontWeight.bold,
               // color:
               //     // initialData != null ?
@@ -430,6 +432,7 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
                         children: [titleButton, doneButton]))),
             Expanded(
                 child: CupertinoDatePicker(
+              backgroundColor: Colors.white,
               mode: CupertinoDatePickerMode.dateAndTime,
               initialDateTime: initialData,
               onDateTimeChanged: (dateTime) {

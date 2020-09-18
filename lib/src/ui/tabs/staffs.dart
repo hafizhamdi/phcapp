@@ -43,7 +43,7 @@ class _Staffs extends State<Staffs> {
   @override
   build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.white,
       // appBar: AppBar(
       //   title: Text("Add Response Team"),
       // ),
@@ -51,160 +51,176 @@ class _Staffs extends State<Staffs> {
         child: Center(
           child: Container(
             constraints: BoxConstraints(maxWidth: 700),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20.0),
-                ),
-              ),
-              margin: EdgeInsets.all(10),
-              child: BlocConsumer<StaffBloc, StaffState>(
-                listener: (context, state) {},
-                builder: (context, state) {
-                  if (state is StaffFetched) {
-                    return Column(children: [
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.close),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            // HeaderSection("Add Response Team"),
-                            IconButton(
-                              icon: Icon(Icons.check),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ]),
+            // child: Card(
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.all(
+            //       Radius.circular(20.0),
+            //     ),
+            //   ),
+            //   margin: EdgeInsets.all(10),
+            child: BlocConsumer<StaffBloc, StaffState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                if (state is StaffFetched) {
+                  return Column(children: [
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          // HeaderSection("Add Response Team"),
+                          IconButton(
+                            icon: Icon(Icons.check),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ]),
 
-                      HeaderSection("Add Response Team"),
+                    HeaderSection("Add Response Team"),
 
-                      SizedBox(
-                        height: 20,
-                      ),
-                      // new Padding(
-                      //   padding: new EdgeInsets.only(top: 20.0),
-                      // ),
-                      Padding(
-                          padding: EdgeInsets.all(10),
-                          child: TextField(
-                            decoration: InputDecoration(
-                                // hintText: hintText,
-                                labelText: "Search Staff Name",
-                                fillColor: Colors.white,
-                                border: new OutlineInputBorder(
-                                  borderRadius: new BorderRadius.circular(40.0),
-                                  borderSide: new BorderSide(),
-                                ),
-                                prefixIcon: Icon(Icons.search),
-                                suffixIcon: IconButton(
-                                    onPressed: () => controller.clear(),
-                                    icon: Icon(Icons.cancel))
-                                // )
+                    SizedBox(
+                      height: 20,
+                    ),
+                    // new Padding(
+                    //   padding: new EdgeInsets.only(top: 20.0),
+                    // ),
+                    Padding(
+                        padding: EdgeInsets.all(10),
+                        child: TextField(
+                          decoration: InputDecoration(
+                              // hintText: hintText,
+                              labelText: "Search Staff Name",
+                              fillColor: Colors.white,
+                              border: new OutlineInputBorder(
+                                borderRadius: new BorderRadius.circular(40.0),
+                                borderSide: new BorderSide(),
+                              ),
+                              prefixIcon: Icon(Icons.search),
+                              suffixIcon: IconButton(
+                                  onPressed: () => controller.clear(),
+                                  icon: Icon(Icons.cancel))
+                              // )
 
-                                // decoration: new InputDecoration(
-                                //   labelText: "Search staff name",
-                                //   border:,
-                                ),
-                            controller: controller,
-                          )),
-                      new Expanded(
-                          child: ListView.builder(
-                        itemCount: state.available_staffs.length,
-                        itemBuilder: (context, index) {
-                          return filter == null || filter == ""
-                              ? Container(
-                                  color: teamBloc.listSelected.contains(index)
-                                      ? Colors.pink[200]
+                              // decoration: new InputDecoration(
+                              //   labelText: "Search staff name",
+                              //   border:,
+                              ),
+                          controller: controller,
+                        )),
+                    new Expanded(
+                        child: ListView.builder(
+                      itemCount: state.available_staffs.length,
+                      itemBuilder: (context, index) {
+                        return filter == null || filter == ""
+                            ? Container(
+                                color: teamBloc.listSelected
+                                        .contains(state.available_staffs[index])
+                                    ? Colors.pink[200]
+                                    : null,
+                                child: ListTile(
+                                  title:
+                                      Text(state.available_staffs[index].name),
+                                  subtitle: Text(
+                                      state.available_staffs[index].position),
+                                  trailing: teamBloc.listSelected.contains(
+                                          state.available_staffs[index])
+                                      ? Icon(Icons.check)
                                       : null,
-                                  child: ListTile(
-                                    title: Text(
-                                        state.available_staffs[index].name),
-                                    subtitle: Text(
-                                        state.available_staffs[index].position),
-                                    trailing:
-                                        teamBloc.listSelected.contains(index)
-                                            ? Icon(Icons.check)
-                                            : null,
-                                    onTap: () {
+                                  onTap: () {
+                                    if (!teamBloc.listSelected.contains(
+                                        state.available_staffs[index])) {
                                       setState(() {
-                                        teamBloc.listSelected.add(index);
+                                        teamBloc.listSelected
+                                            .add(state.available_staffs[index]);
                                       });
-                                      // print("your location:{$index}");
-                                      // print("you pressed me!! " +
-                                      //     state.available_staffs[index].name);
-
                                       BlocProvider.of<TeamBloc>(context).add(
                                           // staffBloc.add(
                                           AddTeam(
                                               staff: state
                                                   .available_staffs[index]));
-                                      // setState(() {
-                                      //  _listStaffs.add(state.available_staffs[index]);
-                                      // });
-                                    },
-                                  ))
-                              : state.available_staffs[index].name
-                                      .toLowerCase()
-                                      .contains(filter.toLowerCase())
-                                  ? Container(
-                                      color:
-                                          teamBloc.listSelected.contains(index)
-                                              ? Colors.pink[200]
+                                    } else {
+                                      setState(() {
+                                        teamBloc.listSelected.remove(
+                                            state.available_staffs[index]);
+                                      });
+
+                                      BlocProvider.of<TeamBloc>(context).add(
+                                          // staffBloc.add(
+                                          RemoveTeam(
+                                              staff: state
+                                                  .available_staffs[index]));
+                                    }
+                                    // print("your location:{$index}");
+                                    // print("you pressed me!! " +
+                                    //     state.available_staffs[index].name);
+
+                                    // setState(() {
+                                    //  _listStaffs.add(state.available_staffs[index]);
+                                    // });
+                                  },
+                                ))
+                            : state.available_staffs[index].name
+                                    .toLowerCase()
+                                    .contains(filter.toLowerCase())
+                                ? Container(
+                                    color: teamBloc.listSelected.contains(
+                                            state.available_staffs[index])
+                                        ? Colors.pink[200]
+                                        : null,
+                                    child: ListTile(
+                                      title: Text(
+                                          state.available_staffs[index].name),
+                                      subtitle: Text(state
+                                          .available_staffs[index].position),
+                                      trailing:
+                                          // IconButton(
+                                          // icon:
+                                          teamBloc.listSelected.contains(
+                                                  state.available_staffs[index])
+                                              ? Icon(Icons.check)
                                               : null,
-                                      child: ListTile(
-                                        title: Text(
-                                            state.available_staffs[index].name),
-                                        subtitle: Text(state
-                                            .available_staffs[index].position),
-                                        trailing:
-                                            // IconButton(
-                                            // icon:
-                                            teamBloc.listSelected
-                                                    .contains(index)
-                                                ? Icon(Icons.check)
-                                                : null,
-                                        // onPressed: () {},
-                                        // ),
-                                        onTap: () {
-                                          // print("your location:{$index}");
-                                          // print("you pressed me!! " +
-                                          //     state.available_staffs[index].name);
+                                      // onPressed: () {},
+                                      // ),
+                                      onTap: () {
+                                        // print("your location:{$index}");
+                                        // print("you pressed me!! " +
+                                        //     state.available_staffs[index].name);
 
-                                          setState(() {
-                                            teamBloc.listSelected.add(index);
-                                          });
+                                        setState(() {
+                                          teamBloc.listSelected.add(
+                                              state.available_staffs[index]);
+                                        });
 
-                                          BlocProvider.of<TeamBloc>(context)
-                                              .add(
-                                                  // staffBloc.add(
-                                                  AddTeam(
-                                                      staff: state
-                                                              .available_staffs[
-                                                          index]));
-                                          // mySelectedList.add(index);
-                                        },
-                                      ))
-                                  : new Container();
+                                        BlocProvider.of<TeamBloc>(context).add(
+                                            // staffBloc.add(
+                                            AddTeam(
+                                                staff: state
+                                                    .available_staffs[index]));
+                                        // mySelectedList.add(index);
+                                      },
+                                    ))
+                                : new Container();
 
-                          // return
-                        },
+                        // return
+                      },
 
-                        // child: Text("All staffs not selected yet"),
-                      ))
-                    ]);
-                  }
-                  return Center(child: CircularProgressIndicator());
-                },
-              ),
+                      // child: Text("All staffs not selected yet"),
+                    ))
+                  ]);
+                }
+                return Center(child: CircularProgressIndicator());
+              },
             ),
           ),
         ),
       ),
+
+      // ),
     );
   }
 }

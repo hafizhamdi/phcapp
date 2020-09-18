@@ -4,6 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/ui/list_callcard.dart';
 import 'package:phcapp/src/ui/settings.dart';
+import 'package:phcapp/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen();
@@ -15,6 +17,9 @@ class _LoginScreen extends State<LoginScreen>
   TextEditingController usernameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   LoginBloc loginBloc;
+
+  bool isUserActive = false;
+  bool isPassActive = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -162,28 +167,27 @@ class _LoginScreen extends State<LoginScreen>
           boxShadow: [
             BoxShadow(
               color: Color(0x80000000),
-              blurRadius: 30.0,
-              offset: Offset(0.0, 5.0),
+              blurRadius: 10.0,
+              offset: Offset(0.0, 0.0),
             ),
           ],
-          // gradient: LinearGradient(
-          //   begin: Alignment.topLeft,
-          //   end: Alignment.bottomRight,
-          //   colors: [
-          //     Color(0xFF0000FF),
-          //     Color(0xFFFF3500),
-          //   ],
-          // ),
-          color: Color(0xFF11249F),
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [Color(0xFF3383CD), Colors.green],
+          ),
+          // color: Color(0xFF11249F),
+          // color: Color(0xFFCDDC39),
         ),
         child: Center(
           child: Text(
             'LOGIN',
             style: TextStyle(
-                fontSize: 16.0,
-                letterSpacing: 3,
-                fontWeight: FontWeight.bold,
-                color: Colors.white),
+              fontSize: 16.0,
+              letterSpacing: 3,
+              fontWeight: FontWeight.bold,
+              // color: Colors.white
+            ),
           ),
         ),
       );
@@ -207,198 +211,222 @@ class _LoginScreen extends State<LoginScreen>
 
   Widget _loginPage() {
     return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          ClipPath(
-            clipper: MyClipper(),
-            child: Container(
-              padding: EdgeInsets.only(
-                left: 20, top: 50,
-                // bottom: 100
-                //  right: 20
-              ),
-              height: 350,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    Color(0xFF3383CD),
-                    Colors.green
-                    // Color(0xFF112BBF),
-                  ],
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        // height: MediaQuery.of(context).size.height,
+        // decoration: BoxDecoration(
+        //   gradient: LinearGradient(
+        //     begin: Alignment.topRight,
+        //     end: Alignment.bottomLeft,
+        //     colors: [
+        //       Color(0xFF3383CD),
+        //       Color(0xFF11249F),
+        //     ],
+        //   ),
+        // ),
+        child: Column(
+          children: <Widget>[
+            ClipPath(
+              clipper: MyClipper(),
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: 20, top: 50,
+                  // bottom: 100
+                  //  right: 20
                 ),
-                // image: DecorationImage(
-                //   image: AssetImage("assets/images/authentication.svg"),
-                // ),
-              ),
-              child: Stack(
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Positioned(
-                      // top: 10,
-                      // bottom: 0.1,
-                      // left: 100,
-                      // right: 0,
-                      child: Container(
-                        width: double.infinity,
-                        child:
-                            Image(image: AssetImage('assets/medicineMY.png')),
-                        // SvgPicture.asset("assets/medicine.svg"),
-                      ),
-                    ),
-                    Positioned(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        // (
-                        // child:
-                        // Container(
-                        //   width: 200,
-                        //   child: Image(
-                        //       image: AssetImage('assets/ambulanceMY.png')),
-                        //   // )
-                        // ),
-                        // SizedBox(
-                        //   height: 40,
-                        // ),
-                        Container(
-                          // right: 70,
-                          child: Text(
-                            "PH Care",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 50,
-                                fontFamily: "Raleway"),
-                          ),
+                height: 350,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color(0xFF3383CD),
+                      Colors.green
+                      // Color(0xFF112BBF),
+                    ],
+                  ),
+                  // image: DecorationImage(
+                  //   image: AssetImage("assets/images/authentication.svg"),
+                  // ),
+                ),
+                child: Stack(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Positioned(
+                        // top: 10,
+                        // bottom: 0.1,
+                        // left: 100,
+                        // right: 0,
+                        child: Container(
+                          width: double.infinity,
+                          child:
+                              Image(image: AssetImage('assets/medicineMY.png')),
+                          // SvgPicture.asset("assets/medicine.svg"),
                         ),
-                        Container(
-                          // right: 70,
-                          // top: 60,
-                          child: Text(
-                            "HRPB Version 1.21",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              // fontFamily: "Raleway"
+                      ),
+                      Positioned(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          // (
+                          // child:
+                          // Container(
+                          //   width: 200,
+                          //   child: Image(
+                          //       image: AssetImage('assets/ambulanceMY.png')),
+                          //   // )
+                          // ),
+                          // SizedBox(
+                          //   height: 40,
+                          // ),
+                          Container(
+                            // right: 70,
+                            child: Text(
+                              "PH Care",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 50,
+                                  fontFamily: "Raleway"),
                             ),
                           ),
-                        ),
-                      ],
-                    ))
-                  ]),
+                          Container(
+                            // right: 70,
+                            // top: 60,
+                            child: Text(
+                              "HRPB Version 2.1",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                // fontFamily: "Raleway"
+                              ),
+                            ),
+                          ),
+                        ],
+                      ))
+                    ]),
+              ),
+              // ),
             ),
+
+            // SizedBox(
+            //   height: 50,
             // ),
-          ),
+            // Container(
+            //     width: 200,
+            //     height: 100,
+            //     child: Image(image: AssetImage('assets/phcare.png'))),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
 
-          // SizedBox(
-          //   height: 50,
-          // ),
-          // Container(
-          //     width: 200,
-          //     height: 100,
-          //     child: Image(image: AssetImage('assets/phcare.png'))),
-          // Padding(
-          //     padding: EdgeInsets.all(10),
-          //     child: Text(
-          //       "Pre Hospital Care App",
-          //       style: TextStyle(fontFamily: "Raleway", fontSize: 16),
-          //     )),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
-            // child: Container(
-            // width: 400,
-            // child: Form(
-            //   key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _textInput("Username", Icons.person, usernameController, false),
-                _textInput("Password", Icons.vpn_key, passwordController, true),
-                SizedBox(
-                  height: 10,
-                ),
-                // InkWell(
-                //   child: Container(
-                //     height: 60,
-                //     // width: double.infinity,
-                //     // margin: EdgeInsets.symmetric(vertical: 10),
-                //     // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                //     constraints: BoxConstraints(maxWidth: 300),
-                //     decoration: BoxDecoration(
-                //       color: Color(0xFF11249F),
-                //       borderRadius: BorderRadius.circular(30.0),
+              // padding: EdgeInsets.all(10),
+              //     child: Text(
+              //       "Pre Hospital Care App",
+              //       style: TextStyle(fontFamily: "Raleway", fontSize: 16),
+              //     )),
 
-                //       boxShadow: [
-                //         BoxShadow(
-                //             offset: Offset(0, 4),
-                //             blurRadius: 60,
-                //             color: Colors.black.withOpacity(.1)),
-                //       ],
-                //       // color: Colors.white,
-                //       // borderRadius: BorderRadius.circular(30),
-                //       border: Border.all(
-                //         color: Color(0xFFE5E5E5),
-                //       ),
-                //     ),
-                // child:
-                Center(
-                  child: GestureDetector(
-                    onTapDown: _onTapDown,
-                    onTapUp: _onTapUp,
-                    child: Transform.scale(
-                      scale: _scale,
-                      child: _animatedButtonUI,
-                    ),
+              // Padding(
+              // child: Container(
+              // width: 400,
+              // child: Form(
+              //   key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _textInput("Username", Icons.person, usernameController,
+                      false, isUserActive),
+                  _textInput("Password", Icons.vpn_key, passwordController,
+                      true, isPassActive),
+                  SizedBox(
+                    height: 10,
                   ),
-                )
-                //   Text(
-                //     "LOGIN",
-                //     style: TextStyle(
-                //         color: Colors.white,
-                //         letterSpacing: 3.0,
-                //         fontSize: 16),
-                //   ),
-                // ),
-                //   ),
-                //   onTap: () {
-                //     final user = usernameController.text;
-                //     final password = passwordController.text;
+                  // InkWell(
+                  //   child: Container(
+                  //     height: 60,
+                  //     // width: double.infinity,
+                  //     // margin: EdgeInsets.symmetric(vertical: 10),
+                  //     // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  //     constraints: BoxConstraints(maxWidth: 300),
+                  //     decoration: BoxDecoration(
+                  //       color: Color(0xFF11249F),
+                  //       borderRadius: BorderRadius.circular(30.0),
 
-                //     if (user.isEmpty || password.isEmpty) {
-                //       showEmpty();
-                //     } else {
-                //       loginBloc.add(LoginButtonPressed(
-                //           username: user, password: password));
-                //     }
-                //   },
-                // ),
-                // )
-              ],
+                  //       boxShadow: [
+                  //         BoxShadow(
+                  //             offset: Offset(0, 4),
+                  //             blurRadius: 60,
+                  //             color: Colors.black.withOpacity(.1)),
+                  //       ],
+                  //       // color: Colors.white,
+                  //       // borderRadius: BorderRadius.circular(30),
+                  //       border: Border.all(
+                  //         color: Color(0xFFE5E5E5),
+                  //       ),
+                  //     ),
+                  // child:
+                  Center(
+                    child: GestureDetector(
+                      onTapDown: _onTapDown,
+                      onTapUp: _onTapUp,
+                      child: Transform.scale(
+                        scale: _scale,
+                        child: _animatedButtonUI,
+                      ),
+                    ),
+                  )
+                  //   Text(
+                  //     "LOGIN",
+                  //     style: TextStyle(
+                  //         color: Colors.white,
+                  //         letterSpacing: 3.0,
+                  //         fontSize: 16),
+                  //   ),
+                  // ),
+                  //   ),
+                  //   onTap: () {
+                  //     final user = usernameController.text;
+                  //     final password = passwordController.text;
+
+                  //     if (user.isEmpty || password.isEmpty) {
+                  //       showEmpty();
+                  //     } else {
+                  //       loginBloc.add(LoginButtonPressed(
+                  //           username: user, password: password));
+                  //     }
+                  //   },
+                  // ),
+                  // )
+                ],
+              ),
             ),
-          ),
 
-          FlatButton.icon(
-            icon: Icon(Icons.settings),
-            label: Text("Settings"),
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Settings()));
-            },
-            // ,
-          ),
-          SizedBox(
-            height: 40,
-          ),
-          // Stack(
-          //   children: <Widget>[
-          //     Positioned(
-          //       child:
-          Container(
+            FlatButton.icon(
+              icon: Icon(
+                Icons.settings,
+                // color: Colors.white,
+              ),
+              label: Text(
+                "Settings",
+                // style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Settings()));
+              },
+              // ,
+            ),
+            // ]),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.1,
+            ),
+            // Stack(
+            //   children: <Widget>[
+            //     Positioned(
+            //       child:
+            Container(
               padding: EdgeInsets.symmetric(horizontal: 50),
-              margin: EdgeInsets.only(bottom: 50),
+              // margin: EdgeInsets.only(bottom: 50),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -417,90 +445,102 @@ class _LoginScreen extends State<LoginScreen>
                       child: Image(image: AssetImage('assets/mers999.png')),
                       // SvgPicture.asset("assets/town.svg"),
                     ),
-                  ]))
-          // )
-          // Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          // ],
-          // )
-          //   IconButton(
-          //   ),
-          //   Text("Settings")
-          // ])
-        ],
+                  ]),
+            ),
+            SizedBox(
+              height: 20,
+            )
+
+            // ],
+            // ),
+            // )
+            // Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            // ],
+            // )
+            //   IconButton(
+            //   ),
+            //   Text("Settings")
+            // ])
+          ],
+        ),
       ),
     );
   }
 
-  Widget _textInput(labelText, icon, controller, obscureText) {
+  Widget _textInput(labelText, icon, controller, obscureText, isActive) {
+    final primaryColor =
+        Provider.of<ThemeProvider>(context).getThemeData.primaryColor;
     return Container(
       constraints: BoxConstraints(maxWidth: 300),
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20),
       height: 60,
-      // width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
-        // borderRadius: BorderRadius.circular(100.0),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x80000000),
-            blurRadius: 30.0,
-            offset: Offset(0.0, 5.0),
-          ),
-        ],
-
-        // decoration: BoxDecoration(
-        //   boxShadow: [
-        //     BoxShadow(
-        //         offset: Offset(0, 4),
-        //         blurRadius: 50,
-        //         color: Colors.black.withOpacity(.1)),
-        //   ],
-        //   // color: Colors.lightBlue.withOpacity(.20),
+        // color:
+        // isActive ? Colors.yellow[100] :
+        // Colors.white,
+        border: Border.all(color: Colors.grey),
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Color(0x80000000),
+        //     blurRadius: 5.0,
+        //     offset: Offset(0.0, 0.0),
+        //   ),
+        // ],
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          // color: Color(0xFFE5E5E5)
-          color: Colors.grey,
-        ),
       ),
       child: Row(
         children: <Widget>[
-          Icon(icon),
+          Icon(
+            icon,
+            color:
+                // isActive ? primaryColor :
+
+                Colors.grey[600],
+          ),
           SizedBox(width: 20),
           Expanded(
-              child: TextField(
-                  obscureText: obscureText,
-                  // keyboardType: inputType,
-                  controller: controller,
-                  decoration: InputDecoration(
-                      border: InputBorder.none, hintText: labelText))),
+            child: TextField(
+              style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.w700,
+                  // color: Colors.,
+                  fontSize: 18,
+                  letterSpacing: 1.0),
+              cursorColor: primaryColor,
+              obscureText: obscureText,
+              onChanged: (text) {
+                if (text.length > 0) {
+                  if (obscureText == true) {
+                    setState(() {
+                      isPassActive = true;
+                    });
+                  } else {
+                    setState(() {
+                      isUserActive = true;
+                    });
+                  }
+                } else {
+                  if (obscureText == true) {
+                    setState(() {
+                      isPassActive = false;
+                    });
+                  } else {
+                    setState(() {
+                      isUserActive = false;
+                    });
+                  }
+                }
+              },
+              controller: controller,
+              decoration: InputDecoration(
+                  focusColor: Color(0xFF512DA8),
+                  border: InputBorder.none,
+                  hintText: labelText),
+            ),
+          ),
         ],
       ),
-      // return Container(
-      //   // width: 500,
-      //   // width: 400,
-      //   // constraints: BoxConstraints(maxWidth: 500),
-      //   // child: Padding(
-      //   //     padding: EdgeInsets.all(16),
-      //   child: Row(children: [
-      //     Icon(icon),
-      //     // SizedBox(width: 20),
-      //     TextFormField(
-      //       obscureText: obscureText,
-      //       // keyboardType: keyboardType,
-      //       controller: controller,
-      //       decoration: InputDecoration(
-      //         labelText: labelText,
-      //         fillColor: Colors.white,
-      //         border: new OutlineInputBorder(
-      //           borderRadius: new BorderRadius.circular(50.0),
-      //           borderSide: new BorderSide(),
-      //         ),
-      //       ),
-      //     ),
-      //   ]),
-
-      // )
     );
   }
 }

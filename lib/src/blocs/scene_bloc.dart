@@ -1,13 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phcapp/src/models/phc.dart';
 
 abstract class SceneEvent extends Equatable {
-  final List<String> selectedPPE;
+  final PPE selectedPPE;
   final List<String> selectedEnvironment;
   final List<String> selectedCaseType;
   final List<String> selectedPatient;
   final List<String> selectedBackup;
-  final List<String> selectedServices;
+  final OtherServices selectedServices;
 
   SceneEvent({
     this.selectedPPE,
@@ -23,12 +24,12 @@ abstract class SceneEvent extends Equatable {
 }
 
 abstract class SceneState extends Equatable {
-  final List<String> selectedPPE;
+  final PPE selectedPPE;
   final List<String> selectedEnvironment;
   final List<String> selectedCaseType;
   final List<String> selectedPatient;
   final List<String> selectedBackup;
-  final List<String> selectedServices;
+  final OtherServices selectedServices;
 
   SceneState({
     this.selectedPPE,
@@ -45,12 +46,12 @@ abstract class SceneState extends Equatable {
 }
 
 class LoadScene extends SceneEvent {
-  final List<String> selectedPPE;
+  final PPE selectedPPE;
   final List<String> selectedEnvironment;
   final List<String> selectedCaseType;
   final List<String> selectedPatient;
   final List<String> selectedBackup;
-  final List<String> selectedServices;
+  final OtherServices selectedServices;
 
   LoadScene({
     this.selectedPPE,
@@ -91,12 +92,12 @@ class SetScene extends SceneEvent {
 }
 
 class LoadedScene extends SceneState {
-  final List<String> selectedPPE;
+  final PPE selectedPPE;
   final List<String> selectedEnvironment;
   final List<String> selectedCaseType;
   final List<String> selectedPatient;
   final List<String> selectedBackup;
-  final List<String> selectedServices;
+  final OtherServices selectedServices;
 
   LoadedScene({
     this.selectedPPE,

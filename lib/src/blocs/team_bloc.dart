@@ -48,11 +48,16 @@ class AddResponseTeam extends TeamEvent {
 }
 
 class RemoveTeam extends TeamEvent {
-  int removeIndex;
-  RemoveTeam({this.removeIndex});
+  Staff staff;
+  RemoveTeam({this.staff});
 
   @override
-  List<Object> get props => [removeIndex];
+  List<Object> get props => [staff];
+  // int removeIndex;
+  // RemoveTeam({this.removeIndex});
+
+  // @override
+  // List<Object> get props => [removeIndex];
 }
 
 abstract class TeamState extends Equatable {
@@ -81,6 +86,8 @@ class TeamLoaded extends TeamState {
   // }
 }
 
+class TeamLoading extends TeamState {}
+
 class TeamEmpty extends TeamState {
   // final ResponseTeam response_team;
   // List<Staff> selectedStaffs;
@@ -97,7 +104,7 @@ class TeamEmpty extends TeamState {
 class TeamBloc extends Bloc<TeamEvent, TeamState> {
   PhcDao phcDao;
   ResponseTeam response_team;
-  List<int> listSelected = new List<int>();
+  List<Staff> listSelected = new List<Staff>();
   List<Staff> selectedStaffs = new List<Staff>();
 
   TeamBloc({this.phcDao}) : assert(phcDao != null);
@@ -127,7 +134,7 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
       // yield* _reloadResponseTeam(event.assign_id);
     } else if (event is ResetTeam) {
       selectedStaffs = new List<Staff>();
-      listSelected = new List<int>();
+      listSelected = new List<Staff>();
       yield TeamEmpty();
     }
   }
@@ -211,7 +218,7 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
   }
 
   Stream<TeamState> _addStaffToState(AddTeam event) async* {
-    print("currentTstate");
+    yield TeamLoading();
     // print(state);
 
     // final currentState = state;
@@ -243,17 +250,19 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
   }
 
   Stream<TeamState> _removeStaffToState(RemoveTeam event) async* {
+    yield TeamLoading();
+
     // final currentState = state;
     // ResponseTeam responseTeam = currentState.response_team;
 
     // if (state is TeamLoaded) {
     // selectedStaffs.add(event.staff);
-    final newList = selectedStaffs..removeAt(event.removeIndex);
+    final newList = selectedStaffs..remove(event.staff);
     // print(newList);
     // responseTeam.staffs = newList; // = newList;
 
     // remove from selected list tick
-    listSelected.removeAt(event.removeIndex);
+    listSelected.remove(event.staff);
     print("--removelength");
     // currentState.response_team.staffs.removeAt(event.removeIndex);
 

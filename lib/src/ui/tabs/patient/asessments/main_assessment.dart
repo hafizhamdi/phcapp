@@ -117,7 +117,9 @@ class MainAssessment extends StatelessWidget {
                           );
                         },
                       ),
-
+                      SizedBox(
+                        height: 5,
+                      ),
                       BlocBuilder<InterBloc, InterState>(
                         builder: (context, state) {
                           if (state is InterLoaded) {
@@ -146,42 +148,67 @@ class MainAssessment extends StatelessWidget {
                         },
                       ),
 
-                      BuildCard(
-                        icon: Icons.change_history,
-                        title: "SAMPLER",
-                        nextRoute: SampleScreen(
-                          samplerAssessment:
-                              samplerBloc.state.samplerAssessment != null
-                                  ? samplerBloc.state.samplerAssessment
-                                  : samplerAssessment ?? null,
-                        ),
-                        timestamp: samplerBloc.state.samplerAssessment != null
-                            ? samplerBloc.state.samplerAssessment.timestamp
-                            : samplerAssessment != null
+                      SizedBox(
+                        height: 5,
+                      ),
+                      BlocBuilder<SamplerBloc, SamplerState>(
+                        builder: (context, state) {
+                          if (state is LoadedSampler) {
+                            return BuildCard(
+                              icon: Icons.change_history,
+                              title: "SAMPLER",
+                              nextRoute: SampleScreen(
+                                samplerAssessment:
+                                    state.samplerAssessment != null
+                                        ? state.samplerAssessment
+                                        : samplerAssessment ?? null,
+                              ),
+                              timestamp: state.samplerAssessment != null
+                                  ? state.samplerAssessment.timestamp
+                                  : samplerAssessment != null
+                                      ? samplerAssessment.timestamp
+                                      : null,
+                            );
+                          }
+                          return BuildCard(
+                            icon: Icons.change_history,
+                            title: "SAMPLER",
+                            nextRoute: SampleScreen(
+                              samplerAssessment: samplerAssessment ?? null,
+                            ),
+                            timestamp: samplerAssessment != null
                                 ? samplerAssessment.timestamp
                                 : null,
+                          );
+                        },
                       ),
 
-                      // BlocBuilder<TraumaBloc, TraumaState>(
-                      //   builder: (context, state) {
-                      //     print("TRAUMABLOC");
-                      //     print(state);
-                      //     if (state is TraumaLoaded) {
-                      //       print("TRAUMALOADED");
-                      // return
-                      BuildCard(
-                          icon: Icons.airline_seat_recline_normal,
-                          title: "Trauma",
-                          nextRoute: TraumaScreen(
-                              trauma: traumaBloc.state.traumaAssessment != null
-                                  ? traumaBloc.state.traumaAssessment
-                                  : traumaAssessment ?? null),
-                          timestamp: traumaBloc.state.traumaAssessment != null
-                              ? traumaBloc.state.traumaAssessment.timestamp
-                              : traumaAssessment != null
-                                  ? traumaAssessment.timestamp
-                                  : null),
-                      // }
+                      SizedBox(
+                        height: 5,
+                      ),
+                      BlocBuilder<TraumaBloc, TraumaState>(
+                          builder: (context, state) {
+                        if (state is TraumaLoaded) {
+                          return BuildCard(
+                              icon: Icons.airline_seat_recline_normal,
+                              title: "Trauma",
+                              nextRoute: TraumaScreen(
+                                trauma: state.traumaAssessment,
+                              ),
+                              timestamp: state.traumaAssessment != null
+                                  ? state.traumaAssessment.timestamp
+                                  : null);
+                        }
+
+                        return BuildCard(
+                            icon: Icons.airline_seat_recline_normal,
+                            title: "Trauma",
+                            nextRoute:
+                                TraumaScreen(trauma: traumaAssessment ?? null),
+                            timestamp: traumaAssessment != null
+                                ? traumaAssessment.timestamp
+                                : null);
+                      }),
                       //     return BuildCard(
                       //       icon: Icons.airline_seat_recline_normal,
                       //       title: "Trauma",
@@ -190,77 +217,120 @@ class MainAssessment extends StatelessWidget {
                       //     );
                       //   },
                       // ),
-                      BuildCard(
-                        icon: Icons.dns,
-                        title: "Medication",
-                        nextRoute: MedicationScreen(
-                          medications:
-                              medicationBloc.state.medicationAssessment != null
-                                  ? medicationBloc
-                                      .state.medicationAssessment.medication
-                                  : medicationAssessment != null
-                                      ? medicationAssessment.medication
-                                      : null,
-                        ),
-                        timestamp:
-                            medicationBloc.state.medicationAssessment != null
-                                ? medicationBloc
-                                    .state.medicationAssessment.timestamp
-                                : medicationAssessment != null
-                                    ? medicationAssessment.timestamp
-                                    : null,
+
+                      SizedBox(
+                        height: 5,
                       ),
+                      BlocBuilder<MedicationBloc, MedicationState>(
+                          builder: (context, state) {
+                        if (state is LoadedMedication) {
+                          print("IM IN MEDICATION STATE");
+                          print(state.medicationAssessment.timestamp);
+                          return BuildCard(
+                            icon: Icons.dns,
+                            title: "Medication",
+                            nextRoute: MedicationScreen(
+                                medications:
+                                    state.medicationAssessment.medication),
+                            timestamp: state.medicationAssessment.timestamp,
+                          );
+                        }
 
-                      BuildCard(
-                          icon: Icons.chrome_reader_mode,
-                          title: "Other Information",
-                          nextRoute: OtherInformation(
-                              otherAssessment:
-                                  otherBloc.state.otherAssessment != null
-                                      ? otherBloc.state.otherAssessment
-                                      : otherAssessment != null
-                                          ? otherAssessment
-                                          : null),
-                          timestamp: otherBloc.state.otherAssessment != null
-                              ? otherBloc.state.otherAssessment.timestamp
-                              : otherAssessment != null
-                                  ? otherAssessment.timestamp
-                                  : null),
-
-                      BuildCard(
-                        icon: Icons.report_problem,
-                        title: "Incident Reporting",
-                        nextRoute: IncidentReport(
-                          incidentReporting:
-                              reportingBloc.state.incidentReporting != null
-                                  ? reportingBloc.state.incidentReporting
-                                  : reportingAssessment ?? null,
-                        ),
-                        timestamp: reportingBloc.state.incidentReporting != null
-                            ? reportingBloc.state.incidentReporting.timestamp
-                            : reportingAssessment != null
-                                ? reportingAssessment.timestamp
+                        print("IM OUTSIDE MEDICATION STATE");
+                        return BuildCard(
+                          icon: Icons.dns,
+                          title: "Medication",
+                          nextRoute: MedicationScreen(
+                            medications: medicationAssessment != null
+                                ? medicationAssessment.medication
                                 : null,
-                      ),
-
-                      BuildCard(
-                          icon: Icons.note,
-                          title: "Outcome",
-                          disasterTriage: outcomeBloc.state.outcome != null
-                              ? outcomeBloc.state.outcome.etdTriage
-                              : outcomeAssessment != null
-                                  ? outcomeAssessment.etdTriage
-                                  : null,
-                          nextRoute: OutcomeAssessment(
-                            outcome: outcomeBloc.state.outcome != null
-                                ? outcomeBloc.state.outcome
-                                : outcomeAssessment ?? null,
                           ),
-                          timestamp: outcomeBloc.state.outcome != null
-                              ? outcomeBloc.state.outcome.timestamp
-                              : outcomeAssessment != null
-                                  ? outcomeAssessment.timestamp
-                                  : null),
+                          timestamp: medicationAssessment != null
+                              ? medicationAssessment.timestamp
+                              : null,
+                        );
+                      }),
+
+                      SizedBox(
+                        height: 5,
+                      ),
+                      BlocBuilder<OtherBloc, OtherState>(
+                          builder: (context, state) {
+                        if (state is LoadedOther) {
+                          return BuildCard(
+                              icon: Icons.chrome_reader_mode,
+                              title: "Other Information",
+                              nextRoute: OtherInformation(
+                                  otherAssessment: state.otherAssessment),
+                              timestamp: state.otherAssessment.timestamp);
+                        }
+
+                        return BuildCard(
+                            icon: Icons.chrome_reader_mode,
+                            title: "Other Information",
+                            nextRoute: OtherInformation(
+                                otherAssessment: otherAssessment ?? null),
+                            timestamp: otherAssessment != null
+                                ? otherAssessment.timestamp
+                                : null);
+                      }),
+
+                      SizedBox(
+                        height: 5,
+                      ),
+                      BlocBuilder<ReportingBloc, ReportingState>(
+                          builder: (context, state) {
+                        if (state is LoadedReporting) {
+                          return BuildCard(
+                            icon: Icons.report_problem,
+                            title: "Incident Reporting",
+                            nextRoute: IncidentReport(
+                              incidentReporting: state.incidentReporting,
+                            ),
+                            timestamp:
+                                reportingBloc.state.incidentReporting.timestamp,
+                          );
+                        }
+                        return BuildCard(
+                          icon: Icons.report_problem,
+                          title: "Incident Reporting",
+                          nextRoute: IncidentReport(
+                            incidentReporting: reportingAssessment ?? null,
+                          ),
+                          timestamp: reportingAssessment != null
+                              ? reportingAssessment.timestamp
+                              : null,
+                        );
+                      }),
+
+                      SizedBox(
+                        height: 5,
+                      ),
+                      BlocBuilder<OutcomeBloc, OutcomeState>(
+                          builder: (context, state) {
+                        if (state is LoadedOutcome) {
+                          return BuildCard(
+                              icon: Icons.note,
+                              title: "Outcome",
+                              disasterTriage: state.outcome.etdTriage,
+                              nextRoute: OutcomeAssessment(
+                                outcome: state.outcome,
+                              ),
+                              timestamp: state.outcome.timestamp);
+                        }
+                        return BuildCard(
+                            icon: Icons.note,
+                            title: "Outcome",
+                            disasterTriage: outcomeAssessment != null
+                                ? outcomeAssessment.etdTriage
+                                : null,
+                            nextRoute: OutcomeAssessment(
+                              outcome: outcomeAssessment ?? null,
+                            ),
+                            timestamp: outcomeAssessment != null
+                                ? outcomeAssessment.timestamp
+                                : null);
+                      }),
                     ],
                   ),
                 ),
@@ -301,8 +371,9 @@ class BuildCard extends StatelessWidget {
     //   child:
 
     return InkWell(
+      borderRadius: BorderRadius.circular(10),
       child: Container(
-        margin: EdgeInsets.all(5),
+        // margin: EdgeInsets.all(5),
         padding: EdgeInsets.only(left: 8, top: 8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),

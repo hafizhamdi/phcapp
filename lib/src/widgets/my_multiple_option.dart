@@ -17,8 +17,8 @@ class _MyMultipleOptions extends State<MyMultipleOptions> {
   List<String> listSelected = new List();
 
   List<String> valueSelected;
-  bool normalIsSelected = false;
   Color bgColor = Colors.grey[300];
+  bool normalIsSelected = false;
   double opac = 1;
 
   @override
@@ -37,13 +37,15 @@ class _MyMultipleOptions extends State<MyMultipleOptions> {
       children: List<Widget>.generate(
         widget.listDataset.length,
         (int index) {
-          if (widget.listDataset[index].contains("Normal")) {
+          if (widget.listDataset[index].contains("Normal") || widget.listDataset[index].contains("Oriented")
+              || widget.listDataset[index].contains("Adequate airway")) {
             return Container(
               // padding: EdgeInsets.only(right: 10),
               child: _buildChoiceChipWidget(index),
             );
           } else {
-            if (listSelected.contains("Normal")) {
+            if (listSelected.contains("Normal") || listSelected.contains("Oriented") 
+                || listSelected.contains("Adequate airway")) {
               opac = .4;
               bgColor = Colors.grey[100];
               normalIsSelected = true;
@@ -80,7 +82,8 @@ class _MyMultipleOptions extends State<MyMultipleOptions> {
         elevation: 4,
         onSelected: (bool selected) {
           setState(() {
-            if (widget.listDataset[index].contains("Normal")) {
+            if (widget.listDataset[index].contains("Normal") || widget.listDataset[index].contains("Oriented")
+                || widget.listDataset[index].contains("Adequate airway")) {
               if (normalIsSelected) {
                 listSelected.remove(widget.listDataset[index]);
                 normalIsSelected = false;
@@ -97,7 +100,14 @@ class _MyMultipleOptions extends State<MyMultipleOptions> {
               if (normalIsSelected) {
                 listSelected.clear();
                 bgColor = Colors.grey[100];
-                listSelected.add("Normal");
+
+                if(widget.listDataset.contains("Normal")){
+                  listSelected.add("Normal");
+                }else if(widget.listDataset.contains("Oriented")){
+                  listSelected.add("Oriented");
+                }else if(widget.listDataset.contains("Adequate airway")){
+                  listSelected.add("Adequate airway");
+                }
                 opac = .4;
               } else {
                 listSelected.contains(widget.listDataset[index])

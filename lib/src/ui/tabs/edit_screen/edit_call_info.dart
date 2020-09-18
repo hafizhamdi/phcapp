@@ -232,238 +232,246 @@ class _EditCallInfo extends State<EditCallInfo>
     //       }
     // String initialValue;
 
-    return Center(
+    return
+        // Scaffold(
+        //   backgroundColor: Colors.white,
+        // backgroundColor: ,
+        // body:
+        Center(
       child: Container(
+        color: Colors.white,
+        // child: Container(
+        // width: 700,
         constraints: BoxConstraints(maxWidth: 700),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(20.0),
-            ),
-          ),
-          margin: EdgeInsets.all(10.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.check),
-                      onPressed: () {
-                        // {
-                        // if (_formKey.currentState.validate()) {
-                        // print("widget.call_information.assign_id");
-                        // print(widget.call_information.assign_id);
-                        callInfoBloc.add(SaveCallInfo(
-                            callInformation: new CallInformation(
-                          callcardNo: cardNoValue,
-                          callReceived: receivedController.text,
-                          callerContactno: contactNoController.text,
-                          eventCode: mergingEventCode(
-                              eventCol1Controller,
-                              eventCol2Controller,
-                              eventCol3Controller,
-                              eventCol4Controller),
-                          priority: _priority,
-                          incidentDesc: incidentController.text,
-                          incidentLocation: locationController.text,
-                          landmark: landmarkController.text,
-                          locationType: _location,
-                          distanceToScene: _distance,
-                          assignId: widget.call_information.assign_id,
-                          plateNo: widget.call_information.plate_no,
-                        )));
+        // child: Card(
+        //   shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.all(
+        //       Radius.circular(20.0),
+        //     ),
+        //   ),
+        // margin: EdgeInsets.all(10.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.check),
+                    onPressed: () {
+                      // {
+                      // if (_formKey.currentState.validate()) {
+                      // print("widget.call_information.assign_id");
+                      // print(widget.call_information.assign_id);
+                      callInfoBloc.add(SaveCallInfo(
+                          callInformation: new CallInformation(
+                        callcardNo: cardNoValue,
+                        callReceived: receivedController.text,
+                        callerContactno: contactNoController.text,
+                        eventCode: mergingEventCode(
+                            eventCol1Controller,
+                            eventCol2Controller,
+                            eventCol3Controller,
+                            eventCol4Controller),
+                        priority: _priority,
+                        incidentDesc: incidentController.text,
+                        incidentLocation: locationController.text,
+                        landmark: landmarkController.text,
+                        locationType: _location,
+                        distanceToScene: _distance,
+                        assignId: widget.call_information.assign_id,
+                        plateNo: widget.call_information.plate_no,
+                      )));
 
-                        // final snackBar = SnackBar(
-                        //   content: Text("Call information has been saved!"),
-                        // );
-                        // Scaffold.of(context).showSnackBar(snackBar);
+                      // final snackBar = SnackBar(
+                      //   content: Text("Call information has been saved!"),
+                      // );
+                      // Scaffold.of(context).showSnackBar(snackBar);
 
-                        //   Navigator.pop(context);
-                        // }
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
+                      //   Navigator.pop(context);
+                      // }
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+
+              // SizedBox(
+              //   height: 40,
+              // ),
+              // Row(
+              //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: <Widget>[
+              // IconButton(
+              //   icon: Icon(Icons.close),
+              //   onPressed: () {
+              //     Navigator.pop(context);
+              //   },
+              // ),
+              Center(
+                child: HeaderSection("Edit Call Information"),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              // IconButton(
+              //   icon: Icon(Icons.check),
+              //   onPressed: () {
+              //     // {
+              //     // if (_formKey.currentState.validate()) {
+              //     // print("widget.call_information.assign_id");
+              //     // print(widget.call_information.assign_id);
+              //     callInfoBloc.add(SaveCallInfo(
+              //         callInformation: new CallInformation(
+              //       callcardNo: cardNoValue,
+              //       callReceived: receivedController.text,
+              //       callerContactno: contactNoController.text,
+              //       eventCode: mergingEventCode(
+              //           eventCol1Controller,
+              //           eventCol2Controller,
+              //           eventCol3Controller,
+              //           eventCol4Controller),
+              //       priority: _priority,
+              //       incidentDesc: incidentController.text,
+              //       incidentLocation: locationController.text,
+              //       landmark: landmarkController.text,
+              //       locationType: _location,
+              //       distanceToScene: _distance,
+              //       assignId: widget.call_information.assign_id,
+              //       plateNo: widget.call_information.plate_no,
+              //     )));
+
+              //     // final snackBar = SnackBar(
+              //     //   content: Text("Call information has been saved!"),
+              //     // );
+              //     // Scaffold.of(context).showSnackBar(snackBar);
+
+              //     //   Navigator.pop(context);
+              //     // }
+              //     Navigator.pop(context);
+              //   },
+              // ),
+              //   ],
+              // ),
+              // // TextEditLabel(
+              // //     labelText: "Call Card No",
+              // //     controller: cardNoController),
+
+              Row(children: [
+                Expanded(
+                  child: CardNoTextInput(
+                    labelText: "Call Card No",
+                    controller: callInfoBloc.cardNoController,
+                    initialData: cardNoValue,
+                    // controller: cardNoController,
+                    // stream: infoBloc.callcarNoStream,
+                    // updateText: infoBloc.setCallcardNo,
+                  ),
                 ),
-
-                // SizedBox(
-                //   height: 40,
-                // ),
-                // Row(
-                //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: <Widget>[
-                // IconButton(
-                //   icon: Icon(Icons.close),
-                //   onPressed: () {
-                //     Navigator.pop(context);
-                //   },
-                // ),
-                Center(
-                  child: HeaderSection("Edit Call Information"),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                // IconButton(
-                //   icon: Icon(Icons.check),
-                //   onPressed: () {
-                //     // {
-                //     // if (_formKey.currentState.validate()) {
-                //     // print("widget.call_information.assign_id");
-                //     // print(widget.call_information.assign_id);
-                //     callInfoBloc.add(SaveCallInfo(
-                //         callInformation: new CallInformation(
-                //       callcardNo: cardNoValue,
-                //       callReceived: receivedController.text,
-                //       callerContactno: contactNoController.text,
-                //       eventCode: mergingEventCode(
-                //           eventCol1Controller,
-                //           eventCol2Controller,
-                //           eventCol3Controller,
-                //           eventCol4Controller),
-                //       priority: _priority,
-                //       incidentDesc: incidentController.text,
-                //       incidentLocation: locationController.text,
-                //       landmark: landmarkController.text,
-                //       locationType: _location,
-                //       distanceToScene: _distance,
-                //       assignId: widget.call_information.assign_id,
-                //       plateNo: widget.call_information.plate_no,
-                //     )));
-
-                //     // final snackBar = SnackBar(
-                //     //   content: Text("Call information has been saved!"),
-                //     // );
-                //     // Scaffold.of(context).showSnackBar(snackBar);
-
-                //     //   Navigator.pop(context);
-                //     // }
-                //     Navigator.pop(context);
-                //   },
-                // ),
-                //   ],
-                // ),
-                // // TextEditLabel(
-                // //     labelText: "Call Card No",
-                // //     controller: cardNoController),
-
-                Row(children: [
+                Expanded(
+                  child: _dateReceived("Date Received", receivedController),
+                )
+              ]),
+              Row(
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Expanded(
-                    child: CardNoTextInput(
-                      labelText: "Call Card No",
-                      controller: callInfoBloc.cardNoController,
-                      initialData: cardNoValue,
-                      // controller: cardNoController,
-                      // stream: infoBloc.callcarNoStream,
-                      // updateText: infoBloc.setCallcardNo,
+                    child: TextInput(
+                      labelText: "Event Code",
+                      controller: eventCol1Controller,
+
+                      // hintText: "37/XC/02/XW",
+                      // maskFormater: eventCodeFormater,
                     ),
                   ),
                   Expanded(
-                    child: _dateReceived("Date Received", receivedController),
-                  )
-                ]),
-                Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: TextInput(
-                        labelText: "Event Code",
-                        controller: eventCol1Controller,
-
-                        // hintText: "37/XC/02/XW",
-                        // maskFormater: eventCodeFormater,
-                      ),
+                    child: TextInput(
+                      // labelText: "Event Code",
+                      controller: eventCol2Controller,
+                      // hintText: "37/XC/02/XW",
+                      // maskFormater: eventCodeFormater,
                     ),
-                    Expanded(
-                      child: TextInput(
-                        // labelText: "Event Code",
-                        controller: eventCol2Controller,
-                        // hintText: "37/XC/02/XW",
-                        // maskFormater: eventCodeFormater,
-                      ),
+                  ),
+                  Expanded(
+                    child: TextInput(
+                      // labelText: "Event Code",
+                      controller: eventCol3Controller,
+                      // hintText: "37/XC/02/XW",
+                      // maskFormater: eventCodeFormater,
                     ),
-                    Expanded(
-                      child: TextInput(
-                        // labelText: "Event Code",
-                        controller: eventCol3Controller,
-                        // hintText: "37/XC/02/XW",
-                        // maskFormater: eventCodeFormater,
-                      ),
+                  ),
+                  Expanded(
+                    child: TextInput(
+                      // labelText: "Event Code",
+                      controller: eventCol4Controller,
+                      // hintText: "37/XC/02/XW",
+                      // maskFormater: eventCodeFormater,
                     ),
-                    Expanded(
-                      child: TextInput(
-                        // labelText: "Event Code",
-                        controller: eventCol4Controller,
-                        // hintText: "37/XC/02/XW",
-                        // maskFormater: eventCodeFormater,
-                      ),
-                    ),
-                  ],
+                  ),
+                ],
+              ),
+              Row(children: [
+                Expanded(
+                  child: DropDownList("Location type", LIST_LOCTYPE,
+                      InputOption.location, _location),
                 ),
-                Row(children: [
+                Expanded(
+                  child: DropDownList("Priority", LIST_PRIORITY,
+                      InputOption.priority, _priority),
+                ),
+              ]),
+              TextInput(
+                  labelText: "Incident Location",
+                  controller: locationController),
+              TextInput(
+                  labelText: "Complaint",
+                  controller: incidentController,
+                  maxLines: 3),
+              TextInput(labelText: "Landmark", controller: landmarkController),
+              DropDownList("Distance to scene", LIST_DISTANCES,
+                  InputOption.distance, _distance),
+              Row(
+                children: [
                   Expanded(
-                    child: DropDownList("Location type", LIST_LOCTYPE,
-                        InputOption.location, _location),
-                  ),
-                  Expanded(
-                    child: DropDownList("Priority", LIST_PRIORITY,
-                        InputOption.priority, _priority),
-                  ),
-                ]),
-                TextInput(
-                    labelText: "Incident Location",
-                    controller: locationController),
-                TextInput(
-                    labelText: "Complaint",
-                    controller: incidentController,
-                    maxLines: 3),
-                TextInput(
-                    labelText: "Landmark", controller: landmarkController),
-                DropDownList("Distance to scene", LIST_DISTANCES,
-                    InputOption.distance, _distance),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.3,
-                        padding: EdgeInsets.all(15),
-                        // Expanded(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      padding: EdgeInsets.all(15),
+                      // Expanded(
 
-                        child: TextFormField(
-                          controller: contactNoController,
-                          inputFormatters: [contactNoFormater],
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            hintText: "e.g., 012-3456789",
-                            labelText: "Caller Contact No",
-                            fillColor: Colors.white,
-                            border: new OutlineInputBorder(
-                              borderRadius: new BorderRadius.circular(10.0),
-                              borderSide: new BorderSide(),
-                            ),
+                      child: TextFormField(
+                        controller: contactNoController,
+                        inputFormatters: [contactNoFormater],
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: "e.g., 012-3456789",
+                          labelText: "Caller Contact No",
+                          fillColor: Colors.white,
+                          border: new OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(10.0),
+                            borderSide: new BorderSide(),
                           ),
                         ),
                       ),
-                    ), //     inputType:
-                    // Expanded(
-                    //     child: ),
-                    //         TextInputType.numberWithOptions(signed: true),
-                    //     hintText: "0139446197",
-                  ],
-                ),
-              ],
-            ),
+                    ),
+                  ), //     inputType:
+                  // Expanded(
+                  //     child: ),
+                  //         TextInputType.numberWithOptions(signed: true),
+                  //     hintText: "0139446197",
+                ],
+              ),
+            ],
           ),
         ),
+        // ),
+        // ),
       ),
     );
     // });
@@ -494,7 +502,7 @@ class _EditCallInfo extends State<EditCallInfo>
     void callback(String item, int index) {}
 
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.white,
       // appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
