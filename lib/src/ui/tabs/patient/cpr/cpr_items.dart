@@ -924,7 +924,6 @@ class _CPRItems extends State<CPRItems>
                         )
                       : Container()
                   : Container(),
-
             ])
             // ],
             ),
@@ -1075,26 +1074,11 @@ class _CPRItems extends State<CPRItems>
   _buildAnalysis(RhythmAnalysis rhythmAnalysis, Function setState, index) {
     // final provider = Provider.of<CPRProvider>(context);
     final timeCreated = DateTime.now();
-<<<<<<< HEAD
     print("rhythm");
     print(rhythmAnalysis.rhythm);
-<<<<<<< HEAD
-    selectAnalysis != null ? selectAnalysis = selectAnalysis : selectAnalysis = rhythmAnalysis.rhythm;
-=======
     selectAnalysis != null
         ? selectAnalysis = selectAnalysis
         : selectAnalysis = rhythmAnalysis.rhythm;
->>>>>>> 9a5e4ac3dde5c0a236b8faacc1aa2ad626ee5f49
-=======
-    // print("rhythm");
-    // print(rhythmAnalysis.rhythm);
-
-    // setState(() {
-    //   selectAnalysis != null
-    //       ? selectAnalysis = selectAnalysis
-    //       : selectAnalysis = rhythmAnalysis.rhythm;
-    // });
->>>>>>> 52a1e419eb78cb1b88c4382f1f3a62a082ed9650
 
     return Container(
       // padding: EdgeInsets.all(10),
