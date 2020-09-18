@@ -273,7 +273,7 @@ class _VitalSignList extends State<VitalSignList>
                 // margin: EdgeInsets.all(12.0),
 
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.7,
+                  // height: MediaQuery.of(context).size.height * 0.7,
                   child: Column(
                     // mainAxisAlignment: MainAxisAlignment.center,
                     // mainAxisSize: MainAxisSize.min,
@@ -397,7 +397,8 @@ class _VitalSignList extends State<VitalSignList>
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => VitalDetail()));
-                          })
+                          }),
+                      SizedBox(height: 20),
                     ],
                   ),
                 ),

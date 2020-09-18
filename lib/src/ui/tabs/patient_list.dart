@@ -343,6 +343,36 @@ class _Patients extends State<PatientListScreen>
                             otherServicesController),
                       ]);
                     }
+                    return Column(children: [
+                      HeaderSection("Scene Assessment"),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      _buildSceneChips(
+                          "PPE",
+                          _ppe,
+                          callback,
+                          state.selectedPPE != null
+                              ? state.selectedPPE.ppe
+                              : null,
+                          ppeOtherController),
+                      _defaultChips("Environment", _environment, callback,
+                          state.selectedEnvironment),
+                      _defaultChips("Case Type", _trauma, callback,
+                          state.selectedCaseType),
+                      _defaultChips(
+                          "Patient", _patient, callback, state.selectedPatient),
+                      _defaultChips(
+                          "Backup", _backup, callback, state.selectedBackup),
+                      _buildSceneChips(
+                          "Other services at scene",
+                          _otherServices,
+                          callback,
+                          state.selectedServices != null
+                              ? state.selectedServices.otherServices
+                              : null,
+                          otherServicesController),
+                    ]);
                   }),
                   SizedBox(
                     height: 10,
@@ -351,6 +381,7 @@ class _Patients extends State<PatientListScreen>
                       builder: (context, state) {
                     if (state is PatientLoaded) {
                       print("Patient Loaded");
+                      print("HYEYE");
                       return BuildPatientList(
                         patientList: state.patients,
                       );
