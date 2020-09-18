@@ -957,7 +957,7 @@ class PatientAssessment {
   String heartSound;
   List<String> skin;
   String ecg;
-  String abdomenPalpation;
+  List<String> abdomenPalpation;
   String abdomenAbnormalityLocation;
   StrokeScale strokeScale;
 
@@ -999,7 +999,9 @@ class PatientAssessment {
             ? List<String>.from(json["skin"].map((x) => x))
             : null,
         ecg: json["ecg"],
-        abdomenPalpation: json["abdomen_palpation"],
+        abdomenPalpation: json["abdomen_palpation"] is List
+                      ? List<String>.from(json["abdomen_palpation"].map((x) => x))
+                      : [json["abdomen_palpation"]],
         abdomenAbnormalityLocation: json["abdomen_abnormality_location"],
         strokeScale: StrokeScale.fromJson(json["stroke_scale"]),
       );
@@ -1022,7 +1024,9 @@ class PatientAssessment {
         "heart_sound": heartSound,
         "skin": skin != null ? List<dynamic>.from(skin.map((x) => x)) : null,
         "ecg": ecg,
-        "abdomen_palpation": abdomenPalpation,
+        "abdomen_palpation": abdomenPalpation != null
+            ? List<dynamic>.from(abdomenPalpation.map((x) => x))
+            : null,
         "abdomen_abnormality_location": abdomenAbnormalityLocation,
         "stroke_scale": strokeScale.toJson(),
       };
