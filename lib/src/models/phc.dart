@@ -95,6 +95,7 @@ class CallInformation {
   String distanceToScene;
   String plateNo;
   String assignId;
+  String updatedDate;
 
   CallInformation(
       {this.callcardNo,
@@ -108,7 +109,9 @@ class CallInformation {
       this.locationType,
       this.distanceToScene,
       this.plateNo,
-      this.assignId});
+      this.assignId,
+      this.updatedDate
+      });
 
   factory CallInformation.fromJson(Map<String, dynamic> json) =>
       CallInformation(
@@ -123,7 +126,9 @@ class CallInformation {
           locationType: json["location_type"],
           distanceToScene: json["distance_to_scene"],
           plateNo: json["plate_no"],
-          assignId: json["assign_id"]);
+          assignId: json["assign_id"],
+          updatedDate: json["updated_date"]
+          );
 
   Map<String, dynamic> toJson() => {
         "callcard_no": callcardNo,
@@ -137,7 +142,8 @@ class CallInformation {
         "location_type": locationType,
         "distance_to_scene": distanceToScene,
         "plate_no": plateNo,
-        "assign_id": assignId
+        "assign_id": assignId,
+        "updated_date": updatedDate
       };
 
   String get callcard_no => callcardNo;
@@ -152,6 +158,7 @@ class CallInformation {
   String get distance_to_scene => distanceToScene;
   String get plate_no => plateNo;
   String get assign_id => assignId;
+  String get updated_date => updatedDate;
 }
 
 class Patient {
@@ -957,7 +964,7 @@ class PatientAssessment {
   String heartSound;
   List<String> skin;
   String ecg;
-  String abdomenPalpation;
+  List<String> abdomenPalpation;
   String abdomenAbnormalityLocation;
   StrokeScale strokeScale;
 
@@ -999,7 +1006,9 @@ class PatientAssessment {
             ? List<String>.from(json["skin"].map((x) => x))
             : null,
         ecg: json["ecg"],
-        abdomenPalpation: json["abdomen_palpation"],
+        abdomenPalpation: json["abdomen_palpation"] is List
+                      ? List<String>.from(json["abdomen_palpation"].map((x) => x))
+                      : [json["abdomen_palpation"]],
         abdomenAbnormalityLocation: json["abdomen_abnormality_location"],
         strokeScale: StrokeScale.fromJson(json["stroke_scale"]),
       );
@@ -1022,7 +1031,10 @@ class PatientAssessment {
         "heart_sound": heartSound,
         "skin": skin != null ? List<dynamic>.from(skin.map((x) => x)) : null,
         "ecg": ecg,
-        "abdomen_palpation": abdomenPalpation,
+        
+        "abdomen_palpation": abdomenPalpation != null
+            ? List<dynamic>.from(abdomenPalpation.map((x) => x))
+            : null,
         "abdomen_abnormality_location": abdomenAbnormalityLocation,
         "stroke_scale": strokeScale.toJson(),
       };

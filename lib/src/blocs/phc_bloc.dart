@@ -57,7 +57,7 @@ class PostPhc extends PhcEvent {
 abstract class PhcState extends Equatable {
   final Phc phc;
 
-  PhcState({this.phc}) ;//: assert(phc != null);
+  PhcState({this.phc}); //: assert(phc != null);
 
   @override
   List<Object> get props => [phc];

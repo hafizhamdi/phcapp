@@ -3,11 +3,14 @@ import 'package:intl/intl.dart';
 import 'package:phcapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'datetime_verbose.dart';
+
 class CardList extends StatelessWidget {
   final callcardNo;
   final plateNo;
   final address;
   final receivedCall;
+  final updatedDate;
   final Function onPressed;
 
   CardList(
@@ -15,10 +18,16 @@ class CardList extends StatelessWidget {
       this.plateNo,
       this.address,
       this.receivedCall,
-      this.onPressed});
+      this.onPressed,
+      this.updatedDate});
 
   @override
   Widget build(BuildContext context) {
+    DateFormatter df = DateFormatter();
+    DateTime dt = DateTime.parse(updatedDate);
+    var updateTime =
+        updatedDate != null ? df.getVerboseDateTimeRepresentation(dt) : '';
+
     return InkWell(
       borderRadius: BorderRadius.circular(10),
       child: Container(
@@ -77,11 +86,9 @@ class CardList extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            receivedCall != null
-                                ? DateFormat("dd/MM/yyyy, h:mm a").format(
-                                    DateTime.parse(receivedCall),
-                                  )
-                                : '',
+                            " $updateTime",
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: Colors.grey),
                           )
                         ]),
                     SizedBox(
@@ -105,20 +112,44 @@ class CardList extends StatelessWidget {
                     ]),
 
                     Row(children: [
-                      Icon(
-                        Icons.directions_car,
-                        color: Colors.purple,
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                          child: Text(
-                        plateNo != null ? plateNo : '',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.grey[700],
-                          fontFamily: "Poppins",
+                      Row(children: [
+                        Icon(
+                          Icons.directions_car,
+                          color: Colors.purple,
                         ),
-                      )),
+                        SizedBox(width: 10),
+                        Container(
+                            width: 100,
+                            child: Text(
+                              plateNo != null ? plateNo : '',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                                fontFamily: "Poppins",
+                              ),
+                            )),
+                      ]),
+                      Row(children: [
+                        Icon(
+                          Icons.call_received,
+                          color: Colors.indigo,
+                        ),
+                        SizedBox(width: 10),
+                        Container(
+                            width: 100,
+                            child: Text(
+                              receivedCall != null
+                                  ? DateFormat("d-MMM HH:mm").format(
+                                      DateTime.parse(receivedCall),
+                                    )
+                                  : '',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                                fontFamily: "Poppins",
+                              ),
+                            )),
+                      ])
                     ]),
                     // Text("THE REST")
                   ],
