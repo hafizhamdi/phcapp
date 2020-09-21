@@ -186,7 +186,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         listData: _skinAssment,
         value: List<String>(),
         multiple: true),
-    ChipItem(id: "ecg", name: "ECG", listData: _ecg, value: ""),
+    ChipItem(id: "ecg", name: "ECG", listData: _ecg, value: List<String>(), multiple: true),
     ChipItem(
         id: "abdomen_palpation",
         name: "Abdomen Palpation",
@@ -398,10 +398,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         }
         if (f.id == "ecg") {
           f.value = widget.patientAssessment.ecg;
-          listECG.add(widget.patientAssessment.ecg);
-          if (listECG.length > 1) {
-            listECG.removeLast();
-          }
+          listECG = widget.patientAssessment.ecg;
         }
         if (f.id == "abdomen_palpation") {
           f.value = widget.patientAssessment.abdomenPalpation;
@@ -559,8 +556,12 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                         heartSound:
                             listHeartSound.length > 0 ? listHeartSound[0] : "",
                         skin: listSkin,
-                        ecg: listECG.length > 0 ? listECG[0] : "",
-                        abdomenPalpation: listAbdomenPalpation,
+                        ecg: listECG.length > 0
+                            ? listECG
+                            : List<String>(),
+                        abdomenPalpation: listAbdomenPalpation.length > 0
+                            ? listAbdomenPalpation
+                            : List<String>(),
                         abdomenAbnormalityLocation: abnormalTextController.text,
                         strokeScale: StrokeScale(
                           arm: listStrokeArm.length > 0 ? listStrokeArm : List<String>(),

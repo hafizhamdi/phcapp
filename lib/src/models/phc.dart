@@ -802,36 +802,66 @@ class Analysis {
 
 class IncidentReporting {
   DateTime timestamp;
-  String responseDelay;
-  String sceneDelay;
-  String transportDelay;
+  List<String> responseDelay;
+  String othersResponse;
+  List<String> sceneDelay;
+  String othersScene;
+  List<String> transportDelay;
+  String othersTransport;
 
   IncidentReporting(
       {this.responseDelay,
+      this.othersResponse,
       this.sceneDelay,
+      this.othersScene,
       this.transportDelay,
+      this.othersTransport,
       this.timestamp});
 
   factory IncidentReporting.fromJson(Map<String, dynamic> json) =>
       IncidentReporting(
         timestamp: parsingDateTime(json["timestamp"]),
-        responseDelay: json["response_delay"],
-        sceneDelay: json["scene_delay"],
-        transportDelay: json["transport_delay"],
+        responseDelay: json['response_delay'] is List
+                      ? List<String>.from(json['response_delay'].map((x) => x))
+                      : [json['response_delay']],
+        othersResponse: json['others_response'] != null
+                        ? json['others_response']
+                        : null,
+        sceneDelay: json['scene_delay'] is List
+                      ? List<String>.from(json['scene_delay'].map((x) => x))
+                      : [json['scene_delay']],
+        othersScene: json['others_scene'] != null
+                        ? json['others_scene']
+                        : null,
+        transportDelay: json['transport_delay'] is List
+                      ? List<String>.from(json['transport_delay'].map((x) => x))
+                      : [json['transport_delay']],
+        othersTransport: json['others_transport'] != null
+                        ? json['others_transport']
+                        : null,
       );
   // print("Incident reporting ... done");
   Map<String, dynamic> toJson() => {
         "timestamp": timestamp.toString(),
-        "response_delay": responseDelay,
-        "scene_delay": sceneDelay,
-        "transport_delay": transportDelay,
+        "response_delay": responseDelay != null
+            ? List<dynamic>.from(responseDelay.map((x) => x))
+            : null,
+        "others_response": othersResponse,
+        "scene_delay": sceneDelay != null
+            ? List<dynamic>.from(sceneDelay.map((x) => x))
+            : null,
+        "others_scene": othersScene,
+        "transport_delay": transportDelay != null
+            ? List<dynamic>.from(transportDelay.map((x) => x))
+            : null,
+        "others_transport": othersTransport
       };
 }
 
 class InterventionAss {
   DateTime timestamp;
   List<String> airwayDevice;
-  String oxygen;
+  List<String> oxygen;
   List<String> extHaemorrhage;
   List<String> vascularAccess;
   String vascularAccessLocation;
@@ -858,7 +888,9 @@ class InterventionAss {
         airwayDevice: json['airway_device'] is List
                       ? List<String>.from(json['airway_device'].map((x) => x))
                       : [json['airway_device']],
-        oxygen: json["oxygen"],
+        oxygen: json['oxygen'] is List
+                      ? List<String>.from(json['oxygen'].map((x) => x))
+                      : [json['oxygen']],
         extHaemorrhage: json["ext_haemorrhage"] != null
               ? List<String>.from(json["ext_haemorrhage"].map((x) => x))
               : null,
@@ -880,7 +912,9 @@ class InterventionAss {
         "airway_device": airwayDevice != null
             ? List<dynamic>.from(airwayDevice.map((x) => x))
             : null,
-        "oxygen": oxygen,
+        "oxygen": oxygen != null
+            ? List<dynamic>.from(oxygen.map((x) => x))
+            : null,
         "ext_haemorrhage": extHaemorrhage != null
             ? List<dynamic>.from(extHaemorrhage.map((x) => x))
             : null,
@@ -956,7 +990,7 @@ class PatientAssessment {
   BreathSound breathSound;
   String heartSound;
   List<String> skin;
-  String ecg;
+  List<String> ecg;
   List<String> abdomenPalpation;
   String abdomenAbnormalityLocation;
   StrokeScale strokeScale;
@@ -998,7 +1032,9 @@ class PatientAssessment {
         skin: json["skin"] != null
             ? List<String>.from(json["skin"].map((x) => x))
             : null,
-        ecg: json["ecg"],
+        ecg: json["ecg"] is List
+                      ? List<String>.from(json["ecg"].map((x) => x))
+                      : [json["ecg"]],
         abdomenPalpation: json["abdomen_palpation"] is List
                       ? List<String>.from(json["abdomen_palpation"].map((x) => x))
                       : [json["abdomen_palpation"]],
@@ -1023,7 +1059,9 @@ class PatientAssessment {
         "breath_sound": breathSound.toJson(),
         "heart_sound": heartSound,
         "skin": skin != null ? List<dynamic>.from(skin.map((x) => x)) : null,
-        "ecg": ecg,
+        "ecg": ecg != null
+            ? List<dynamic>.from(ecg.map((x) => x))
+            : null,
         "abdomen_palpation": abdomenPalpation != null
             ? List<dynamic>.from(abdomenPalpation.map((x) => x))
             : null,
