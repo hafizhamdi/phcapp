@@ -139,6 +139,7 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
   }
 
   Stream<VitalState> _addVitalToState(AddVital event) async* {
+    yield VitalLoading();
     // Patient patient =
     //     new Patient(patientInformation: event.patient.patientInformation);
 
@@ -159,6 +160,7 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
   }
 
   Stream<VitalState> _updateVitalToState(UpdateVital event) async* {
+    yield VitalLoading();
     final currentState = state;
 
     final foundVital = currentState.listVitals
@@ -196,6 +198,7 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
   }
 
   Stream<VitalState> _removeVitalToState(RemoveVital event) async* {
+    yield VitalLoading();
     //   print("REMOVE PATIENT BY 1");
     //   print("length");
 

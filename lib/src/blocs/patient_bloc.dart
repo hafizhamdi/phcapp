@@ -229,6 +229,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
 //   }
 
   Stream<PatientState> _addPatientToState(AddPatient event) async* {
+    yield PatientLoading();
     Patient patient = new Patient(
         patientInformation: event.patient.patientInformation,
         cprLog: event.patient.cprLog,
@@ -263,6 +264,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
   }
 
   Stream<PatientState> _updatePatientToState(UpdatePatient event) async* {
+    yield PatientLoading();
     final currentState = state;
 
     final foundPatient = currentState.patients.firstWhere((data) =>
@@ -298,6 +300,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
   }
 
   Stream<PatientState> _removePatientToState(RemovePatient event) async* {
+    yield PatientLoading();
     print("REMOVE PATIENT BY 1");
     print("length");
 

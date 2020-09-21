@@ -71,10 +71,7 @@ class _Patients extends State<PatientListScreen>
   // CprBloc cprBloc;
 
   @override
-  initState() {
-
-
-  }
+  initState() {}
 
   @override
   void didChangeDependencies() {
@@ -93,8 +90,16 @@ class _Patients extends State<PatientListScreen>
     //       patients: List<Patient>(),
     //       sceneAssessment: widget.sceneAssessment));
     // }
-    ppeOtherController.text = widget.sceneAssessment != null ? widget.sceneAssessment.ppe.otherspecify : null;
-    otherServicesController.text = widget.sceneAssessment != null ? widget.sceneAssessment.otherServicesAtScene.otherspecify : null;
+    ppeOtherController.text = widget.sceneAssessment != null
+        ? widget.sceneAssessment.ppe != null
+            ? widget.sceneAssessment.ppe.otherspecify
+            : null
+        : null;
+    otherServicesController.text = widget.sceneAssessment != null
+        ? widget.sceneAssessment.otherServicesAtScene != null
+            ? widget.sceneAssessment.otherServicesAtScene.otherspecify
+            : null
+        : null;
 
     super.didChangeDependencies();
   }
@@ -128,39 +133,49 @@ class _Patients extends State<PatientListScreen>
                   padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
                   width: MediaQuery.of(context).size.width * 0.5,
                   child: TextField(
-                     onChanged: (text) {
+                    onChanged: (text) {
+                      if (ppeList == null &&
+                          widget.sceneAssessment.ppe.ppe == null) {
+                        ppeList = new List<String>();
+                      }
+                      if (wantedList == null &&
+                          widget.sceneAssessment.otherServicesAtScene
+                                  .otherServices ==
+                              null) {
+                        wantedList = new List<String>();
+                      }
+                      final ppe = new PPE(
+                          ppe: widget.sceneAssessment.ppe.ppe != null
+                              ? widget.sceneAssessment.ppe.ppe
+                              : ppeList,
+                          otherspecify: ppeOtherController.text);
 
-                       if(ppeList == null && widget.sceneAssessment.ppe.ppe == null){
-                              ppeList = new List<String>();
-                       }
-                       if(wantedList == null && widget.sceneAssessment.otherServicesAtScene.otherServices == null){
-       wantedList = new List<String>();
-                       }
-       final ppe = new PPE(ppe: widget.sceneAssessment.ppe.ppe != null 
-                                ? widget.sceneAssessment.ppe.ppe
-                                : ppeList, otherspecify: ppeOtherController.text);
+                      final otherServices = new OtherServices(
+                          otherServices: widget.sceneAssessment
+                                      .otherServicesAtScene.otherServices !=
+                                  null
+                              ? widget.sceneAssessment.otherServicesAtScene
+                                  .otherServices
+                              : wantedList,
+                          otherspecify: otherServicesController.text);
+                      sceneBloc = BlocProvider.of<SceneBloc>(context);
+                      // if(ppeOtherController.text.isNotEmpty){
+                      //   ppeList.removeLast();
+                      //   ppeList.add(ppeOtherController.text);
+                      // }
 
-      final otherServices = new OtherServices(otherServices: widget.sceneAssessment.otherServicesAtScene.otherServices != null 
-                                ? widget.sceneAssessment.otherServicesAtScene.otherServices
-                                : wantedList, otherspecify: otherServicesController.text);
-       sceneBloc = BlocProvider.of<SceneBloc>(context);
-        // if(ppeOtherController.text.isNotEmpty){
-        //   ppeList.removeLast();
-        //   ppeList.add(ppeOtherController.text);
-        // }
+                      // otherServicesController.text.isNotEmpty
+                      // ? wantedList.add(otherServicesController.text)
+                      // : wantedList = wantedList;
 
-        // otherServicesController.text.isNotEmpty 
-        // ? wantedList.add(otherServicesController.text)
-        // : wantedList = wantedList;
-        
-        sceneBloc.add(LoadScene(
-          selectedPPE: ppe,
-          selectedEnvironment: environmentList,
-          selectedCaseType: caseTypeList,
-          selectedPatient: patientList,
-          selectedBackup: backupList,
-          selectedServices: otherServices));
-                   },
+                      sceneBloc.add(LoadScene(
+                          selectedPPE: ppe,
+                          selectedEnvironment: environmentList,
+                          selectedCaseType: caseTypeList,
+                          selectedPatient: patientList,
+                          selectedBackup: backupList,
+                          selectedServices: otherServices));
+                    },
                     controller: otherController,
                     decoration: InputDecoration(
                       labelText: "Other separated with comma(,)",
@@ -230,29 +245,34 @@ class _Patients extends State<PatientListScreen>
         });
       }
 
-        sceneBloc = BlocProvider.of<SceneBloc>(context);
-        // ppeOtherController.text.isNotEmpty 
-        // ? ppeList.add(ppeOtherController.text)
-        // : ppeList = ppeList;
+      sceneBloc = BlocProvider.of<SceneBloc>(context);
+      // ppeOtherController.text.isNotEmpty
+      // ? ppeList.add(ppeOtherController.text)
+      // : ppeList = ppeList;
 
-        // otherServicesController.text.isNotEmpty 
-        // ? wantedList.add(otherServicesController.text)
-        // : wantedList = wantedList;
+      // otherServicesController.text.isNotEmpty
+      // ? wantedList.add(otherServicesController.text)
+      // : wantedList = wantedList;
 
-        final ppe = new PPE(ppe: widget.sceneAssessment.ppe.ppe != null 
-                                ? widget.sceneAssessment.ppe.ppe
-                                : ppeList, otherspecify: ppeOtherController.text);
-        final otherServices = new OtherServices(otherServices: widget.sceneAssessment.otherServicesAtScene.otherServices != null 
-                                ? widget.sceneAssessment.otherServicesAtScene.otherServices
-                                : wantedList, otherspecify: otherServicesController.text);
-        sceneBloc.add(LoadScene(
+      final ppe = new PPE(
+          ppe: widget.sceneAssessment.ppe.ppe != null
+              ? widget.sceneAssessment.ppe.ppe
+              : ppeList,
+          otherspecify: ppeOtherController.text);
+      final otherServices = new OtherServices(
+          otherServices:
+              widget.sceneAssessment.otherServicesAtScene.otherServices != null
+                  ? widget.sceneAssessment.otherServicesAtScene.otherServices
+                  : wantedList,
+          otherspecify: otherServicesController.text);
+      sceneBloc.add(LoadScene(
           selectedPPE: ppe,
           selectedEnvironment: environmentList,
           selectedCaseType: caseTypeList,
           selectedPatient: patientList,
           selectedBackup: backupList,
           selectedServices: otherServices));
-        print("bloc kat sini: ");
+      print("bloc kat sini: ");
 
       // patientBloc.add(LoadPatient(
       //     assign_id: widget.assign_id,
@@ -290,49 +310,78 @@ class _Patients extends State<PatientListScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  BlocBuilder<SceneBloc, SceneState>(
-                    builder: (context, state) {
-                      if (state is LoadedScene) {
-                        return Column(children: [
-                          HeaderSection("Scene Assessment"),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _buildSceneChips("PPE", _ppe, callback,
-                              state.selectedPPE != null
-                              ? state.selectedPPE.ppe 
-                              : null, ppeOtherController),
-                          _defaultChips("Environment", _environment,
-                              callback, state.selectedEnvironment),
-                          _defaultChips("Case Type", _trauma, callback,
-                              state.selectedCaseType),
-                          _defaultChips("Patient", _patient, callback,
-                              state.selectedPatient),
-                          _defaultChips("Backup", _backup, callback,
-                              state.selectedBackup),
-                          _buildSceneChips(
-                              "Other services at scene",
-                              _otherServices,
-                              callback,
-                              state.selectedServices.otherServices != null
+                  BlocBuilder<SceneBloc, SceneState>(builder: (context, state) {
+                    if (state is LoadedScene) {
+                      return Column(children: [
+                        HeaderSection("Scene Assessment"),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        _buildSceneChips(
+                            "PPE",
+                            _ppe,
+                            callback,
+                            state.selectedPPE != null
+                                ? state.selectedPPE.ppe
+                                : null,
+                            ppeOtherController),
+                        _defaultChips("Environment", _environment, callback,
+                            state.selectedEnvironment),
+                        _defaultChips("Case Type", _trauma, callback,
+                            state.selectedCaseType),
+                        _defaultChips("Patient", _patient, callback,
+                            state.selectedPatient),
+                        _defaultChips(
+                            "Backup", _backup, callback, state.selectedBackup),
+                        _buildSceneChips(
+                            "Other services at scene",
+                            _otherServices,
+                            callback,
+                            state.selectedServices != null
+                                ? state.selectedServices.otherServices
+                                : null,
+                            otherServicesController),
+                      ]);
+                    }
+                    return Column(children: [
+                      HeaderSection("Scene Assessment"),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      _buildSceneChips(
+                          "PPE",
+                          _ppe,
+                          callback,
+                          state.selectedPPE != null
+                              ? state.selectedPPE.ppe
+                              : null,
+                          ppeOtherController),
+                      _defaultChips("Environment", _environment, callback,
+                          state.selectedEnvironment),
+                      _defaultChips("Case Type", _trauma, callback,
+                          state.selectedCaseType),
+                      _defaultChips(
+                          "Patient", _patient, callback, state.selectedPatient),
+                      _defaultChips(
+                          "Backup", _backup, callback, state.selectedBackup),
+                      _buildSceneChips(
+                          "Other services at scene",
+                          _otherServices,
+                          callback,
+                          state.selectedServices != null
                               ? state.selectedServices.otherServices
                               : null,
-                              otherServicesController),
-                        ]);
-                      }
-                    }
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    BlocBuilder<PatientBloc, PatientState>(
-                        builder: (context, state) {
-                      if (state is PatientLoaded) {
-                        print("Patient Loaded");
-                        return BuildPatientList(
-                          patientList: state.patients,
-                        );
-                      }
+                          otherServicesController),
+                    ]);
+                  }),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  BlocBuilder<PatientBloc, PatientState>(
+                      builder: (context, state) {
+                    if (state is PatientLoaded) {
+                      print("Patient Loaded");
+                      print("HYEYE");
                       return BuildPatientList(
                         patientList: state.patients,
                       );
@@ -349,7 +398,8 @@ class _Patients extends State<PatientListScreen>
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 }
 
@@ -454,7 +504,6 @@ class BuildPatientList extends StatelessWidget {
             // Add your onPressed code here!
           });
     }
-    
 
     badgeCircle(count) => Container(
           width: 25,
