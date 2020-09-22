@@ -6,7 +6,7 @@ that will synchronize with the hospital system.
 
 Developed for MOH (Ministry of Health)
 
-Final version is 1.21
+Final version is 2.2
 
 # Features
 
