@@ -351,7 +351,7 @@ class TraumaAssessment {
           pelvic: json["pelvic"] != null
               ? List<String>.from(json["pelvic"].map((x) => x))
               : null,
-          rightHip: json["right_Hip"] != null
+          rightHip: json["right_hip"] != null
               ? List<String>.from(json["right_hip"].map((x) => x))
               : null,
           leftHip: json["left_hip"] != null
