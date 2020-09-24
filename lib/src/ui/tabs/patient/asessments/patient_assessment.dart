@@ -89,10 +89,7 @@ const _arm = [
   "Unable to assess"
 ];
 
-const _normality = [
-  "Normal",
-  "Abnormal"
-];
+const _normality = ["Normal", "Abnormal"];
 
 class PatientAssessmentScreen extends StatefulWidget {
   final PatientAssessment patientAssessment;
@@ -137,7 +134,11 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
     //     listData: _disasterTriage,
     //     value: ""),
     ChipItem(
-        id: "appearance", name: "Appearance", listData: _appearance, value: List<String>(), multiple: true),
+        id: "appearance",
+        name: "Appearance",
+        listData: _appearance,
+        value: List<String>(),
+        multiple: true),
     ChipItem(
         id: "level_responsive",
         name: "Level of Responsiveness",
@@ -147,7 +148,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         id: "airway_patency",
         name: "Airway Patency",
         listData: _airway,
-        value: List<String>(), 
+        value: List<String>(),
         multiple: true),
     ChipItem(
         id: "respiratory_effort",
@@ -186,7 +187,12 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         listData: _skinAssment,
         value: List<String>(),
         multiple: true),
-    ChipItem(id: "ecg", name: "ECG", listData: _ecg, value: List<String>(), multiple: true),
+    ChipItem(
+        id: "ecg",
+        name: "ECG",
+        listData: _ecg,
+        value: List<String>(),
+        multiple: true),
     ChipItem(
         id: "abdomen_palpation",
         name: "Abdomen Palpation",
@@ -203,21 +209,25 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         id: "stroke_speech",
         name: "Stroke Scale: Speech",
         listData: _speech,
-        value: List<String>(), 
+        value: List<String>(),
         multiple: true),
     ChipItem(
-        id: "stroke_arm", name: "Stroke Scale: Arm", listData: _arm, value: List<String>(), multiple: true),
+        id: "stroke_arm",
+        name: "Stroke Scale: Arm",
+        listData: _arm,
+        value: List<String>(),
+        multiple: true),
     ChipItem(
         id: "stroke_balance",
         name: "Stroke Scale: Balance",
         listData: _normality,
-        value: List<String>(), 
+        value: List<String>(),
         multiple: true),
     ChipItem(
         id: "stroke_eyesight",
         name: "Stroke Scale: Eye Sight",
         listData: _normality,
-        value: List<String>(), 
+        value: List<String>(),
         multiple: true),
   ];
 
@@ -434,10 +444,12 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
       abnormalTextController.text =
           widget.patientAssessment.abdomenAbnormalityLocation;
 
-      // clear textfield others 
-      !_appearance.contains(widget.patientAssessment.appearance)
+      // clear textfield others
+      if (widget.patientAssessment.appearance.isNotEmpty) {
+        !_appearance.contains(widget.patientAssessment.appearance)
             ? otherController.text = widget.patientAssessment.appearance.last
             : otherController.clear();
+      }
     }
 
     super.didChangeDependencies();
@@ -526,11 +538,11 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                         timestamp: new DateTime.now(),
                         disasterTriage:
                             listTriage.length > 0 ? listTriage[0] : "",
-                        appearance: listAppearance.length > 0 
-                                    ? listAppearance.contains("Other")
-                                    ? otherController.text
-                                    : listAppearance
-                                    : List<String>(),
+                        appearance: listAppearance.length > 0
+                            ? listAppearance.contains("Other")
+                                ? otherController.text
+                                : listAppearance
+                            : List<String>(),
                         levelResponsive: listLevelResponsiveness.length > 0
                             ? listLevelResponsiveness[0]
                             : "",
@@ -556,15 +568,15 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                         heartSound:
                             listHeartSound.length > 0 ? listHeartSound[0] : "",
                         skin: listSkin,
-                        ecg: listECG.length > 0
-                            ? listECG
-                            : List<String>(),
+                        ecg: listECG.length > 0 ? listECG : List<String>(),
                         abdomenPalpation: listAbdomenPalpation.length > 0
                             ? listAbdomenPalpation
                             : List<String>(),
                         abdomenAbnormalityLocation: abnormalTextController.text,
                         strokeScale: StrokeScale(
-                          arm: listStrokeArm.length > 0 ? listStrokeArm : List<String>(),
+                          arm: listStrokeArm.length > 0
+                              ? listStrokeArm
+                              : List<String>(),
                           face: listStrokeFace.length > 0
                               ? listStrokeFace
                               : List<String>(),
@@ -605,8 +617,8 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
             }
             String initialData;
             !_appearance.contains(prepareData[index].value)
-            ? initialData = "Other"
-            : initialData = prepareData[index].value;
+                ? initialData = "Other"
+                : initialData = prepareData[index].value;
             return prepareData[index].id != "appearance"
                 ? MyCardSingleOption(
                     id: prepareData[index].id,
