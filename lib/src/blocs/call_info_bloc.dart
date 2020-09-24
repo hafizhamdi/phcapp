@@ -117,7 +117,10 @@ class CallInfoBloc extends Bloc<CallInfoEvent, CallInfoState> {
         locationType: event.callInformation.location_type,
         distanceToScene: event.callInformation.distance_to_scene,
         assignId: event.callInformation.assign_id,
-        plateNo: event.callInformation.plate_no);
+        plateNo: event.callInformation.plate_no,
+        updatedDate: event.callInformation.updated_date
+        
+        );
     yield CallInfoLoaded(callInformation: callInformation);
   }
   // Stream<TextEditingController> get cardNoControllerStream =>  cardNoController;

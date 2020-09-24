@@ -108,9 +108,9 @@ class _ListCallcards extends State<ListCallcards> {
               RefreshPhc(),
             );
 
-            Timer timer = new Timer(new Duration(seconds: 3), () {
-              _refreshCompleter.complete();
-            });
+            // Timer timer = new Timer(new Duration(seconds: 3), () {
+            //   _refreshCompleter.complete();
+            // });
             print("REfreshIndicator===========");
             print("what is state now:");
             print(phcBloc.state);
@@ -138,11 +138,11 @@ class _ListCallcards extends State<ListCallcards> {
                     phcRepository: phcRepository, phcDao: phcDaoClient.phcDao),
                 child: BlocConsumer<PhcBloc, PhcState>(
                   listener: (context, state) {
-                    // if (state is PhcLoaded) {
-                    // //   print("Phcloaded----in listener");
-                    // _refreshCompleter.complete();
-                    // _refreshCompleter = Completer();
-                    // }
+                    if (state is PhcLoaded) {
+                      // //   print("Phcloaded----in listener");
+                      _refreshCompleter.complete();
+                      _refreshCompleter = Completer();
+                    }
                   },
                   builder: (context, state) {
                     phcBloc = BlocProvider.of<PhcBloc>(context);
@@ -292,6 +292,7 @@ class _ListCallcards extends State<ListCallcards> {
                 receivedCall: callInfo.call_received,
                 plateNo: callInfo.plate_no,
                 address: callInfo.incident_location,
+                updatedDate: callInfo.updated_date,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -356,6 +357,7 @@ class _ListCallcards extends State<ListCallcards> {
                     receivedCall: callInfo.call_received,
                     plateNo: callInfo.plate_no,
                     address: callInfo.incident_location,
+                    updatedDate: callInfo.updated_date,
                     onPressed: () {
                       Navigator.push(
                         context,

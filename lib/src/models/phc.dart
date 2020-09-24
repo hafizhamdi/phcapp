@@ -95,6 +95,7 @@ class CallInformation {
   String distanceToScene;
   String plateNo;
   String assignId;
+  String updatedDate;
 
   CallInformation(
       {this.callcardNo,
@@ -108,7 +109,8 @@ class CallInformation {
       this.locationType,
       this.distanceToScene,
       this.plateNo,
-      this.assignId});
+      this.assignId,
+      this.updatedDate});
 
   factory CallInformation.fromJson(Map<String, dynamic> json) =>
       CallInformation(
@@ -123,7 +125,9 @@ class CallInformation {
           locationType: json["location_type"],
           distanceToScene: json["distance_to_scene"],
           plateNo: json["plate_no"],
-          assignId: json["assign_id"]);
+          assignId: json["assign_id"],
+          updatedDate: json["updated_date"],
+          );
 
   Map<String, dynamic> toJson() => {
         "callcard_no": callcardNo,
@@ -137,7 +141,8 @@ class CallInformation {
         "location_type": locationType,
         "distance_to_scene": distanceToScene,
         "plate_no": plateNo,
-        "assign_id": assignId
+        "assign_id": assignId,
+        "updated_date": updatedDate
       };
 
   String get callcard_no => callcardNo;
@@ -152,6 +157,7 @@ class CallInformation {
   String get distance_to_scene => distanceToScene;
   String get plate_no => plateNo;
   String get assign_id => assignId;
+  String get updated_date => updatedDate;
 }
 
 class Patient {
