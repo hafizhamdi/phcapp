@@ -143,7 +143,7 @@ class _InterventionScreen extends State<InterventionScreen> {
         }
         if (f.id == "oxygen") {
           f.value = widget.interAssessment.oxygen;
-          listAirwayDevice = widget.interAssessment.oxygen;
+          listOxygen = widget.interAssessment.oxygen;
         }
         if (f.id == "ext_haemo") {
           f.value = widget.interAssessment.extHaemorrhage;
