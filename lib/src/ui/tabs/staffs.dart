@@ -123,10 +123,15 @@ class _Staffs extends State<Staffs> {
                                     ? Colors.pink[200]
                                     : null,
                                 child: ListTile(
-                                  title:
-                                      Text(state.available_staffs[index].name),
-                                  subtitle: Text(
-                                      state.available_staffs[index].position),
+                                  title: Text(
+                                      state.available_staffs[index].name != null
+                                          ? state.available_staffs[index].name
+                                          : ''),
+                                  subtitle: Text(state.available_staffs[index]
+                                              .position !=
+                                          null
+                                      ? state.available_staffs[index].position
+                                      : ''),
                                   trailing: teamBloc.listSelected.contains(
                                           state.available_staffs[index])
                                       ? Icon(Icons.check)

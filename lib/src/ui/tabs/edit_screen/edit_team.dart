@@ -263,7 +263,10 @@ class _EditTeamScreen extends State<EditTeamScreen> //{
                     BlocBuilder<PlateBloc, PlateState>(
                         builder: (context, state) {
                       List<String> plateList = [""];
-                      List<PlateNo>.from(state.available_plateno).map((f) {
+                      List<PlateNo>.from(state.available_plateno != null
+                              ? state.available_plateno
+                              : [])
+                          .map((f) {
                         plateList.add(f.plateNo);
                         // return f.plateNo.trim();
                       }).toList();
