@@ -20,7 +20,7 @@ const _head = [
 ];
 const _neck_abnormal = [
   "Anterior right",
-  "Anteriror left",
+  "Anterior left",
   "Posterior right",
   "Posterior left"
 ];
