@@ -59,10 +59,10 @@ class _Patients extends State<PatientListScreen>
   PPE ppe;
   OtherServices otherServices;
   List<String> ppeList;
-  List<String> environmentList;
-  List<String> caseTypeList;
-  List<String> patientList;
-  List<String> backupList;
+  String environmentList;
+  String caseTypeList;
+  String patientList;
+  String backupList;
   List<String> wantedList;
 
   TextEditingController ppeOtherController = TextEditingController();
@@ -221,22 +221,22 @@ class _Patients extends State<PatientListScreen>
       }
       if (item == "Environment") {
         setState(() {
-          environmentList = selectedItems;
+          environmentList = selectedItems.last;
         });
       }
       if (item == "Case Type") {
         setState(() {
-          caseTypeList = selectedItems;
+          caseTypeList = selectedItems.last;
         });
       }
       if (item == "Patient") {
         setState(() {
-          patientList = selectedItems;
+          patientList = selectedItems.last;
         });
       }
       if (item == "Backup") {
         setState(() {
-          backupList = selectedItems;
+          backupList = selectedItems.last;
         });
       }
       if (item == "Other services at scene") {

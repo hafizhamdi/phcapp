@@ -1490,10 +1490,10 @@ class SceneAssessment {
     this.otherServicesAtScene,
   });
   PPE ppe;
-  List<String> environment;
-  List<String> caseType;
-  List<String> patient;
-  List<String> backup;
+  String environment;
+  String caseType;
+  String patient;
+  String backup;
   OtherServices otherServicesAtScene;
 
   factory SceneAssessment.fromJson(Map<String, dynamic> json){
@@ -1503,18 +1503,34 @@ class SceneAssessment {
         ppe: json["ppe"] is List 
              ? PPE.fromJson(json)
              : PPE.fromJson(json["ppe"]),
-        environment: json["environment"] == null
-            ? null
-            : List<String>.from(json["environment"].map((x) => x)),
-        caseType: json["case_type"] == null
-            ? null
-            : List<String>.from(json["case_type"].map((x) => x)),
-        patient: json["patient"] == null
-            ? null
-            : List<String>.from(json["patient"].map((x) => x)),
-        backup: json["backup"] == null
-            ? null
-            : List<String>.from(json["backup"].map((x) => x)),
+        environment: json["environment"] != null
+            ? json["environment"] is List 
+            ? json["environment"].length > 0
+            ? json["environment"][0]
+            : ""
+            : json["environment"]
+            : null,
+        caseType: json["case_type"] != null
+            ? json["case_type"] is List 
+            ? json["case_type"].length > 0
+            ? json["case_type"][0]
+            : ""
+            : json["case_type"]
+            : null,
+        patient: json["patient"] != null
+            ? json["patient"] is List 
+            ? json["patient"].length > 0
+            ? json["patient"][0]
+            : ""
+            : json["patient"]
+            : null,
+        backup: json["backup"] != null
+            ? json["backup"] is List 
+            ? json["backup"].length > 0
+            ? json["backup"][0]
+            : ""
+            : json["backup"]
+            : null,
         otherServicesAtScene: json["other_services_atScene"] is List 
              ? OtherServices.fromJson(json)
              : OtherServices.fromJson(json["other_services_atScene"]),       
@@ -1527,16 +1543,16 @@ class SceneAssessment {
             : ppe.toJson(),
         "environment": environment == null
             ? null
-            : List<dynamic>.from(environment.map((x) => x)),
+            : environment,
         "case_type": caseType == null
             ? null
-            : List<dynamic>.from(caseType.map((x) => x)),
+            : caseType,
         "patient": patient == null
             ? null
-            : List<dynamic>.from(patient.map((x) => x)),
+            : patient,
         "backup": backup == null
             ? null
-            : List<dynamic>.from(backup.map((x) => x)),
+            : backup,
         "other_services_atScene": otherServicesAtScene == null
             ? null
             : otherServicesAtScene.toJson(),
