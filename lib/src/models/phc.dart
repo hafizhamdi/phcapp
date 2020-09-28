@@ -1242,6 +1242,7 @@ class VitalSign {
     this.bloodGlucose,
     this.bloodKetone,
     this.pulsePressure,
+    this.cardiacRhythm
   });
 
   String e;
@@ -1265,6 +1266,7 @@ class VitalSign {
   String bloodGlucose;
   String bloodKetone;
   String pulsePressure;
+  String cardiacRhythm;
 
   factory VitalSign.fromJson(Map<String, dynamic> json) => VitalSign(
         e: json["e"] == null ? null : json["e"],
@@ -1290,6 +1292,8 @@ class VitalSign {
         bloodKetone: json["blood_ketone"] == null ? null : json["blood_ketone"],
         pulsePressure:
             json["pulse_pressure"] == null ? null : json["pulse_pressure"],
+        cardiacRhythm:
+            json["cardiac_rhythm"] == null ? null : json["cardiac_rhythm"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -1314,6 +1318,7 @@ class VitalSign {
         "blood_glucose": bloodGlucose == null ? null : bloodGlucose,
         "blood_ketone": bloodKetone == null ? null : bloodKetone,
         "pulse_pressure": pulsePressure == null ? null : pulsePressure,
+        "cardiac_rhythm": cardiacRhythm == null ? null : cardiacRhythm,
       };
 }
 
