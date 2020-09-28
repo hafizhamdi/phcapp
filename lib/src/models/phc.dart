@@ -601,6 +601,7 @@ class CprLog {
   CprLog({
     this.witnessCpr,
     this.bystanderCpr,
+    this.dnar,
     this.cprStart,
     this.rosc,
     this.cprStop,
@@ -612,6 +613,7 @@ class CprLog {
   Log log;
   Cpr witnessCpr;
   Cpr bystanderCpr;
+  Cpr dnar;
   Cpr cprStart;
   Cpr rosc;
   Cpr cprStop;
@@ -626,6 +628,9 @@ class CprLog {
         bystanderCpr: json["bystander_cpr"] != null
             ? Cpr.fromJson(json["bystander_cpr"])
             : null,
+        dnar: json["dnar"] != null
+            ? Cpr.fromJson(json["dnar"])
+            : null,    
         cprStart:
             json["cpr_start"] != null ? Cpr.fromJson(json["cpr_start"]) : null,
         rosc: json["rosc"] != null ? Cpr.fromJson(json["rosc"]) : null,
@@ -646,6 +651,7 @@ class CprLog {
   Map<String, dynamic> toJson() => {
         "witness_cpr": witnessCpr != null ? witnessCpr.toJson() : null,
         "bystander_cpr": bystanderCpr != null ? bystanderCpr.toJson() : null,
+        "dnar": dnar != null ? dnar.toJson() : null,
         "cpr_start": cprStart != null ? cprStart.toJson() : null,
         "rosc": rosc != null ? rosc.toJson() : null,
         "cpr_stop": cprStop != null ? cprStop.toJson() : null,

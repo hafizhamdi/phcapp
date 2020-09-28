@@ -492,6 +492,7 @@ class BuildPatientList extends StatelessWidget {
                     : new CprLog(
                         witnessCpr: new Cpr(),
                         bystanderCpr: new Cpr(),
+                        dnar: new Cpr(),
                         cprStart: new Cpr(),
                         cprStop: new Cpr(),
                         rosc: new Cpr(),
@@ -604,6 +605,7 @@ class BuildPatientList extends StatelessWidget {
                       cprLog: new CprLog(
                           witnessCpr: new Cpr(),
                           bystanderCpr: new Cpr(),
+                          dnar: new Cpr(),
                           cprStart: new Cpr(),
                           cprStop: new Cpr(),
                           rosc: new Cpr(),

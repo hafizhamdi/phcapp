@@ -197,6 +197,7 @@ class CprBloc extends Bloc<CprEvent, CprState> {
     currentState.cprLog.witnessCpr = state.cprLog.witnessCpr;
     currentState.cprLog.cprStart = state.cprLog.cprStart;
     currentState.cprLog.bystanderCpr = state.cprLog.bystanderCpr;
+    currentState.cprLog.dnar = state.cprLog.dnar;
     currentState.cprLog.rosc = state.cprLog.rosc;
     currentState.cprLog.cprStop = state.cprLog.cprStop;
     // currentState.cprLog.cprOutcome = state.cprLog.cprOutcome;
@@ -209,6 +210,9 @@ class CprBloc extends Bloc<CprEvent, CprState> {
     }
     if (event.id == "cpr_start") {
       currentState.cprLog.cprStart = event.cpr;
+    }
+    if (event.id == "dnar") {
+      currentState.cprLog.dnar = event.cpr;
     }
     if (event.id == "bystander_cpr") {
       currentState.cprLog.bystanderCpr = event.cpr;
