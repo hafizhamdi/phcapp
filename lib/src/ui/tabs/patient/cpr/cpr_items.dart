@@ -19,7 +19,7 @@ class CPRItems extends StatefulWidget {
 }
 
 const WITNESS = ["Yes", "No"];
-const RHYTHM = ["VF", "Pulseless VT"];
+const RHYTHM = ["Rhythm VF", "Pulseless VT"];
 const INTERV = ["Defibrillation"];
 const INTEROT = ["Sync-cardioversion", "Pacing"];
 const DRUG = ["Adrenaline", "Amiodarone"];
