@@ -180,6 +180,7 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
     foundVital.spo2 = event.vital.spo2;
     foundVital.pulsePressure = event.vital.pulsePressure;
     foundVital.pulseVolume = event.vital.pulseVolume;
+    foundVital.cardiacRhythm = event.vital.cardiacRhythm;
     foundVital.bloodKetone = event.vital.bloodKetone;
     foundVital.crt = event.vital.crt;
     foundVital.painScore = event.vital.painScore;

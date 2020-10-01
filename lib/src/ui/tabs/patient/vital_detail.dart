@@ -13,6 +13,8 @@ enum ActionButton { delete, create }
 
 const pupilList = ["", "Reactive", "Sluggish", "Fixed"];
 const pvList = ["", "Good", "Poor", "NIL"];
+const crList = ["", "Normal Rhythm", "Narrow Complex Tachycardia", "Broad Complex Tachycardia / VF / VT",
+"Bradycardia / Heart Blocked", "Atriar Fibrilation"];
 const crtList = ["", "< 2 sec", "> 2 sec"];
 
 class VitalDetail extends StatefulWidget {
@@ -51,6 +53,7 @@ class _VitalDetailState extends State<VitalDetail> {
   NumberPicker gcsVpicker = new NumberPicker();
   NumberPicker gcsMpicker = new NumberPicker();
   NumberPicker gcsTotalpicker = new NumberPicker();
+  NumberPicker crPicker = new NumberPicker();
 
   VitalBloc vitalBloc;
 
@@ -128,6 +131,8 @@ class _VitalDetailState extends State<VitalDetail> {
           new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.m));
       gcsTotalpicker =
           new NumberPicker(value: checkIsNumberNotNull(widget.vitalSign.gcs));
+      crPicker = new NumberPicker(
+          option: checkIsStringNotNull(widget.vitalSign.cardiacRhythm));
     }
   }
 
@@ -532,15 +537,17 @@ vPicker.setValue(5);
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(
+                Expanded(child:Text(
                   picker.getOption != null ? picker.getOption : '',
                   style: TextStyle(
                     fontSize: 25,
                     color: picker.getOption == "Good"? Colors.green: Colors.orange,
                     fontWeight: FontWeight.w900
+                    
                     // color: Colors.purple[200]
                   ),
-                ),
+                  overflow: TextOverflow.ellipsis,
+                ),),
                 IconButton(
                   icon: Icon(Icons.edit),
                   color: Colors.blue,
@@ -1154,7 +1161,8 @@ vPicker.setValue(5);
                                 v: transformBlankNull(gcsVpicker.getValue),
                                 m: transformBlankNull(gcsMpicker.getValue),
                                 gcs: transformBlankNull(
-                                    gcsTotalpicker.getValue));
+                                    gcsTotalpicker.getValue),
+                                cardiacRhythm:  transformBlankNull(crPicker.getOption));
 
                             print("Vital Sigs");
                             // // print(vs.toJson());
@@ -1199,7 +1207,8 @@ vPicker.setValue(5);
                 e: transformBlankNull(gcsEpicker.getValue),
                 v: transformBlankNull(gcsVpicker.getValue),
                 m: transformBlankNull(gcsMpicker.getValue),
-                gcs: transformBlankNull(gcsTotalpicker.getValue));
+                gcs: transformBlankNull(gcsTotalpicker.getValue),
+                cardiacRhythm: transformBlankNull(crPicker.getOption));
 
             setState(() {
               vitalBloc.add(UpdateVital(index: widget.index, vital: vs));
@@ -1244,6 +1253,7 @@ vPicker.setValue(5);
                   // _buildItemPupil(context, "Right Pupil", rpController),
                   _buildItemGCS(context, gcsEpicker, gcsVpicker, gcsMpicker,
                       gcsTotalpicker, "GCS"),
+                  _buildItemOption(context, crPicker, "Cardiac Rhythm", crList),
                 ],
               ),
             ),

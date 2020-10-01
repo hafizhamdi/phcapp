@@ -52,7 +52,14 @@ class SingleChoiceChip extends State<SingleOption> {
   @override
   Widget build(BuildContext context) {
     if (widget.initialData != null) {
-      selectedItems = widget.initialData;
+      if(widget.initialData is String){
+        selectedItems.add(widget.initialData);
+        if (selectedItems.length > 1) {
+            selectedItems.removeLast();
+        }
+      }else{
+        selectedItems = widget.initialData;
+      }
     }
     return Container(
         padding: EdgeInsets.only(left: 10),
@@ -115,7 +122,7 @@ class SingleChoiceChip extends State<SingleOption> {
                     // } else {
                     // selectedItems[0] = _value;
                     // }
-
+                    
                     widget.callback(widget.header, selectedItems);
                     // Callback cb =
                     //     callback(item: stateList[index], index: index);

@@ -19,13 +19,13 @@ class CPRItems extends StatefulWidget {
 }
 
 const WITNESS = ["Yes", "No"];
-const RHYTHM = ["VF", "Pulseless VT"];
+const RHYTHM = ["Rhythm VF", "Pulseless VT"];
 const INTERV = ["Defibrillation"];
 const INTEROT = ["Sync-cardioversion", "Pacing"];
 const DRUG = ["Adrenaline", "Amiodarone"];
 const DRUOT = ["Atropine"];
 const AIRWAY = ["BVM", "LMA", "ETT"];
-const RHYTHMNS = ["Asystole", "PEA"];
+const RHYTHMNS = ["Asystole", "Wide PEA", "Narrow PEA"];
 const RHYTHMOT = ["Tachyarythmias", "Bradyarrythmias"];
 const ANALYSIS = ["Non-Shockable", "Shockable", "Other"];
 const _cpr = ["Required", "Not Required"];
@@ -91,6 +91,7 @@ class _CPRItems extends State<CPRItems>
       log: new Log(),
       witnessCpr: new Cpr(),
       bystanderCpr: new Cpr(),
+      dnar: new Cpr(),
       cprStart: new Cpr(),
       rosc: new Cpr(),
       cprStop: new Cpr(),
@@ -115,6 +116,7 @@ class _CPRItems extends State<CPRItems>
   String selectAirwayO;
   TextEditingController witnessController = new TextEditingController();
   TextEditingController bystanderController = new TextEditingController();
+  TextEditingController dnarController = new TextEditingController();
   TextEditingController cprStartController = new TextEditingController();
   TextEditingController cprStopController = new TextEditingController();
   TextEditingController roscController = new TextEditingController();
@@ -196,10 +198,13 @@ class _CPRItems extends State<CPRItems>
       final stateCpr = cprBloc.state.cprLog;
       setState(() {
         witnessController.text =
-            stateCpr.witnessCpr != null ? stateCpr.witnessCpr.timestamp : '';
+            stateCpr.witnessCpr != null ? stateCpr.witnessCpr.timestamp : '';  
         bystanderController.text = stateCpr.bystanderCpr != null
             ? stateCpr.bystanderCpr.timestamp
             : '';
+        dnarController.text = stateCpr.dnar != null
+            ? stateCpr.dnar.timestamp
+            : '';  
         cprStartController.text =
             stateCpr.cprStart != null ? stateCpr.cprStart.timestamp : '';
         cprStopController.text =
@@ -268,6 +273,12 @@ class _CPRItems extends State<CPRItems>
       setState(() {
         cprBloc.add(AddCpr(cpr: temp, id: "bystander_cpr"));
         cprLog.bystanderCpr = temp;
+      });
+    }
+    if (id == "dnar") {
+      setState(() {
+        cprBloc.add(AddCpr(cpr: temp, id: "dnar"));
+        cprLog.dnar = temp;
       });
     }
     if (id == "cpr_start") {
@@ -525,6 +536,16 @@ class _CPRItems extends State<CPRItems>
                           ),
                           BuildChoiceChip(
                             // context,
+                            id: "dnar",
+                            listData: WITNESS,
+                            selectData: state.cprLog.dnar != null
+                                ? state.cprLog.dnar.value
+                                : '',
+                            txtController: dnarController,
+                            callback: buttonCallback,
+                          ),
+                          BuildChoiceChip(
+                            // context,
                             id: "cpr_start",
                             listData: WITNESS,
                             selectData: state.cprLog.cprStart != null
@@ -607,6 +628,16 @@ class _CPRItems extends State<CPRItems>
                             listData: WITNESS,
                             selectData: cprLog.bystanderCpr.value,
                             txtController: bystanderController,
+                            callback: buttonCallback,
+                          ),
+                        ),
+                        SingleChildScrollView(
+                          child: BuildChoiceChip(
+                            // context,
+                            id: "dnar",
+                            listData: WITNESS,
+                            selectData: cprLog.dnar.value,
+                            txtController: dnarController,
                             callback: buttonCallback,
                           ),
                         ),
@@ -1074,14 +1105,11 @@ class _CPRItems extends State<CPRItems>
   _buildAnalysis(RhythmAnalysis rhythmAnalysis, Function setState, index) {
     // final provider = Provider.of<CPRProvider>(context);
     final timeCreated = DateTime.now();
-    // print("rhythm");
-    // print(rhythmAnalysis.rhythm);
-
-    // setState(() {
-    //   selectAnalysis != null
-    //       ? selectAnalysis = selectAnalysis
-    //       : selectAnalysis = rhythmAnalysis.rhythm;
-    // });
+    print("rhythm");
+    print(rhythmAnalysis.rhythm);
+    selectAnalysis != null
+        ? selectAnalysis = selectAnalysis
+        : selectAnalysis = rhythmAnalysis.rhythm;
 
     return Container(
       // padding: EdgeInsets.all(10),

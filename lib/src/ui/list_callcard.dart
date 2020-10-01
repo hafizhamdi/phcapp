@@ -478,13 +478,8 @@ class _ListCallcards extends State<ListCallcards> {
           timeBloc.add(ResetTime());
 
           final sceneBloc = BlocProvider.of<SceneBloc>(context);
-          sceneBloc.add(LoadScene(
-              selectedPPE: new PPE(),
-              selectedEnvironment: [],
-              selectedCaseType: [],
-              selectedPatient: [],
-              selectedBackup: [],
-              selectedServices: new OtherServices()));
+          sceneBloc.add(LoadScene(selectedPPE: new PPE(), selectedEnvironment: "", selectedCaseType: "",
+                                  selectedPatient: "", selectedBackup: "",selectedServices: new OtherServices()));
 
           final patientBloc = BlocProvider.of<PatientBloc>(context);
           patientBloc.add(InitPatient());

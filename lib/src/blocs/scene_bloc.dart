@@ -4,10 +4,10 @@ import 'package:phcapp/src/models/phc.dart';
 
 abstract class SceneEvent extends Equatable {
   final PPE selectedPPE;
-  final List<String> selectedEnvironment;
-  final List<String> selectedCaseType;
-  final List<String> selectedPatient;
-  final List<String> selectedBackup;
+  final String selectedEnvironment;
+  final String selectedCaseType;
+  final String selectedPatient;
+  final String selectedBackup;
   final OtherServices selectedServices;
 
   SceneEvent({
@@ -25,10 +25,10 @@ abstract class SceneEvent extends Equatable {
 
 abstract class SceneState extends Equatable {
   final PPE selectedPPE;
-  final List<String> selectedEnvironment;
-  final List<String> selectedCaseType;
-  final List<String> selectedPatient;
-  final List<String> selectedBackup;
+  final String selectedEnvironment;
+  final String selectedCaseType;
+  final String selectedPatient;
+  final String selectedBackup;
   final OtherServices selectedServices;
 
   SceneState({
@@ -47,10 +47,10 @@ abstract class SceneState extends Equatable {
 
 class LoadScene extends SceneEvent {
   final PPE selectedPPE;
-  final List<String> selectedEnvironment;
-  final List<String> selectedCaseType;
-  final List<String> selectedPatient;
-  final List<String> selectedBackup;
+  final String selectedEnvironment;
+  final String selectedCaseType;
+  final String selectedPatient;
+  final String selectedBackup;
   final OtherServices selectedServices;
 
   LoadScene({
@@ -93,10 +93,10 @@ class SetScene extends SceneEvent {
 
 class LoadedScene extends SceneState {
   final PPE selectedPPE;
-  final List<String> selectedEnvironment;
-  final List<String> selectedCaseType;
-  final List<String> selectedPatient;
-  final List<String> selectedBackup;
+  final String selectedEnvironment;
+  final String selectedCaseType;
+  final String selectedPatient;
+  final String selectedBackup;
   final OtherServices selectedServices;
 
   LoadedScene({

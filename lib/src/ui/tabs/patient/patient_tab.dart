@@ -470,6 +470,7 @@ class _CPRPage extends State<CPRPage> {
   String _cprNote,
       _witnessNote,
       _bystanderNote,
+      _dnarNote,
       _startNote,
       _roscNote,
       _stopNote,
@@ -479,6 +480,7 @@ class _CPRPage extends State<CPRPage> {
   List<String> _listCPR = new List<String>();
   List<String> _listWitness = new List<String>();
   List<String> _listBystander = new List<String>();
+  List<String> _listDNAR = new List<String>();
   List<String> _listStart = new List<String>();
   List<String> _listRosc = new List<String>();
   List<String> _listStop = new List<String>();
@@ -513,6 +515,11 @@ class _CPRPage extends State<CPRPage> {
     if (id == "bystandercpr") {
       setState(() {
         _bystanderNote = data;
+      });
+    }
+    if (id == "dnar") {
+      setState(() {
+        _dnarNote = data;
       });
     }
     if (id == "cprstart") {
@@ -611,6 +618,20 @@ class _CPRPage extends State<CPRPage> {
               listButton: ["YES", "NO"],
               listSelected: _listBystander,
               noteSetted: _bystanderNote,
+              timeSetted: "15/9/2020 12:34",
+              onNote: _onNote,
+              callback: _btnCallback,
+              // noteSetted: "Add patient sick",
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 10),
+            height: 50,
+            child: SelectableRow(
+              title: "DNAR",
+              listButton: ["YES", "NO"],
+              listSelected: _listDNAR,
+              noteSetted:  _dnarNote,
               timeSetted: "15/9/2020 12:34",
               onNote: _onNote,
               callback: _btnCallback,

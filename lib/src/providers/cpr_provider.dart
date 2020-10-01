@@ -44,6 +44,7 @@ class CPRProvider extends ChangeNotifier {
   List<String> _commonCPR = List();
   String witnessCPR;
   String byStanderCPR;
+  String dnar;
   String cprStart;
   int cycleCounter = 0;
   // List<CprSection> _listCPRs = new List();
@@ -57,6 +58,7 @@ class CPRProvider extends ChangeNotifier {
     ItemModel(id: "log_in_cpr", name: "CPR"),
     ItemModel(id: "witness_cpr", name: "Witness CPR"),
     ItemModel(id: "bystander_cpr", name: "Bystander CPR"),
+    ItemModel(id: "dnar", name: "DNAR"),
     ItemModel(id: "cpr_start", name: "CPR Start"),
     ItemModel(id: "rosc", name: "ROSC"),
     ItemModel(id: "cpr_stop", name: "CPR Stop"),
@@ -121,6 +123,8 @@ class CPRProvider extends ChangeNotifier {
   void resetRhythmAnalysis() {
     itemModels.map((f) {
       if (f.id == "cpr_start")
+        f.value = f.value;
+      else if (f.id == "dnar")
         f.value = f.value;
       else if (f.id == "bystander_cpr")
         f.value = f.value;
