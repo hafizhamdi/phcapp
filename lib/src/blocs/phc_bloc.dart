@@ -186,7 +186,7 @@ class PhcBloc extends Bloc<PhcEvent, PhcState> {
 
       final phcData = Phc.fromJson(phc);
 
-      //   print("refersh");
+      print("refersh");
       yield PhcLoaded(phc: phcData);
       //   print(phc);
       //   yield PhcFetched(phc: phc);

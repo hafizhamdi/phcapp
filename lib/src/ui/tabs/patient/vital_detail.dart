@@ -15,7 +15,7 @@ const pupilList = ["", "Reactive", "Sluggish", "Fixed"];
 const pvList = ["", "Good", "Poor", "NIL"];
 const crList = ["", "Normal Rhythm", "Narrow Complex Tachycardia", "Broad Complex Tachycardia / VF / VT",
 "Bradycardia / Heart Blocked", "Atriar Fibrilation"];
-const crtList = ["", "< 2 sec", "> 2 sec"];
+const crtList = ["", "< = 2 sec", "> 2 sec"];
 
 class VitalDetail extends StatefulWidget {
   final VitalSign vitalSign;

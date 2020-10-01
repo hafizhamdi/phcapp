@@ -91,8 +91,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final plateNo = await phcRepository.getAvailablePlateNo();
 
         final tmpFetchPlateNo = List<PlateNo>.from(
-          plateNo["available_plate_no"].map((x)=> PlateNo.fromJson(x)));
-        
+            plateNo["available_plate_no"].map((x) => PlateNo.fromJson(x)));
 
         // print(fetchStaffs);
         // print("phcDao");
@@ -114,7 +113,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       final staffs = await phcDao.getStaffs();
 
-      fetchStaffs = staffs;
+      fetchStaffs = List<Staff>.from(staffs).toList();
       // print(staffs);
 
       // print("LOGGEDIN");

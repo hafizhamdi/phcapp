@@ -43,17 +43,21 @@ class PhcDao {
   Future getStaffs() async {
     final result = await _staffStore.record('staffs').getSnapshot(await _db);
     print("IN GETSTAFF");
-    final staffs = jsonDecode(result.value["staffs"]);
-    print(staffs);
-    print(staffs.length);
-    final newStaffs = List<dynamic>.from(staffs).map((f) {
-      // print('inmapped');
-      // print(f);
-      return Staff.fromJson(f);
-      // Staff.fromJson(f.toJson());
-    }).toList();
-
-    return newStaffs;
+    if (result != null) {
+      final staffs = jsonDecode(result.value["staffs"]);
+      // print(staffs);
+      // print(staffs.length);
+      final newStaffs = List<dynamic>.from(staffs).map((f) {
+        //   // print('inmapped');
+        //   // print(f);
+        //   // return f;
+        return Staff.fromJson(f);
+        //   // Staff.fromJson(f.toJson());
+      }).toList();
+      // return staffs;
+      return newStaffs;
+    }
+    return [];
   }
 
   Future getPlateNo() async {
@@ -83,8 +87,11 @@ class PhcDao {
     final result =
         await _settingStore.record('settings').getSnapshot(await _db);
     print("IN GETSETTINGS");
-    print(result.value);
-    return Environment.fromJson(result.value);
+    // print(result.value);
+    if (result != null)
+      return Environment.fromJson(result.value);
+    else
+      return Environment();
   }
 
   Future insert(Phc phc) async {

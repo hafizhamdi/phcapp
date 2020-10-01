@@ -115,9 +115,9 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
 
       // final staffs = await phcRepository.getAvailableStaffs();
 
-      print(staffs);
+      // print(staffs);
       // print(newList);
-      yield StaffFetched(available_staffs: staffs);
+      yield StaffFetched(available_staffs: List<Staff>.from(staffs).toList());
     } catch (_) {
       yield StaffFetchingError();
     }

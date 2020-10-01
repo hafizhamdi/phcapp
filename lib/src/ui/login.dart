@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
-import 'package:phcapp/src/ui/list_callcard.dart';
 import 'package:phcapp/src/ui/settings.dart';
 import 'package:phcapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +46,8 @@ class _LoginScreen extends State<LoginScreen>
   @override
   dispose() {
     _controller.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -97,12 +97,15 @@ class _LoginScreen extends State<LoginScreen>
             if (state is AuthAunthenticated) {
               Navigator.of(context).pushNamed('/listCallcards');
             } else if (state is AuthUnaunthenticated) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/login', (Route<dynamic> route) => false);
+              print("listener in blocconsumer authunauthenticated");
+              showUnauthorized();
+              // Navigator.of(context).pushNamedAndRemoveUntil(
+              //     '/login', (Route<dynamic> route) => false);
             }
-            // else if( state is AuthUnitialized){
-            //   //     showUnauthorized();
-
+            // else if (state is AuthUnitialized) {
+            //   showUnauthorized();
+            //   Navigator.of(context).pushNamedAndRemoveUntil(
+            //       '/login', (Route<dynamic> route) => false);
             // }
           },
           builder: (context, state) {

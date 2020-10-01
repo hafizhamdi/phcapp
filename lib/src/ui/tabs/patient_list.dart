@@ -16,9 +16,12 @@ import '../../models/phc.dart';
 const _otherServices = [
   "APM",
   "EMRS",
-  "Red cresent",
-  "St. John ambulance",
+  "Civil Defense",
+  "Fire Rescue",
+  "Red Crescent",
+  "St. John Ambulance",
   "Private",
+  "Police",
   "Supervisor vehicle",
 ];
 

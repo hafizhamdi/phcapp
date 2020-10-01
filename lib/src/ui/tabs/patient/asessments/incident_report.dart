@@ -9,7 +9,7 @@ import 'package:phcapp/src/widgets/my_multiple_option.dart';
 const _responseDelay = [
   "Direction/ unable to locate",
   "Traffic",
-  "Route obstruction",
+  "Route obstruction (landslide / route clouse)",
   "Vehicle failure",
   "Vehicle crash",
   "Staff delay"
@@ -19,8 +19,8 @@ const _sceneDelay = [
   "Awaiting secondary responder",
   "Awaiting specialized vehicle",
   "Awaiting specialized equipment",
-  "Awaiting PDRM officer (personal officer)",
-  "Awaiting PDRM (left before arrive)"
+  "Awaiting PDRM officer (personal arrive)",
+  "Awaiting PDRM (left before arrive)",
   "Vehicle crash",
   "Vehicle failure"
 ];

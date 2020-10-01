@@ -35,7 +35,7 @@ const LIST_LOCTYPE = [
   "Public area"
 ];
 
-const LIST_DISTANCES = ["", "< 5km", "5-10km", "> 10km"];
+const LIST_DISTANCES = ["", "< 5 km", "5-10 km", "> 10 km"];
 
 class CallInformationScreen extends StatefulWidget {
   final CallInformation call_information;

@@ -38,14 +38,16 @@ class _MyMultipleOptions extends State<MyMultipleOptions> {
         widget.listDataset.length,
         (int index) {
           if (widget.listDataset[index].contains("Normal") || widget.listDataset[index].contains("Oriented")
-              || widget.listDataset[index].contains("Adequate airway")) {
+              || widget.listDataset[index].contains("Adequate airway") || widget.listDataset[index].contains("Sinus Rhythm")
+              || widget.listDataset[index].contains("Soft & non-tender")) {
             return Container(
               // padding: EdgeInsets.only(right: 10),
               child: _buildChoiceChipWidget(index),
             );
           } else {
             if (listSelected.contains("Normal") || listSelected.contains("Oriented") 
-                || listSelected.contains("Adequate airway")) {
+                || listSelected.contains("Adequate airway") || listSelected.contains("Sinus Rhythm")
+                || listSelected.contains("Soft & non-tender")) {
               opac = .4;
               bgColor = Colors.grey[100];
               normalIsSelected = true;
@@ -83,7 +85,8 @@ class _MyMultipleOptions extends State<MyMultipleOptions> {
         onSelected: (bool selected) {
           setState(() {
             if (widget.listDataset[index].contains("Normal") || widget.listDataset[index].contains("Oriented")
-                || widget.listDataset[index].contains("Adequate airway")) {
+                || widget.listDataset[index].contains("Adequate airway") || widget.listDataset[index].contains("Sinus Rhythm")
+                || widget.listDataset[index].contains("Soft & non-tender")) {
               if (normalIsSelected) {
                 listSelected.remove(widget.listDataset[index]);
                 normalIsSelected = false;
@@ -107,6 +110,10 @@ class _MyMultipleOptions extends State<MyMultipleOptions> {
                   listSelected.add("Oriented");
                 }else if(widget.listDataset.contains("Adequate airway")){
                   listSelected.add("Adequate airway");
+                }else if(widget.listDataset.contains("Sinus Rhythm")){
+                  listSelected.add("Sinus Rhythm");
+                }else if(widget.listDataset.contains("Soft & non-tender")){
+                  listSelected.add("Soft & non-tender");
                 }
                 opac = .4;
               } else {

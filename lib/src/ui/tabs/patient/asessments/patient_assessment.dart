@@ -10,7 +10,7 @@ import 'package:phcapp/src/widgets/my_single_option.dart';
 import 'package:phcapp/src/widgets/mycard_single_option.dart';
 
 const _disasterTriage = ["Red", "Yellow", "Green", "White"];
-const _appearance = ["Oriented", "Lethargy", "Confused", "In pain", "Other"];
+const _appearance = ["Oriented", "Lethargy", "Confused", "In pain"];
 const _responsiveness = ["Alert", "Verbal", "Pain", "Unresponsive"];
 const _airway = [
   "Adequate airway",
@@ -42,7 +42,7 @@ const _skinAssment = [
   "Dry"
 ];
 const _ecg = [
-  "Sinus rhythm",
+  "Sinus Rhythm",
   "Sinus tachycardia",
   "Bradycardia",
   "AF",
@@ -200,6 +200,11 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         value: List<String>(),
         multiple: true),
     ChipItem(
+        id: "abdomen_abnormal_location",
+        name: "Abdomen Abnormality Location",
+        listData: _abdomenAbnorm,
+        value: "",),
+    ChipItem(
         id: "stroke_face",
         name: "Stroke Scale: Face",
         listData: _face,
@@ -241,7 +246,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
     if (id == "appearance") {
       setState(() {
         listAppearance = dataReturn;
-        otherController.clear();
+        // otherController.clear();
       });
     }
 
@@ -308,6 +313,11 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
     if (id == "abdomen_palpation") {
       setState(() {
         listAbdomenPalpation = dataReturn;
+      });
+    }
+    if (id == "abdomen_abnormal_location") {
+      setState(() {
+        listAbdomenAbnPalpation = dataReturn;
       });
     }
     if (id == "stroke_face") {
@@ -414,6 +424,13 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
           f.value = widget.patientAssessment.abdomenPalpation;
           listAbdomenPalpation = widget.patientAssessment.abdomenPalpation;
         }
+        if (f.id == "abdomen_abnormal_location") {
+          f.value = widget.patientAssessment.abdomenAbnormalityLocation;
+          listAbdomenAbnPalpation.add(widget.patientAssessment.abdomenAbnormalityLocation);
+          if (listAbdomenAbnPalpation.length > 1) {
+            listAbdomenAbnPalpation.removeLast();
+          }
+        }
         if (f.id == "stroke_face") {
           f.value = widget.patientAssessment.strokeScale.face;
           listStrokeFace = widget.patientAssessment.strokeScale.face;
@@ -441,15 +458,11 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         // f.value = widget.patientAssessment.abdomenAbnormalityLocation;
         return f;
       }).toList();
-      abnormalTextController.text =
-          widget.patientAssessment.abdomenAbnormalityLocation;
 
       // clear textfield others
-      if (widget.patientAssessment.appearance.isNotEmpty) {
-        !_appearance.contains(widget.patientAssessment.appearance)
-            ? otherController.text = widget.patientAssessment.appearance.last
+      widget.patientAssessment != null
+            ? otherController.text = widget.patientAssessment.appearanceOthers
             : otherController.clear();
-      }
     }
 
     super.didChangeDependencies();
@@ -538,11 +551,8 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                         timestamp: new DateTime.now(),
                         disasterTriage:
                             listTriage.length > 0 ? listTriage[0] : "",
-                        appearance: listAppearance.length > 0
-                            ? listAppearance.contains("Other")
-                                ? otherController.text
-                                : listAppearance
-                            : List<String>(),
+                        appearance: listAppearance.length > 0 ? listAppearance : List<String>(),
+                        appearanceOthers: otherController.text,
                         levelResponsive: listLevelResponsiveness.length > 0
                             ? listLevelResponsiveness[0]
                             : "",
@@ -572,7 +582,9 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                         abdomenPalpation: listAbdomenPalpation.length > 0
                             ? listAbdomenPalpation
                             : List<String>(),
-                        abdomenAbnormalityLocation: abnormalTextController.text,
+                        abdomenAbnormalityLocation: listAbdomenAbnPalpation.length > 0
+                                                    ? listAbdomenAbnPalpation.last
+                                                    : "",
                         strokeScale: StrokeScale(
                           arm: listStrokeArm.length > 0
                               ? listStrokeArm
@@ -619,21 +631,12 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
             !_appearance.contains(prepareData[index].value)
                 ? initialData = "Other"
                 : initialData = prepareData[index].value;
-            return prepareData[index].id != "appearance"
-                ? MyCardSingleOption(
+            return  MyCardSingleOption(
                     id: prepareData[index].id,
                     name: prepareData[index].name,
                     listData: prepareData[index].listData,
                     mycallback: mycallback,
                     value: prepareData[index].value,
-                  )
-                : MyAppearanceOption(
-                    id: prepareData[index].id,
-                    name: prepareData[index].name,
-                    listData: prepareData[index].listData,
-                    mycallback: mycallback,
-                    value: initialData,
-                    controller: otherController,
                   );
 
             // );
@@ -667,14 +670,14 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
               initialData: value,
               callback: mycallback,
             ),
-            id == "abdomen_palpation"
+            id == "appearance"
                 ? Container(
                     width: MediaQuery.of(context).size.width * 0.5,
                     child: TextField(
                       style: TextStyle(fontSize: 18),
-                      controller: abnormalTextController,
+                      controller: otherController,
                       decoration: InputDecoration(
-                          labelText: "Abdomen Abnormal Location"),
+                          labelText: "Other"),
                     ),
                   )
                 : Container(),
@@ -729,14 +732,15 @@ class MyAppearanceOption extends StatelessWidget {
               initialData: value,
               callback: mycallback,
             ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.5,
-              child: TextField(
-                style: TextStyle(fontSize: 18),
-                controller: controller,
-                decoration: InputDecoration(labelText: "Other"),
-              ),
-            )
+            // Container(
+            //   width: MediaQuery.of(context).size.width * 0.5,
+            //       child: TextField(
+            //       style: TextStyle(fontSize: 18),
+            //       controller: controller,
+            //       decoration: InputDecoration(labelText: "Other"),
+            //     ),
+            // )
+            
           ],
         ),
       ),

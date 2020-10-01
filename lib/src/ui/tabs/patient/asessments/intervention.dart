@@ -25,9 +25,9 @@ const _oxygen = [
   "Face mask",
   "Venturi mask",
   "Room Air",
-  "CPAP3 cmH20",
-  "CPAP5 cmH20",
-  "CPAP7.5 cmH20",
+  "CPAP3 cmH2O",
+  "CPAP5 cmH2O",
+  "CPAP7.5 cmH2O",
 ];
 const _extHaemorrhage = ["Bandage", "Haemostatic bandages", "Torniquet"];
 const _vascularAccess = ["IV", "IO"];
@@ -42,7 +42,7 @@ const _specialCare = [
   "Amputed limb care",
   "Evisceration care",
   "Foreign object stabilization",
-  "Thermal Blanket"
+  "Thermal blanket"
 ];
 
 class InterventionScreen extends StatefulWidget {
