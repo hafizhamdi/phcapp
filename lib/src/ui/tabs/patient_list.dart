@@ -22,7 +22,7 @@ const _otherServices = [
   "St. John Ambulance",
   "Private",
   "Police",
-  "Supervisor Vehicle",
+  "Supervisor vehicle",
 ];
 
 const _ppe = ["Gown", "Glove", "Mask", "Safety Helmet", "Faceshield"];
