@@ -537,15 +537,17 @@ vPicker.setValue(5);
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(
+                Expanded(child:Text(
                   picker.getOption != null ? picker.getOption : '',
                   style: TextStyle(
                     fontSize: 25,
                     color: picker.getOption == "Good"? Colors.green: Colors.orange,
                     fontWeight: FontWeight.w900
+                    
                     // color: Colors.purple[200]
                   ),
-                ),
+                  overflow: TextOverflow.ellipsis,
+                ),),
                 IconButton(
                   icon: Icon(Icons.edit),
                   color: Colors.blue,
