@@ -15,7 +15,7 @@ const LIST_RESPONSES = [
   "",
   "999 Primary",
   "999 Secondary",
-  "Supervisor Vehicle"
+  "Supervisor vehicle"
 ];
 
 const LIST_AGENCIES = [

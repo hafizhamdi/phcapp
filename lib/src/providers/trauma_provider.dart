@@ -70,7 +70,7 @@ const _skinAssment = [
   "Dry"
 ];
 const _ecg = [
-  "Sinus rhythm",
+  "Sinus Rhythm",
   "Sinus tachycardia",
   "Bradycardia",
   "AF",

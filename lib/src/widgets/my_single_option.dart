@@ -75,7 +75,11 @@ class _MySingleOptions extends State<MySingleOptions>
           // style: TextStyle(fontSize: 18),
         ),
         selected: listSelected.contains(widget.listDataset[index]),
+        backgroundColor: bgColor,
         selectedColor: Colors.pink[200],
+        selectedShadowColor: Colors.grey,
+        pressElevation: 10,
+        elevation: 4,
         onSelected: (bool selected) {
           setState(() {
             if (widget.listDataset[index].contains("Normal")) {

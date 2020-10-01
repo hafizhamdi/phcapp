@@ -10,7 +10,7 @@ import 'package:phcapp/src/widgets/my_single_option.dart';
 import 'package:phcapp/src/widgets/mycard_single_option.dart';
 
 const _disasterTriage = ["Red", "Yellow", "Green", "White"];
-const _appearance = ["Oriented", "Lethargy", "Confused", "In pain", "Other"];
+const _appearance = ["Oriented", "Lethargy", "Confused", "In pain"];
 const _responsiveness = ["Alert", "Verbal", "Pain", "Unresponsive"];
 const _airway = [
   "Adequate airway",
@@ -732,14 +732,14 @@ class MyAppearanceOption extends StatelessWidget {
               initialData: value,
               callback: mycallback,
             ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.5,
-                  child: TextField(
-                  style: TextStyle(fontSize: 18),
-                  controller: controller,
-                  decoration: InputDecoration(labelText: "Other"),
-                ),
-            )
+            // Container(
+            //   width: MediaQuery.of(context).size.width * 0.5,
+            //       child: TextField(
+            //       style: TextStyle(fontSize: 18),
+            //       controller: controller,
+            //       decoration: InputDecoration(labelText: "Other"),
+            //     ),
+            // )
             
           ],
         ),

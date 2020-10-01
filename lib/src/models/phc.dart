@@ -690,14 +690,18 @@ class CPROutcome{
     this.tor
   });
 
-  List<String> value = new List<String>();
+  String value;
   String transported;
   String tor;
 
   factory CPROutcome.fromJson(Map<String, dynamic> json) =>
       CPROutcome(
-        value: json["value"] != null
-            ? List<String>.from(json["value"].map((x) => x))
+        value:json["value"] != null
+            ? json["value"] is List 
+            ? json["value"].length > 0
+            ? json["value"][0]
+            : ""
+            : json["value"]
             : null,
         transported: json["transported"],
         tor: json["tor"],
@@ -705,7 +709,7 @@ class CPROutcome{
 
   Map<String, dynamic> toJson() => {
         "value": value != null
-            ? List<dynamic>.from(value.map((x) => x))
+            ? value
             : null,
         "transported": transported != null ? transported : "",
         "tor": tor != null ? tor : "",
@@ -715,7 +719,7 @@ class CPROutcome{
 class Log{
 
   String reason;
-  List<String> value;
+  String value;
 
   Log({
     this.reason,
@@ -724,15 +728,19 @@ class Log{
 
   factory Log.fromJson(Map<String, dynamic> json) =>
       Log(
-        value: json["value"] != null
-            ? List<String>.from(json["value"].map((x) => x))
+        value:json["value"] != null
+            ? json["value"] is List 
+            ? json["value"].length > 0
+            ? json["value"][0]
+            : ""
+            : json["value"]
             : null,
         reason: json["reason"],
       );
 
   Map<String, dynamic> toJson() => {
         "value": value != null
-            ? List<dynamic>.from(value.map((x) => x))
+            ? value
             : null,
         "reason": reason != null ? reason : "",
       };
@@ -995,6 +1003,7 @@ class PatientAssessment {
   DateTime timestamp;
   String disasterTriage;
   List<String> appearance;
+  String appearanceOthers;
   String levelResponsive;
   List<String> airwayPatency;
   List<String> respiratoryEffort;
@@ -1011,6 +1020,7 @@ class PatientAssessment {
     this.timestamp,
     this.disasterTriage,
     this.appearance,
+    this.appearanceOthers,
     this.levelResponsive,
     this.airwayPatency,
     this.respiratoryEffort,
@@ -1031,6 +1041,9 @@ class PatientAssessment {
         appearance: json["appearance"] is List
                       ? List<String>.from(json["appearance"].map((x) => x))
                       : [json["appearance"]],
+        appearanceOthers: json['others_appearance'] != null
+                        ? json['others_appearance']
+                        : null,
         levelResponsive: json["level_responsive"],
         airwayPatency: json["airway_patency"] is List
                       ? List<String>.from(json["airway_patency"].map((x) => x))
@@ -1060,6 +1073,7 @@ class PatientAssessment {
         "appearance": appearance != null
             ? List<dynamic>.from(appearance.map((x) => x))
             : null,
+        "others_appearance": appearanceOthers,
         "level_responsive": levelResponsive,
         "airway_patency": airwayPatency != null
             ? List<dynamic>.from(airwayPatency.map((x) => x))
@@ -1389,7 +1403,7 @@ class ResponseTeam {
 enum ServiceResponse { SUPERVISOR_VEHICLE, THE_999_SECONDARY, THE_999_PRIMARY }
 
 final serviceResponseValues = EnumValues({
-  "Supervisor Vehicle": ServiceResponse.SUPERVISOR_VEHICLE,
+  "Supervisor vehicle": ServiceResponse.SUPERVISOR_VEHICLE,
   "999 Primary": ServiceResponse.THE_999_PRIMARY,
   "999 Secondary": ServiceResponse.THE_999_SECONDARY
 });

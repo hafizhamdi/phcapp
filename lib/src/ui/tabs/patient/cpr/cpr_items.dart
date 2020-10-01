@@ -368,7 +368,7 @@ class _CPRItems extends State<CPRItems>
 
     if (item == "CPR") {
       final tempLog = Log(
-          value: selectedItems,
+          value: selectedItems.last,
           reason: widget.cprLog != null
               ? widget.cprLog.log != null ? widget.cprLog.log.reason : ''
               : '');
@@ -382,7 +382,7 @@ class _CPRItems extends State<CPRItems>
 
     if (item == "CPR Outcome") {
       final tempCPROutcome = CPROutcome(
-          value: selectedItems,
+          value: selectedItems.last,
           transported: widget.cprLog != null
               ? widget.cprLog.cprOutcome != null
                   ? widget.cprLog.cprOutcome.transported
