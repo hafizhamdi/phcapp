@@ -209,33 +209,53 @@ class _CallcardTabs extends State<CallcardTabs> {
         return AlertDialog(
           title: Text(
             "Success",
+            textAlign: TextAlign.center,
             // style: TextStyle(fontSize: 14),
           ),
-          content:
-              // Column(children: [
-              RichText(
-            text: TextSpan(style: TextStyle(color: Colors.black), children: [
-              TextSpan(text: "This Call Card # "),
-              TextSpan(
-                  text:
-                      // widget.call_information.callcard_no ??
-                      callInfoBloc.state.callInformation != null
-                          ? callInfoBloc.state.callInformation.callcard_no
-                          : widget.call_information != null
-                              ? widget.call_information.callcard_no
-                              : '',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: " has been synced"),
-              // TextSpan(
-              //     text: "VIEW LIST CC",
-              //     style: TextStyle(fontWeight: FontWeight.bold)),
-              // TextSpan(text: " to end process"),
-            ]),
-          ),
-          // ]),
+          content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  child: Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                    size: 100,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                RichText(
+                  text: TextSpan(
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(text: "Call Card No. "),
+                        TextSpan(
+                            text:
+                                // widget.call_information.callcard_no ??
+                                callInfoBloc.state.callInformation != null
+                                    ? callInfoBloc
+                                        .state.callInformation.callcard_no
+                                    : widget.call_information != null
+                                        ? widget.call_information.callcard_no
+                                        : '',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20)),
+                        TextSpan(text: " has successfully synced"),
+                        // TextSpan(
+                        //     text: "VIEW LIST CC",
+                        //     style: TextStyle(fontWeight: FontWeight.bold)),
+                        // TextSpan(text: " to end process"),
+                      ]),
+                ),
+              ]),
           actions: <Widget>[
             FlatButton(
-                child: Text("VIEW LIST CALL CARDS"),
+                child: Text(
+                  "VIEW LIST CALL CARDS",
+                  style: TextStyle(color: Colors.blue),
+                ),
                 onPressed: () {
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
