@@ -49,11 +49,6 @@ class _ListCallcards extends State<ListCallcards> {
 
   @override
   void didChangeDependencies() {
-    phcBloc = BlocProvider.of<PhcBloc>(context);
-    loginBloc = BlocProvider.of<LoginBloc>(context);
-    authBloc = BlocProvider.of<AuthBloc>(context);
-    settingBloc = BlocProvider.of<SettingBloc>(context);
-
     phcRepository = PhcRepository(
         phcApiClient: PhcApiClient(
             httpClient: http.Client(),
@@ -73,6 +68,13 @@ class _ListCallcards extends State<ListCallcards> {
   void initState() {
     super.initState();
     _refreshCompleter = Completer<void>();
+
+    phcBloc = BlocProvider.of<PhcBloc>(context);
+    loginBloc = BlocProvider.of<LoginBloc>(context);
+    authBloc = BlocProvider.of<AuthBloc>(context);
+    settingBloc = BlocProvider.of<SettingBloc>(context);
+
+    phcBloc.add(FetchPhc());
   }
 
   @override
@@ -151,13 +153,14 @@ class _ListCallcards extends State<ListCallcards> {
                   }
                 },
                 builder: (context, state) {
-                  phcBloc = BlocProvider.of<PhcBloc>(context);
+                  // phcBloc = BlocProvider.of<PhcBloc>(context);
 
                   print(state);
 
-                  if (state is PhcEmpty) {
-                    phcBloc.add(FetchPhc());
-                  } else if (state is PhcLoading) {
+                  // if (state is PhcEmpty) {
+                  //   phcBloc.add(FetchPhc());
+                  // } else
+                  if (state is PhcLoading) {
                     return Dashboard();
                   } else if (state is PhcLoaded) {
                     // _refreshCompleter.isCompleted
