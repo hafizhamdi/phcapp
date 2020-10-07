@@ -1033,7 +1033,7 @@ vPicker.setValue(5);
       }
 
       if (bpSysPicker.getValue != null && bpDiasPicker.getValue != null) {
-        var map = (bpSysPicker.getValue + (2 * bpDiasPicker.getValue) / 3);
+        var map = (bpSysPicker.getValue + (2 * bpDiasPicker.getValue)) / 3;
         var mapStr = double.parse(map.toString()).toStringAsFixed(2);
         mapPicker.setOption(mapStr);
         // print(map);
