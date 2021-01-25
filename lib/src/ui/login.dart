@@ -99,8 +99,9 @@ class _LoginScreen extends State<LoginScreen>
             } else if (state is AuthUnaunthenticated) {
               print("listener in blocconsumer authunauthenticated");
               showUnauthorized();
-              // Navigator.of(context).pushNamedAndRemoveUntil(
-              //     '/login', (Route<dynamic> route) => false);
+            } else if (state is AppLoggedOut) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/login', (Route<dynamic> route) => false);
             }
             // else if (state is AuthUnitialized) {
             //   showUnauthorized();
@@ -298,7 +299,7 @@ class _LoginScreen extends State<LoginScreen>
                             // right: 70,
                             // top: 60,
                             child: Text(
-                              "HRPB Version 2.6",
+                              "HRPB Version 2.8",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,

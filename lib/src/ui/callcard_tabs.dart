@@ -391,32 +391,32 @@ class _CallcardTabs extends State<CallcardTabs> {
               ? sceneBloc.state.selectedPPE
               : widget.scene_assessment != null
                   ? widget.scene_assessment.ppe
-                  : [],
+                  : null,
           environment: sceneBloc.state.selectedEnvironment != null
               ? sceneBloc.state.selectedEnvironment
               : widget.scene_assessment != null
                   ? widget.scene_assessment.environment
-                  : [],
+                  : "",
           caseType: sceneBloc.state.selectedCaseType != null
               ? sceneBloc.state.selectedCaseType
               : widget.scene_assessment != null
                   ? widget.scene_assessment.caseType
-                  : [],
+                  : "",
           patient: sceneBloc.state.selectedPatient != null
               ? sceneBloc.state.selectedPatient
               : widget.scene_assessment != null
                   ? widget.scene_assessment.patient
-                  : [],
+                  : "",
           backup: sceneBloc.state.selectedBackup != null
               ? sceneBloc.state.selectedBackup
               : widget.scene_assessment != null
                   ? widget.scene_assessment.backup
-                  : [],
+                  : "",
           otherServicesAtScene: sceneBloc.state.selectedServices != null
               ? sceneBloc.state.selectedServices
               : widget.scene_assessment != null
                   ? widget.scene_assessment.otherServicesAtScene
-                  : []);
+                  : null);
       // print(patientState);
 
       final patientList = patientBloc.state.patients != null

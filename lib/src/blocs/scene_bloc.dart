@@ -16,11 +16,18 @@ abstract class SceneEvent extends Equatable {
     this.selectedCaseType,
     this.selectedPatient,
     this.selectedBackup,
-    this.selectedServices,});
+    this.selectedServices,
+  });
 
   @override
-  List get props => [selectedPPE, selectedEnvironment,selectedCaseType, 
-  selectedPatient, selectedBackup, selectedServices];
+  List get props => [
+        selectedPPE,
+        selectedEnvironment,
+        selectedCaseType,
+        selectedPatient,
+        selectedBackup,
+        selectedServices
+      ];
 }
 
 abstract class SceneState extends Equatable {
@@ -38,11 +45,17 @@ abstract class SceneState extends Equatable {
     this.selectedPatient,
     this.selectedBackup,
     this.selectedServices,
-    });
+  });
 
   @override
-  List get props => [selectedPPE, selectedEnvironment,selectedCaseType, 
-  selectedPatient, selectedBackup, selectedServices];
+  List get props => [
+        selectedPPE,
+        selectedEnvironment,
+        selectedCaseType,
+        selectedPatient,
+        selectedBackup,
+        selectedServices
+      ];
 }
 
 class LoadScene extends SceneEvent {
@@ -53,18 +66,23 @@ class LoadScene extends SceneEvent {
   final String selectedBackup;
   final OtherServices selectedServices;
 
-  LoadScene({
-    this.selectedPPE,
-    this.selectedEnvironment,
-    this.selectedCaseType,
-    this.selectedPatient,
-    this.selectedBackup,
-    this.selectedServices
-    });
+  LoadScene(
+      {this.selectedPPE,
+      this.selectedEnvironment,
+      this.selectedCaseType,
+      this.selectedPatient,
+      this.selectedBackup,
+      this.selectedServices});
 
   @override
-  List get props => [selectedPPE, selectedEnvironment,selectedCaseType, 
-  selectedPatient, selectedBackup, selectedServices];
+  List get props => [
+        selectedPPE,
+        selectedEnvironment,
+        selectedCaseType,
+        selectedPatient,
+        selectedBackup,
+        selectedServices
+      ];
 }
 
 class ResetScene extends SceneEvent {}
@@ -77,19 +95,26 @@ class SetScene extends SceneEvent {
   final selectedBackup;
   final selectedServices;
 
-  SetScene({
-    this.selectedPPE,
-    this.selectedEnvironment,
-    this.selectedCaseType,
-    this.selectedPatient,
-    this.selectedBackup,
-    this.selectedServices
-    });
+  SetScene(
+      {this.selectedPPE,
+      this.selectedEnvironment,
+      this.selectedCaseType,
+      this.selectedPatient,
+      this.selectedBackup,
+      this.selectedServices});
 
   @override
-  List get props => [selectedPPE, selectedEnvironment,selectedCaseType, 
-  selectedPatient, selectedBackup, selectedServices];
+  List get props => [
+        selectedPPE,
+        selectedEnvironment,
+        selectedCaseType,
+        selectedPatient,
+        selectedBackup,
+        selectedServices
+      ];
 }
+
+class LoadingScene extends SceneState {}
 
 class LoadedScene extends SceneState {
   final PPE selectedPPE;
@@ -99,18 +124,23 @@ class LoadedScene extends SceneState {
   final String selectedBackup;
   final OtherServices selectedServices;
 
-  LoadedScene({
-    this.selectedPPE,
-    this.selectedEnvironment,
-    this.selectedCaseType,
-    this.selectedPatient,
-    this.selectedBackup,
-    this.selectedServices
-    });
+  LoadedScene(
+      {this.selectedPPE,
+      this.selectedEnvironment,
+      this.selectedCaseType,
+      this.selectedPatient,
+      this.selectedBackup,
+      this.selectedServices});
 
   @override
-  List get props => [selectedPPE, selectedEnvironment,selectedCaseType, 
-  selectedPatient, selectedBackup, selectedServices];
+  List get props => [
+        selectedPPE,
+        selectedEnvironment,
+        selectedCaseType,
+        selectedPatient,
+        selectedBackup,
+        selectedServices
+      ];
 }
 
 class EmptyScene extends SceneState {}
@@ -129,12 +159,20 @@ class SceneBloc extends Bloc<SceneEvent, SceneState> {
   }
 
   Stream<SceneState> mapLoadSceneToState(LoadScene event) async* {
+    yield LoadingScene();
+
+    final _selectedPPE = event.selectedPPE;
+    final _selectedEnvironment = event.selectedEnvironment;
+    final _selectedCaseType = event.selectedCaseType;
+    final _selectedPatient = event.selectedPatient;
+    final _selectedBackup = event.selectedBackup;
+    final _selectedServices = event.selectedServices;
     yield LoadedScene(
-      selectedPPE:  event.selectedPPE,
-      selectedEnvironment:  event.selectedEnvironment, 
-      selectedCaseType: event.selectedCaseType,
-      selectedPatient: event.selectedPatient,
-      selectedBackup: event.selectedBackup,
-      selectedServices: event.selectedServices);
+        selectedPPE: _selectedPPE,
+        selectedEnvironment: _selectedEnvironment,
+        selectedCaseType: _selectedCaseType,
+        selectedPatient: _selectedPatient,
+        selectedBackup: _selectedBackup,
+        selectedServices: _selectedServices);
   }
 }

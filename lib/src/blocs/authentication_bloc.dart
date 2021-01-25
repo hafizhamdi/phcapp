@@ -58,6 +58,8 @@ class AuthUnaunthenticated extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
+class AppLoggedOut extends AuthState {}
+
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final phcRepository;
   PhcDao phcDao;
@@ -151,7 +153,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         yield AuthUnaunthenticated();
       }
     } else if (event is LoggedOut) {
-      yield AuthUnaunthenticated();
+      // yield AuthLoading();
+      yield AppLoggedOut();
     }
   }
 

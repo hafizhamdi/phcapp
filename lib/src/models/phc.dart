@@ -1584,41 +1584,61 @@ class SceneAssessment {
       };
 }
 
-class PPE{
-    List<String> ppe;
-    String otherspecify;
+// class PPE{
+//     List<String> ppe;
+//     String otherspecify;
 
-  PPE({
-    this.ppe,
-    this.otherspecify
-  });
+//   PPE({
+//     this.ppe,
+//     this.otherspecify
+//   });
   
-    factory PPE.fromJson(Map<String, dynamic> json){
+//     factory PPE.fromJson(Map<String, dynamic> json){
 
-      return
-      PPE(
-        ppe: json != null 
-             ? json["ppe"] is List 
-             ? List<String>.from(json["ppe"].map((x) => x))
-             : json != null 
-             ? json["ppe_list"] != null
-             ? List<String>.from(json["ppe_list"].map((x) => x))
-             : null
-             : null
-             : null,
-        otherspecify: json.toString().contains("others_specify")
-                      ? json["others_specify"]
-                      : ""     
-      );
-    }
+//       return
+//       PPE(
+//         ppe: json != null 
+//              ? json["ppe"] is List 
+//              ? List<String>.from(json["ppe"].map((x) => x))
+//              : json != null 
+//              ? json["ppe_list"] != null
+//              ? List<String>.from(json["ppe_list"].map((x) => x))
+//              : null
+//              : null
+//              : null,
+//         otherspecify: json.toString().contains("others_specify")
+//                       ? json["others_specify"]
+//                       : ""     
+//       );
+//     }
 
-        Map<String, dynamic> toJson() => {
-       "ppe_list": ppe == null
-            ? null
-        : List<dynamic>.from(ppe.map((x) => x)),
-        "others_specify": otherspecify != null ? otherspecify : null
-      };
+//         Map<String, dynamic> toJson() => {
+//        "ppe_list": ppe == null
+//             ? null
+//         : List<dynamic>.from(ppe.map((x) => x)),
+//         "others_specify": otherspecify != null ? otherspecify : null
+//       };
+// }
+
+class PPE {
+  List<String> ppeList;
+  String othersSpecify;
+
+  PPE({this.ppeList, this.othersSpecify});
+
+  PPE.fromJson(Map<String, dynamic> json) {
+    ppeList = json['ppe_list']!=null? json['ppe_list'].cast<String>(): [];
+    othersSpecify = json['others_specify'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ppe_list'] = this.ppeList;
+    data['others_specify'] = this.othersSpecify;
+    return data;
+  }
 }
+
 
 class OtherServices{
     List<String> otherServices;
