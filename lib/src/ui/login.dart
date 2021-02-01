@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/ui/settings.dart';
 import 'package:phcapp/theme/theme_provider.dart';
@@ -103,62 +104,14 @@ class _LoginScreen extends State<LoginScreen>
               Navigator.of(context).pushNamedAndRemoveUntil(
                   '/login', (Route<dynamic> route) => false);
             }
-            // else if (state is AuthUnitialized) {
-            //   showUnauthorized();
-            //   Navigator.of(context).pushNamedAndRemoveUntil(
-            //       '/login', (Route<dynamic> route) => false);
-            // }
           },
           builder: (context, state) {
-            // if (state is AuthUnitialized) {
-
-            // if (state is AuthAunthenticated) {
-            //   // return ListCallcards();
-            //   // }
-            //   // else if (state is AuthInitialized) {
-            //   //   return LoginScreen();
-            //   // } else if (state is AuthUnitialized) {
-            //   //   return LoginScreen();
-            // } else if (state is AuthUnaunthenticated) {
-            //   // showUnauthorized();
-            //   // return LoginScreen();
-            // }
-            //  else if (state is AuthLoading) {
-            //   return Center(
-            //     child: CircularProgressIndicator(),
-            //   );
-            // }
-            // return
-            // return Container();
+            
             return _loginPage();
             // );
           },
         ),
-        // BlocConsumer<LoginBloc, LoginState>(
-        //   listener: (context, state) {
-        //     if (state is LoginFailure) {
-        //       showError();
-        //     }
-        //     // else if(state is Login)
-        //     // if (state is LoginUnauthorized) {
-        //     //   showUnauthorized();
-        //     // } else if (state is LoginLoading) {
-        //     //   loginBloc.add(AppStart());
-        //     // } else if (state is AppStarted) {
-        //     // } else if (state is LoginError) {
-        //     //   showError();
-        //     // } else if (state is LoggedIn) {
-        //     //   Navigator.push(
-        //     //       context, MaterialPageRoute(builder: (context) => ListCallcards()));
-        //     // }
-        //   },
-        //   builder: (context, state) {
-        //     return
-        //         // Center(child:
-        //         _loginPage();
-        //     // );
-        //   },
-        // ),
+   
       ),
     );
   }
@@ -217,17 +170,6 @@ class _LoginScreen extends State<LoginScreen>
     return SingleChildScrollView(
       child: Container(
         width: MediaQuery.of(context).size.width,
-        // height: MediaQuery.of(context).size.height,
-        // decoration: BoxDecoration(
-        //   gradient: LinearGradient(
-        //     begin: Alignment.topRight,
-        //     end: Alignment.bottomLeft,
-        //     colors: [
-        //       Color(0xFF3383CD),
-        //       Color(0xFF11249F),
-        //     ],
-        //   ),
-        // ),
         child: Column(
           children: <Widget>[
             ClipPath(
@@ -265,25 +207,17 @@ class _LoginScreen extends State<LoginScreen>
                         child: Container(
                           width: double.infinity,
                           child:
-                              Image(image: AssetImage('assets/medicineMY.png')),
-                          // SvgPicture.asset("assets/medicine.svg"),
+                              // Image.network(
+                              //     'https://raw.githubusercontent.com/hafizhamdi/phcapp/88a227268087c6230d4d38d270cacb9fb00a8ac7/assets/town.svg')
+                              Image(
+                                  image: AssetImage('assets/ambulanceMY.png')),
+                          // child: SvgPicture.asset("assets/medicine.svg"),
                         ),
                       ),
                       Positioned(
                           child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          // (
-                          // child:
-                          // Container(
-                          //   width: 200,
-                          //   child: Image(
-                          //       image: AssetImage('assets/ambulanceMY.png')),
-                          //   // )
-                          // ),
-                          // SizedBox(
-                          //   height: 40,
-                          // ),
                           Container(
                             // right: 70,
                             child: Text(
@@ -299,7 +233,7 @@ class _LoginScreen extends State<LoginScreen>
                             // right: 70,
                             // top: 60,
                             child: Text(
-                              "HRPB Version 2.8",
+                              "HRPB Version 2.9",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -314,27 +248,9 @@ class _LoginScreen extends State<LoginScreen>
               // ),
             ),
 
-            // SizedBox(
-            //   height: 50,
-            // ),
-            // Container(
-            //     width: 200,
-            //     height: 100,
-            //     child: Image(image: AssetImage('assets/phcare.png'))),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
 
-              // padding: EdgeInsets.all(10),
-              //     child: Text(
-              //       "Pre Hospital Care App",
-              //       style: TextStyle(fontFamily: "Raleway", fontSize: 16),
-              //     )),
-
-              // Padding(
-              // child: Container(
-              // width: 400,
-              // child: Form(
-              //   key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -345,30 +261,7 @@ class _LoginScreen extends State<LoginScreen>
                   SizedBox(
                     height: 10,
                   ),
-                  // InkWell(
-                  //   child: Container(
-                  //     height: 60,
-                  //     // width: double.infinity,
-                  //     // margin: EdgeInsets.symmetric(vertical: 10),
-                  //     // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  //     constraints: BoxConstraints(maxWidth: 300),
-                  //     decoration: BoxDecoration(
-                  //       color: Color(0xFF11249F),
-                  //       borderRadius: BorderRadius.circular(30.0),
-
-                  //       boxShadow: [
-                  //         BoxShadow(
-                  //             offset: Offset(0, 4),
-                  //             blurRadius: 60,
-                  //             color: Colors.black.withOpacity(.1)),
-                  //       ],
-                  //       // color: Colors.white,
-                  //       // borderRadius: BorderRadius.circular(30),
-                  //       border: Border.all(
-                  //         color: Color(0xFFE5E5E5),
-                  //       ),
-                  //     ),
-                  // child:
+                
                   Center(
                     child: GestureDetector(
                       onTapDown: _onTapDown,
@@ -379,28 +272,7 @@ class _LoginScreen extends State<LoginScreen>
                       ),
                     ),
                   )
-                  //   Text(
-                  //     "LOGIN",
-                  //     style: TextStyle(
-                  //         color: Colors.white,
-                  //         letterSpacing: 3.0,
-                  //         fontSize: 16),
-                  //   ),
-                  // ),
-                  //   ),
-                  //   onTap: () {
-                  //     final user = usernameController.text;
-                  //     final password = passwordController.text;
-
-                  //     if (user.isEmpty || password.isEmpty) {
-                  //       showEmpty();
-                  //     } else {
-                  //       loginBloc.add(LoginButtonPressed(
-                  //           username: user, password: password));
-                  //     }
-                  //   },
-                  // ),
-                  // )
+                
                 ],
               ),
             ),
@@ -455,16 +327,6 @@ class _LoginScreen extends State<LoginScreen>
               height: 20,
             )
 
-            // ],
-            // ),
-            // )
-            // Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            // ],
-            // )
-            //   IconButton(
-            //   ),
-            //   Text("Settings")
-            // ])
           ],
         ),
       ),

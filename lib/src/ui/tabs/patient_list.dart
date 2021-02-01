@@ -95,7 +95,7 @@ class _Patients extends State<PatientListScreen>
     // }
     ppeOtherController.text = widget.sceneAssessment != null
         ? widget.sceneAssessment != null
-            ? widget.sceneAssessment.ppe.othersSpecify
+            ? widget.sceneAssessment.ppe.otherspecify
             : null
         : null;
     otherServicesController.text = widget.sceneAssessment != null
@@ -138,19 +138,18 @@ class _Patients extends State<PatientListScreen>
                   child: TextField(
                     onChanged: (text) {
                       if (ppeList == null &&
-                          widget.sceneAssessment.ppe.ppeList == null) {
+                          widget.sceneAssessment.ppe.ppe == null) {
                         ppeList = new List<String>();
                       }
                       if (wantedList == null &&
-                          widget.sceneAssessment ==
-                              null) {
+                          widget.sceneAssessment == null) {
                         wantedList = new List<String>();
                       }
                       final ppe = new PPE(
-                          ppeList: widget.sceneAssessment != null
-                              ? widget.sceneAssessment.ppe.ppeList
+                          ppe: widget.sceneAssessment != null
+                              ? widget.sceneAssessment.ppe.ppe
                               : ppeList,
-                          othersSpecify: ppeOtherController.text);
+                          otherspecify: ppeOtherController.text);
 
                       final otherServices = new OtherServices(
                           otherServices: widget.sceneAssessment != null
@@ -255,10 +254,10 @@ class _Patients extends State<PatientListScreen>
       // : wantedList = wantedList;
 
       final ppe = new PPE(
-          ppeList: widget.sceneAssessment != null
-              ? widget.sceneAssessment.ppe.ppeList
+          ppe: widget.sceneAssessment != null
+              ? widget.sceneAssessment.ppe.ppe
               : ppeList,
-          othersSpecify: ppeOtherController.text);
+          otherspecify: ppeOtherController.text);
       final otherServices = new OtherServices(
           otherServices: widget.sceneAssessment != null
               ? widget.sceneAssessment.otherServicesAtScene.otherServices
@@ -321,7 +320,7 @@ class _Patients extends State<PatientListScreen>
                             _ppe,
                             callback,
                             state.selectedPPE != null
-                                ? state.selectedPPE.ppeList
+                                ? state.selectedPPE.ppe
                                 : null,
                             ppeOtherController),
                         _defaultChips("Environment", _environment, callback,
@@ -352,7 +351,7 @@ class _Patients extends State<PatientListScreen>
                           _ppe,
                           callback,
                           state.selectedPPE != null
-                              ? state.selectedPPE.ppeList
+                              ? state.selectedPPE.ppe
                               : null,
                           ppeOtherController),
                       _defaultChips("Environment", _environment, callback,
