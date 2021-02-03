@@ -84,7 +84,7 @@ class _VitalSignList extends State<VitalSignList>
       borderRadius: BorderRadius.circular(10),
       child: Container(
         margin: EdgeInsets.only(bottom: 5),
-        padding: EdgeInsets.only(left: 8, top: 8),
+        // padding: EdgeInsets.only(left: 8, top: 8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             shape: BoxShape.rectangle,
@@ -119,6 +119,7 @@ class _VitalSignList extends State<VitalSignList>
                       vital.created != null
                           ? Text(
                               generateTime(vital.created),
+                              overflow: TextOverflow.ellipsis,
                             )
                           : Text(
                               "No data",

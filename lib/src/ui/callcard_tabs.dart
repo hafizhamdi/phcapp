@@ -50,7 +50,7 @@ class CallcardTabs extends StatefulWidget {
   _CallcardTabs createState() => _CallcardTabs();
 }
 
-class _CallcardTabs extends State<CallcardTabs> {
+class _CallcardTabs extends State<CallcardTabs> with TickerProviderStateMixin {
   CallInfoBloc callInfoBloc;
   bool isLoading = false;
 
@@ -72,6 +72,10 @@ class _CallcardTabs extends State<CallcardTabs> {
   ResponseBloc responseBloc;
   SceneBloc sceneBloc;
   AuthBloc authBloc;
+
+  AnimationController _controller;
+  Animation _animation;
+
   // CallcardTabs(
   //     {this.callcard_no,
   //     this.call_information,
@@ -95,6 +99,23 @@ class _CallcardTabs extends State<CallcardTabs> {
     authBloc = BlocProvider.of<AuthBloc>(context);
 
     super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    _animation = Tween<double>(
+      begin: 20,
+      end: 100,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.elasticInOut,
+      ),
+    );
+
+    super.initState();
   }
 
   @override
@@ -208,52 +229,66 @@ class _CallcardTabs extends State<CallcardTabs> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            "Success",
+            "Sync Success",
             textAlign: TextAlign.center,
             // style: TextStyle(fontSize: 14),
           ),
-          content: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  child: Icon(
-                    Icons.check_circle,
-                    color: Colors.green,
-                    size: 100,
+          content: SingleChildScrollView(
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AnimatedBuilder(
+                      animation: _animation,
+                      builder: (ctx, child) {
+                        return Container(
+                          constraints:
+                              BoxConstraints(minWidth: 100, minHeight: 100),
+                          child: Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: _animation.value,
+                          ),
+                        );
+                      }
+                      // width: 50,
+                      // height: 50,
+                      // duration: Duration(seconds: 2),
+                      // child:
+
+                      ),
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                RichText(
-                  text: TextSpan(
-                      style: TextStyle(color: Colors.black),
-                      children: [
-                        TextSpan(text: "Call Card No. "),
-                        TextSpan(
-                            text:
-                                // widget.call_information.callcard_no ??
-                                callInfoBloc.state.callInformation != null
-                                    ? callInfoBloc
-                                        .state.callInformation.callcard_no
-                                    : widget.call_information != null
-                                        ? widget.call_information.callcard_no
-                                        : '',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20)),
-                        TextSpan(text: " has successfully synced"),
-                        // TextSpan(
-                        //     text: "VIEW LIST CC",
-                        //     style: TextStyle(fontWeight: FontWeight.bold)),
-                        // TextSpan(text: " to end process"),
-                      ]),
-                ),
-              ]),
+                  // Column(
+                  // RichText(
+                  //   textAlign: TextAlign.center,
+                  //   text: TextSpan(
+                  //       style: TextStyle(color: Colors.black),
+                  // children: [
+                  Text("Call Card No: "),
+                  Text(
+                      // widget.call_information.callcard_no ??
+                      callInfoBloc.state.callInformation != null
+                          ? callInfoBloc.state.callInformation.callcard_no
+                          : widget.call_information != null
+                              ? widget.call_information.callcard_no
+                              : '',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  SizedBox(height: 10),
+                  Text(" has successfully synced"),
+                  // TextSpan(
+                  //     text: "VIEW LIST CC",
+                  //     style: TextStyle(fontWeight: FontWeight.bold)),
+                  // TextSpan(text: " to end process"),
+                  // ]),
+                ]),
+          ),
           actions: <Widget>[
             FlatButton(
                 child: Text(
-                  "VIEW LIST CALL CARDS",
+                  "RETURN TO DASHBOARD",
                   style: TextStyle(color: Colors.blue),
                 ),
                 onPressed: () {
@@ -524,6 +559,9 @@ class _CallcardTabs extends State<CallcardTabs> {
               //   Navigator.pop(context);
               // }
               showSuccess();
+
+              //start play
+              _controller.forward();
 
               // clear all state to avoid cache
               // callInfoBloc.add(ResetCallInfo());

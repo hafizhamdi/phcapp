@@ -508,10 +508,14 @@ class _Information extends State<PatientInformationScreen>
                   setterField(selector, snapshot.data); // {
 
                   return DropdownButtonFormField(
+                      isExpanded: true,
                       isDense: true,
                       items: list.map((String dropDownStringItem) {
                         return DropdownMenuItem<String>(
-                            child: Text(dropDownStringItem),
+                            child: Text(
+                              dropDownStringItem,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                             value: dropDownStringItem);
                       }).toList(),
                       onChanged: (valueChanged) {

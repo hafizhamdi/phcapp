@@ -198,13 +198,12 @@ class _CPRItems extends State<CPRItems>
       final stateCpr = cprBloc.state.cprLog;
       setState(() {
         witnessController.text =
-            stateCpr.witnessCpr != null ? stateCpr.witnessCpr.timestamp : '';  
+            stateCpr.witnessCpr != null ? stateCpr.witnessCpr.timestamp : '';
         bystanderController.text = stateCpr.bystanderCpr != null
             ? stateCpr.bystanderCpr.timestamp
             : '';
-        dnarController.text = stateCpr.dnar != null
-            ? stateCpr.dnar.timestamp
-            : '';  
+        dnarController.text =
+            stateCpr.dnar != null ? stateCpr.dnar.timestamp : '';
         cprStartController.text =
             stateCpr.cprStart != null ? stateCpr.cprStart.timestamp : '';
         cprStopController.text =
@@ -832,7 +831,10 @@ class _CPRItems extends State<CPRItems>
               // ),
               ),
           RaisedButton.icon(
-            label: Text("Add Rhythm Analysis"),
+            label: Text(
+              "Add Rhythm Analysis",
+              overflow: TextOverflow.ellipsis,
+            ),
             icon: Icon(Icons.add),
             onPressed: () {
               shockable = new Analysis();

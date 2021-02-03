@@ -159,11 +159,6 @@ class _EditCallInfo extends State<EditCallInfo>
     _distanceController.close();
     _locationController.close();
 
-    // callInfoBloc.add(SaveCallInfo(
-    //     callInformation:
-    //         new CallInformation(callcardNo: cardNoController.text)));
-    // print("call info captured");
-    // cardNoController.dispose();
     receivedController.dispose();
     contactNoController.dispose();
     eventCol1Controller.dispose();
@@ -210,46 +205,10 @@ class _EditCallInfo extends State<EditCallInfo>
         mask: "##/##/##/##", filter: {"#": RegExp(r'[a-zA-Z0-9]')});
     var contactNoFormater = MaskTextInputFormatter(
         mask: "###-########", filter: {"#": RegExp(r'[a-zA-Z0-9]')});
-
-    // return BlocConsumer<CallInfoBloc, CallInfoState>(
-    //     listener: (context, state) {},
-    //     builder: (context, state) {
-    //       if (state is CallInfoLoaded) {
-    //         final currentState = state.call_information;
-
-    //         print("UI:CALLINFOLOADED");
-    //         cardNoController.text = setField(currentState.callcard_no);
-    //         contactNoController.text = setField(currentState.caller_contactno);
-    //         receivedController.text = setField(currentState.call_received);
-    //         eventCodeController.text = setField(currentState.event_code);
-    //         incidentController.text = setField(currentState.incident_desc);
-    //         locationController.text = setField(currentState.incident_location);
-    //         landmarkController.text = setField(currentState.landmark);
-
-    //         _priority = setField(currentState.priority);
-    //         _location = setField(currentState.location_type);
-    //         _distance = setField(currentState.distance_to_scene);
-    //       }
-    // String initialValue;
-
-    return
-        // Scaffold(
-        //   backgroundColor: Colors.white,
-        // backgroundColor: ,
-        // body:
-        Center(
+    return Center(
       child: Container(
         color: Colors.white,
-        // child: Container(
-        // width: 700,
         constraints: BoxConstraints(maxWidth: 700),
-        // child: Card(
-        //   shape: RoundedRectangleBorder(
-        //     borderRadius: BorderRadius.all(
-        //       Radius.circular(20.0),
-        //     ),
-        //   ),
-        // margin: EdgeInsets.all(10.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -302,77 +261,18 @@ class _EditCallInfo extends State<EditCallInfo>
                   ),
                 ],
               ),
-
-              // SizedBox(
-              //   height: 40,
-              // ),
-              // Row(
-              //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: <Widget>[
-              // IconButton(
-              //   icon: Icon(Icons.close),
-              //   onPressed: () {
-              //     Navigator.pop(context);
-              //   },
-              // ),
               Center(
                 child: HeaderSection("Edit Call Information"),
               ),
               SizedBox(
                 height: 20,
               ),
-              // IconButton(
-              //   icon: Icon(Icons.check),
-              //   onPressed: () {
-              //     // {
-              //     // if (_formKey.currentState.validate()) {
-              //     // print("widget.call_information.assign_id");
-              //     // print(widget.call_information.assign_id);
-              //     callInfoBloc.add(SaveCallInfo(
-              //         callInformation: new CallInformation(
-              //       callcardNo: cardNoValue,
-              //       callReceived: receivedController.text,
-              //       callerContactno: contactNoController.text,
-              //       eventCode: mergingEventCode(
-              //           eventCol1Controller,
-              //           eventCol2Controller,
-              //           eventCol3Controller,
-              //           eventCol4Controller),
-              //       priority: _priority,
-              //       incidentDesc: incidentController.text,
-              //       incidentLocation: locationController.text,
-              //       landmark: landmarkController.text,
-              //       locationType: _location,
-              //       distanceToScene: _distance,
-              //       assignId: widget.call_information.assign_id,
-              //       plateNo: widget.call_information.plate_no,
-              //     )));
-
-              //     // final snackBar = SnackBar(
-              //     //   content: Text("Call information has been saved!"),
-              //     // );
-              //     // Scaffold.of(context).showSnackBar(snackBar);
-
-              //     //   Navigator.pop(context);
-              //     // }
-              //     Navigator.pop(context);
-              //   },
-              // ),
-              //   ],
-              // ),
-              // // TextEditLabel(
-              // //     labelText: "Call Card No",
-              // //     controller: cardNoController),
-
               Row(children: [
                 Expanded(
                   child: CardNoTextInput(
                     labelText: "Call Card No",
                     controller: callInfoBloc.cardNoController,
                     initialData: cardNoValue,
-                    // controller: cardNoController,
-                    // stream: infoBloc.callcarNoStream,
-                    // updateText: infoBloc.setCallcardNo,
                   ),
                 ),
                 Expanded(
@@ -380,7 +280,6 @@ class _EditCallInfo extends State<EditCallInfo>
                 )
               ]),
               Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: TextInput(
@@ -585,6 +484,7 @@ class _EditCallInfo extends State<EditCallInfo>
                   // child:
 
                   return DropdownButtonFormField(
+                      isExpanded: true,
                       isDense: true,
                       items: list.map((String dropDownStringItem) {
                         return DropdownMenuItem<String>(

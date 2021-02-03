@@ -295,6 +295,7 @@ class _ListCallcards extends State<ListCallcards> {
       itemCount: phc.callcards.length,
       itemBuilder: (BuildContext context, int index) {
         final callInfo = phc.callcards[index].callInformation;
+        final patients = phc.callcards[index].patients;
 
         return (filter == null || filter == "")
             ? CardList(
@@ -303,6 +304,7 @@ class _ListCallcards extends State<ListCallcards> {
                 plateNo: callInfo.plate_no,
                 address: callInfo.incident_location,
                 updatedDate: callInfo.updated_date,
+                persons: patients.length,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -591,7 +593,7 @@ class Dashboard extends StatelessWidget {
             child: StatsCard(
               labelText: "Total",
               count: totalCount,
-              color: Colors.blue,
+              color: Color(0xff5c85ec),
             ),
           ),
           SizedBox(
@@ -602,7 +604,7 @@ class Dashboard extends StatelessWidget {
             child: StatsCard(
               labelText: "Success",
               count: successCount,
-              color: Colors.green,
+              color: Color(0xff1ca754),
             ),
           ),
           SizedBox(
@@ -613,7 +615,7 @@ class Dashboard extends StatelessWidget {
             child: StatsCard(
               labelText: "Failed",
               count: failedCount,
-              color: Color(0xffED3B47),
+              color: Color(0xfffe5a3f),
             ),
           ),
         ],

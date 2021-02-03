@@ -410,7 +410,7 @@ class BuildPatientList extends StatelessWidget {
   Widget build(BuildContext context) {
     final cprBloc = BlocProvider.of<CprBloc>(context);
     _buildPatient(data, route) {
-      var callInfo = data.patientInformation;
+      final PatientInformation callInfo = data.patientInformation;
       var vital_length =
           data.vitalSigns != null ? data.vitalSigns.length : null;
 
@@ -426,34 +426,58 @@ class BuildPatientList extends StatelessWidget {
             // onHighlightChanged: (hightlight) {},
             child: ListTile(
               contentPadding: EdgeInsets.all(10),
-              leading: Icon(Icons.face),
+              leading: Container(
+                padding: EdgeInsets.all(15),
+                // alignment: Alignment.center,
+                child: Icon(
+                  Icons.face,
+                  size: 35,
+                  color: Colors.white,
+                ),
+                // color: Colors.indigo,
+                decoration: BoxDecoration(
+                    color: Colors.purple,
+                    // : Colors.indigo,
+                    shape: BoxShape.circle),
+              ),
+
+              // Icon(Icons.face, size: 30),
               title: Text(callInfo.name != null ? callInfo.name : "Not set",
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontFamily: "Raleway")),
               subtitle: Container(
-                  child: Row(
+                  child: Wrap(
                     children: <Widget>[
                       Expanded(
-                          child: Row(children: <Widget>[
-                        Icon(
-                          Icons.accessibility_new,
-                          color: Colors.purple,
-                          size: 20,
-                        ),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text(
-                          (callInfo.age != null ? callInfo.age : "0") +
-                              " yrs (" +
-                              (callInfo.gender != null
-                                  ? callInfo.gender.substring(0, 1)
-                                  : 'N') +
-                              ")",
-                          style: TextStyle(fontFamily: "Arial"),
-                        )
-                      ])),
+                        child: Row(children: <Widget>[
+                          Icon(
+                            Icons.accessibility_new,
+                            color: Colors.purple,
+                            size: 20,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            (callInfo.age != null ? callInfo.age : "0") +
+                                " yrs, " +
+                                (callInfo.gender != null
+                                    ? callInfo.gender.substring(0, 1)
+                                    : 'N') +
+                                "",
+                            style: TextStyle(
+                                fontFamily: "Arial",
+                                fontWeight: FontWeight.w700),
+                          ),
+                          Expanded(
+                            child: Text(
+                              ", ${callInfo.idNo}",
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          )
+                        ]),
+                      ),
                       Expanded(
                           child: Row(children: <Widget>[
                         Icon(
@@ -471,7 +495,8 @@ class BuildPatientList extends StatelessWidget {
                                   ? vital_length.toString()
                                   : "0") +
                               " vitals",
-                          style: TextStyle(fontFamily: "Arial"),
+                          style: TextStyle(
+                              fontFamily: "Arial", fontWeight: FontWeight.w700),
                         )
                       ])),
                     ],

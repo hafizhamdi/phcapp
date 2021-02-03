@@ -11,6 +11,7 @@ class CardList extends StatelessWidget {
   final address;
   final receivedCall;
   final updatedDate;
+  final persons;
   final Function onPressed;
 
   CardList(
@@ -19,6 +20,7 @@ class CardList extends StatelessWidget {
       this.address,
       this.receivedCall,
       this.onPressed,
+      this.persons,
       this.updatedDate});
 
   @override
@@ -34,7 +36,7 @@ class CardList extends StatelessWidget {
         margin: EdgeInsets.only(bottom: 10),
         padding: EdgeInsets.all(10),
         width: MediaQuery.of(context).size.width,
-        height: 100,
+        height: 120,
         decoration: BoxDecoration(
           color: Provider.of<ThemeProvider>(context).isDarkTheme
               ? Colors.grey[900]
@@ -55,7 +57,7 @@ class CardList extends StatelessWidget {
               padding: EdgeInsets.all(15),
               child: Icon(
                 Icons.call,
-                size: 40,
+                size: 35,
                 color: Colors.white,
               ),
               // color: Colors.indigo,
@@ -96,7 +98,7 @@ class CardList extends StatelessWidget {
                     ),
                     Row(children: [
                       Icon(
-                        Icons.person_pin,
+                        Icons.location_on,
                         color: Colors.blue,
                       ),
                       SizedBox(width: 10),
@@ -111,7 +113,7 @@ class CardList extends StatelessWidget {
                       )),
                     ]),
 
-                    Row(children: [
+                    Wrap(children: [
                       Row(children: [
                         Icon(
                           Icons.directions_car,
@@ -128,6 +130,20 @@ class CardList extends StatelessWidget {
                                 fontFamily: "Poppins",
                               ),
                             )),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Icon(
+                          Icons.group,
+                          color: Colors.purple,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          persons.toString(),
+                          style: TextStyle(color: Colors.grey[700]),
+                        )
                       ]),
                       Row(children: [
                         Icon(
@@ -136,20 +152,21 @@ class CardList extends StatelessWidget {
                         ),
                         SizedBox(width: 10),
                         Container(
-                            width: 100,
-                            child: Text(
-                              receivedCall != null
-                                  ? DateFormat("d-MMM HH:mm").format(
-                                      DateTime.parse(receivedCall),
-                                    )
-                                  : '',
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.grey[700],
-                                fontFamily: "Poppins",
-                              ),
-                            )),
-                      ])
+                          // width: 100,
+                          child: Text(
+                            receivedCall != null
+                                ? DateFormat("d-MMM HH:mm").format(
+                                    DateTime.parse(receivedCall),
+                                  )
+                                : '',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontFamily: "Poppins",
+                            ),
+                          ),
+                        ),
+                      ]),
                     ]),
                     // Text("THE REST")
                   ],
