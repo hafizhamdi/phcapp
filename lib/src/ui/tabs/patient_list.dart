@@ -449,37 +449,36 @@ class BuildPatientList extends StatelessWidget {
               subtitle: Container(
                   child: Wrap(
                     children: <Widget>[
-                      Expanded(
-                        child: Row(children: <Widget>[
-                          Icon(
-                            Icons.accessibility_new,
-                            color: Colors.purple,
-                            size: 20,
+                      Row(children: <Widget>[
+                        Icon(
+                          Icons.accessibility_new,
+                          color: Colors.purple,
+                          size: 20,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          (callInfo.age != null ? callInfo.age : "0") +
+                              " yrs, " +
+                              (callInfo.gender != null
+                                  ? callInfo.gender.substring(0, 1)
+                                  : 'N') +
+                              "",
+                          style: TextStyle(
+                              fontFamily: "Arial", fontWeight: FontWeight.w700),
+                        ),
+                        Expanded(
+                          child: Text(
+                            ", ${callInfo.idNo}",
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            (callInfo.age != null ? callInfo.age : "0") +
-                                " yrs, " +
-                                (callInfo.gender != null
-                                    ? callInfo.gender.substring(0, 1)
-                                    : 'N') +
-                                "",
-                            style: TextStyle(
-                                fontFamily: "Arial",
-                                fontWeight: FontWeight.w700),
-                          ),
-                          Expanded(
-                            child: Text(
-                              ", ${callInfo.idNo}",
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          )
-                        ]),
-                      ),
-                      Expanded(
-                          child: Row(children: <Widget>[
+                        )
+                      ]),
+                      // ),
+                      // Expanded(
+                      //     child:
+                      Row(children: <Widget>[
                         Icon(
                           Icons.favorite,
                           color: vital_length != null
@@ -498,7 +497,8 @@ class BuildPatientList extends StatelessWidget {
                           style: TextStyle(
                               fontFamily: "Arial", fontWeight: FontWeight.w700),
                         )
-                      ])),
+                      ])
+                      // ),
                     ],
                   ),
                   padding: EdgeInsets.only(right: 20)),
