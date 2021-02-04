@@ -177,6 +177,18 @@ class _Information extends State<PatientInformationScreen>
                     // mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       HeaderSection("Patient Information"),
+                      Container(
+                        padding: EdgeInsets.only(left: 15),
+                        child: Row(children: [
+                          Icon(Icons.info),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                                "Changes of existing Identification No. shall create new record in PHC web",
+                                softWrap: true),
+                          ),
+                        ]),
+                      ),
                       MyTextInput2(
                         labelText: "Name",
                         controller: patProvider.nameController,

@@ -106,12 +106,10 @@ class _LoginScreen extends State<LoginScreen>
             }
           },
           builder: (context, state) {
-            
             return _loginPage();
             // );
           },
         ),
-   
       ),
     );
   }
@@ -233,7 +231,7 @@ class _LoginScreen extends State<LoginScreen>
                             // right: 70,
                             // top: 60,
                             child: Text(
-                              "HRPB Version 2.9",
+                              "HRPB Version 3.0",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -250,7 +248,6 @@ class _LoginScreen extends State<LoginScreen>
 
             Padding(
               padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
-
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -261,7 +258,6 @@ class _LoginScreen extends State<LoginScreen>
                   SizedBox(
                     height: 10,
                   ),
-                
                   Center(
                     child: GestureDetector(
                       onTapDown: _onTapDown,
@@ -272,7 +268,6 @@ class _LoginScreen extends State<LoginScreen>
                       ),
                     ),
                   )
-                
                 ],
               ),
             ),
@@ -326,7 +321,6 @@ class _LoginScreen extends State<LoginScreen>
             SizedBox(
               height: 20,
             )
-
           ],
         ),
       ),
