@@ -222,7 +222,7 @@ class SplashScreen extends StatelessWidget {
                 child: Image(image: AssetImage('assets/ambulance.png')),
               ),
               Text(
-                "PH Care",
+                "PHCare",
                 style: TextStyle(
                     fontFamily: "OpenSans",
                     fontWeight: FontWeight.w900,

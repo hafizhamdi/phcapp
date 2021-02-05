@@ -5,6 +5,7 @@ import 'package:phcapp/src/blocs/blocs.dart';
 import 'package:phcapp/src/ui/settings.dart';
 import 'package:phcapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'dart:math' as math;
 
 class LoginScreen extends StatefulWidget {
   LoginScreen();
@@ -173,76 +174,28 @@ class _LoginScreen extends State<LoginScreen>
             ClipPath(
               clipper: MyClipper(),
               child: Container(
-                padding: EdgeInsets.only(
-                  left: 20, top: 50,
-                  // bottom: 100
-                  //  right: 20
-                ),
-                height: 350,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      Color(0xFF3383CD),
-                      Colors.green
-                      // Color(0xFF112BBF),
-                    ],
+                  padding: EdgeInsets.only(
+                    left: 20, top: 50,
+                    // bottom: 100
+                    //  right: 20
                   ),
-                  // image: DecorationImage(
-                  //   image: AssetImage("assets/images/authentication.svg"),
-                  // ),
-                ),
-                child: Stack(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Positioned(
-                        // top: 10,
-                        // bottom: 0.1,
-                        // left: 100,
-                        // right: 0,
-                        child: Container(
-                          width: double.infinity,
-                          child:
-                              // Image.network(
-                              //     'https://raw.githubusercontent.com/hafizhamdi/phcapp/88a227268087c6230d4d38d270cacb9fb00a8ac7/assets/town.svg')
-                              Image(
-                                  image: AssetImage('assets/ambulanceMY.png')),
-                          // child: SvgPicture.asset("assets/medicine.svg"),
-                        ),
-                      ),
-                      Positioned(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            // right: 70,
-                            child: Text(
-                              "PH Care",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 50,
-                                  fontFamily: "Raleway"),
-                            ),
-                          ),
-                          Container(
-                            // right: 70,
-                            // top: 60,
-                            child: Text(
-                              "HRPB Version 3.0",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                // fontFamily: "Raleway"
-                              ),
-                            ),
-                          ),
-                        ],
-                      ))
-                    ]),
-              ),
+                  height: 350,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        Color(0xFF3383CD),
+                        Colors.green
+                        // Color(0xFF112BBF),
+                      ],
+                    ),
+                    // image: DecorationImage(
+                    //   image: AssetImage("assets/images/authentication.svg"),
+                    // ),
+                  ),
+                  child: SecondDesign()),
               // ),
             ),
 
@@ -420,5 +373,123 @@ class MyClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {
     return false;
+  }
+}
+
+class FirstDesign extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Positioned(
+            // top: 10,
+            // bottom: 0.1,
+            // left: 100,
+            // right: 0,
+            child: Container(
+              width: double.infinity,
+              child:
+                  // Image.network(
+                  //     'https://raw.githubusercontent.com/hafizhamdi/phcapp/88a227268087c6230d4d38d270cacb9fb00a8ac7/assets/town.svg')
+                  Image(image: AssetImage('assets/ambulanceMY.png')),
+              // child: SvgPicture.asset("assets/medicine.svg"),
+            ),
+          ),
+          Positioned(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                // right: 70,
+                child: Text(
+                  "PHCare",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 50,
+                      fontFamily: "Raleway"),
+                ),
+              ),
+              Container(
+                // right: 70,
+                // top: 60,
+                child: Row(children: [
+                  Text(
+                    "HRPB",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      // fontFamily: "Raleway"
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                        border: Border.all(width: 0.5),
+                        color: Colors.lightBlueAccent,
+                        boxShadow: [
+                          BoxShadow(color: Colors.grey, blurRadius: 10.0)
+                        ]),
+                    child: Text(
+                      "v3.0.1",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ]),
+              ),
+            ],
+          ))
+        ]);
+  }
+}
+
+class SecondDesign extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Image(
+          width: 200,
+          image: AssetImage('assets/ambulanceMY.png'),
+        ),
+        Text(
+          "PHCare",
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w700,
+            fontFamily: "Raleway",
+            color: Colors.white,
+          ),
+        ),
+        Text(
+          "Pre Hospital Care",
+          style: TextStyle(
+            fontFamily: "Poppins",
+
+            // fontSize: 30,
+
+            // fontWeight: FontWeight.w700,
+            color: Colors.white.withOpacity(1),
+          ),
+        ),
+        SizedBox(height: 10),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
+              border: Border.all(width: 0.5),
+              color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
+                  .withOpacity(1.0),
+              boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10.0)]),
+          child: Text(
+            "v3.0.1",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
+    );
   }
 }
