@@ -77,13 +77,13 @@ const _face = [
 ];
 const _speech = [
   "Normal",
-  "Abrnormal pre-existing",
+  "Abnormal pre-existing",
   "Slurring",
   "Unable to assess"
 ];
 const _arm = [
   "Normal",
-  "Abrnormal pre-existing",
+  "Abnormal pre-existing",
   "Arm drift right",
   "Arm drift left",
   "Unable to assess"
@@ -438,9 +438,9 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         if (f.id == "stroke_speech") {
           f.value = widget.patientAssessment.strokeScale.speech;
           listStrokeSpeech = widget.patientAssessment.strokeScale.speech;
-          if (listStrokeSpeech.length > 1) {
-            listStrokeSpeech.removeLast();
-          }
+          // if (listStrokeSpeech.length > 1) {
+          //   listStrokeSpeech.removeLast();
+          // }
         }
         if (f.id == "stroke_arm") {
           f.value = widget.patientAssessment.strokeScale.arm;

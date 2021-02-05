@@ -29,7 +29,7 @@ const RHYTHMNS = ["Asystole", "Wide PEA", "Narrow PEA"];
 const RHYTHMOT = ["Tachyarythmias", "Bradyarrythmias"];
 const ANALYSIS = ["Non-Shockable", "Shockable", "Other"];
 const _cpr = ["Required", "Not Required"];
-const _cpr_outcome = ["Transported", "Termination of Resusitation (TOR)"];
+const _cpr_outcome = ["Transport", "Termination of Resusitation (TOR)"];
 const _cpr_not_required = [
   "Algor mortis",
   "Livor mortis",
@@ -991,7 +991,7 @@ class _CPRItems extends State<CPRItems>
                   multiple: false,
                   initialData: initialData),
               initialData != null
-                  ? initialData.contains("Transported")
+                  ? initialData.contains("Transport")
                       ? StreamBuilder<Object>(
                           stream:
                               transportedController.stream.asBroadcastStream(),

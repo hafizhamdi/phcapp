@@ -21,7 +21,7 @@ enum Response {
   abortMission
 }
 
-const MISSION_ABORT = [" ", "arrive at scene no patient found", "stand down"];
+const MISSION_ABORT = [" ", "Arrive at scene no patient found", "Stand down"];
 
 class ResponseTimeScreen extends StatelessWidget {
   final ResponseTime responseTime;
@@ -367,12 +367,20 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
     );
   }
 
-  Widget DropDownList(labelText, List<String> list, initialData) {
+  Widget DropDownList(labelText, List<String> list, String initialData) {
     final controller = abortMissionController;
 
     // if (!list.contains(initialData)) initialData = "";
 
-    print("initialData: $initialData");
+    // To cater old data consistency
+    if(initialData != null){
+      initialData = initialData.substring(0,1).toUpperCase()+initialData.substring(1);
+      widget.reasonAbort = initialData;
+      responseTime.reasonAbort = widget.reasonAbort;
+      timeBloc.add(AddTime(responseTime: responseTime));
+    }
+    //
+
     return Container(
         // width: 500,
         child: Padding(
