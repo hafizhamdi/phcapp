@@ -94,12 +94,12 @@ class _Patients extends State<PatientListScreen>
     //       sceneAssessment: widget.sceneAssessment));
     // }
     ppeOtherController.text = widget.sceneAssessment != null
-        ? widget.sceneAssessment.ppe != null
+        ? widget.sceneAssessment != null
             ? widget.sceneAssessment.ppe.otherspecify
             : null
         : null;
     otherServicesController.text = widget.sceneAssessment != null
-        ? widget.sceneAssessment.otherServicesAtScene != null
+        ? widget.sceneAssessment != null
             ? widget.sceneAssessment.otherServicesAtScene.otherspecify
             : null
         : null;
@@ -142,21 +142,17 @@ class _Patients extends State<PatientListScreen>
                         ppeList = new List<String>();
                       }
                       if (wantedList == null &&
-                          widget.sceneAssessment.otherServicesAtScene
-                                  .otherServices ==
-                              null) {
+                          widget.sceneAssessment == null) {
                         wantedList = new List<String>();
                       }
                       final ppe = new PPE(
-                          ppe: widget.sceneAssessment.ppe.ppe != null
+                          ppe: widget.sceneAssessment != null
                               ? widget.sceneAssessment.ppe.ppe
                               : ppeList,
                           otherspecify: ppeOtherController.text);
 
                       final otherServices = new OtherServices(
-                          otherServices: widget.sceneAssessment
-                                      .otherServicesAtScene.otherServices !=
-                                  null
+                          otherServices: widget.sceneAssessment != null
                               ? widget.sceneAssessment.otherServicesAtScene
                                   .otherServices
                               : wantedList,
@@ -258,15 +254,14 @@ class _Patients extends State<PatientListScreen>
       // : wantedList = wantedList;
 
       final ppe = new PPE(
-          ppe: widget.sceneAssessment.ppe.ppe != null
+          ppe: widget.sceneAssessment != null
               ? widget.sceneAssessment.ppe.ppe
               : ppeList,
           otherspecify: ppeOtherController.text);
       final otherServices = new OtherServices(
-          otherServices:
-              widget.sceneAssessment.otherServicesAtScene.otherServices != null
-                  ? widget.sceneAssessment.otherServicesAtScene.otherServices
-                  : wantedList,
+          otherServices: widget.sceneAssessment != null
+              ? widget.sceneAssessment.otherServicesAtScene.otherServices
+              : wantedList,
           otherspecify: otherServicesController.text);
       sceneBloc.add(LoadScene(
           selectedPPE: ppe,
@@ -415,7 +410,7 @@ class BuildPatientList extends StatelessWidget {
   Widget build(BuildContext context) {
     final cprBloc = BlocProvider.of<CprBloc>(context);
     _buildPatient(data, route) {
-      var callInfo = data.patientInformation;
+      final PatientInformation callInfo = data.patientInformation;
       var vital_length =
           data.vitalSigns != null ? data.vitalSigns.length : null;
 
@@ -431,16 +426,30 @@ class BuildPatientList extends StatelessWidget {
             // onHighlightChanged: (hightlight) {},
             child: ListTile(
               contentPadding: EdgeInsets.all(10),
-              leading: Icon(Icons.face),
+              leading: Container(
+                padding: EdgeInsets.all(15),
+                // alignment: Alignment.center,
+                child: Icon(
+                  Icons.face,
+                  size: 35,
+                  color: Colors.white,
+                ),
+                // color: Colors.indigo,
+                decoration: BoxDecoration(
+                    color: Colors.purple,
+                    // : Colors.indigo,
+                    shape: BoxShape.circle),
+              ),
+
+              // Icon(Icons.face, size: 30),
               title: Text(callInfo.name != null ? callInfo.name : "Not set",
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontFamily: "Raleway")),
               subtitle: Container(
-                  child: Row(
+                  child: Wrap(
                     children: <Widget>[
-                      Expanded(
-                          child: Row(children: <Widget>[
+                      Row(children: <Widget>[
                         Icon(
                           Icons.accessibility_new,
                           color: Colors.purple,
@@ -451,16 +460,25 @@ class BuildPatientList extends StatelessWidget {
                         ),
                         Text(
                           (callInfo.age != null ? callInfo.age : "0") +
-                              " yrs (" +
+                              " yrs, " +
                               (callInfo.gender != null
                                   ? callInfo.gender.substring(0, 1)
                                   : 'N') +
-                              ")",
-                          style: TextStyle(fontFamily: "Arial"),
+                              "",
+                          style: TextStyle(
+                              fontFamily: "Arial", fontWeight: FontWeight.w700),
+                        ),
+                        Expanded(
+                          child: Text(
+                            ", ${callInfo.idNo}",
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         )
-                      ])),
-                      Expanded(
-                          child: Row(children: <Widget>[
+                      ]),
+                      // ),
+                      // Expanded(
+                      //     child:
+                      Row(children: <Widget>[
                         Icon(
                           Icons.favorite,
                           color: vital_length != null
@@ -476,9 +494,11 @@ class BuildPatientList extends StatelessWidget {
                                   ? vital_length.toString()
                                   : "0") +
                               " vitals",
-                          style: TextStyle(fontFamily: "Arial"),
+                          style: TextStyle(
+                              fontFamily: "Arial", fontWeight: FontWeight.w700),
                         )
-                      ])),
+                      ])
+                      // ),
                     ],
                   ),
                   padding: EdgeInsets.only(right: 20)),

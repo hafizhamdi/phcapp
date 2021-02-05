@@ -23,14 +23,14 @@ class StatsCard extends StatelessWidget {
         // border: Border.all(color: Colors.grey),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Padding(
             padding: EdgeInsets.all(10),
             child: Text(labelText,
                 style: TextStyle(
                     fontFamily: "Poppins",
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.w900)),
           ),
           Padding(

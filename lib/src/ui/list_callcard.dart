@@ -31,6 +31,9 @@ class ListCallcards extends StatefulWidget {
 }
 
 class _ListCallcards extends State<ListCallcards> {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
+
   Completer<void> _refreshCompleter;
   PhcBloc phcBloc;
   LoginBloc loginBloc;
@@ -46,11 +49,6 @@ class _ListCallcards extends State<ListCallcards> {
 
   @override
   void didChangeDependencies() {
-    phcBloc = BlocProvider.of<PhcBloc>(context);
-    loginBloc = BlocProvider.of<LoginBloc>(context);
-    authBloc = BlocProvider.of<AuthBloc>(context);
-    settingBloc = BlocProvider.of<SettingBloc>(context);
-
     phcRepository = PhcRepository(
         phcApiClient: PhcApiClient(
             httpClient: http.Client(),
@@ -70,6 +68,13 @@ class _ListCallcards extends State<ListCallcards> {
   void initState() {
     super.initState();
     _refreshCompleter = Completer<void>();
+
+    phcBloc = BlocProvider.of<PhcBloc>(context);
+    loginBloc = BlocProvider.of<LoginBloc>(context);
+    authBloc = BlocProvider.of<AuthBloc>(context);
+    settingBloc = BlocProvider.of<SettingBloc>(context);
+
+    phcBloc.add(FetchPhc());
   }
 
   @override
@@ -94,7 +99,7 @@ class _ListCallcards extends State<ListCallcards> {
         appBar: AppBar(
           leading: TopOtherMenu(),
           title: Text(
-            "PH Care",
+            "PHCare",
             style: TextStyle(fontFamily: "Poppins", fontSize: 30),
           ),
           actions: <Widget>[
@@ -102,6 +107,7 @@ class _ListCallcards extends State<ListCallcards> {
           ],
         ),
         body: RefreshIndicator(
+          // key: _refreshIndicatorKey,
           // displacement: 20,
           onRefresh: () {
             BlocProvider.of<PhcBloc>(context).add(
@@ -119,11 +125,13 @@ class _ListCallcards extends State<ListCallcards> {
             //   _refreshCompleter = Completer();
             // }
             return _refreshCompleter.future;
+            // return;
           },
           child: SingleChildScrollView(
-            // physics: AlwaysScrollableScrollPhysics(),
+            physics: AlwaysScrollableScrollPhysics(),
             // physics: BouncingScrollPhysics(),
             child: Container(
+              // height: MediaQuery.of(context).size.height,
               padding: EdgeInsets.all(20),
               // child: Column(
               //   crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,127 +141,129 @@ class _ListCallcards extends State<ListCallcards> {
               //     ),
 
               // Expanded(
-              child: BlocProvider(
-                create: (context) => PhcBloc(
-                    phcRepository: phcRepository, phcDao: phcDaoClient.phcDao),
-                child: BlocConsumer<PhcBloc, PhcState>(
-                  listener: (context, state) {
-                    if (state is PhcLoaded) {
-                      // //   print("Phcloaded----in listener");
-                      _refreshCompleter.complete();
-                      _refreshCompleter = Completer();
-                    }
-                  },
-                  builder: (context, state) {
-                    phcBloc = BlocProvider.of<PhcBloc>(context);
+              // child: BlocProvider(
+              //   create: (context) => PhcBloc(
+              //       phcRepository: phcRepository, phcDao: phcDaoClient.phcDao),
+              child: BlocConsumer<PhcBloc, PhcState>(
+                listener: (context, state) {
+                  print("Phcloaded----in listener");
+                  if (state is PhcLoaded) {
+                    _refreshCompleter.complete();
+                    _refreshCompleter = Completer();
+                  }
+                },
+                builder: (context, state) {
+                  // phcBloc = BlocProvider.of<PhcBloc>(context);
 
-                    print(state);
+                  print(state);
 
-                    if (state is PhcEmpty) {
-                      phcBloc.add(FetchPhc());
-                    } else if (state is PhcLoaded) {
-                      // _refreshCompleter.isCompleted
-                      //     ? _refreshCompleter = Completer()
-                      //     : _refreshCompleter.complete();
-                      // _refreshCompleter.complete();
-                      // _refreshCompleter = Completer();
-                      final phc = state.phc;
+                  // if (state is PhcEmpty) {
+                  //   phcBloc.add(FetchPhc());
+                  // } else
+                  if (state is PhcLoading) {
+                    return Dashboard();
+                  } else if (state is PhcLoaded) {
+                    // _refreshCompleter.isCompleted
+                    //     ? _refreshCompleter = Completer()
+                    //     : _refreshCompleter.complete();
+                    // _refreshCompleter.complete();
+                    // _refreshCompleter = Completer();
+                    final phc = state.phc;
 
-                      return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Dashboard(
-                              username: user.name,
-                              lastUpdated: phc.lastUpdated,
-                              totalCount: phc.callcards.length,
-                              successCount: historyBloc.state.listHistory
-                                  .where((f) => f.statusSend == 1)
-                                  .toList()
-                                  .length,
-                              failedCount: historyBloc.state.listHistory
-                                  .where((f) => f.statusSend == 0)
-                                  .toList()
-                                  .length,
+                    return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Dashboard(
+                            username: user.name,
+                            lastUpdated: phc.lastUpdated,
+                            totalCount: phc.callcards.length,
+                            successCount: historyBloc.state.listHistory
+                                .where((f) => f.statusSend == 1)
+                                .toList()
+                                .length,
+                            failedCount: historyBloc.state.listHistory
+                                .where((f) => f.statusSend == 0)
+                                .toList()
+                                .length,
+                          ),
+
+                          SizedBox(
+                            height: 10,
+                          ),
+
+                          Container(
+                            // margin: EdgeInsets.symmetric(
+                            //     // horizontal: 20,
+                            //     vertical: 20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              color: Provider.of<ThemeProvider>(context)
+                                      .isDarkTheme
+                                  ? Colors.grey[900]
+                                  : Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0x80000000).withOpacity(0.2),
+                                  blurRadius: 10.0,
+                                  offset: Offset(0.0, 0.0),
+                                ),
+                              ],
                             ),
-
-                            SizedBox(
-                              height: 10,
-                            ),
-
-                            Container(
-                              // margin: EdgeInsets.symmetric(
-                              //     // horizontal: 20,
-                              //     vertical: 20),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(40),
-                                color: Provider.of<ThemeProvider>(context)
-                                        .isDarkTheme
-                                    ? Colors.grey[900]
-                                    : Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0x80000000).withOpacity(0.2),
-                                    blurRadius: 10.0,
-                                    offset: Offset(0.0, 0.0),
+                            child: TextFormField(
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 18,
+                                  letterSpacing: 1.0),
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.only(bottom: 20),
+                                  prefixIcon: Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 18, right: 10),
+                                    child: Icon(
+                                      Icons.search,
+                                      size: 30,
+                                    ),
                                   ),
-                                ],
-                              ),
-                              child: TextFormField(
-                                style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 18,
-                                    letterSpacing: 1.0),
-                                decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.only(bottom: 20),
-                                    prefixIcon: Padding(
-                                      padding:
-                                          EdgeInsets.only(left: 18, right: 10),
-                                      child: Icon(
-                                        Icons.search,
+                                  suffixIcon: Padding(
+                                    padding: EdgeInsets.only(right: 14),
+                                    child: IconButton(
+                                      onPressed: () => searchController.clear(),
+                                      icon: Icon(
+                                        Icons.clear,
                                         size: 30,
                                       ),
                                     ),
-                                    suffixIcon: Padding(
-                                      padding: EdgeInsets.only(right: 14),
-                                      child: IconButton(
-                                        onPressed: () =>
-                                            searchController.clear(),
-                                        icon: Icon(
-                                          Icons.clear,
-                                          size: 30,
-                                        ),
-                                      ),
-                                    ),
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.never,
-                                    labelText: "Search Call Card No",
-                                    labelStyle: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    border: InputBorder.none),
-                                controller: searchController,
-                              ),
+                                  ),
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.never,
+                                  labelText: "Search Call Card No",
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  border: InputBorder.none),
+                              controller: searchController,
                             ),
+                          ),
 
-                            SizedBox(
-                              height: 10,
-                            ),
+                          SizedBox(
+                            height: 10,
+                          ),
 
-                            // Expanded(
-                            //   child:
-                            _buildList(phc),
-                            // )
-                          ]);
-                    }
-                    return Dashboard();
-                  },
-                ),
+                          // Expanded(
+                          //   child:
+                          _buildList(phc),
+                          // )
+                        ]);
+                  }
+                  return Dashboard();
+                },
               ),
             ),
           ),
         ),
       ),
+      // ),
     );
   }
 
@@ -285,6 +295,7 @@ class _ListCallcards extends State<ListCallcards> {
       itemCount: phc.callcards.length,
       itemBuilder: (BuildContext context, int index) {
         final callInfo = phc.callcards[index].callInformation;
+        final patients = phc.callcards[index].patients;
 
         return (filter == null || filter == "")
             ? CardList(
@@ -293,6 +304,7 @@ class _ListCallcards extends State<ListCallcards> {
                 plateNo: callInfo.plate_no,
                 address: callInfo.incident_location,
                 updatedDate: callInfo.updated_date,
+                persons: patients.length,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -478,8 +490,13 @@ class _ListCallcards extends State<ListCallcards> {
           timeBloc.add(ResetTime());
 
           final sceneBloc = BlocProvider.of<SceneBloc>(context);
-          sceneBloc.add(LoadScene(selectedPPE: new PPE(), selectedEnvironment: "", selectedCaseType: "",
-                                  selectedPatient: "", selectedBackup: "",selectedServices: new OtherServices()));
+          sceneBloc.add(LoadScene(
+              selectedPPE: new PPE(),
+              selectedEnvironment: "",
+              selectedCaseType: "",
+              selectedPatient: "",
+              selectedBackup: "",
+              selectedServices: new OtherServices()));
 
           final patientBloc = BlocProvider.of<PatientBloc>(context);
           patientBloc.add(InitPatient());
@@ -576,7 +593,7 @@ class Dashboard extends StatelessWidget {
             child: StatsCard(
               labelText: "Total",
               count: totalCount,
-              color: Colors.blue,
+              color: Color(0xff5c85ec),
             ),
           ),
           SizedBox(
@@ -587,7 +604,7 @@ class Dashboard extends StatelessWidget {
             child: StatsCard(
               labelText: "Success",
               count: successCount,
-              color: Colors.green,
+              color: Color(0xff1ca754),
             ),
           ),
           SizedBox(
@@ -598,7 +615,7 @@ class Dashboard extends StatelessWidget {
             child: StatsCard(
               labelText: "Failed",
               count: failedCount,
-              color: Color(0xffED3B47),
+              color: Color(0xfffe5a3f),
             ),
           ),
         ],

@@ -593,11 +593,14 @@ class EventCodeField extends StatelessWidget {
   Widget build(BuildContext context) {
     _buildBox(text) {
       return Container(
-        margin: EdgeInsets.symmetric(horizontal: 5),
-        width: 50,
-        height: 50,
+        margin: EdgeInsets.only(left: 5),
+        // margin: EdgeInsets.symmetric(horizontal: 5),
+        width: 30,
+        height: 30,
         decoration: BoxDecoration(
-            color: Colors.yellow[100], borderRadius: BorderRadius.circular(10)),
+          color: Colors.yellow[100],
+          //  borderRadius: BorderRadius.circular(10)
+        ),
         child: Center(
           child: Text(
             text,
@@ -612,81 +615,83 @@ class EventCodeField extends StatelessWidget {
         split = initialData.split(',');
       }
     }
-    return Expanded(
-      child: Container(
-        // height: 50,
-        // width: 500,
-        // width: 170,
-        child: Container(
-          child: Padding(
-            padding: EdgeInsets.only(left: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  labelText,
-                  style: TextStyle(
-                      fontFamily: "OpenSans",
-                      // fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.grey),
-                ),
-                Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Container(
-                      child: Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          _buildBox(split[0]),
-                          _buildBox(split[1]),
-                          _buildBox(split[2]),
-                          _buildBox(split[3]),
-                        ],
-                      ),
-                    )
-                    // Text(
-                    //   (initialData != null) ? initialData : "",
-                    //   style: TextStyle(fontSize: 16),
-
-                    )
-                // TextFormField(
-                //   enabled: false,
-                //   initialValue: initialData,
-                //   validator: (value) {
-                //     if (value.length > 20) {
-                //       return "Call Card No cannot be more than 20 characters";
-                //     }
-
-                //     if (value.isEmpty) {
-                //       return 'This field is required';
-                //     }
-                //     return null;
-                //   },
-                //   inputFormatters: maskFormater != null ? [maskFormater] : [],
-                //   onChanged: (value) {
-                //     controller.sink.add(value.toUpperCase());
-                //   },
-
-                //   // onEditingComplete: (){
-
-                //   // },
-                //   // keyboardType: inputType,
-                //   // controller: myController,
-                //   decoration: InputDecoration(border: InputBorder.none
-                //       //   // hintText: hintText,
-                //       //   labelText: labelText,
-                //       //   fillColor: Colors.white,
-                //       //   border: new OutlineInputBorder(
-                //       //     borderRadius: new BorderRadius.circular(10.0),
-                //       //     borderSide: new BorderSide(),
-                //       //   ),
-                //       ),
-                // ),
-              ],
-            ),
+    return
+        // Expanded(
+        //   child:
+        Container(
+      // height: 50,
+      // width: 500,
+      // width: 170,
+      // child: Container(
+      // child: Padding(
+      // padding: EdgeInsets.only(left: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            labelText,
+            style: TextStyle(
+                fontFamily: "OpenSans",
+                // fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.grey),
           ),
-        ),
+          Padding(
+              padding: EdgeInsets.all(10),
+              child: Container(
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    _buildBox(split[0]),
+                    _buildBox(split[1]),
+                    _buildBox(split[2]),
+                    _buildBox(split[3]),
+                  ],
+                ),
+              )
+              // Text(
+              //   (initialData != null) ? initialData : "",
+              //   style: TextStyle(fontSize: 16),
+
+              )
+          // TextFormField(
+          //   enabled: false,
+          //   initialValue: initialData,
+          //   validator: (value) {
+          //     if (value.length > 20) {
+          //       return "Call Card No cannot be more than 20 characters";
+          //     }
+
+          //     if (value.isEmpty) {
+          //       return 'This field is required';
+          //     }
+          //     return null;
+          //   },
+          //   inputFormatters: maskFormater != null ? [maskFormater] : [],
+          //   onChanged: (value) {
+          //     controller.sink.add(value.toUpperCase());
+          //   },
+
+          //   // onEditingComplete: (){
+
+          //   // },
+          //   // keyboardType: inputType,
+          //   // controller: myController,
+          //   decoration: InputDecoration(border: InputBorder.none
+          //       //   // hintText: hintText,
+          //       //   labelText: labelText,
+          //       //   fillColor: Colors.white,
+          //       //   border: new OutlineInputBorder(
+          //       //     borderRadius: new BorderRadius.circular(10.0),
+          //       //     borderSide: new BorderSide(),
+          //       //   ),
+          //       ),
+          // ),
+        ],
       ),
+      // ),
+      // ),
+      // ),
     );
   }
 }

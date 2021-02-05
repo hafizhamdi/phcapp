@@ -395,49 +395,56 @@ class BuildCard extends StatelessWidget {
             ),
           ),
           subtitle: Container(
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Row(children: <Widget>[
-                      Padding(
-                          padding: EdgeInsets.only(right: 5),
-                          child: Icon(
-                            Icons.access_time,
-                            color: Colors.purple,
-                            // size: 18,
-                          )),
-                      timestamp != null
-                          ? Text(
-                              generateTime(timestamp),
-                            )
-                          : Text(
-                              "No data",
-                              // style: TextStyle(fontSize: 16),
-                            ),
-                      title == "Outcome"
-                          ? Padding(
-                              padding: EdgeInsets.only(left: 15),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.person_pin_circle,
-                                    color: defineColor(disasterTriage),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  title == "Patient"
-                                      ? Text("Disaster Triage")
-                                      : Text("ETD Triage")
-                                ],
-                              ),
-                            )
-                          : Container()
-                    ]),
-                  ),
-                ],
-              ),
-              padding: EdgeInsets.only(right: 20)),
+            width: double.infinity,
+            child:
+
+                //  Column(
+                //   children: <Widget>[
+                // Expanded(
+                //   child:
+                Wrap(children: <Widget>[
+              Row(children: [
+                Padding(
+                    padding: EdgeInsets.only(right: 5),
+                    child: Icon(
+                      Icons.access_time,
+                      color: Colors.purple,
+                      // size: 18,
+                    )),
+                timestamp != null
+                    ? Text(
+                        generateTime(timestamp),
+                      )
+                    : Text(
+                        "No data",
+                        // style: TextStyle(fontSize: 16),
+                      ),
+              ]),
+              title == "Outcome"
+                  ? Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.person_pin_circle,
+                            color: defineColor(disasterTriage),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          title == "Patient"
+                              ? Text("Disaster Triage",
+                                  overflow: TextOverflow.ellipsis)
+                              : Text("ETD Triage",
+                                  overflow: TextOverflow.ellipsis),
+                        ],
+                      ),
+                    )
+                  : Container()
+            ]),
+          ),
+          // ],
+          // ),
+          // padding: EdgeInsets.only(right: 20)),
           trailing: Icon(Icons.arrow_forward_ios),
         ),
       ),

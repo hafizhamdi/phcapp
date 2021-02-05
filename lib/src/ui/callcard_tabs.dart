@@ -50,7 +50,7 @@ class CallcardTabs extends StatefulWidget {
   _CallcardTabs createState() => _CallcardTabs();
 }
 
-class _CallcardTabs extends State<CallcardTabs> {
+class _CallcardTabs extends State<CallcardTabs> with TickerProviderStateMixin {
   CallInfoBloc callInfoBloc;
   bool isLoading = false;
 
@@ -72,6 +72,10 @@ class _CallcardTabs extends State<CallcardTabs> {
   ResponseBloc responseBloc;
   SceneBloc sceneBloc;
   AuthBloc authBloc;
+
+  AnimationController _controller;
+  Animation _animation;
+
   // CallcardTabs(
   //     {this.callcard_no,
   //     this.call_information,
@@ -95,6 +99,23 @@ class _CallcardTabs extends State<CallcardTabs> {
     authBloc = BlocProvider.of<AuthBloc>(context);
 
     super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    _animation = Tween<double>(
+      begin: 20,
+      end: 100,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.elasticInOut,
+      ),
+    );
+
+    super.initState();
   }
 
   @override
@@ -208,34 +229,68 @@ class _CallcardTabs extends State<CallcardTabs> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            "Success",
+            "Sync Success",
+            textAlign: TextAlign.center,
             // style: TextStyle(fontSize: 14),
           ),
-          content:
-              // Column(children: [
-              RichText(
-            text: TextSpan(style: TextStyle(color: Colors.black), children: [
-              TextSpan(text: "This Call Card # "),
-              TextSpan(
-                  text:
+          content: SingleChildScrollView(
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AnimatedBuilder(
+                      animation: _animation,
+                      builder: (ctx, child) {
+                        return Container(
+                          constraints:
+                              BoxConstraints(minWidth: 100, minHeight: 100),
+                          child: Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: _animation.value,
+                          ),
+                        );
+                      }
+                      // width: 50,
+                      // height: 50,
+                      // duration: Duration(seconds: 2),
+                      // child:
+
+                      ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  // Column(
+                  // RichText(
+                  //   textAlign: TextAlign.center,
+                  //   text: TextSpan(
+                  //       style: TextStyle(color: Colors.black),
+                  // children: [
+                  Text("Call Card No: "),
+                  Text(
                       // widget.call_information.callcard_no ??
                       callInfoBloc.state.callInformation != null
                           ? callInfoBloc.state.callInformation.callcard_no
                           : widget.call_information != null
                               ? widget.call_information.callcard_no
                               : '',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: " has been synced"),
-              // TextSpan(
-              //     text: "VIEW LIST CC",
-              //     style: TextStyle(fontWeight: FontWeight.bold)),
-              // TextSpan(text: " to end process"),
-            ]),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  SizedBox(height: 10),
+                  Text(" has successfully synced"),
+                  // TextSpan(
+                  //     text: "VIEW LIST CC",
+                  //     style: TextStyle(fontWeight: FontWeight.bold)),
+                  // TextSpan(text: " to end process"),
+                  // ]),
+                ]),
           ),
-          // ]),
           actions: <Widget>[
             FlatButton(
-                child: Text("VIEW LIST CALL CARDS"),
+                child: Text(
+                  "RETURN TO DASHBOARD",
+                  style: TextStyle(color: Colors.blue),
+                ),
                 onPressed: () {
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
@@ -371,32 +426,32 @@ class _CallcardTabs extends State<CallcardTabs> {
               ? sceneBloc.state.selectedPPE
               : widget.scene_assessment != null
                   ? widget.scene_assessment.ppe
-                  : [],
+                  : null,
           environment: sceneBloc.state.selectedEnvironment != null
               ? sceneBloc.state.selectedEnvironment
               : widget.scene_assessment != null
                   ? widget.scene_assessment.environment
-                  : [],
+                  : "",
           caseType: sceneBloc.state.selectedCaseType != null
               ? sceneBloc.state.selectedCaseType
               : widget.scene_assessment != null
                   ? widget.scene_assessment.caseType
-                  : [],
+                  : "",
           patient: sceneBloc.state.selectedPatient != null
               ? sceneBloc.state.selectedPatient
               : widget.scene_assessment != null
                   ? widget.scene_assessment.patient
-                  : [],
+                  : "",
           backup: sceneBloc.state.selectedBackup != null
               ? sceneBloc.state.selectedBackup
               : widget.scene_assessment != null
                   ? widget.scene_assessment.backup
-                  : [],
+                  : "",
           otherServicesAtScene: sceneBloc.state.selectedServices != null
               ? sceneBloc.state.selectedServices
               : widget.scene_assessment != null
                   ? widget.scene_assessment.otherServicesAtScene
-                  : []);
+                  : null);
       // print(patientState);
 
       final patientList = patientBloc.state.patients != null
@@ -504,6 +559,9 @@ class _CallcardTabs extends State<CallcardTabs> {
               //   Navigator.pop(context);
               // }
               showSuccess();
+
+              //start play
+              _controller.forward();
 
               // clear all state to avoid cache
               // callInfoBloc.add(ResetCallInfo());

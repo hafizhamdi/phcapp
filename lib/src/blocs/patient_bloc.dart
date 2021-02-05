@@ -267,8 +267,9 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     yield PatientLoading();
     final currentState = state;
 
-    final foundPatient = currentState.patients.firstWhere((data) =>
-        data.patientInformation.name == event.patient.patientInformation.name);
+    // final foundPatient = currentState.patients.firstWhere((data) =>
+    //     data.patientInformation.name == event.patient.patientInformation.name);
+    final foundPatient = currentState.patients[event.index];
 
     foundPatient.patientInformation = event.patient.patientInformation;
     foundPatient.cprLog = event.patient.cprLog;

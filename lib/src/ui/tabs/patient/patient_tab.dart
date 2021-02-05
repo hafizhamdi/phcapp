@@ -214,7 +214,7 @@ class _PatientTab extends State<PatientTab> {
             //         if (patientBloc.formKey.currentState!=null
             // )
             // {
-            //   if(patientBloc.formKey.currentState.validate()) {
+              if(patientBloc.formKey.currentState.validate()) {
             // final provider =
             //     Provider.of<PatInfoProvider>(context, listen: false);
             // if (provider.formKey.currentState.validate()) {
@@ -326,7 +326,7 @@ class _PatientTab extends State<PatientTab> {
             // }
             // } else {
             //   invalidInputError();
-            // }
+            }
           },
           // child: Text(
           //   (action == Action.delete) ? "SAVE" : "CREATE",

@@ -1620,6 +1620,27 @@ class PPE{
       };
 }
 
+// class PPE {
+//   List<String> ppeList;
+//   String othersSpecify;
+
+//   PPE({this.ppeList, this.othersSpecify});
+
+//   PPE.fromJson(Map<String, dynamic> json) {
+//     ppeList = json['ppe_list']!=null? List<String>.from(json['ppe_list']).toList(): 
+//     json["ppe"] !=null ? List<String>.from(json["ppe"]).toList(): null;
+//     othersSpecify = json['others_specify'];
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['ppe_list'] = this.ppeList;
+//     data['others_specify'] = this.othersSpecify;
+//     return data;
+//   }
+// }
+
+
 class OtherServices{
     List<String> otherServices;
     String otherspecify;

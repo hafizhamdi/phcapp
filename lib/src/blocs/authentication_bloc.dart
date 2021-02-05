@@ -58,6 +58,8 @@ class AuthUnaunthenticated extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
+class AppLoggedOut extends AuthState {}
+
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final phcRepository;
   PhcDao phcDao;
@@ -91,8 +93,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final plateNo = await phcRepository.getAvailablePlateNo();
 
         final tmpFetchPlateNo = List<PlateNo>.from(
-          plateNo["available_plate_no"].map((x)=> PlateNo.fromJson(x)));
-        
+            plateNo["available_plate_no"].map((x) => PlateNo.fromJson(x)));
 
         // print(fetchStaffs);
         // print("phcDao");
@@ -114,7 +115,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       final staffs = await phcDao.getStaffs();
 
-      fetchStaffs = staffs;
+      fetchStaffs = List<Staff>.from(staffs).toList();
       // print(staffs);
 
       // print("LOGGEDIN");
@@ -152,7 +153,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         yield AuthUnaunthenticated();
       }
     } else if (event is LoggedOut) {
-      yield AuthUnaunthenticated();
+      // yield AuthLoading();
+      yield AppLoggedOut();
     }
   }
 

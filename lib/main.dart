@@ -9,36 +9,18 @@ import 'package:provider/provider.dart';
 import 'src/app.dart';
 
 void main() {
-  // runApp(App());
+  // This use to debug bloc state output
   BlocSupervisor.delegate = SimpleBlocDelegate();
-
-  SettingBloc settingBloc; //BlocProvider.of(context).add(LoadEnvironment());
 
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(isDarkTheme: false),
       child: BlocProvider<SettingBloc>(
+        // Initialize environment setted
         create: (context) =>
             SettingBloc(phcDao: new PhcDao())..add(LoadEnvironment()),
-        child: App(
-          // environment: settingBloc.state.environment,
-        ),
-        // child: BlocBu, SettingState>(
-        //   bloc: settingBloc,
-        //   builder: (context, state) {
-        //     settingBloc = BlocProvider.of(context);
-        //     if (state is EmptySetting) {
-        //       settingBloc.add(LoadEnvironment());
-        //     }
-        //     if (state is LoadedSetting) {
-        //       return App(environment: state.environment);
-        //     }
-        //     return App(
-        //       environment: state.environment,
-        //     );
-        //   },
+        child: App(),
       ),
     ),
-    // ),
   );
 }
