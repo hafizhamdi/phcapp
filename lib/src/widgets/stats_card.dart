@@ -26,7 +26,7 @@ class StatsCard extends StatelessWidget {
           end:
               Alignment(0.8, 0.0), // 10% of the width, so there are ten blinds.
           // colors: [const Color(0xFF33ccff), const Color(0xFFff99cc)],
-          colors: [Colors.white54, color],
+          colors: [Colors.grey[300], color],
         ), // whit
         // border: Border.all(color: Colors.grey),
       ),

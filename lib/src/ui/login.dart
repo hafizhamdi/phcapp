@@ -434,7 +434,7 @@ class FirstDesign extends StatelessWidget {
                           BoxShadow(color: Colors.grey, blurRadius: 10.0)
                         ]),
                     child: Text(
-                      "v3.0.1",
+                      "v3.0.2",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
