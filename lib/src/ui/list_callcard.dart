@@ -591,10 +591,10 @@ class Dashboard extends StatelessWidget {
           Flexible(
             flex: 1,
             child: StatsCard(
-              labelText: "Total",
-              count: totalCount,
-              color: Color(0xff5c85ec),
-            ),
+                labelText: "Total",
+                count: totalCount,
+                color: Color(0xff5c85ec),
+                icon: Icons.timelapse),
           ),
           SizedBox(
             width: 10,
@@ -602,10 +602,10 @@ class Dashboard extends StatelessWidget {
           Flexible(
             flex: 1,
             child: StatsCard(
-              labelText: "Success",
-              count: successCount,
-              color: Color(0xff1ca754),
-            ),
+                labelText: "Success",
+                count: successCount,
+                color: Color(0xff1ca754),
+                icon: Icons.timeline),
           ),
           SizedBox(
             width: 10,
@@ -613,10 +613,10 @@ class Dashboard extends StatelessWidget {
           Flexible(
             flex: 1,
             child: StatsCard(
-              labelText: "Failed",
-              count: failedCount,
-              color: Color(0xfffe5a3f),
-            ),
+                labelText: "Failed",
+                count: failedCount,
+                color: Color(0xfffe5a3f),
+                icon: Icons.sms_failed),
           ),
         ],
       ),

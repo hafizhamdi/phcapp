@@ -391,7 +391,7 @@ class _PatientTab extends State<PatientTab> {
                             style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.normal,
-                                color: Colors.grey)),
+                                color: Colors.grey[400])),
                         widget.patient.patientInformation.name != null
                             ? Text(widget.patient.patientInformation.name)
                             : Container()

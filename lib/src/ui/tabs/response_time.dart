@@ -294,75 +294,63 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10),
         child: ListTile(
-            title: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  // Padding(
-                  //   padding: EdgeInsets.only(bottom: 10),
-                  //   child:
-
-                  Text(
-                    labelText,
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 18,
-                        fontFamily: "Poppins"),
-                  ),
-                  // ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.edit,
-                      color: Colors.blueAccent,
-                    ),
-                    onPressed: () {
-                      showCupertinoModalPopup(
-                        context: context,
-                        builder: (context) =>
-                            _timerPopup(labelText, initialData, selector),
-                      );
-                    },
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                ]),
-            subtitle: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    initialData != null
-                        ? DateFormat("HH:mm").format(initialData)
-                        : "No data",
-                    style: TextStyle(
-                      color: Colors.black,
-                      // fontFamily: "OpenSans",
-                      fontSize: initialData != null ? 50 : 16,
-                      // fontSize: 18,
-                      // fontFamily: "Poppins"
-                      // fontWeight: FontWeight.bold,
-                      // color:
-                      //     // initialData != null ?
-                      //     Colors.black
-                      // : Colors.grey
-                      // fontSize: 30,
-                    ),
-                  ),
-                  RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(20.0),
-                        ),
-                      ),
-                      child: Text(
-                        "NOW",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      color: Colors.green,
-                      onPressed: onPressed)
-                ])
-            // trailing:
+          title: Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Text(
+              labelText,
+              style: TextStyle(
+                  color: Colors.grey, fontSize: 18, fontFamily: "Poppins"),
             ),
+          ),
+          subtitle: Text(
+            initialData != null
+                ? DateFormat("HH:mm").format(initialData)
+                : "No data",
+            style: TextStyle(
+              color: Colors.black,
+              // fontFamily: "OpenSans",
+              fontSize: initialData != null ? 50 : 16,
+              // fontSize: 18,
+              // fontFamily: "Poppins"
+              // fontWeight: FontWeight.bold,
+              // color:
+              //     // initialData != null ?
+              //     Colors.black
+              // : Colors.grey
+              // fontSize: 30,
+            ),
+          ),
+          trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.edit,
+                color: Colors.blueAccent,
+              ),
+              onPressed: () {
+                showCupertinoModalPopup(
+                  context: context,
+                  builder: (context) =>
+                      _timerPopup(labelText, initialData, selector),
+                );
+              },
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            RaisedButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20.0),
+                  ),
+                ),
+                child: Text(
+                  "NOW",
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.green,
+                onPressed: onPressed)
+          ]),
+        ),
       ),
     );
   }

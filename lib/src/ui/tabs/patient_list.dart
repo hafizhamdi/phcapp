@@ -460,19 +460,21 @@ class BuildPatientList extends StatelessWidget {
                         ),
                         Text(
                           (callInfo.age != null ? callInfo.age : "0") +
-                              " yrs, " +
+                              " yrs • " +
                               (callInfo.gender != null
                                   ? callInfo.gender.substring(0, 1)
                                   : 'N') +
                               "",
                           style: TextStyle(
-                              fontFamily: "Arial", fontWeight: FontWeight.w700),
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.w700),
                         ),
                         Expanded(
-                          child: Text(
-                            ", ${callInfo.idNo}",
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                          child: Text(" • ${callInfo.idNo}",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w700)),
                         )
                       ]),
                       // ),
@@ -495,7 +497,8 @@ class BuildPatientList extends StatelessWidget {
                                   : "0") +
                               " vitals",
                           style: TextStyle(
-                              fontFamily: "Arial", fontWeight: FontWeight.w700),
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.w700),
                         )
                       ])
                       // ),
