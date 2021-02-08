@@ -21,7 +21,7 @@ enum Response {
   abortMission
 }
 
-const MISSION_ABORT = [" ", "arrive at scene no patient found", "stand down"];
+const MISSION_ABORT = [" ", "Arrive at scene no patient found", "Stand down"];
 
 class ResponseTimeScreen extends StatelessWidget {
   final ResponseTime responseTime;
@@ -294,73 +294,93 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10),
         child: ListTile(
-          title: Padding(
-            padding: EdgeInsets.only(bottom: 10),
-            child: Text(
-              labelText,
-              style: TextStyle(
-                  color: Colors.grey, fontSize: 18, fontFamily: "Poppins"),
-            ),
-          ),
-          subtitle: Text(
-            initialData != null
-                ? DateFormat("HH:mm").format(initialData)
-                : "No data",
-            style: TextStyle(
-              color: Colors.black,
-              // fontFamily: "OpenSans",
-              fontSize: initialData != null ? 50 : 16,
-              // fontSize: 18,
-              // fontFamily: "Poppins"
-              // fontWeight: FontWeight.bold,
-              // color:
-              //     // initialData != null ?
-              //     Colors.black
-              // : Colors.grey
-              // fontSize: 30,
-            ),
-          ),
-          trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.edit,
-                color: Colors.blueAccent,
-              ),
-              onPressed: () {
-                showCupertinoModalPopup(
-                  context: context,
-                  builder: (context) =>
-                      _timerPopup(labelText, initialData, selector),
-                );
-              },
-            ),
-            SizedBox(
-              width: 20,
-            ),
-            RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20.0),
+            title: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // Padding(
+                  //   padding: EdgeInsets.only(bottom: 10),
+                  //   child:
+
+                  Text(
+                    labelText,
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                        fontFamily: "Poppins"),
                   ),
-                ),
-                child: Text(
-                  "NOW",
-                  style: TextStyle(color: Colors.white),
-                ),
-                color: Colors.green,
-                onPressed: onPressed)
-          ]),
-        ),
+
+                  IconButton(
+                    icon: Icon(
+                      Icons.edit,
+                      color: Colors.blueAccent,
+                    ),
+                    onPressed: () {
+                      showCupertinoModalPopup(
+                        context: context,
+                        builder: (context) =>
+                            _timerPopup(labelText, initialData, selector),
+                      );
+                    },
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                ]),
+            subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    initialData != null
+                        ? DateFormat("HH:mm").format(initialData)
+                        : "No data",
+                    style: TextStyle(
+                      color: Colors.black,
+                      // fontFamily: "OpenSans",
+                      fontSize: initialData != null ? 50 : 16,
+                      // fontSize: 18,
+                      // fontFamily: "Poppins"
+                      // fontWeight: FontWeight.bold,
+                      // color:
+                      //     // initialData != null ?
+                      //     Colors.black
+                      // : Colors.grey
+                      // fontSize: 30,
+                    ),
+                  ),
+                  RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20.0),
+                        ),
+                      ),
+                      child: Text(
+                        "NOW",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.green,
+                      onPressed: onPressed)
+                ])
+            // trailing:
+            ),
       ),
     );
   }
 
-  Widget DropDownList(labelText, List<String> list, initialData) {
+  Widget DropDownList(labelText, List<String> list, String initialData) {
     final controller = abortMissionController;
 
     // if (!list.contains(initialData)) initialData = "";
 
     print("initialData: $initialData");
+    // To cater old data consistency
+    if (initialData != null) {
+      initialData =
+          initialData.substring(0, 1).toUpperCase() + initialData.substring(1);
+      widget.reasonAbort = initialData;
+      responseTime.reasonAbort = widget.reasonAbort;
+      timeBloc.add(AddTime(responseTime: responseTime));
+    }
     return Container(
         // width: 500,
         child: Padding(

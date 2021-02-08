@@ -399,7 +399,7 @@ class _CallcardTabs extends State<CallcardTabs> with TickerProviderStateMixin {
       // print(responseBloc.state.vehicleRegNo);
       // print(widget.call_information.toJson());
       final response_team = new ResponseTeam(
-          serviceResponse: responseBloc.state.serviceResponse != null
+          serviceResponse: responseBloc.state != null
               ? responseBloc.state.serviceResponse
               : widget.response_team != null
                   ? widget.response_team.serviceResponse
