@@ -421,23 +421,25 @@ class BuildCard extends StatelessWidget {
                       ),
               ]),
               title == "Outcome"
-                  ? Expanded(
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.person_pin_circle,
-                            color: defineColor(disasterTriage),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          title == "Patient"
-                              ? Text("Disaster Triage",
-                                  overflow: TextOverflow.ellipsis)
-                              : Text("ETD Triage",
-                                  overflow: TextOverflow.ellipsis),
-                        ],
-                      ),
+                  ?
+                  // Expanded(
+                  //     child:
+                  Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.person_pin_circle,
+                          color: defineColor(disasterTriage),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        title == "Patient"
+                            ? Text("Disaster Triage",
+                                overflow: TextOverflow.ellipsis)
+                            : Text("ETD Triage",
+                                overflow: TextOverflow.ellipsis),
+                      ],
+                      // ),
                     )
                   : Container()
             ]),
