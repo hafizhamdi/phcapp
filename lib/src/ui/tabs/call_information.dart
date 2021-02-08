@@ -594,7 +594,7 @@ class EventCodeField extends StatelessWidget {
     _buildBox(text) {
       return Container(
         // padding: EdgeInsets.all(16),
-        margin: EdgeInsets.only(left: 5),
+        margin: EdgeInsets.only(right: 5),
         // margin: EdgeInsets.symmetric(horizontal: 5),
         width: 30,
         height: 30,
@@ -636,7 +636,7 @@ class EventCodeField extends StatelessWidget {
                   color: Colors.grey),
             ),
             Padding(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.only(top: 10),
                 child: Container(
                   child: Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
