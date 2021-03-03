@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:phcapp/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class MySingleOptions extends StatefulWidget {
   final listDataset;
@@ -72,7 +74,9 @@ class _MySingleOptions extends State<MySingleOptions>
       child: ChoiceChip(
         label: Text(
           widget.listDataset[index],
-          // style: TextStyle(fontSize: 18),
+          style: TextStyle(
+              // fontSize: 18,
+              color: Colors.black87),
         ),
         selected: listSelected.contains(widget.listDataset[index]),
         backgroundColor: bgColor,
@@ -83,25 +87,25 @@ class _MySingleOptions extends State<MySingleOptions>
         onSelected: (bool selected) {
           setState(() {
             if (widget.listDataset[index].contains("Normal")) {
-              if(normalIsSelected){
+              if (normalIsSelected) {
                 listSelected.remove(widget.listDataset[index]);
                 normalIsSelected = false;
                 bgColor = Colors.grey[300];
                 opac = 1.0;
-              }else{
+              } else {
                 listSelected.clear();
-                bgColor = Colors.grey[100];
+                bgColor = Colors.grey;
                 listSelected.add(widget.listDataset[index]);
                 normalIsSelected = true;
                 opac = .4;
               }
-            }else{
+            } else {
               if (normalIsSelected) {
                 listSelected.clear();
                 bgColor = Colors.grey[100];
                 listSelected.add("Normal");
                 opac = .4;
-              }else{
+              } else {
                 if (listSelected.length < 1) {
                   listSelected.contains(widget.listDataset[index])
                       ? listSelected.remove(widget.listDataset[index])
@@ -113,8 +117,7 @@ class _MySingleOptions extends State<MySingleOptions>
                   } else {
                     listSelected.remove(widget.listDataset[index]);
                   }
-            }
-
+                }
               }
             }
 

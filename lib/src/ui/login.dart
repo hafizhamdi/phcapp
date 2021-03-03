@@ -434,7 +434,7 @@ class FirstDesign extends StatelessWidget {
                           BoxShadow(color: Colors.grey, blurRadius: 10.0)
                         ]),
                     child: Text(
-                      "v3.0.2",
+                      "v3.1.0",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -485,7 +485,7 @@ class SecondDesign extends StatelessWidget {
                   .withOpacity(1.0),
               boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10.0)]),
           child: Text(
-            "v3.0.2",
+            "v3.1.0",
             style: TextStyle(color: Colors.white),
           ),
         ),

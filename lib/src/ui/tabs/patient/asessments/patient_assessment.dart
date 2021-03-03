@@ -2,94 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phcapp/custom/header_section.dart';
+import 'package:phcapp/common/constants.dart';
 import 'package:phcapp/src/models/chip_item.dart';
 import 'package:phcapp/src/models/phc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/pat_ass_bloc.dart';
 import 'package:phcapp/src/widgets/my_multiple_option.dart';
 import 'package:phcapp/src/widgets/my_single_option.dart';
 import 'package:phcapp/src/widgets/mycard_single_option.dart';
-
-const _disasterTriage = ["Red", "Yellow", "Green", "White"];
-const _appearance = ["Oriented", "Lethargy", "Confused", "In pain"];
-const _responsiveness = ["Alert", "Verbal", "Pain", "Unresponsive"];
-const _airway = [
-  "Adequate airway",
-  "Apnea/agonal respiration",
-  "Gag reflex absent",
-  "Sonorous sound",
-  "Injury involving airway"
-];
-const _respiratory = [
-  "Normal",
-  "Rapid",
-  "Distressed",
-  "Use of accessory muscles",
-  "Apnoeic",
-  "Weak/agonal"
-];
-const _airEntry = ["Normal", "Decreased", "Absent"];
-const _breathSound = ["Normal", "Rhonchi", "Crepitation", "Silent"];
-const _heartSound = ["Normal", "Muffled", "Murmur"];
-const _skinAssment = [
-  "Normal",
-  "Pale",
-  "Mottled",
-  "Jaundice",
-  "Hot",
-  "Diaphoretic",
-  "Cold",
-  "Clammy",
-  "Dry"
-];
-const _ecg = [
-  "Sinus Rhythm",
-  "Sinus tachycardia",
-  "Bradycardia",
-  "AF",
-  "STEMI",
-  "NSTEMI",
-  "SVT",
-  "VT with pulse"
-];
-const _abdomenPalpation = [
-  "Soft & non-tender",
-  "Tender",
-  "Rebound tenderness",
-  "Guarded",
-  "Uterus palpable",
-  "Mass"
-];
-const _abdomenAbnorm = [
-  "Generalized",
-  "Epigastric",
-  "Periumbilical",
-  "Left upper quadrant",
-  "Left lower quadrant",
-  "Right upper quadrant",
-  "Right lower quadrant"
-];
-const _face = [
-  "Normal",
-  "Abnormal pre-existing",
-  "Facial droop left",
-  "Facial droop right",
-  "Unable to perform"
-];
-const _speech = [
-  "Normal",
-  "Abrnormal pre-existing",
-  "Slurring",
-  "Unable to assess"
-];
-const _arm = [
-  "Normal",
-  "Abrnormal pre-existing",
-  "Arm drift right",
-  "Arm drift left",
-  "Unable to assess"
-];
-
-const _normality = ["Normal", "Abnormal"];
 
 class PatientAssessmentScreen extends StatefulWidget {
   final PatientAssessment patientAssessment;
@@ -128,110 +47,106 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
   TextEditingController otherController = new TextEditingController();
 
   List<ChipItem> prepareData = [
-    // ChipItem(
-    //     id: "disaster_triage",
-    //     name: "Disaster Triage",
-    //     listData: _disasterTriage,
-    //     value: ""),
     ChipItem(
         id: "appearance",
         name: "Appearance",
-        listData: _appearance,
+        listData: appearance,
         value: List<String>(),
         multiple: true),
     ChipItem(
         id: "level_responsive",
         name: "Level of Responsiveness",
-        listData: _responsiveness,
+        listData: responsiveness,
         value: ""),
     ChipItem(
         id: "airway_patency",
         name: "Airway Patency",
-        listData: _airway,
+        listData: airway,
         value: List<String>(),
         multiple: true),
     ChipItem(
         id: "respiratory_effort",
         name: "Respiratory Effort",
-        listData: _respiratory,
+        listData: respiratory,
         value: List<String>(),
         multiple: true),
     ChipItem(
         id: "airentry_left",
         name: "Air Entry: Left Lung",
-        listData: _airEntry,
+        listData: airEntry,
         value: ""),
     ChipItem(
         id: "airentry_right",
         name: "Air Entry: Right Lung",
-        listData: _airEntry,
+        listData: airEntry,
         value: ""),
     ChipItem(
         id: "breath_left",
         name: "Breath Sound: Left Lung",
-        listData: _breathSound,
+        listData: breathSound,
         value: ""),
     ChipItem(
         id: "breath_right",
         name: "Breath Sound: Right Lung",
-        listData: _breathSound,
+        listData: breathSound,
         value: ""),
     ChipItem(
         id: "heart_sound",
         name: "Heart Sound",
-        listData: _heartSound,
+        listData: heartSound,
         value: ""),
     ChipItem(
         id: "skin",
         name: "Skin Assessment",
-        listData: _skinAssment,
+        listData: skinAssment,
         value: List<String>(),
         multiple: true),
     ChipItem(
         id: "ecg",
         name: "ECG",
-        listData: _ecg,
+        listData: ecg,
         value: List<String>(),
         multiple: true),
     ChipItem(
         id: "abdomen_palpation",
         name: "Abdomen Palpation",
-        listData: _abdomenPalpation,
+        listData: abdomenPalpation,
         value: List<String>(),
         multiple: true),
     ChipItem(
-        id: "abdomen_abnormal_location",
-        name: "Abdomen Abnormality Location",
-        listData: _abdomenAbnorm,
-        value: "",),
+      id: "abdomen_abnormal_location",
+      name: "Abdomen Abnormality Location",
+      listData: abdomenAbnorm,
+      value: "",
+    ),
     ChipItem(
         id: "stroke_face",
         name: "Stroke Scale: Face",
-        listData: _face,
+        listData: face,
         value: List<String>(),
         multiple: true),
     ChipItem(
         id: "stroke_speech",
         name: "Stroke Scale: Speech",
-        listData: _speech,
+        listData: speech,
         value: List<String>(),
         multiple: true),
     ChipItem(
         id: "stroke_arm",
         name: "Stroke Scale: Arm",
-        listData: _arm,
+        listData: arm,
         value: List<String>(),
         multiple: true),
     ChipItem(
         id: "stroke_balance",
         name: "Stroke Scale: Balance",
-        listData: _normality,
+        listData: normality,
         value: List<String>(),
         multiple: true),
     ChipItem(
         id: "stroke_eyesight",
         name: "Stroke Scale: Eye Sight",
-        listData: _normality,
+        listData: normality,
         value: List<String>(),
         multiple: true),
   ];
@@ -426,7 +341,8 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
         }
         if (f.id == "abdomen_abnormal_location") {
           f.value = widget.patientAssessment.abdomenAbnormalityLocation;
-          listAbdomenAbnPalpation.add(widget.patientAssessment.abdomenAbnormalityLocation);
+          listAbdomenAbnPalpation
+              .add(widget.patientAssessment.abdomenAbnormalityLocation);
           if (listAbdomenAbnPalpation.length > 1) {
             listAbdomenAbnPalpation.removeLast();
           }
@@ -461,8 +377,8 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
 
       // clear textfield others
       widget.patientAssessment != null
-            ? otherController.text = widget.patientAssessment.appearanceOthers
-            : otherController.clear();
+          ? otherController.text = widget.patientAssessment.appearanceOthers
+          : otherController.clear();
     }
 
     super.didChangeDependencies();
@@ -473,64 +389,6 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey,
-        // appBar: AppBar(
-        //   title: Text("Patient Assessment"),
-        //   actions: <Widget>[
-        //     FlatButton.icon(
-        //       icon: Icon(Icons.save, color: Colors.white),
-        //       label: Text(
-        //         "SAVE",
-        //         style: TextStyle(color: Colors.white),
-        //       ),
-        //       onPressed: () {
-        //         PatientAssessment patientAssessment = new PatientAssessment(
-        //             timestamp: new DateTime.now(),
-        //             disasterTriage: listTriage.length > 0 ? listTriage[0] : "",
-        //             appearance:
-        //                 listAppearance.length > 0 && listAppearance[0] == "Other"
-        //                     ? otherController.text
-        //                     : listAppearance[0],
-        //             levelResponsive: listLevelResponsiveness.length > 0
-        //                 ? listLevelResponsiveness[0]
-        //                 : "",
-        //             airwayPatency: listAirway.length > 0 ? listAirway[0] : "",
-        //             respiratoryEffort:
-        //                 listRespiratory.length > 0 ? listRespiratory[0] : "",
-        //             airEntry: AirEntry(
-        //                 leftLung:
-        //                     listAirEntryL.length > 0 ? listAirEntryL[0] : "",
-        //                 rightLung:
-        //                     listAirEntryR.length > 0 ? listAirEntryR[0] : ""),
-        //             breathSound: BreathSound(
-        //                 leftLung: listBreathSoundL.length > 0
-        //                     ? listBreathSoundL[0]
-        //                     : "",
-        //                 rightLung: listBreathSoundR.length > 0
-        //                     ? listBreathSoundR[0]
-        //                     : ""),
-        //             heartSound:
-        //                 listHeartSound.length > 0 ? listHeartSound[0] : "",
-        //             skin: listSkin,
-        //             ecg: listECG.length > 0 ? listECG[0] : "",
-        //             abdomenPalpation: listAbdomenPalpation.length > 0
-        //                 ? listAbdomenPalpation[0]
-        //                 : "",
-        //             abdomenAbnormalityLocation: abnormalTextController.text,
-        //             strokeScale: StrokeScale(
-        //               arm: listStrokeArm.length > 0 ? listStrokeArm[0] : "",
-        //               face: listStrokeFace.length > 0 ? listStrokeFace[0] : "",
-        //               speech:
-        //                   listStrokeSpeech.length > 0 ? listStrokeSpeech[0] : "",
-        //             ));
-
-        //         BlocProvider.of<AssPatientBloc>(context)
-        //             .add(UpdateAssPatient(patientAssessment: patientAssessment));
-
-        //         Navigator.pop(context);
-        //       },
-        //     )
-        //   ],
-        // ),
         body: Card(
           margin: EdgeInsets.all(12),
           child: Column(children: [
@@ -551,7 +409,9 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                         timestamp: new DateTime.now(),
                         disasterTriage:
                             listTriage.length > 0 ? listTriage[0] : "",
-                        appearance: listAppearance.length > 0 ? listAppearance : List<String>(),
+                        appearance: listAppearance.length > 0
+                            ? listAppearance
+                            : List<String>(),
                         appearanceOthers: otherController.text,
                         levelResponsive: listLevelResponsiveness.length > 0
                             ? listLevelResponsiveness[0]
@@ -582,9 +442,10 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                         abdomenPalpation: listAbdomenPalpation.length > 0
                             ? listAbdomenPalpation
                             : List<String>(),
-                        abdomenAbnormalityLocation: listAbdomenAbnPalpation.length > 0
-                                                    ? listAbdomenAbnPalpation.last
-                                                    : "",
+                        abdomenAbnormalityLocation:
+                            listAbdomenAbnPalpation.length > 0
+                                ? listAbdomenAbnPalpation.last
+                                : "",
                         strokeScale: StrokeScale(
                           arm: listStrokeArm.length > 0
                               ? listStrokeArm
@@ -628,16 +489,16 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
               return _buildCardMultiple(prepareData[index]);
             }
             String initialData;
-            !_appearance.contains(prepareData[index].value)
+            !appearance.contains(prepareData[index].value)
                 ? initialData = "Other"
                 : initialData = prepareData[index].value;
-            return  MyCardSingleOption(
-                    id: prepareData[index].id,
-                    name: prepareData[index].name,
-                    listData: prepareData[index].listData,
-                    mycallback: mycallback,
-                    value: prepareData[index].value,
-                  );
+            return MyCardSingleOption(
+              id: prepareData[index].id,
+              name: prepareData[index].name,
+              listData: prepareData[index].listData,
+              mycallback: mycallback,
+              value: prepareData[index].value,
+            );
 
             // );
           }),
@@ -676,8 +537,7 @@ class _PatientAssessmentScreen extends State<PatientAssessmentScreen>
                     child: TextField(
                       style: TextStyle(fontSize: 18),
                       controller: otherController,
-                      decoration: InputDecoration(
-                          labelText: "Other"),
+                      decoration: InputDecoration(labelText: "Other"),
                     ),
                   )
                 : Container(),
@@ -732,15 +592,6 @@ class MyAppearanceOption extends StatelessWidget {
               initialData: value,
               callback: mycallback,
             ),
-            // Container(
-            //   width: MediaQuery.of(context).size.width * 0.5,
-            //       child: TextField(
-            //       style: TextStyle(fontSize: 18),
-            //       controller: controller,
-            //       decoration: InputDecoration(labelText: "Other"),
-            //     ),
-            // )
-            
           ],
         ),
       ),

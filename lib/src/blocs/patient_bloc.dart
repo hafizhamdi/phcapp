@@ -132,21 +132,6 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       {
       // @required this.phcRepository,
       this.phcDao});
-  // : assert(phcRepository != null);
-
-  // @override
-  // Future<void> close() {
-  //   blocPatients.clear();
-
-  //   nameController.dispose();
-  //   idController.dispose();
-  //   idTypeController.dispose();
-  //   dobController.dispose();
-  //   ageController.dispose();
-  //   genderController.dispose();
-
-  // return super.clos/e();
-  // }
 
   @override
   PatientState get initialState => PatientEmpty();
@@ -183,50 +168,11 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
   }
 
   Stream<PatientState> _mapLoadPatientToState(LoadPatient event) async* {
-    // final result = await phcDao.getPhcPatientList(event.assign_id);
-
-    // final currentState = state;
-    // sceneAssessment = event.sceneAssessment;
-
-    // patients = event.patients != null ? event.patients : new List<Patient>();
-
-    // print("Patient BLOC");
-
-    // sceneAssessment = event.sceneAssessment != null
-    // ? event.sceneAssessment
-    // : new SceneAssessment();
-    // final newList = List<Patient>.from(result)
-    // result.
-    // print(sceneAssessment);
-    // final currentState = state;
-// currentState.patients
-
-    // print(result);
-    // yield PatientLoading();
-
-    yield PatientLoaded(
+       yield PatientLoaded(
       patients: event.patients,
       // sceneAssessment: sceneAssessment,
     );
   }
-
-//   Stream<PatientState> _mapAddSceneAssessmentToState(
-//       AddSceneAssessment event) async* {
-//     // final result = await phcDao.getPhcPatientList(event.assign_id);
-//     final currentState = state;
-
-//     sceneAssessment = event.sceneAssessment;
-//     patients = event.patients;
-//     // final newList = List<Patient>.from(result)
-//     // result.
-//     // final currentState = state;
-// // currentState.patients
-
-//     // print(result);
-//     // yield PatientLoading();
-
-//     yield PatientLoaded(patients: patients);
-//   }
 
   Stream<PatientState> _addPatientToState(AddPatient event) async* {
     yield PatientLoading();
@@ -244,18 +190,9 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
         otherAssessment: event.patient.otherAssessment);
 
     final currentState = state;
-    // print(blocPatients.length);
-
-    print("ADDD PATIENT");
-    // print(patient.toJson());
     final newList = List<Patient>.from(
         currentState.patients != null ? currentState.patients : [])
       ..add(patient);
-    // print(newList.length);
-    // / blocPatients.add(patient);
-
-    // patients = newList;
-    // yield PatientLoading();
 
     yield PatientLoaded(
       patients: newList,
@@ -267,8 +204,6 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     yield PatientLoading();
     final currentState = state;
 
-    // final foundPatient = currentState.patients.firstWhere((data) =>
-    //     data.patientInformation.name == event.patient.patientInformation.name);
     final foundPatient = currentState.patients[event.index];
 
     foundPatient.patientInformation = event.patient.patientInformation;
@@ -289,11 +224,6 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     final newList = List<Patient>.from(currentState.patients)
       ..replaceRange(event.index, event.index + 1, [foundPatient]);
     print(newList.length);
-    // / blocPatients.add(patient);
-
-    // patients = newList;
-    // yield PatientLoading();
-
     yield PatientLoaded(
       patients: newList,
       // sceneAssessment: sceneAssessment

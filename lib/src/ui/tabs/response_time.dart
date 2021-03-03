@@ -298,10 +298,6 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  // Padding(
-                  //   padding: EdgeInsets.only(bottom: 10),
-                  //   child:
-
                   Text(
                     labelText,
                     style: TextStyle(
@@ -309,7 +305,6 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
                         fontSize: 18,
                         fontFamily: "Poppins"),
                   ),
-
                   IconButton(
                     icon: Icon(
                       Icons.edit,
@@ -335,17 +330,9 @@ class _ResponseTimeScreenA extends State<ResponseTimeScreenA>
                         ? DateFormat("HH:mm").format(initialData)
                         : "No data",
                     style: TextStyle(
-                      color: Colors.black,
+                      // color: Colors.black,
                       // fontFamily: "OpenSans",
                       fontSize: initialData != null ? 50 : 16,
-                      // fontSize: 18,
-                      // fontFamily: "Poppins"
-                      // fontWeight: FontWeight.bold,
-                      // color:
-                      //     // initialData != null ?
-                      //     Colors.black
-                      // : Colors.grey
-                      // fontSize: 30,
                     ),
                   ),
                   RaisedButton(

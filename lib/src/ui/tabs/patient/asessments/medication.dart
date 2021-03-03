@@ -14,17 +14,17 @@ const _medication = [
   "D10%",
   "Aspirin",
   "GTN",
-  "adrenalin",
-  "tramadol",
-  "diclofenac",
-  "morphine",
-  "ketamine",
-  "midazolam",
-  "diazepam",
-  "tranexemic acid",
-  "hydrocortisone",
-  "neb combivent",
-  "neb salbutamol"
+  "Adrenalin",
+  "Tramadol",
+  "Diclofenac",
+  "Morphine",
+  "Ketamine",
+  "Midazolam",
+  "Diazepam",
+  "Tranexemic acid",
+  "Hydrocortisone",
+  "Neb combivent",
+  "Neb salbutamol"
 ];
 
 const _route = ["IV", "IM", "IO"];

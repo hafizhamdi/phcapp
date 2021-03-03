@@ -48,8 +48,6 @@ class _App extends State<App> {
     // settingBloc.add(LoadEnvironment());
     themeProvider = Provider.of<ThemeProvider>(context);
 
-    // print("SEtting State environment");
-    // print(settingBloc.state.environment);
     phcRepository = PhcRepository(
         phcApiClient: PhcApiClient(
       httpClient: http.Client(),

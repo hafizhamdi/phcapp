@@ -10,7 +10,6 @@ import 'package:phcapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatefulWidget {
   _Settings createState() => _Settings();
@@ -95,19 +94,6 @@ class _Settings extends State<Settings> {
         title: Text("Settings"),
       ),
       body: BlocBuilder<SettingBloc, SettingState>(
-        // )<AuthBloc, AuthState>(
-        // bloc: authBloc,
-        // listener: (context, state) {
-        //   print("inside listener");
-        //   // if (state is LoadedSetting) {
-        //   //   print(state);
-        //   //   showError();
-        //   //   print("im authunitialized");
-        //   // } else
-        //   if (state is LoadedSetting) {
-        //     showSuccess();
-        //   }
-        // },
         builder: (context, state) {
           return
               // child:
@@ -165,7 +151,7 @@ class _Settings extends State<Settings> {
     );
   }
 
-  appChild() => Text("3.0.2.0221");
+  appChild() => Text("3.1.0.0321");
 
   toggleButton(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);

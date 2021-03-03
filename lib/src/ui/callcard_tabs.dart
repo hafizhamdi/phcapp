@@ -361,13 +361,6 @@ class _CallcardTabs extends State<CallcardTabs> with TickerProviderStateMixin {
   Future<void> _handleSubmit(BuildContext context) async {
     try {
       print("handlesubmit pressed!");
-      // Dialogs.showLoadingDialog(context, _keyLoader);
-
-      // Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-      //     .pop(); //close the dialoge
-      // Navigator.pushReplacementNamed(context, "/listCallcards");
-      // print("callInfoBloc state push toserver");
-
       final call_information = callInfoBloc.state.callInformation ??
           widget.call_information ??
           new CallInformation();
@@ -385,19 +378,6 @@ class _CallcardTabs extends State<CallcardTabs> with TickerProviderStateMixin {
           : widget.response_team != null
               ? widget.response_team.vehicleRegno
               : null;
-      // print(call_information.callcard_no);
-      // call_information.plateNo =
-      //     widget.call_information.plate_no;
-      // : convertDateToStandard(
-      //     widget.call_information.call_received);
-
-      // print(currentState.toJson());
-      print("INSIDE CALL INFO");
-      // print(call_information.toJson());
-      // print("+=======+");
-      // print(responseBloc.state.serviceResponse);
-      // print(responseBloc.state.vehicleRegNo);
-      // print(widget.call_information.toJson());
       final response_team = new ResponseTeam(
           serviceResponse: responseBloc.state != null
               ? responseBloc.state.serviceResponse
@@ -460,34 +440,7 @@ class _CallcardTabs extends State<CallcardTabs> with TickerProviderStateMixin {
               ? List<dynamic>.from(widget.patients).toList()
               : [];
 
-      // print(patientList.length);
-      // print(scene_assessment.toJson());
-      // print(patientList.elementAt(0).patientInformation.idNo);
 
-      // print(patientBloc.sceneAssessment.toJson());
-      // historyBloc.add(AddHistory(
-      //     callcard: new Callcard(
-      //         callInformation: call_information,
-      //         responseTeam: response_team,
-      //         responseTime: response_time,
-      //         patients: List<Patient>(),
-      //         sceneAssessment: new SceneAssessment())));
-
-      // print("DONE");
-      // print(call_information);
-      // print(scene_assessment);
-      // print(response_team);
-
-      // print(response_time);
-      // print(patientList);
-      // if (patientList.length > 0) {
-      //   print("PATIENT LIST MORE THAN ONE");
-      //   patientList.map((f) {
-      //     print("what inside patientlist");
-      //     // print((f));
-      //     print(f.toJson());
-      //   }).toList();
-      // }
       Staff user = authBloc.getAuthorizedUser;
 
       // print(patientList);

@@ -2,20 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phcapp/custom/header_section.dart';
+import 'package:phcapp/common/constants.dart';
 import 'package:phcapp/src/blocs/vital_bloc.dart';
 import 'package:phcapp/src/models/phc.dart';
+import 'package:intl/intl.dart';
 import 'package:phcapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 enum ItemInput { singlePoint, doublePoint }
 enum ActionButton { delete, create }
-
-const pupilList = ["", "Reactive", "Sluggish", "Fixed"];
-const pvList = ["", "Good", "Poor", "NIL"];
-const crList = ["", "Normal Rhythm", "Narrow Complex Tachycardia", "Broad Complex Tachycardia / VF / VT",
-"Bradycardia / Heart Blocked", "Atriar Fibrilation"];
-const crtList = ["", "< = 2 sec", "> 2 sec"];
 
 class VitalDetail extends StatefulWidget {
   final VitalSign vitalSign;
@@ -169,13 +164,13 @@ class _VitalDetailState extends State<VitalDetail> {
         margin: EdgeInsets.all(5),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color:Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.blue:Colors.white,
             boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0x80000000).withOpacity(0.2),
-                                    blurRadius: 10.0,
-                                    offset: Offset(0.0, 0.0),
-                                  ),
+                  BoxShadow(
+                    color: Color(0x80000000).withOpacity(0.2),
+                    blurRadius: 10.0,
+                    offset: Offset(0.0, 0.0),
+                  ),
                                 ],
             borderRadius: BorderRadius.circular(10),
             shape: BoxShape.rectangle,
@@ -215,8 +210,8 @@ class _VitalDetailState extends State<VitalDetail> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.edit),
-                    color: Colors.blue,
+                    icon: Icon(Icons.edit),   color:Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.greenAccent:Colors.blue,
+                       
                     iconSize: 25,
                     onPressed: () {
                       setState(() {
@@ -255,8 +250,8 @@ class _VitalDetailState extends State<VitalDetail> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.edit),
-                    color: Colors.blue,
+                    icon: Icon(Icons.edit),   color:Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.greenAccent:Colors.blue,
+                       
                     iconSize: 25,
                     onPressed: () {
                       setState((){
@@ -298,8 +293,8 @@ vPicker.setValue(5);
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.edit),
-                    color: Colors.blue,
+                    icon: Icon(Icons.edit),   color:Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.greenAccent:Colors.blue,
+                       
                     iconSize: 25,
                     onPressed: () {
                       setState((){
@@ -342,7 +337,7 @@ vPicker.setValue(5);
                   ),
                 ])
           ],
-        )); //,
+        ),); //,
     // );
   }
 
@@ -409,7 +404,7 @@ vPicker.setValue(5);
         margin: EdgeInsets.all(5),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color:Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.blue:Colors.white,
           borderRadius: BorderRadius.circular(10),
           shape: BoxShape.rectangle,
           
@@ -449,8 +444,8 @@ vPicker.setValue(5);
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.edit),
-                    color: Colors.blue,
+                    icon: Icon(Icons.edit),   color:Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.greenAccent:Colors.blue,
+                       
                     iconSize: 25,
                     onPressed: () {
                       setState((){
@@ -471,7 +466,11 @@ vPicker.setValue(5);
                     Text(
                       "Response to light",
                       textAlign: TextAlign.left,
-                      style: TextStyle(color: Colors.grey, fontFamily: "Poppins"),
+                      style: TextStyle(color: 
+                      Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.white:Colors.grey, 
+                      
+                      
+                      fontFamily: "Poppins"),
                     ),
                   ],
                 )),
@@ -486,8 +485,8 @@ vPicker.setValue(5);
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.edit),
-                    color: Colors.blue,
+                    icon: Icon(Icons.edit),   color:Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.greenAccent:Colors.blue,
+                       
                     iconSize: 25,
                     onPressed: () {
                       showCupertinoModalPopup(
@@ -507,7 +506,7 @@ vPicker.setValue(5);
       margin: EdgeInsets.all(5),
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.blue:Colors.white,
           borderRadius: BorderRadius.circular(10),
           shape: BoxShape.rectangle,
           
@@ -549,8 +548,8 @@ vPicker.setValue(5);
                   overflow: TextOverflow.ellipsis,
                 ),),
                 IconButton(
-                  icon: Icon(Icons.edit),
-                  color: Colors.blue,
+                  icon: Icon(Icons.edit),   color:Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.greenAccent:Colors.blue,
+                       
                   iconSize: 25,
                   onPressed: () {
                     showCupertinoModalPopup(
@@ -579,7 +578,7 @@ vPicker.setValue(5);
           margin: EdgeInsets.all(5),
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.blue:Colors.white,
             boxShadow: [
                                   BoxShadow(
                                     color: Color(0x80000000).withOpacity(0.2),
@@ -633,7 +632,7 @@ vPicker.setValue(5);
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         
-            color: Colors.white,
+            color:Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.blue:Colors.white,
             boxShadow: [
                                   BoxShadow(
                                     color: Color(0x80000000).withOpacity(0.2),
@@ -660,7 +659,10 @@ vPicker.setValue(5);
                       // ),
                       ),
             
-            Padding(padding:EdgeInsets.only(right: 10),child:Text(unit, style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w600),),)],
+            Padding(padding:EdgeInsets.only(right: 10),child:Text(unit, style: TextStyle(fontSize: 14, 
+           color:Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.white:Colors.grey,
+            // color: Colors.grey, 
+            fontWeight: FontWeight.w600),),),],
           ),
           SizedBox(height: 10,),
           ((title == "Blood Ketone" && picker.hi == false) ||
@@ -684,7 +686,7 @@ vPicker.setValue(5);
                       ),
                       IconButton(
                           icon: Icon(Icons.edit),
-                          color: Colors.blue,
+                          color:Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.greenAccent:Colors.blue,
                           iconSize: 25,
                           onPressed: () {
                             setState((){
@@ -779,40 +781,7 @@ vPicker.setValue(5);
                                     });
                               })
                         ]),
-          //     : Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         children: <Widget>[
-          //             Text(
-          //               tempDecimal,
-          //               // picker.getValue != null ? picker.getValue.toString() : '',
-          //               // decimalFormating(
-          //               //     controller.firstValue, controller.secondValue),
-          //               style: TextStyle(
-          //                   fontSize: 40,
-          //                   color: picker.getAbnormal == true
-          //                       ? Colors.redAccent
-          //                       : null),
-          //             ),
-          //             IconButton(
-          //                 icon: Icon(Icons.edit),
-          //                 color: Colors.grey,
-          //                 iconSize: 25,
-          //                 onPressed: () {
-          //                   showCupertinoModalPopup(
-          //                       context: context,
-          //                       builder: (context) {
-          //                         if (title == "Blood Ketone" ||
-          //                             title == "Temperature") {
-          //                           return cupertinoDoublePicker(picker,
-          //                               title, itemCount, initialData);
-          //                         }
-
-          //                         return cupertinoPicker(picker, title,
-          //                             itemCount, initialData);
-          //                       });
-          //                 })
-          //           ]),
-          (title == "Blood Ketone")
+         (title == "Blood Ketone")
               ? Row(
                   children: <Widget>[
                     Text("HI"),
@@ -903,9 +872,6 @@ vPicker.setValue(5);
                 
                   
                   :Container()
-        
-//         ,SizedBox(height: 20,),
-// Row(children:[Text("Celcius")])
         ],
       ),
     );

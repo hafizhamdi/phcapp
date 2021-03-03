@@ -105,13 +105,13 @@ const _face = [
 ];
 const _speech = [
   "Normal",
-  "Abrnormal pre-existing",
+  "Abnormal pre-existing",
   "Slurring",
   "Unable to assess"
 ];
 const _arm = [
   "Normal",
-  "Abrnormal pre-existing",
+  "Abnormal pre-existing",
   "Arm drift right",
   "Arm drift left",
   "Unable to assess"

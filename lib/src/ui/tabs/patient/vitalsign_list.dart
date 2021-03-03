@@ -391,7 +391,11 @@ class _VitalSignList extends State<VitalSignList>
                           icon: Icon(Icons.add, color: Colors.blueAccent),
                           label: Text(
                             "ADD VITAL SIGN",
-                            style: TextStyle(color: Colors.blueAccent),
+                            style: TextStyle(
+                                color: Provider.of<ThemeProvider>(context)
+                                        .isDarkTheme
+                                    ? Colors.blue[200]
+                                    : Colors.blueAccent),
                           ),
                           onPressed: () {
                             Navigator.push(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phcapp/common/commons.dart';
 import 'package:phcapp/custom/choice_chip.dart';
 import 'package:phcapp/custom/header_section.dart';
 import 'package:phcapp/src/blocs/blocs.dart';
@@ -11,6 +12,8 @@ import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/reporting_bloc.dart'
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/sampler_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/asessments/blocs/trauma_bloc.dart';
 import 'package:phcapp/src/ui/tabs/patient/patient_tab.dart';
+import 'package:phcapp/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 import '../../models/phc.dart';
 
 const _otherServices = [
@@ -71,28 +74,9 @@ class _Patients extends State<PatientListScreen>
   TextEditingController ppeOtherController = TextEditingController();
   TextEditingController otherServicesController = TextEditingController();
   SceneBloc sceneBloc;
-  // CprBloc cprBloc;
-
-  @override
-  initState() {}
 
   @override
   void didChangeDependencies() {
-    // cprBloc = BlocProvider.of<CprBloc>(context);
-
-    // if (widget.patients != null) {
-    // patientBloc.add(LoadPatient(
-    //     assign_id: widget.assign_id,
-    //     sceneAssessment: widget.sceneAssessment,
-    //     patients: patientBloc.state.patients != null
-    //         ? patientBloc.state.patients
-    //         : widget.patients));
-    // } else {
-    //   patientBloc.add(LoadPatient(
-    //       assign_id: widget.assign_id,
-    //       patients: List<Patient>(),
-    //       sceneAssessment: widget.sceneAssessment));
-    // }
     ppeOtherController.text = widget.sceneAssessment != null
         ? widget.sceneAssessment != null
             ? widget.sceneAssessment.ppe.otherspecify
@@ -459,12 +443,16 @@ class BuildPatientList extends StatelessWidget {
                           width: 8,
                         ),
                         Text(
-                          (callInfo.age != null ? callInfo.age : "0") +
-                              " yrs • " +
+                          (callInfo.age != null
+                                  ? nativeAges(callInfo.dob).contains("days")
+                                      ? "${nativeAges(callInfo.dob).replaceAll('months', "m")} • "
+                                      : "${callInfo.age} yrs • "
+                                  : "0") +
                               (callInfo.gender != null
                                   ? callInfo.gender.substring(0, 1)
                                   : 'N') +
                               "",
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontFamily: "Poppins",
                               fontWeight: FontWeight.w700),
@@ -593,7 +581,10 @@ class BuildPatientList extends StatelessWidget {
           icon: Icon(Icons.add, color: Colors.blueAccent),
           label: Text(
             "ADD PATIENT NOTE",
-            style: TextStyle(color: Colors.blueAccent),
+            style: TextStyle(
+                color: Provider.of<ThemeProvider>(context).isDarkTheme
+                    ? Colors.blue[200]
+                    : Colors.blueAccent),
           ),
           onPressed: () {
             Navigator.push(
