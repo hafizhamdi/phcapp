@@ -1,4 +1,3 @@
-
 String calcAge(day, month, year) {
   // var resultAge;
 
@@ -43,13 +42,15 @@ convertDOBtoStandard(data) {
 
 String nativeAges(String dob) {
   var stdDob = convertDOBtoStandard(dob);
-  var sliceDate = stdDob.split("/");
-  print(sliceDate.length);
-  if (sliceDate.length == 3) {
-    var day = sliceDate[0];
-    var month = sliceDate[1];
-    var year = sliceDate[2];
-    return calcAge(day, month, year);
+  if (stdDob != null && stdDob.contains('/') == true) {
+    var sliceDate = stdDob.split("/");
+    print(sliceDate.length);
+    if (sliceDate.length == 3) {
+      var day = sliceDate[0];
+      var month = sliceDate[1];
+      var year = sliceDate[2];
+      return calcAge(day, month, year);
+    }
   }
   return "";
 }

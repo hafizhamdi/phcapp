@@ -746,7 +746,8 @@ vPicker.setValue(5);
                           ),
                           IconButton(
                               icon: Icon(Icons.edit),
-                              color: Colors.blue,
+                               color:Provider.of<ThemeProvider>(context).isDarkTheme?  Colors.greenAccent:Colors.blue,
+                         
                               iconSize: 25,
                               onPressed: () {
                                 

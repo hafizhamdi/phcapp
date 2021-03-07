@@ -173,24 +173,28 @@ class _EditCallInfo extends State<EditCallInfo>
 
   Widget _dateReceived(labelText, controller) {
     return Container(
-        width: 500,
-        child: Padding(
-            padding: EdgeInsets.all(16),
-            child: TextFormField(
-                controller: controller,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "This field is required";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                    labelText: labelText,
-                    fillColor: Colors.white,
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
-                      borderSide: new BorderSide(),
-                    )))));
+      width: 500,
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: TextFormField(
+          controller: controller,
+          validator: (value) {
+            if (value.isEmpty) {
+              return "This field is required";
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            labelText: labelText,
+            fillColor: Colors.white,
+            border: new OutlineInputBorder(
+              borderRadius: new BorderRadius.circular(10.0),
+              borderSide: new BorderSide(),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   String setField(data) {
@@ -207,7 +211,8 @@ class _EditCallInfo extends State<EditCallInfo>
         mask: "###-########", filter: {"#": RegExp(r'[a-zA-Z0-9]')});
     return Center(
       child: Container(
-        color: Colors.white,
+        // color: Colors.white,
+        // color: Colors.red,
         constraints: BoxConstraints(maxWidth: 700),
         child: Form(
           key: _formKey,
@@ -229,25 +234,28 @@ class _EditCallInfo extends State<EditCallInfo>
                       // if (_formKey.currentState.validate()) {
                       // print("widget.call_information.assign_id");
                       // print(widget.call_information.assign_id);
-                      callInfoBloc.add(SaveCallInfo(
+                      callInfoBloc.add(
+                        SaveCallInfo(
                           callInformation: new CallInformation(
-                        callcardNo: cardNoValue,
-                        callReceived: receivedController.text,
-                        callerContactno: contactNoController.text,
-                        eventCode: mergingEventCode(
-                            eventCol1Controller,
-                            eventCol2Controller,
-                            eventCol3Controller,
-                            eventCol4Controller),
-                        priority: _priority,
-                        incidentDesc: incidentController.text,
-                        incidentLocation: locationController.text,
-                        landmark: landmarkController.text,
-                        locationType: _location,
-                        distanceToScene: _distance,
-                        assignId: widget.call_information.assign_id,
-                        plateNo: widget.call_information.plate_no,
-                      )));
+                            callcardNo: cardNoValue,
+                            callReceived: receivedController.text,
+                            callerContactno: contactNoController.text,
+                            eventCode: mergingEventCode(
+                                eventCol1Controller,
+                                eventCol2Controller,
+                                eventCol3Controller,
+                                eventCol4Controller),
+                            priority: _priority,
+                            incidentDesc: incidentController.text,
+                            incidentLocation: locationController.text,
+                            landmark: landmarkController.text,
+                            locationType: _location,
+                            distanceToScene: _distance,
+                            assignId: widget.call_information.assign_id,
+                            plateNo: widget.call_information.plate_no,
+                          ),
+                        ),
+                      );
 
                       // final snackBar = SnackBar(
                       //   content: Text("Call information has been saved!"),
@@ -401,21 +409,21 @@ class _EditCallInfo extends State<EditCallInfo>
     void callback(String item, int index) {}
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       // appBar: AppBar(),
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: _buildBloc(context, initialValue),
-        ),
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   heroTag: 100,
-      //   onPressed: () {
-      //   },
-      //   child: Icon(Icons.save),
-      // ),
+          child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: _buildBloc(context, initialValue),
+      )),
     );
+    // floatingActionButton: FloatingActionButton(
+    //   heroTag: 100,
+    //   onPressed: () {
+    //   },
+    //   child: Icon(Icons.save),
+    // );
+    // );
   }
 
   String changeStandardDateFormat(var mydate) {
@@ -470,40 +478,42 @@ class _EditCallInfo extends State<EditCallInfo>
     print(selector);
     print(initialData);
     return Container(
-        // width: 500,
-        child: Padding(
-            padding: EdgeInsets.all(16),
-            child: StreamBuilder(
-                stream: controller.stream,
-                initialData: initialData,
-                builder: (context, snapshot) {
-                  print("Streambuilder value");
-                  print(snapshot.data);
+      // width: 500,
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: StreamBuilder(
+            stream: controller.stream,
+            initialData: initialData,
+            builder: (context, snapshot) {
+              print("Streambuilder value");
+              print(snapshot.data);
 
-                  setInputOption(selector, snapshot.data);
-                  // child:
+              setInputOption(selector, snapshot.data);
+              // child:
 
-                  return DropdownButtonFormField(
-                      isExpanded: true,
-                      isDense: true,
-                      items: list.map((String dropDownStringItem) {
-                        return DropdownMenuItem<String>(
-                            child: Text(dropDownStringItem),
-                            value: dropDownStringItem);
-                      }).toList(),
-                      onChanged: (valueChanged) {
-                        print("WHATS IS INDESIDE:$valueChanged");
-                        controller.sink.add(valueChanged);
-                      },
-                      value: snapshot.data,
-                      decoration: InputDecoration(
-                          labelText: labelText,
-                          fillColor: Colors.white,
-                          border: new OutlineInputBorder(
-                            borderRadius: new BorderRadius.circular(10.0),
-                            borderSide: new BorderSide(),
-                          )));
-                })));
+              return DropdownButtonFormField(
+                  isExpanded: true,
+                  isDense: true,
+                  items: list.map((String dropDownStringItem) {
+                    return DropdownMenuItem<String>(
+                        child: Text(dropDownStringItem),
+                        value: dropDownStringItem);
+                  }).toList(),
+                  onChanged: (valueChanged) {
+                    print("WHATS IS INDESIDE:$valueChanged");
+                    controller.sink.add(valueChanged);
+                  },
+                  value: snapshot.data,
+                  decoration: InputDecoration(
+                      labelText: labelText,
+                      fillColor: Colors.white,
+                      border: new OutlineInputBorder(
+                        borderRadius: new BorderRadius.circular(10.0),
+                        borderSide: new BorderSide(),
+                      )));
+            }),
+      ),
+    );
   }
 }
 
@@ -530,42 +540,46 @@ class CardNoTextInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        // width: 500,
-        // width: 500,
-        child: Padding(
-            padding: EdgeInsets.all(16),
-            child: TextFormField(
-                autovalidate: true,
-                textCapitalization: TextCapitalization.characters,
-                initialValue: initialData,
-                validator: (value) {
-                  if (value.length > 20) {
-                    return "Call Card No cannot be more than 20 characters";
-                  }
+      // width: 500,
+      // width: 500,
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: TextFormField(
+          autovalidate: true,
+          textCapitalization: TextCapitalization.characters,
+          initialValue: initialData,
+          validator: (value) {
+            if (value.length > 20) {
+              return "Call Card No cannot be more than 20 characters";
+            }
 
-                  if (value.isEmpty) {
-                    return 'This field is required';
-                  }
-                  return null;
-                },
-                inputFormatters: maskFormater != null ? [maskFormater] : [],
-                onChanged: (value) {
-                  controller.sink.add(value);
-                },
+            if (value.isEmpty) {
+              return 'This field is required';
+            }
+            return null;
+          },
+          inputFormatters: maskFormater != null ? [maskFormater] : [],
+          onChanged: (value) {
+            controller.sink.add(value);
+          },
 
-                // onEditingComplete: (){
+          // onEditingComplete: (){
 
-                // },
-                // keyboardType: inputType,
-                // controller: myController,
-                decoration: InputDecoration(
-                    // hintText: hintText,
-                    labelText: labelText,
-                    fillColor: Colors.white,
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
-                      borderSide: new BorderSide(),
-                    )))));
+          // },
+          // keyboardType: inputType,
+          // controller: myController,
+          decoration: InputDecoration(
+            // hintText: hintText,
+            labelText: labelText,
+            // fillColor: Colors.white,
+            border: new OutlineInputBorder(
+              borderRadius: new BorderRadius.circular(10.0),
+              borderSide: new BorderSide(),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
